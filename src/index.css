@@ -21,3 +21,20 @@
     @apply bg-term-gray border border-term-amber/40 text-term-green px-3 py-2 rounded focus:outline-none focus:border-term-green;
   }
 }
+
+@layer utilities {
+  .animate-slideDown {
+    animation: slideDown 0.3s ease-out;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

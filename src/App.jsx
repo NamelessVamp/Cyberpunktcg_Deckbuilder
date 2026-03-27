@@ -1,9 +1,24 @@
 import { useState, useEffect } from 'react'
 import cardsData from './data/cards.json'
+import SearchBar from './components/SearchBar'
+import FilterPanel from './components/FilterPanel'
 
 function App() {
   const [cards, setCards] = useState([])
   const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState()
+  const [filters, setFilters] = useState({
+  type: '',
+  faction: '',
+  costMin: 0,
+  costMax: 9,
+  powerMin: 0,
+  powerMax: 15,
+  ramMin: 1,
+  ramMax: 5,
+  
+})
+const [filtersOpen, setFiltersOpen] = useState(false)
 
   useEffect(() => {
     setTimeout(() => {
@@ -11,6 +26,42 @@ function App() {
       setLoading(false)
     }, 500)
   }, [])
+
+  // Filtrar cartas basado en el término de búsqueda
+const filteredCards = cards.filter(card => {
+  // FILTRO 1: SEARCH TERM
+  if (searchTerm) {
+    const search = searchTerm.toLowerCase();
+    const matchesSearch = 
+      card.name.toLowerCase().includes(search) ||
+      (card.subtitle && card.subtitle.toLowerCase().includes(search)) ||
+      (card.text && card.text.toLowerCase().includes(search)) ||
+      (card.keywords && card.keywords.some(k => k.toLowerCase().includes(search)));
+    
+    if (!matchesSearch) return false;
+  }
+  
+  // FILTRO 2: TYPE
+  if (filters.type && card.type !== filters.type) return false;
+  
+  // FILTRO 3: FACTION
+  if (filters.faction && card.faction !== filters.faction) return false;
+  
+  // FILTRO 4: COST
+  if (card.cost !== undefined) {
+    if (card.cost < filters.costMin || card.cost > filters.costMax) return false;
+  }
+  
+  // FILTRO 5: POWER
+  if (card.power !== undefined) {
+    if (card.power < filters.powerMin || card.power > filters.powerMax) return false;
+  }
+  
+  // FILTRO 6: RAM
+  if (card.ram < filters.ramMin || card.ram > filters.ramMax) return false;
+  
+  return true;
+});
 
   if (loading) {
     return (
@@ -30,13 +81,25 @@ function App() {
           CYBERPUNK TCG // DECK_BUILDER.EXE
         </h1>
         <p className="text-term-green font-mono">
-          [{cards.length} CARDS LOADED] // [ALPHA/BETA KIT 2026]
+          [{filteredCards.length} / {cards.length} CARDS] // [ALPHA/BETA KIT 2026]
         </p>
       </header>
 
+      {/* Search Bar */}
+      <SearchBar 
+        onSearch={setSearchTerm}
+        onToggleFilters={() => setFiltersOpen(!filtersOpen)}
+        filtersOpen={filtersOpen}
+      />
+      <FilterPanel 
+      cards={cards} 
+      onFilterChange={setFilters}
+      isOpen={filtersOpen}
+      />
+
       {/* Card Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {cards.slice(0, 12).map((card) => (
+        {filteredCards.map((card) => (
           <div 
             key={card.id} 
             className="card-container hover:border-term-green transition-all duration-300 cursor-pointer group"
