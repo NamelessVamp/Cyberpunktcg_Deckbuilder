@@ -1,65 +1,16 @@
-# 🔥 Cyberpunk TCG Deck Builder
+# React + Vite
 
-A modern, open-source deck builder for the Cyberpunk 2077 Trading Card Game.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Features (Phase 1 - In Progress)
+Currently, two official plugins are available:
 
-- 🔍 **Advanced Search & Filtering** - Fuzzy search by name, filter by type, cost, RAM, tags
-- ✅ **Real-Time Validation** - Dynamic RAM calculator, deck size limits, copy restrictions
-- 📊 **Deck Analytics** - Eddie curve, tribal synergy %, card type distribution
-- 📤 **Export to Text** - Discord-friendly plain text format (stealth mode)
-- ⭐ **Wishlist** - Mark cards you want to pull
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Tech Stack
+## React Compiler
 
-- **Frontend**: React + Vite (coming soon)
-- **Data**: JSON local database (no backend required)
-- **Scraper**: Python + BeautifulSoup4
-- **Hosting**: GitHub Pages (planned)
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Card Database
+## Expanding the ESLint configuration
 
-The scraper pulls card data from [cyberpunktcg.com/cards](https://cyberpunktcg.com/cards).
-
-### Update Cards
-```bash
-# Activate virtual environment
-source venv/bin/activate  # Mac/Linux
-venv\Scripts\activate     # Windows
-
-# Run scraper
-python scripts/scraper.py
-```
-
-## Installation (Dev)
-```bash
-# Clone repo
-git clone https://github.com/NamelessVamp/Cyberpunktcg_Deckbuilder
-cd Cyberpunktcg_Deckbuilder
-
-# Setup Python venv
-python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
-pip install -r requirements.txt
-
-# Run scraper
-python scripts/scraper.py
-```
-
-## Roadmap
-
-- [x] Card scraper
-- [ ] React boilerplate
-- [ ] Search & filtering system
-- [ ] RAM validator (dynamic, no hardcoded combos)
-- [ ] Deck analytics
-- [ ] Export to text
-- [ ] GitHub Pages deployment
-
-## Legal
-
-This is a fan-made, non-commercial project. Cyberpunk 2077 and related trademarks are property of CD PROJEKT RED. Card data is sourced from the official [Cyberpunk TCG website](https://cyberpunktcg.com).
-
----
-
-**"Never stop fighting."** — V
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

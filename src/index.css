@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-term-black text-term-amber font-mono;
+  }
+}
+
+@layer components {
+  .card-container {
+    @apply bg-term-gray border border-term-amber/20 rounded-lg p-4;
+  }
+  
+  .btn-primary {
+    @apply bg-term-amber text-term-black px-4 py-2 rounded font-bold hover:bg-term-green transition-colors;
+  }
+  
+  .input-terminal {
+    @apply bg-term-gray border border-term-amber/40 text-term-green px-3 py-2 rounded focus:outline-none focus:border-term-green;
+  }
+}
