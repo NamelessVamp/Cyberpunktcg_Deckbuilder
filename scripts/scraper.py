@@ -15,6 +15,31 @@ BASE_URL = "https://cyberpunktcg.com"
 CARDS_URL = f"{BASE_URL}/cards"
 OUTPUT_FILE = "src/data/cards.json"
 
+# Valid factions (hardcoded from game knowledge)
+VALID_FACTIONS = {
+    "ARASAKA",
+    "MERC",
+    "CORPO",
+    "NETRUNNER",
+    "NOMAD",
+    "GANGER",
+    "ROCKERBOY",
+    "RIPPERDOC",
+    "NCPD",
+    "ALDECADO",
+    "DOLL",
+    "OVERCLOCKING",
+    "ZETATECH",
+    "MILITECH",
+    "VEHICLE",
+    "CYBERWARE",
+    "WEAPON",
+    "PLAN",
+    "BRAINDANCE",
+    "QUICKHACK",
+    "TECH",
+}
+
 
 def setup_driver():
     """Setup Chrome driver con opciones headless."""
@@ -32,7 +57,7 @@ def setup_driver():
 def extract_card_links(driver):
     """Extrae todos los links de cartas."""
     driver.get(CARDS_URL)
-    time.sleep(3)  # Esperar a que cargue
+    time.sleep(3)
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
     links = []
@@ -69,6 +94,10 @@ def parse_card_page(driver, url):
         subtitle_elem = h1.find_next("p") if h1 else None
         subtitle = safe_text(subtitle_elem)
 
+        # FIX: Ignorar subtítulos de placeholder
+        if "Subscribe to updates" in subtitle or "follow us on socials" in subtitle:
+            subtitle = ""
+
         card_data = {
             "id": url.split("/")[-1],
             "name": name,
@@ -76,7 +105,7 @@ def parse_card_page(driver, url):
             "url": url,
         }
 
-        # Extraer COST, PWR, RAM (buscar por los SVG icons y sus labels)
+        # Extraer COST, PWR, RAM
         stats_divs = soup.find_all("div", class_=re.compile(r"inline-flex.*gap-2"))
         for div in stats_divs:
             label_span = div.find("span", class_="hud-label")
@@ -104,27 +133,17 @@ def parse_card_page(driver, url):
         if type_chip:
             card_data["type"] = safe_text(type_chip)
 
-        # Facción (todos los chips después del tipo)
+        # FIX: Facción (filtrar solo VALID_FACTIONS)
         faction_chips = soup.find_all("span", class_="chip-cyber")
         factions = []
         for chip in faction_chips:
-            text = safe_text(chip)
-            if text not in [
-                "LEGEND",
-                "UNIT",
-                "GEAR",
-                "PROGRAM",
-                "ALPHA",
-                "SPOILER",
-                "PROMO",
-                "STANDARD",
-                "FOIL",
-            ]:
+            text = safe_text(chip).upper()
+            if text in VALID_FACTIONS:
                 factions.append(text)
 
         card_data["faction"] = factions[0] if factions else None
 
-        # Keywords (buscar "KEYWORDS:")
+        # Keywords
         keywords_section = soup.find(string=re.compile(r"KEYWORDS:"))
         if keywords_section:
             parent = keywords_section.find_parent()
@@ -151,30 +170,38 @@ def parse_card_page(driver, url):
         if img and img.get("src"):
             card_data["image_url"] = img["src"]
 
+        # FIX: Set, Number, Artist (buscar <span class="font-medium">)
         # Set
-        set_elem = soup.find(string=re.compile(r"SET:"))
+        set_label = soup.find(
+            "span", class_="text-muted-foreground", string=re.compile(r"SET:")
+        )
+        if set_label:
+            set_value = set_label.find_next_sibling("span", class_="font-medium")
+            card_data["set"] = safe_text(set_value) if set_value else ""
+        else:
+            card_data["set"] = ""
 
-        if set_elem:
-            parent = set_elem.find_parent()
-            if parent:
-                set_text = safe_text(parent).replace("SET:", "").strip()
-                card_data["set"] = set_text
+        # Number
+        number_label = soup.find(
+            "span", class_="text-muted-foreground", string=re.compile(r"NUMBER:")
+        )
+        if number_label:
+            number_value = number_label.find_next_sibling("span", class_="font-medium")
+            card_data["number"] = safe_text(number_value) if number_value else ""
+        else:
+            card_data["number"] = ""
 
-        # Número
-        number_elem = soup.find(text=re.compile(r"NUMBER:"))
-        if number_elem:
-            parent = number_elem.find_parent()
-            if parent:
-                number_text = safe_text(parent).replace("NUMBER:", "").strip()
-                card_data["number"] = number_text
-
-        # Artista
-        artist_elem = soup.find(text=re.compile(r"ILLUSTRATED BY:"))
-        if artist_elem:
-            parent = artist_elem.find_parent()
-            if parent:
-                artist_text = safe_text(parent).replace("ILLUSTRATED BY:", "").strip()
-                card_data["artist"] = artist_text
+        # Artist
+        artist_label = soup.find(
+            "span",
+            class_="text-muted-foreground",
+            string=re.compile(r"ILLUSTRATED BY:"),
+        )
+        if artist_label:
+            artist_value = artist_label.find_next_sibling("span", class_="font-medium")
+            card_data["artist"] = safe_text(artist_value) if artist_value else ""
+        else:
+            card_data["artist"] = ""
 
         # Detectar color de RAM por el dot
         ram_dot = soup.find("span", class_=re.compile(r"bg-card-"))
@@ -194,7 +221,7 @@ def parse_card_page(driver, url):
 
 
 def main():
-    print("🔥 CYBERPUNK TCG SCRAPER v2.0 (Selenium)")
+    print("🔥 CYBERPUNK TCG SCRAPER v2.2 (Set/Number/Artist Fix)")
     print("=" * 50)
 
     driver = setup_driver()
