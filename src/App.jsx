@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import cardsData from "./data/cards.json";
-import preconDecks from "./data/PreconDecks.json";
+import preconDecks from "./data/preconDecks.json";
 import SearchBar from "./components/SearchBar";
 import FilterPanel from "./components/FilterPanel";
 import DeckArea from "./components/DeckArea";
