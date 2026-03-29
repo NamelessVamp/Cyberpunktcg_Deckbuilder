@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function SaveDeckModal({ deck, onSave, onClose }) {
-  const [deckName, setDeckName] = useState('');
+  const [deckName, setDeckName] = useState("");
+  const [deckNotes, setDeckNotes] = useState("");
 
   const handleSave = () => {
-    if (!deckName.trim()) {
-      alert('Please enter a deck name');
+    if (deckName.trim() === "") {
+      alert("Please enter a deck name");
       return;
     }
-    onSave(deckName.trim());
+    onSave(deckName.trim(), deckNotes.trim());
   };
 
   return (
@@ -41,6 +42,23 @@ export default function SaveDeckModal({ deck, onSave, onClose }) {
           autoFocus
           maxLength={50}
         />
+
+        {/* Deck Notes */}
+        <div className="mt-4">
+          <label className="block text-term-green text-sm mb-2 font-mono">
+            DECK NOTES (OPTIONAL):
+          </label>
+          <textarea
+            value={deckNotes}
+            onChange={(e) => setDeckNotes(e.target.value)}
+            placeholder="Strategy, combos, sideboard notes..."
+            className="input-terminal w-full h-32 resize-none"
+            maxLength={500}
+          />
+          <p className="text-term-amber/40 text-xs mt-1 font-mono">
+            {deckNotes.length}/500 characters
+          </p>
+        </div>
 
         {/* Actions */}
         <div className="flex gap-3">

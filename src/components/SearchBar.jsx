@@ -27,6 +27,7 @@ export default function SearchBar({
     <div className="mb-4 flex gap-2">
       <div className="flex-1 relative">
         <input
+          id="search-input"
           type="text"
           value={search}
           onChange={handleSearch}

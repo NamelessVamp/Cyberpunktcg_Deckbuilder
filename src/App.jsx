@@ -15,6 +15,41 @@ import ConfirmModal from "./components/ConfirmModal";
 import CardPreviewModal from "./components/CardPreviewModal";
 import ImportDeckModal from "./components/ImportDeckModal";
 
+// DECK ENCODING/DECODING UTILITIES
+const encodeDeck = (deck) => {
+  try {
+    const deckData = {
+      legends: deck.legends.map((c) => c.id),
+      mainDeck: deck.mainDeck.map((c) => c.id),
+    };
+    const jsonString = JSON.stringify(deckData);
+    return btoa(jsonString); // Base64 encode
+  } catch (error) {
+    console.error("Error encoding deck:", error);
+    return null;
+  }
+};
+
+const decodeDeck = (encodedString, allCards) => {
+  try {
+    const jsonString = atob(encodedString); // Base64 decode
+    const deckData = JSON.parse(jsonString);
+
+    const legends = deckData.legends
+      .map((id) => allCards.find((c) => c.id === id))
+      .filter(Boolean);
+
+    const mainDeck = deckData.mainDeck
+      .map((id) => allCards.find((c) => c.id === id))
+      .filter(Boolean);
+
+    return { legends, mainDeck };
+  } catch (error) {
+    console.error("Error decoding deck:", error);
+    return null;
+  }
+};
+
 function App() {
   const [showExportModal, setShowExportModal] = useState(false);
   const [exportDeckName, setExportDeckName] = useState("");
@@ -56,6 +91,32 @@ function App() {
     }, 500);
   }, []);
 
+  // AUTO-LOAD DECK FROM URL
+  useEffect(() => {
+    if (cards.length === 0) return; // Wait for cards to load
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const encodedDeck = urlParams.get("d");
+
+    if (encodedDeck) {
+      const decodedDeck = decodeDeck(encodedDeck, cards);
+
+      if (decodedDeck) {
+        setDeck(decodedDeck);
+        setActiveTab("build");
+        showToast(
+          `Deck loaded from URL: ${decodedDeck.legends.length} Legends, ${decodedDeck.mainDeck.length} cards`,
+          "success",
+        );
+
+        // Clean URL after loading
+        window.history.replaceState({}, "", window.location.pathname);
+      } else {
+        showToast("Invalid deck URL", "error");
+      }
+    }
+  }, [cards]);
+
   // Cargar decks guardados desde localStorage
   useEffect(() => {
     const saved = localStorage.getItem("cyberpunk_decks");
@@ -67,6 +128,58 @@ function App() {
       }
     }
   }, []);
+
+  // KEYBOARD SHORTCUTS
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Check if Ctrl or Cmd is pressed
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+      // Ctrl+S: Save Deck
+      if (isCtrlOrCmd && e.key === "s") {
+        e.preventDefault(); // Prevent browser save dialog
+        if (deck.mainDeck.length > 0 || deck.legends.length > 0) {
+          setShowSaveModal(true);
+        }
+      }
+
+      // Ctrl+F: Focus Search
+      if (isCtrlOrCmd && e.key === "f") {
+        e.preventDefault(); // Prevent browser find dialog
+        document.getElementById("search-input")?.focus();
+      }
+
+      // ESC: Close modals/filters
+      if (e.key === "Escape") {
+        setShowSaveModal(false);
+        setShowExportModal(false);
+        setShowImportModal(false);
+        setPreviewCard(null);
+        setFiltersOpen(false);
+        setConfirmModal(null);
+      }
+
+      // Ctrl+E: Export Deck
+      if (isCtrlOrCmd && e.key === "e") {
+        e.preventDefault();
+        if (deck.mainDeck.length > 0) {
+          setExportDeckName("My Deck");
+          setShowExportModal(true);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [
+    deck,
+    showSaveModal,
+    showExportModal,
+    showImportModal,
+    previewCard,
+    filtersOpen,
+    confirmModal,
+  ]);
 
   // FILTRAR CARTAS
   const filteredCards = cards.filter((card) => {
@@ -140,7 +253,7 @@ function App() {
   }, [searchTerm, filters]);
 
   // AGREGAR CARTA AL DECK
-  const handleAddCard = (card) => {
+  const handleAddToDeck = (card, quantity = 1) => {
     if (card.type === "LEGEND") {
       if (deck.legends.length >= 3) {
         showToast("Ya tienes 3 Leyendas (máximo permitido)", "warning");
@@ -156,8 +269,10 @@ function App() {
       }));
       showToast(`${card.name} added to legends`, "success");
     } else {
-      const count = deck.mainDeck.filter((c) => c.id === card.id).length;
-      if (count >= 3) {
+      const currentCount = deck.mainDeck.filter((c) => c.id === card.id).length;
+      const canAdd = Math.min(quantity, 3 - currentCount);
+
+      if (canAdd === 0) {
         showToast(
           "Ya tienes 3 copias de esta carta (máximo permitido)",
           "warning",
@@ -183,12 +298,25 @@ function App() {
         return;
       }
 
-      setDeck((prev) => ({
-        ...prev,
-        mainDeck: [...prev.mainDeck, card],
-      }));
+      setDeck((prev) => {
+        const newMainDeck = [...prev.mainDeck];
+        for (let i = 0; i < canAdd; i++) {
+          newMainDeck.push(card);
+        }
+        return { ...prev, mainDeck: newMainDeck };
+      });
 
-      showToast(`${card.name} added to deck`, "success");
+      if (canAdd < quantity) {
+        showToast(
+          `${card.name}: Added ${canAdd} ${canAdd === 1 ? "copy" : "copies"} (max 3 reached)`,
+          "warning",
+        );
+      } else {
+        showToast(
+          `${card.name}: Added ${canAdd} ${canAdd === 1 ? "copy" : "copies"}`,
+          "success",
+        );
+      }
     }
   };
 
@@ -218,10 +346,11 @@ function App() {
   };
 
   // SAVE DECK
-  const handleSaveDeck = (deckName) => {
+  const handleSaveDeck = (deckName, deckNotes = "") => {
     const newDeck = {
       id: Date.now().toString(),
       name: deckName,
+      notes: deckNotes,
       deck: {
         legends: [...deck.legends],
         mainDeck: [...deck.mainDeck],
@@ -260,6 +389,162 @@ function App() {
       },
       onCancel: () => setConfirmModal(null),
     });
+  };
+
+  // SHARE DECK VIA URL
+  const handleShareDeck = () => {
+    if (deck.mainDeck.length === 0) {
+      showToast("Deck is empty", "warning");
+      return;
+    }
+
+    const encoded = encodeDeck(deck);
+
+    if (!encoded) {
+      showToast("Failed to generate share URL", "error");
+      return;
+    }
+
+    const shareUrl = `${window.location.origin}${window.location.pathname}?d=${encoded}`;
+
+    navigator.clipboard
+      .writeText(shareUrl)
+      .then(() => {
+        showToast("Deck URL copied to clipboard!", "success");
+      })
+      .catch(() => {
+        // Fallback: Show URL in prompt
+        prompt("Copy this URL:", shareUrl);
+      });
+  };
+
+  // EXPORT ALL DECKS
+  const handleExportAllDecks = () => {
+    if (savedDecks.length === 0) {
+      showToast("No decks to export", "warning");
+      return;
+    }
+
+    const exportData = {
+      version: "1.0",
+      exportDate: new Date().toISOString(),
+      decks: savedDecks,
+    };
+
+    const jsonString = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `cyberpunk_decks_backup_${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast(`Exported ${savedDecks.length} decks successfully!`, "success");
+  };
+
+  // IMPORT ALL DECKS
+  const handleImportAllDecks = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const importData = JSON.parse(event.target.result);
+
+          if (!importData.decks || !Array.isArray(importData.decks)) {
+            showToast("Invalid backup file format", "error");
+            return;
+          }
+
+          // Merge with existing decks (avoid duplicates by ID)
+          const existingIds = new Set(savedDecks.map((d) => d.id));
+          const newDecks = importData.decks.filter(
+            (d) => !existingIds.has(d.id),
+          );
+
+          if (newDecks.length === 0) {
+            showToast("All decks already exist", "warning");
+            return;
+          }
+
+          const merged = [...savedDecks, ...newDecks];
+          setSavedDecks(merged);
+          localStorage.setItem("cyberpunk_decks", JSON.stringify(merged));
+
+          showToast(
+            `Imported ${newDecks.length} new decks! (${importData.decks.length - newDecks.length} duplicates skipped)`,
+            "success",
+          );
+        } catch (error) {
+          console.error("Import error:", error);
+          showToast("Failed to import decks. Invalid file.", "error");
+        }
+      };
+
+      reader.readAsText(file);
+    };
+
+    input.click();
+  };
+
+  // DUPLICATE DECK
+  const handleDuplicateDeck = (deckId) => {
+    const deckToDuplicate = savedDecks.find((d) => d.id === deckId);
+
+    if (!deckToDuplicate) return;
+
+    const duplicatedDeck = {
+      id: Date.now().toString(),
+      name: `${deckToDuplicate.name} (Copy)`,
+      deck: {
+        legends: [...deckToDuplicate.deck.legends],
+        mainDeck: [...deckToDuplicate.deck.mainDeck],
+      },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    const updated = [...savedDecks, duplicatedDeck];
+    setSavedDecks(updated);
+    localStorage.setItem("cyberpunk_decks", JSON.stringify(updated));
+    showToast(`Deck "${duplicatedDeck.name}" created!`, "success");
+  };
+
+  // RENAME DECK
+  const handleRenameDeck = (deckId) => {
+    const deckToRename = savedDecks.find((d) => d.id === deckId);
+
+    if (!deckToRename) return;
+
+    const newName = prompt("Enter new deck name:", deckToRename.name);
+
+    if (!newName || newName.trim() === "") {
+      showToast("Deck name cannot be empty", "warning");
+      return;
+    }
+
+    if (newName === deckToRename.name) {
+      return; // No change
+    }
+
+    const updated = savedDecks.map((d) =>
+      d.id === deckId
+        ? { ...d, name: newName.trim(), updatedAt: new Date().toISOString() }
+        : d,
+    );
+
+    setSavedDecks(updated);
+    localStorage.setItem("cyberpunk_decks", JSON.stringify(updated));
+    showToast(`Deck renamed to "${newName.trim()}"`, "success");
   };
 
   // LOAD PRECON DECK
@@ -536,6 +821,7 @@ function App() {
                   deck={deck}
                   onRemoveCard={handleRemoveCard}
                   onClearDeck={handleClearDeck}
+                  onShareDeck={handleShareDeck}
                 />
 
                 {/* SAVE + IMPORT + EXPORT BUTTONS */}
@@ -559,8 +845,7 @@ function App() {
 
                   <button
                     onClick={() => {
-                      const name = prompt("Deck name for export?") || "My Deck";
-                      setExportDeckName(name);
+                      setExportDeckName("My Deck");
                       setShowExportModal(true);
                     }}
                     disabled={deck.mainDeck.length === 0}
@@ -581,6 +866,10 @@ function App() {
           savedDecks={savedDecks}
           onLoadDeck={handleLoadDeck}
           onDeleteDeck={handleDeleteDeck}
+          onDuplicateDeck={handleDuplicateDeck}
+          onRenameDeck={handleRenameDeck}
+          onExportAll={handleExportAllDecks}
+          onImportAll={handleImportAllDecks}
         />
       )}
 
@@ -627,7 +916,7 @@ function App() {
         <CardPreviewModal
           card={previewCard}
           onClose={() => setPreviewCard(null)}
-          onAddToDeck={handleAddCard}
+          onAddToDeck={handleAddToDeck}
         />
       )}
 
@@ -640,8 +929,27 @@ function App() {
       )}
 
       {/* Footer */}
-      <footer className="mt-12 text-center text-term-amber/40 text-sm font-mono">
-        // NAMELESS_V4MP
+      <footer className="mt-12 text-center text-term-amber/40 text-sm font-mono space-y-2">
+        <div className="text-xs">
+          <span className="text-term-green/60">SHORTCUTS:</span>{" "}
+          <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded text-term-amber/60">
+            Ctrl+S
+          </kbd>{" "}
+          Save{" "}
+          <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded text-term-amber/60">
+            Ctrl+F
+          </kbd>{" "}
+          Search{" "}
+          <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded text-term-amber/60">
+            Ctrl+E
+          </kbd>{" "}
+          Export{" "}
+          <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded text-term-amber/60">
+            ESC
+          </kbd>{" "}
+          Close
+        </div>
+        <div>// NAMELESS_V4MP</div>
       </footer>
     </div>
   );
