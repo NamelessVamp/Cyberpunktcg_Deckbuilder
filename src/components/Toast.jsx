@@ -1,44 +1,63 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from "react";
 
-export default function Toast({ message, type = 'success', onClose }) {
+export default function Toast({
+  message,
+  type = "success",
+  onClose,
+  duration = 3000,
+}) {
+  const [isLeaving, setIsLeaving] = useState(false);
+
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Start fade-out 500ms before closing
+    const fadeTimer = setTimeout(() => {
+      setIsLeaving(true);
+    }, duration - 500);
+
+    // Close after full duration
+    const closeTimer = setTimeout(() => {
       onClose();
-    }, 3000);
+    }, duration);
 
-    return () => clearTimeout(timer);
-  }, [onClose]);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(closeTimer);
+    };
+  }, [duration, onClose]);
 
-  const bgColor = type === 'success' 
-    ? 'bg-term-green/20 border-term-green' 
-    : type === 'error' 
-    ? 'bg-term-red/20 border-term-red' 
-    : 'bg-term-amber/20 border-term-amber';
+  const bgColor = {
+    success: "bg-term-green/20 border-term-green",
+    error: "bg-term-red/20 border-term-red",
+    warning: "bg-term-amber/20 border-term-amber",
+    info: "bg-term-blue/20 border-term-blue",
+  }[type];
 
-  const textColor = type === 'success' 
-    ? 'text-term-green' 
-    : type === 'error' 
-    ? 'text-term-red' 
-    : 'text-term-amber';
+  const textColor = {
+    success: "text-term-green",
+    error: "text-term-red",
+    warning: "text-term-amber",
+    info: "text-term-blue",
+  }[type];
 
-  const icon = type === 'success' 
-    ? '✓' 
-    : type === 'error' 
-    ? '✗' 
-    : '⚠';
+  const icon = {
+    success: "✓",
+    error: "✗",
+    warning: "⚠",
+    info: "ℹ",
+  }[type];
 
   return (
-    <div className="fixed top-4 right-4 z-50 animate-slide-in">
-      <div className={`${bgColor} border-2 rounded p-4 font-mono ${textColor} shadow-lg max-w-md`}>
+    <div
+      className={`fixed top-4 right-4 z-50 transition-all duration-500 ${
+        isLeaving ? "opacity-0 translate-x-8" : "opacity-100 translate-x-0"
+      }`}
+    >
+      <div
+        className={`${bgColor} ${textColor} border-2 rounded px-6 py-4 font-mono shadow-lg min-w-[300px]`}
+      >
         <div className="flex items-center gap-3">
           <span className="text-2xl">{icon}</span>
-          <p className="flex-1">{message}</p>
-          <button 
-            onClick={onClose}
-            className="text-xl hover:opacity-70 transition-opacity"
-          >
-            ×
-          </button>
+          <span className="text-sm">{message}</span>
         </div>
       </div>
     </div>

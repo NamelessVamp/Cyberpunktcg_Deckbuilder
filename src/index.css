@@ -22,8 +22,8 @@ body {
 .card-container {
   background: var(--term-gray);
   border: 2px solid rgba(255, 179, 0, 0.2);
-  border-radius: 8px;
-  padding: 1rem;
+  border-radius: 4px;
+  padding: 0.5rem;
   transition: all 0.3s ease;
 }
 
@@ -133,4 +133,16 @@ button:disabled {
   outline: 2px solid var(--term-amber);
   outline-offset: 2px;
   border-color: var(--term-amber);
+}
+/* OPTIMIZED CARD SIZE */
+.card-container img {
+  max-height: 280px;
+  width: 100%;
+  object-fit: contain;
+  background: #1a1a1a;
+}
+
+.card-container {
+  max-width: 100%;
+  margin: 0 auto;
 }

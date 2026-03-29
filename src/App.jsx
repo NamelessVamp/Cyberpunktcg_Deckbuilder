@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import cardsData from "./data/cards.json";
+import preconDecks from "./data/preconDecks.json";
 import SearchBar from "./components/SearchBar";
 import FilterPanel from "./components/FilterPanel";
 import DeckArea from "./components/DeckArea";
@@ -9,6 +10,10 @@ import MyDecksView from "./components/MyDecksView";
 import PreconDecksView from "./components/PreconDecksView";
 import DeckAnalytics from "./components/DeckAnalytics";
 import ExportModal from "./components/ExportModal";
+import Toast from "./components/Toast";
+import ConfirmModal from "./components/ConfirmModal";
+import CardPreviewModal from "./components/CardPreviewModal";
+import ImportDeckModal from "./components/ImportDeckModal";
 
 function App() {
   const [showExportModal, setShowExportModal] = useState(false);
@@ -17,7 +22,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
-    types: [], // CAMBIADO de "type" a "types"
+    types: [],
     factions: [],
     costMin: 0,
     costMax: 9,
@@ -38,7 +43,11 @@ function App() {
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [savedDecks, setSavedDecks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerPage = 12;
+  const [toast, setToast] = useState(null);
+  const [confirmModal, setConfirmModal] = useState(null);
+  const cardsPerPage = 18;
+  const [previewCard, setPreviewCard] = useState(null);
+  const [showImportModal, setShowImportModal] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -84,13 +93,12 @@ function App() {
       if (!filters.factions.includes(card.faction)) return false;
     }
 
-    // FILTRO 4: SET - NUEVO
+    // FILTRO 4: SET
     if (filters.set && card.set !== filters.set) return false;
 
-    // FILTRO 5: KEYWORDS - NUEVO
+    // FILTRO 5: KEYWORDS
     if (filters.keywords && filters.keywords.length > 0) {
       const cardKeywords = card.keywords || [];
-      // Card must have ALL selected keywords
       const hasAllKeywords = filters.keywords.every((keyword) =>
         cardKeywords.includes(keyword),
       );
@@ -120,7 +128,7 @@ function App() {
     return true;
   });
 
-  // PAGINACIÓN (DESPUÉS del filtro)
+  // PAGINACIÓN
   const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
@@ -135,21 +143,25 @@ function App() {
   const handleAddCard = (card) => {
     if (card.type === "LEGEND") {
       if (deck.legends.length >= 3) {
-        alert("Ya tienes 3 Leyendas (máximo permitido)");
+        showToast("Ya tienes 3 Leyendas (máximo permitido)", "warning");
         return;
       }
       if (deck.legends.some((l) => l.id === card.id)) {
-        alert("Esta Leyenda ya está en tu deck");
+        showToast("Esta Leyenda ya está en tu deck", "warning");
         return;
       }
       setDeck((prev) => ({
         ...prev,
         legends: [...prev.legends, card],
       }));
+      showToast(`${card.name} added to legends`, "success");
     } else {
       const count = deck.mainDeck.filter((c) => c.id === card.id).length;
       if (count >= 3) {
-        alert("Ya tienes 3 copias de esta carta (máximo permitido)");
+        showToast(
+          "Ya tienes 3 copias de esta carta (máximo permitido)",
+          "warning",
+        );
         return;
       }
 
@@ -164,8 +176,9 @@ function App() {
       );
 
       if (card.ram_color && ramBudget[card.ram_color] < card.ram) {
-        alert(
+        showToast(
           `RAM insuficiente: Necesitas ${card.ram} ${card.ram_color} RAM (tienes ${ramBudget[card.ram_color]})`,
+          "error",
         );
         return;
       }
@@ -174,6 +187,8 @@ function App() {
         ...prev,
         mainDeck: [...prev.mainDeck, card],
       }));
+
+      showToast(`${card.name} added to deck`, "success");
     }
   };
 
@@ -193,6 +208,7 @@ function App() {
       });
     }
   };
+
   // CLEAR ENTIRE DECK
   const handleClearDeck = () => {
     setDeck({
@@ -218,28 +234,118 @@ function App() {
     setSavedDecks(updated);
     localStorage.setItem("cyberpunk_decks", JSON.stringify(updated));
     setShowSaveModal(false);
-    alert(`Deck "${deckName}" saved successfully!`);
+    showToast(`Deck "${deckName}" saved successfully!`, "success");
   };
 
   // LOAD DECK
   const handleLoadDeck = (savedDeck) => {
     setDeck(savedDeck.deck);
     setActiveTab("build");
-    alert(`Deck "${savedDeck.name}" loaded!`);
+    showToast(`Deck "${savedDeck.name}" loaded!`, "success");
   };
 
   // DELETE DECK
   const handleDeleteDeck = (deckId) => {
-    if (!confirm("Are you sure you want to delete this deck?")) return;
+    const deckToDelete = savedDecks.find((d) => d.id === deckId);
 
-    const updated = savedDecks.filter((d) => d.id !== deckId);
-    setSavedDecks(updated);
-    localStorage.setItem("cyberpunk_decks", JSON.stringify(updated));
+    setConfirmModal({
+      title: "DELETE DECK",
+      message: `Are you sure you want to delete "${deckToDelete?.name}"? This cannot be undone.`,
+      onConfirm: () => {
+        const updated = savedDecks.filter((d) => d.id !== deckId);
+        setSavedDecks(updated);
+        localStorage.setItem("cyberpunk_decks", JSON.stringify(updated));
+        showToast("Deck deleted", "success");
+        setConfirmModal(null);
+      },
+      onCancel: () => setConfirmModal(null),
+    });
   };
 
   // LOAD PRECON DECK
-  const handleLoadPrecon = (preconId) => {
-    alert(`Loading ${preconId}... (To be implemented)`);
+  const handleLoadPrecon = (preconDeck) => {
+    const legends = [];
+    const mainDeck = [];
+
+    // Load legends
+    preconDeck.legends.forEach((legendName) => {
+      const card = cards.find((c) => {
+        const nameLower = c.name.toLowerCase();
+        const searchLower = legendName.toLowerCase();
+        if (nameLower === searchLower) return true;
+        if (c.subtitle) {
+          const fullName = `${c.name} (${c.subtitle})`.toLowerCase();
+          if (fullName === searchLower) return true;
+        }
+        return false;
+      });
+      if (card) legends.push(card);
+    });
+
+    // Load main deck
+    Object.entries(preconDeck.mainDeck).forEach(([cardName, count]) => {
+      const card = cards.find((c) => {
+        const nameLower = c.name.toLowerCase();
+        const searchLower = cardName.toLowerCase();
+        if (nameLower === searchLower) return true;
+        if (c.subtitle) {
+          const fullName = `${c.name} (${c.subtitle})`.toLowerCase();
+          if (fullName === searchLower) return true;
+        }
+        return false;
+      });
+      if (card) {
+        for (let i = 0; i < count; i++) {
+          mainDeck.push(card);
+        }
+      }
+    });
+
+    setDeck({ legends, mainDeck });
+
+    // Auto-filter by deck's RAM colors (clear all other filters first)
+    const deckRamColors = [
+      ...new Set(
+        [...legends, ...mainDeck].map((c) => c.ram_color).filter(Boolean),
+      ),
+    ];
+
+    setFilters({
+      types: [],
+      factions: [],
+      costMin: 0,
+      costMax: 9,
+      powerMin: 0,
+      powerMax: 15,
+      ramMin: 1,
+      ramMax: 5,
+      ramColors: deckRamColors,
+      keywords: [],
+      set: "",
+    });
+
+    // NO auto-open filters panel
+    // setFiltersOpen(true); <-- REMOVED
+
+    setActiveTab("build");
+    showToast(
+      `${preconDeck.name} loaded! Gallery filtered to deck colors.`,
+      "success",
+    );
+  };
+
+  // TOAST HELPER
+  const showToast = (message, type = "success") => {
+    setToast({ message, type });
+  };
+
+  // IMPORT DECK
+  const handleImportDeck = (importedDeck) => {
+    setDeck(importedDeck);
+    showToast(
+      `Deck imported: ${importedDeck.legends.length} Legends, ${importedDeck.mainDeck.length} cards`,
+      "success",
+    );
   };
 
   if (loading) {
@@ -288,12 +394,12 @@ function App() {
               />
 
               {/* Card Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-0">
                 {currentCards.map((card) => (
                   <div
                     key={card.id}
                     className="card-container hover:border-term-green transition-all duration-300 cursor-pointer group"
-                    onClick={() => handleAddCard(card)}
+                    onClick={() => setPreviewCard(card)}
                   >
                     {/* Card Image */}
                     <div className="relative overflow-hidden rounded mb-3 bg-term-gray-light">
@@ -375,10 +481,10 @@ function App() {
                       </div>
                     )}
 
-                    {/* Add Indicator */}
+                    {/* Preview Indicator */}
                     <div className="mt-3 text-center">
                       <span className="text-term-green text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity">
-                        [CLICK TO ADD]
+                        [CLICK TO PREVIEW]
                       </span>
                     </div>
                   </div>
@@ -426,23 +532,29 @@ function App() {
             {/* RIGHT COLUMN: DECK + ANALYTICS (1/3) */}
             <div className="lg:col-span-1">
               <div className="space-y-6">
-                {/* DECK AREA (con scroll independiente, incluye Analytics adentro) */}
                 <DeckArea
                   deck={deck}
                   onRemoveCard={handleRemoveCard}
                   onClearDeck={handleClearDeck}
                 />
 
-                {/* SAVE + EXPORT BUTTONS - FUERA DEL SCROLL */}
-                <div className="grid grid-cols-2 gap-3">
+                {/* SAVE + IMPORT + EXPORT BUTTONS */}
+                <div className="grid grid-cols-3 gap-2">
                   <button
                     onClick={() => setShowSaveModal(true)}
                     disabled={
                       deck.mainDeck.length === 0 && deck.legends.length === 0
                     }
-                    className="bg-term-green text-term-black px-4 py-3 rounded font-mono font-bold hover:bg-green-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="bg-term-green text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-green-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                   >
-                    [💾 SAVE]
+                    [SAVE]
+                  </button>
+
+                  <button
+                    onClick={() => setShowImportModal(true)}
+                    className="bg-term-blue text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-blue-400 transition-colors"
+                  >
+                    [IMPORT]
                   </button>
 
                   <button
@@ -452,9 +564,9 @@ function App() {
                       setShowExportModal(true);
                     }}
                     disabled={deck.mainDeck.length === 0}
-                    className="bg-term-amber text-term-black px-4 py-3 rounded font-mono font-bold hover:bg-yellow-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="bg-term-amber text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-yellow-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                   >
-                    [📋 EXPORT]
+                    [EXPORT]
                   </button>
                 </div>
               </div>
@@ -477,7 +589,7 @@ function App() {
         <PreconDecksView onLoadPrecon={handleLoadPrecon} />
       )}
 
-      {/* SAVE DECK MODAL */}
+      {/* MODALS */}
       {showSaveModal && (
         <SaveDeckModal
           deck={deck}
@@ -486,12 +598,44 @@ function App() {
         />
       )}
 
-      {/* EXPORT MODAL */}
       {showExportModal && (
         <ExportModal
           deck={deck}
           deckName={exportDeckName}
           onClose={() => setShowExportModal(false)}
+        />
+      )}
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
+      {confirmModal && (
+        <ConfirmModal
+          title={confirmModal.title}
+          message={confirmModal.message}
+          onConfirm={confirmModal.onConfirm}
+          onCancel={confirmModal.onCancel}
+        />
+      )}
+
+      {previewCard && (
+        <CardPreviewModal
+          card={previewCard}
+          onClose={() => setPreviewCard(null)}
+          onAddToDeck={handleAddCard}
+        />
+      )}
+
+      {showImportModal && (
+        <ImportDeckModal
+          allCards={cards}
+          onImport={handleImportDeck}
+          onClose={() => setShowImportModal(false)}
         />
       )}
 

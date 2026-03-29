@@ -1,0 +1,45 @@
+[
+  {
+    "id": "merc_starter",
+    "name": "Merc Starter Deck",
+    "faction": "MERC",
+    "description": "Alpha Kit Merc preconstructed deck",
+    "legends": ["Jackie Welles", "V (Corporate Exile)", "Viktor Vektor"],
+    "mainDeck": {
+      "Kiroshi Optics": 3,
+      "Mandibular Upgrade": 2,
+      "Floor It": 3,
+      "Reboot Optics": 3,
+      "Secondhand Bombus": 3,
+      "Delamain Cab": 3,
+      "MTOD12 Flathead": 2,
+      "Dying Night": 2,
+      "Evelyn Parker": 3,
+      "T-Bug": 3
+    }
+  },
+  {
+    "id": "arasaka_starter",
+    "name": "Arasaka Starter Deck",
+    "faction": "ARASAKA",
+    "description": "Alpha Kit Arasaka preconstructed deck",
+    "legends": [
+      "Yorinobu Arasaka",
+      "Goro Takemura (Hands Unclean)",
+      "Saburo Arasaka"
+    ],
+    "mainDeck": {
+      "Mantis Blades": 3,
+      "Satori": 2,
+      "Sandevistan": 2,
+      "Industrial Assembly": 3,
+      "Corporate Surveillance": 3,
+      "Corpo Security": 3,
+      "Ruthless Lowlife": 2,
+      "Swordwise Huscle": 3,
+      "Emergency Atlus": 3,
+      "Goro Takemura (Losing His Way)": 2,
+      "Armored Minotaur": 1
+    }
+  }
+]

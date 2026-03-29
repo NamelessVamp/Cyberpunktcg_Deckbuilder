@@ -64,41 +64,35 @@ export default function DeckArea({ deck, onRemoveCard, onClearDeck }) {
         </button>
       )}
 
-      {/* LEGENDS AREA */}
+      {/* LEGENDS AREA - VISUAL GALLERY */}
       <div className="mb-6 card-container">
         <h2 className="text-term-amber font-bold mb-3 font-mono">
           LEGENDS [{deck.legends.length}/3]
         </h2>
         <div className="grid grid-cols-3 gap-2">
-          {[0, 1, 2].map((index) => (
+          {deck.legends.map((legend) => (
             <div
-              key={index}
-              className={`border-2 border-dashed rounded p-2 h-32 flex items-center justify-center ${
-                deck.legends[index]
-                  ? "border-term-green bg-term-green/5"
-                  : "border-term-amber/30"
-              }`}
+              key={legend.id}
+              className="relative group cursor-pointer"
+              onClick={() => onRemoveCard(legend, "legends")}
             >
-              {deck.legends[index] ? (
-                <div className="text-center">
-                  <p className="text-term-green text-xs font-bold font-mono">
-                    {deck.legends[index].name}
-                  </p>
-                  <p className="text-term-amber/60 text-xs font-mono">
-                    {deck.legends[index].subtitle}
-                  </p>
-                  <button
-                    onClick={() => onRemoveCard(deck.legends[index], "legends")}
-                    className="text-term-red text-xs mt-2 hover:text-red-400 font-mono"
-                  >
+              <div className="relative overflow-hidden rounded border-2 border-term-green/50 hover:border-term-red transition-all">
+                <img
+                  src={legend.image_url}
+                  alt={legend.name}
+                  className="w-full h-auto"
+                  onError={(e) => {
+                    e.target.src =
+                      "https://via.placeholder.com/150x210/1a1a1a/00ff00?text=LEGEND";
+                  }}
+                />
+                {/* Remove Indicator */}
+                <div className="absolute inset-0 bg-term-red/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="text-white font-mono text-sm font-bold">
                     [REMOVE]
-                  </button>
+                  </span>
                 </div>
-              ) : (
-                <span className="text-term-amber/40 text-xs font-mono">
-                  EMPTY
-                </span>
-              )}
+              </div>
             </div>
           ))}
         </div>
@@ -135,8 +129,8 @@ export default function DeckArea({ deck, onRemoveCard, onClearDeck }) {
         </div>
       </div>
 
-      {/* MAIN DECK */}
-      <div className="flex-1 card-container overflow-hidden flex flex-col">
+      {/* MAIN DECK - VISUAL GALLERY */}
+      <div className="flex-1 card-container overflow-hidden flex flex-col mb-6">
         <h2 className="text-term-amber font-bold mb-3 font-mono">
           MAIN DECK [{deck.mainDeck.length}/40-50]
         </h2>
@@ -146,38 +140,49 @@ export default function DeckArea({ deck, onRemoveCard, onClearDeck }) {
               EMPTY // ADD CARDS FROM LEFT PANEL
             </p>
           ) : (
-            <div className="space-y-2">
+            <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
               {Object.entries(
                 deck.mainDeck.reduce((acc, card) => {
-                  if (!acc[card.id]) {
-                    acc[card.id] = { card, count: 0 };
-                  }
+                  acc[card.id] = acc[card.id] || { card, count: 0 };
                   acc[card.id].count++;
                   return acc;
                 }, {}),
-              ).map(([id, { card, count }]) => (
+              ).map(([cardId, { card, count }]) => (
                 <div
-                  key={id}
-                  className="flex items-center justify-between p-2 bg-term-gray-light rounded hover:bg-term-amber/5"
+                  key={cardId}
+                  className="relative group cursor-pointer"
+                  onClick={() => onRemoveCard(card, "main")}
                 >
-                  <div className="flex-1">
-                    <p
-                      className={`text-sm font-mono ${
-                        count > 3 ? "text-term-red" : "text-term-green"
-                      }`}
-                    >
-                      {count}x {card.name}
-                    </p>
-                    <p className="text-xs text-term-amber/60 font-mono">
-                      {card.type} // {card.faction || "NO FACTION"}
-                    </p>
+                  {/* Card Image */}
+                  <div className="relative overflow-hidden rounded border border-term-amber/30 hover:border-term-red transition-all">
+                    <img
+                      src={card.image_url}
+                      alt={card.name}
+                      className="w-full h-auto"
+                      onError={(e) => {
+                        e.target.src =
+                          "https://via.placeholder.com/150x210/1a1a1a/ffb300?text=ERROR";
+                      }}
+                    />
+                    {/* Count Badge */}
+                    {count > 1 && (
+                      <div className="absolute top-1 right-1 bg-term-amber text-term-black rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold font-mono shadow-lg">
+                        {count}
+                      </div>
+                    )}
+                    {/* Warning Badge for 4+ copies */}
+                    {count > 3 && (
+                      <div className="absolute top-1 left-1 bg-term-red text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+                        !
+                      </div>
+                    )}
+                    {/* Remove Indicator */}
+                    <div className="absolute inset-0 bg-term-red/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="text-white font-mono text-sm font-bold">
+                        [REMOVE]
+                      </span>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => onRemoveCard(card, "mainDeck")}
-                    className="text-term-red text-xs hover:text-red-400 font-mono"
-                  >
-                    [-]
-                  </button>
                 </div>
               ))}
             </div>
@@ -186,7 +191,7 @@ export default function DeckArea({ deck, onRemoveCard, onClearDeck }) {
       </div>
 
       {/* VALIDATIONS */}
-      <div className="mt-6 card-container">
+      <div className="card-container mb-6">
         <h2 className="text-term-amber font-bold mb-3 font-mono">
           VALIDATOR.SYS
         </h2>
@@ -224,7 +229,7 @@ export default function DeckArea({ deck, onRemoveCard, onClearDeck }) {
 
       {/* ANALYTICS TOGGLE */}
       {deck.mainDeck.length > 0 && (
-        <div className="mt-6">
+        <div>
           <button
             onClick={() => setShowAnalytics(!showAnalytics)}
             className="w-full mb-3 bg-term-gray border border-term-amber/40 text-term-amber px-3 py-2 rounded font-mono text-sm font-bold hover:bg-term-amber/10 transition-colors"
