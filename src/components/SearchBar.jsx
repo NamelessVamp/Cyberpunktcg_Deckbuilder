@@ -1,37 +1,56 @@
-import { useState, useEffect } from 'react';
+import { useState } from "react";
 
-export default function SearchBar({ onSearch, onToggleFilters, filtersOpen }) {
-  const [inputValue, setInputValue] = useState('');
+export default function SearchBar({
+  onSearch,
+  onToggleFilters,
+  filtersOpen,
+  onCloseFilters,
+}) {
+  const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onSearch(inputValue);
-    }, 300);
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    onSearch(e.target.value);
 
-    return () => clearTimeout(timer);
-  }, [inputValue, onSearch]);
+    // Close filters when user starts typing
+    if (e.target.value && filtersOpen && onCloseFilters) {
+      onCloseFilters();
+    }
+  };
+
+  const handleClear = () => {
+    setSearch("");
+    onSearch("");
+  };
 
   return (
-    <div className="mb-6 flex gap-3">
-      {/* SEARCH INPUT */}
-      <input 
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        placeholder="SEARCH_CARDS.EXE // NAME, TEXT, KEYWORDS..."
-        className="input-terminal flex-1 text-lg"
-      />
-      
-      {/* TOGGLE FILTERS BUTTON */}
+    <div className="mb-4 flex gap-2">
+      <div className="flex-1 relative">
+        <input
+          type="text"
+          value={search}
+          onChange={handleSearch}
+          placeholder="SEARCH_CARDS.EXE // NAME, TEXT, KEYWORDS..."
+          className="input-terminal w-full pr-10"
+        />
+        {search && (
+          <button
+            onClick={handleClear}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-term-red hover:text-term-red/80 transition-colors font-mono font-bold"
+          >
+            ✕
+          </button>
+        )}
+      </div>
       <button
         onClick={onToggleFilters}
-        className={`px-6 py-2 rounded font-mono font-bold transition-colors ${
-          filtersOpen 
-            ? 'bg-term-green text-term-black' 
-            : 'bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10'
+        className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
+          filtersOpen
+            ? "bg-term-amber text-term-black"
+            : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
         }`}
       >
-        {filtersOpen ? '[HIDE]' : '[☰ FILTERS]'}
+        {filtersOpen ? "[HIDE]" : "[FILTERS]"}
       </button>
     </div>
   );

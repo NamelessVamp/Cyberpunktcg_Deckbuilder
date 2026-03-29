@@ -1,6 +1,7 @@
 import json
 import re
 import time
+from pathlib import Path
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -11,7 +12,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 BASE_URL = "https://cyberpunktcg.com"
 CARDS_URL = f"{BASE_URL}/cards"
-OUTPUT_FILE = "src/data/cards.json"
+
+# FIX: Path correcto desde scripts/ hacia src/data/
+SCRIPT_DIR = Path(__file__).resolve().parent  # scripts/
+PROJECT_ROOT = SCRIPT_DIR.parent  # Cyberpunktcg_Deckbuilder/
+OUTPUT_FILE = PROJECT_ROOT / "src" / "data" / "cards.json"
 
 # Valid factions (hardcoded from game knowledge)
 VALID_FACTIONS = {
@@ -220,7 +225,9 @@ def parse_card_page(driver, url):
 
 
 def main():
-    print("🔥 CYBERPUNK TCG SCRAPER v2.2 (Set/Number/Artist Fix)")
+    print("🔥 CYBERPUNK TCG SCRAPER v2.3 (Path Fix)")
+    print("=" * 50)
+    print(f"📂 Output: {OUTPUT_FILE}")
     print("=" * 50)
 
     driver = setup_driver()
@@ -241,17 +248,15 @@ def main():
             time.sleep(1)
 
         # Save to JSON
-        import os
-
-        output_dir = os.path.dirname(OUTPUT_FILE)
-        if output_dir and not os.path.exists(output_dir):
-            os.makedirs(output_dir)
+        output_dir = OUTPUT_FILE.parent
+        output_dir.mkdir(parents=True, exist_ok=True)
 
         print(f"\n💾 Saving to {OUTPUT_FILE}...")
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
             json.dump(cards, f, indent=2, ensure_ascii=False)
 
-        print(f"✅ COMPLETE! {len(cards)} cards saved.")
+        print(f"✅ COMPLETE! {len(cards)} cards saved to:")
+        print(f"   {OUTPUT_FILE.absolute()}")
 
     finally:
         driver.quit()

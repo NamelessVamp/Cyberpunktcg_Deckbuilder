@@ -303,13 +303,12 @@ function App() {
 
     setDeck({ legends, mainDeck });
 
-    // Auto-filter by deck's RAM colors (clear all other filters first)
+    // RESTRICTIVE AUTO-FILTER: Extract RAM colors from LEGENDS ONLY
     const deckRamColors = [
-      ...new Set(
-        [...legends, ...mainDeck].map((c) => c.ram_color).filter(Boolean),
-      ),
+      ...new Set(legends.map((c) => c.ram_color).filter(Boolean)),
     ];
 
+    // Clear all filters and apply ONLY deck RAM colors
     setFilters({
       types: [],
       factions: [],
@@ -324,12 +323,9 @@ function App() {
       set: "",
     });
 
-    // NO auto-open filters panel
-    // setFiltersOpen(true); <-- REMOVED
-
     setActiveTab("build");
     showToast(
-      `${preconDeck.name} loaded! Gallery filtered to deck colors.`,
+      `${preconDeck.name} loaded! Gallery filtered to ${deckRamColors.join(" + ")} cards only.`,
       "success",
     );
   };
@@ -385,10 +381,12 @@ function App() {
                 onSearch={setSearchTerm}
                 onToggleFilters={() => setFiltersOpen(!filtersOpen)}
                 filtersOpen={filtersOpen}
+                onCloseFilters={() => setFiltersOpen(false)}
               />
 
               <FilterPanel
                 cards={cards}
+                filters={filters}
                 onFilterChange={setFilters}
                 isOpen={filtersOpen}
               />
@@ -495,9 +493,10 @@ function App() {
               {totalPages > 1 && (
                 <div className="mt-6 flex items-center justify-center gap-4">
                   <button
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.max(prev - 1, 1))
-                    }
+                    onClick={() => {
+                      setCurrentPage((prev) => Math.max(prev - 1, 1));
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                     disabled={currentPage === 1}
                     className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
                       currentPage === 1
@@ -513,9 +512,10 @@ function App() {
                   </span>
 
                   <button
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                    }
+                    onClick={() => {
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                     disabled={currentPage === totalPages}
                     className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
                       currentPage === totalPages
@@ -531,7 +531,7 @@ function App() {
 
             {/* RIGHT COLUMN: DECK + ANALYTICS (1/3) */}
             <div className="lg:col-span-1">
-              <div className="space-y-6">
+              <div className="lg:sticky lg:top-8 space-y-6">
                 <DeckArea
                   deck={deck}
                   onRemoveCard={handleRemoveCard}
