@@ -50,7 +50,8 @@ export default function DeckArea({
             {deck.legends.map((legend, idx) => (
               <div
                 key={idx}
-                className="relative group cursor-pointer hover:scale-105 transition-transform"
+                className="relative group cursor-pointer"
+                onClick={() => onRemoveCard(legend, "legends")}
               >
                 <img
                   src={legend.image_url}
@@ -61,12 +62,13 @@ export default function DeckArea({
                       "https://via.placeholder.com/300x420/1a1a1a/ffb300?text=NO+IMAGE";
                   }}
                 />
-                <button
-                  onClick={() => onRemoveCard(legend, "legends")}
-                  className="absolute top-1 right-1 bg-term-red text-white rounded-full w-6 h-6 flex items-center justify-center font-bold hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
-                >
-                  ✕
-                </button>
+
+                {/* Remove Overlay */}
+                <div className="absolute inset-0 bg-term-red/60 rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="text-white font-bold text-lg font-mono">
+                    [REMOVE]
+                  </span>
+                </div>
               </div>
             ))}
           </div>
@@ -128,28 +130,51 @@ export default function DeckArea({
 
         {deck.mainDeck.length > 0 ? (
           <div className="grid grid-cols-4 gap-2 max-h-96 overflow-y-auto">
-            {deck.mainDeck.map((card, idx) => (
-              <div
-                key={idx}
-                className="relative group cursor-pointer hover:scale-105 transition-transform"
-              >
-                <img
-                  src={card.image_url}
-                  alt={card.name}
-                  className="w-full rounded border-2 border-term-green/40 group-hover:border-term-green transition-colors"
-                  onError={(e) => {
-                    e.target.src =
-                      "https://via.placeholder.com/300x420/1a1a1a/ffb300?text=NO+IMAGE";
-                  }}
-                />
-                <button
+            {(() => {
+              // Group cards by ID and count
+              const cardCounts = deck.mainDeck.reduce((acc, card) => {
+                if (!acc[card.id]) {
+                  acc[card.id] = { card, count: 0 };
+                }
+                acc[card.id].count++;
+                return acc;
+              }, {});
+
+              // Get unique cards
+              const uniqueCards = Object.values(cardCounts);
+
+              return uniqueCards.map(({ card, count }) => (
+                <div
+                  key={card.id}
+                  className="relative group cursor-pointer"
                   onClick={() => onRemoveCard(card, "mainDeck")}
-                  className="absolute top-1 right-1 bg-term-red text-white rounded-full w-6 h-6 flex items-center justify-center font-bold hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
                 >
-                  ✕
-                </button>
-              </div>
-            ))}
+                  <img
+                    src={card.image_url}
+                    alt={card.name}
+                    className="w-full rounded border-2 border-term-green/40 group-hover:border-term-green transition-colors"
+                    onError={(e) => {
+                      e.target.src =
+                        "https://via.placeholder.com/300x420/1a1a1a/ffb300?text=NO+IMAGE";
+                    }}
+                  />
+
+                  {/* Count Badge */}
+                  {count > 1 && (
+                    <div className="absolute top-2 right-2 bg-term-amber text-term-black rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg border-2 border-term-black shadow-lg pointer-events-none">
+                      {count}
+                    </div>
+                  )}
+
+                  {/* Remove Overlay */}
+                  <div className="absolute inset-0 bg-term-red/60 rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span className="text-white font-bold text-lg font-mono">
+                      [REMOVE]
+                    </span>
+                  </div>
+                </div>
+              ));
+            })()}
           </div>
         ) : (
           <p className="text-term-green/40 text-sm font-mono italic">
