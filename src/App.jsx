@@ -7,20 +7,27 @@ import DeckTabs from "./components/DeckTabs";
 import SaveDeckModal from "./components/SaveDeckModal";
 import MyDecksView from "./components/MyDecksView";
 import PreconDecksView from "./components/PreconDecksView";
+import DeckAnalytics from "./components/DeckAnalytics";
+import ExportModal from "./components/ExportModal";
 
 function App() {
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [exportDeckName, setExportDeckName] = useState("");
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
-    type: "",
-    faction: "",
+    types: [], // CAMBIADO de "type" a "types"
+    factions: [],
     costMin: 0,
     costMax: 9,
     powerMin: 0,
     powerMax: 15,
     ramMin: 1,
     ramMax: 5,
+    ramColors: [],
+    keywords: [],
+    set: "",
   });
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [deck, setDeck] = useState({
@@ -67,26 +74,48 @@ function App() {
       if (!matchesSearch) return false;
     }
 
-    // FILTRO 2: TYPE
-    if (filters.type && card.type !== filters.type) return false;
+    // FILTRO 2: TYPE (multi-select)
+    if (filters.types && filters.types.length > 0) {
+      if (!filters.types.includes(card.type)) return false;
+    }
 
-    // FILTRO 3: FACTION
-    if (filters.faction && card.faction !== filters.faction) return false;
+    // FILTRO 3: FACTION (multi-select)
+    if (filters.factions && filters.factions.length > 0) {
+      if (!filters.factions.includes(card.faction)) return false;
+    }
 
-    // FILTRO 4: COST
+    // FILTRO 4: SET - NUEVO
+    if (filters.set && card.set !== filters.set) return false;
+
+    // FILTRO 5: KEYWORDS - NUEVO
+    if (filters.keywords && filters.keywords.length > 0) {
+      const cardKeywords = card.keywords || [];
+      // Card must have ALL selected keywords
+      const hasAllKeywords = filters.keywords.every((keyword) =>
+        cardKeywords.includes(keyword),
+      );
+      if (!hasAllKeywords) return false;
+    }
+
+    // FILTRO 6: COST
     if (card.cost !== undefined) {
       if (card.cost < filters.costMin || card.cost > filters.costMax)
         return false;
     }
 
-    // FILTRO 5: POWER
+    // FILTRO 7: POWER
     if (card.power !== undefined) {
       if (card.power < filters.powerMin || card.power > filters.powerMax)
         return false;
     }
 
-    // FILTRO 6: RAM
+    // FILTRO 8: RAM
     if (card.ram < filters.ramMin || card.ram > filters.ramMax) return false;
+
+    // FILTRO 9: RAM COLOR
+    if (filters.ramColors && filters.ramColors.length > 0) {
+      if (!filters.ramColors.includes(card.ram_color)) return false;
+    }
 
     return true;
   });
@@ -164,6 +193,14 @@ function App() {
       });
     }
   };
+  // CLEAR ENTIRE DECK
+  const handleClearDeck = () => {
+    setDeck({
+      legends: [],
+      mainDeck: [],
+    });
+  };
+
   // SAVE DECK
   const handleSaveDeck = (deckName) => {
     const newDeck = {
@@ -202,7 +239,6 @@ function App() {
 
   // LOAD PRECON DECK
   const handleLoadPrecon = (preconId) => {
-    // TODO: Implementar carga de precon decks desde PDFs
     alert(`Loading ${preconId}... (To be implemented)`);
   };
 
@@ -215,6 +251,7 @@ function App() {
       </div>
     );
   }
+
   return (
     <div className="min-h-screen p-8">
       {/* Header */}
@@ -234,24 +271,9 @@ function App() {
       {/* CONTENT BY TAB */}
       {activeTab === "build" && (
         <>
-          {/* SAVE DECK BUTTON */}
-          <div className="mb-4 flex justify-end">
-            <button
-              onClick={() => setShowSaveModal(true)}
-              disabled={deck.legends.length === 0 && deck.mainDeck.length === 0}
-              className={`px-6 py-2 rounded font-mono font-bold transition-colors ${
-                deck.legends.length === 0 && deck.mainDeck.length === 0
-                  ? "bg-term-gray border border-term-amber/20 text-term-amber/40 cursor-not-allowed"
-                  : "bg-term-green text-term-black hover:bg-green-400"
-              }`}
-            >
-              [💾 SAVE DECK]
-            </button>
-          </div>
-
           {/* 2 COLUMN LAYOUT */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* LEFT COLUMN: CARD BROWSER */}
+            {/* LEFT COLUMN: CARD BROWSER (2/3) */}
             <div className="lg:col-span-2">
               <SearchBar
                 onSearch={setSearchTerm}
@@ -401,10 +423,40 @@ function App() {
               )}
             </div>
 
-            {/* RIGHT COLUMN: DECK AREA */}
+            {/* RIGHT COLUMN: DECK + ANALYTICS (1/3) */}
             <div className="lg:col-span-1">
-              <div className="sticky top-8">
-                <DeckArea deck={deck} onRemoveCard={handleRemoveCard} />
+              <div className="space-y-6">
+                {/* DECK AREA (con scroll independiente, incluye Analytics adentro) */}
+                <DeckArea
+                  deck={deck}
+                  onRemoveCard={handleRemoveCard}
+                  onClearDeck={handleClearDeck}
+                />
+
+                {/* SAVE + EXPORT BUTTONS - FUERA DEL SCROLL */}
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setShowSaveModal(true)}
+                    disabled={
+                      deck.mainDeck.length === 0 && deck.legends.length === 0
+                    }
+                    className="bg-term-green text-term-black px-4 py-3 rounded font-mono font-bold hover:bg-green-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    [💾 SAVE]
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      const name = prompt("Deck name for export?") || "My Deck";
+                      setExportDeckName(name);
+                      setShowExportModal(true);
+                    }}
+                    disabled={deck.mainDeck.length === 0}
+                    className="bg-term-amber text-term-black px-4 py-3 rounded font-mono font-bold hover:bg-yellow-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    [📋 EXPORT]
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -431,6 +483,15 @@ function App() {
           deck={deck}
           onSave={handleSaveDeck}
           onClose={() => setShowSaveModal(false)}
+        />
+      )}
+
+      {/* EXPORT MODAL */}
+      {showExportModal && (
+        <ExportModal
+          deck={deck}
+          deckName={exportDeckName}
+          onClose={() => setShowExportModal(false)}
         />
       )}
 

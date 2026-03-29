@@ -1,4 +1,9 @@
-export default function DeckArea({ deck, onRemoveCard }) {
+import { useState } from "react";
+import DeckAnalytics from "./DeckAnalytics";
+
+export default function DeckArea({ deck, onRemoveCard, onClearDeck }) {
+  const [showAnalytics, setShowAnalytics] = useState(true);
+
   // Calcular RAM budget dinámico
   const ramBudget = deck.legends.reduce(
     (acc, legend) => {
@@ -48,7 +53,17 @@ export default function DeckArea({ deck, onRemoveCard }) {
     validations.copies.valid;
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="card-container max-h-[calc(100vh-200px)] overflow-y-auto">
+      {/* DELETE ALL BUTTON */}
+      {(deck.legends.length > 0 || deck.mainDeck.length > 0) && (
+        <button
+          onClick={onClearDeck}
+          className="w-full mb-4 bg-term-red/20 border border-term-red/40 text-term-red px-3 py-2 rounded font-mono text-sm font-bold hover:bg-term-red/30 transition-colors"
+        >
+          [🗑️ DELETE ALL]
+        </button>
+      )}
+
       {/* LEGENDS AREA */}
       <div className="mb-6 card-container">
         <h2 className="text-term-amber font-bold mb-3 font-mono">
@@ -206,6 +221,20 @@ export default function DeckArea({ deck, onRemoveCard }) {
           </div>
         )}
       </div>
+
+      {/* ANALYTICS TOGGLE */}
+      {deck.mainDeck.length > 0 && (
+        <div className="mt-6">
+          <button
+            onClick={() => setShowAnalytics(!showAnalytics)}
+            className="w-full mb-3 bg-term-gray border border-term-amber/40 text-term-amber px-3 py-2 rounded font-mono text-sm font-bold hover:bg-term-amber/10 transition-colors"
+          >
+            [{showAnalytics ? "▼ HIDE" : "▶ SHOW"} ANALYTICS]
+          </button>
+
+          {showAnalytics && <DeckAnalytics deck={deck} />}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,0 +1,140 @@
+{
+  "metadata": {
+    "simulator_url": "https://cyberpunk-tcg-sim.online",
+    "engine": "PixiJS 8.17.1",
+    "build_tool": "Vite",
+    "networking": "WebSockets (Colyseus)",
+    "storage": "localStorage"
+  },
+  "localStorage_keys": {
+    "lastUsedDeckId": "cyberpunk-tcg-sim.lastUsedDeckId",
+    "lastUsedHotseatDecks": "cyberpunk-tcg-sim.lastUsedHotseatDecks",
+    "activeFontThemeId": "cyberpunk-tcg-sim.activeFontThemeId"
+  },
+  "deck_ids": {
+    "merc": "alpha-kit-merc-deck",
+    "arasaka": "alpha-kit-arasaka-deck"
+  },
+  "deck_format_inference": {
+    "description": "Basado en localStorage values encontrados en screenshots",
+    "structure": {
+      "player1": "alpha-kit-merc-deck",
+      "player2": "alpha-kit-arasaka-deck"
+    },
+    "localStorage_example": {
+      "key": "cyberpunk-tcg-sim.lastUsedHotseatDecks",
+      "value_format": "{\"player1\":\"alpha-kit-merc-deck\",\"player2\":\"...\"}"
+    }
+  },
+  "precon_decks": {
+    "alpha-kit-merc-deck": {
+      "name": "Mercs Deck - Alpha Kit",
+      "cards": 27,
+      "legends": 3,
+      "source": "Alpha Kit 2026"
+    },
+    "alpha-kit-arasaka-deck": {
+      "name": "Arasaka Deck - Alpha Kit",
+      "cards": 27,
+      "legends": 3,
+      "source": "Alpha Kit 2026"
+    }
+  },
+  "panel_names": [
+    "opponentHand",
+    "log",
+    "hand",
+    "gameInfo",
+    "actionPanel",
+    "preview",
+    "legends",
+    "eddies",
+    "deck",
+    "trash",
+    "dice",
+    "gigs",
+    "field",
+    "opponentLegends",
+    "opponentEddies",
+    "opponentDeck",
+    "opponentTrash",
+    "opponentDice",
+    "opponentGigs",
+    "opponentField"
+  ],
+  "game_zones": {
+    "friendly": [
+      "hand",
+      "legends",
+      "eddies",
+      "deck",
+      "trash",
+      "dice",
+      "gigs",
+      "field"
+    ],
+    "opponent": [
+      "opponentHand",
+      "opponentLegends",
+      "opponentEddies",
+      "opponentDeck",
+      "opponentTrash",
+      "opponentDice",
+      "opponentGigs",
+      "opponentField"
+    ]
+  },
+  "game_stages": {
+    "setup": [
+      "turn_order_selection",
+      "deck_selection",
+      "opening_hand_selection"
+    ],
+    "gameplay": [
+      "player_turn",
+      "ready_roll",
+      "game_over"
+    ]
+  },
+  "export_format_recommendation": {
+    "description": "Formato compatible con el simulador",
+    "format": "deck_id",
+    "examples": {
+      "simple": "alpha-kit-merc-deck",
+      "hotseat": {
+        "player1": "alpha-kit-merc-deck",
+        "player2": "alpha-kit-arasaka-deck"
+      }
+    },
+    "integration_method": "localStorage",
+    "implementation": "\n// En nuestro deck builder, exportar como:\nconst deckExport = {\n  id: 'custom-deck-' + Date.now(),\n  name: deckName,\n  cards: mainDeck.length,\n  legends: legends.length,\n  // Estructura interna del simulador (inferida)\n  deck: {\n    legends: legends.map(l => l.id),\n    mainDeck: mainDeck.map(c => c.id)\n  }\n}\n\n// Para cargar en simulador:\nlocalStorage.setItem(\n  'cyberpunk-tcg-sim.lastUsedDeckId',\n  deckExport.id\n);\n        "
+  },
+  "next_steps": {
+    "phase_1": "Implementar export b\u00e1sico (deck_id solo)",
+    "phase_1_5": "Reverse-engineer formato completo de mazos",
+    "phase_2": "Implementar import/export bidireccional",
+    "phase_3": "Agregar bot\u00f3n 'Open in Simulator' con deep linking"
+  },
+  "competitive_analysis": {
+    "strengths": [
+      "Online multiplayer funcional",
+      "Sandbox mode (hot seat)",
+      "WebSocket para tiempo real",
+      "2 mazos precargados (Alpha Kit)"
+    ],
+    "weaknesses": [
+      "No deck builder integrado",
+      "Solo 2 mazos disponibles",
+      "No validaci\u00f3n de reglas visible",
+      "No analytics de mazo"
+    ],
+    "our_advantages": [
+      "Deck builder completo",
+      "Validador RAM din\u00e1mico",
+      "Analytics en tiempo real",
+      "Save/Load/Export",
+      "GitHub Pages (gratis)",
+      "Offline-first"
+    ]
+  }
+}

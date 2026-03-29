@@ -5,11 +5,9 @@ import time
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from webdriver_manager.chrome import ChromeDriverManager
 
 BASE_URL = "https://cyberpunktcg.com"
 CARDS_URL = f"{BASE_URL}/cards"
@@ -42,15 +40,16 @@ VALID_FACTIONS = {
 
 
 def setup_driver():
-    """Setup Chrome driver con opciones headless."""
+    """Setup Chrome driver sin dependencias externas innecesarias."""
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    # En versiones modernas de Selenium, no necesitas Service(ChromeDriverManager().install())
+    # Selenium buscará Chrome automáticamente en tu sistema.
+    driver = webdriver.Chrome(options=chrome_options)
     return driver
 
 

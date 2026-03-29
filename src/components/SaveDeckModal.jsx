@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 export default function SaveDeckModal({ deck, onSave, onClose }) {
-  const [deckName, setDeckName] = useState("");
+  const [deckName, setDeckName] = useState('');
 
   const handleSave = () => {
     if (!deckName.trim()) {
-      alert("Please enter a deck name");
+      alert('Please enter a deck name');
       return;
     }
     onSave(deckName.trim());

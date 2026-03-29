@@ -39,16 +39,11 @@ export default function MyDecksView({ savedDecks, onLoadDeck, onDeleteDeck }) {
 
           {/* Legend Preview */}
           <div className="mb-3 pb-3 border-b border-term-amber/20">
-            <p className="text-term-green/60 text-xs mb-1 font-mono">
-              LEGENDS:
-            </p>
+            <p className="text-term-green/60 text-xs mb-1 font-mono">LEGENDS:</p>
             {savedDeck.deck.legends.length > 0 ? (
               <div className="space-y-1">
                 {savedDeck.deck.legends.map((legend, idx) => (
-                  <p
-                    key={idx}
-                    className="text-term-amber text-xs font-mono truncate"
-                  >
+                  <p key={idx} className="text-term-amber text-xs font-mono truncate">
                     • {legend.name}
                   </p>
                 ))}

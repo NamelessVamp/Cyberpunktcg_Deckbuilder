@@ -1,25 +1,25 @@
 export default function PreconDecksView({ onLoadPrecon }) {
   const preconDecks = [
     {
-      id: "alpha-merc",
-      name: "Alpha Kit: Merc Deck",
-      description: "30-card starter deck focused on aggressive Merc tactics",
-      color: "Red/Green",
+      id: 'alpha-merc',
+      name: 'Alpha Kit: Merc Deck',
+      description: '30-card starter deck focused on aggressive Merc tactics',
+      color: 'Red/Green'
     },
     {
-      id: "alpha-arasaka",
-      name: "Alpha Kit: Arasaka Deck",
-      description: "30-card starter deck focused on Arasaka control",
-      color: "Blue/Yellow",
-    },
+      id: 'alpha-arasaka',
+      name: 'Alpha Kit: Arasaka Deck',
+      description: '30-card starter deck focused on Arasaka control',
+      color: 'Blue/Yellow'
+    }
   ];
 
   return (
     <div>
       <div className="mb-6 p-4 bg-term-amber/10 border border-term-amber/40 rounded">
         <p className="text-term-amber text-sm font-mono">
-          ⚠️ NOTE: Alpha Kit decks are 30 cards and may not follow standard deck
-          building rules. They are intended for learning and playtesting only.
+          ⚠️ NOTE: Alpha Kit decks are 30 cards and may not follow standard deck building rules.
+          They are intended for learning and playtesting only.
         </p>
       </div>
 

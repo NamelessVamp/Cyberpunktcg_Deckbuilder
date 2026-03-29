@@ -2,39 +2,135 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply bg-term-black text-term-amber font-mono;
+:root {
+  --term-black: #0a0a0a;
+  --term-gray: #1a1a1a;
+  --term-gray-light: #2a2a2a;
+  --term-green: #00ff41;
+  --term-amber: #ffb300;
+  --term-red: #ff1744;
+  --term-blue: #00e5ff;
+}
+
+body {
+  background-color: var(--term-black);
+  color: var(--term-green);
+  font-family: "Courier New", monospace;
+}
+
+/* Card Container */
+.card-container {
+  background: var(--term-gray);
+  border: 2px solid rgba(255, 179, 0, 0.2);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.card-container:hover {
+  border-color: var(--term-green);
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--term-gray);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--term-amber);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--term-green);
+}
+
+/* Selection */
+::selection {
+  background: var(--term-green);
+  color: var(--term-black);
+}
+
+/* Animations */
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 
-@layer components {
-  .card-container {
-    @apply bg-term-gray border border-term-amber/20 rounded-lg p-4;
-  }
-
-  .btn-primary {
-    @apply bg-term-amber text-term-black px-4 py-2 rounded font-bold hover:bg-term-green transition-colors;
-  }
-
-  .input-terminal {
-    @apply bg-term-gray border border-term-amber/40 text-term-green px-3 py-2 rounded focus:outline-none focus:border-term-green;
-  }
-}
-
-@layer utilities {
-  .animate-slideDown {
-    animation: slideDown 0.3s ease-out;
-  }
-}
-
-@keyframes slideDown {
+@keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(-10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Focus styles */
+button:focus,
+input:focus,
+select:focus {
+  outline: 2px solid var(--term-green);
+  outline-offset: 2px;
+}
+
+/* Disabled states */
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color, opacity;
+  transition-duration: 150ms;
+  transition-timing-function: ease-in-out;
+}
+/* Input styles */
+.input-terminal {
+  background-color: var(--term-gray);
+  color: var(--term-amber);
+  border: 1px solid rgba(255, 179, 0, 0.3);
+  border-radius: 4px;
+  padding: 0.5rem;
+  font-family: "Courier New", monospace;
+}
+
+.input-terminal:focus {
+  outline: 2px solid var(--term-amber);
+  outline-offset: 2px;
+  border-color: var(--term-amber);
 }
