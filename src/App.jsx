@@ -14,6 +14,7 @@ import Toast from "./components/Toast";
 import ConfirmModal from "./components/ConfirmModal";
 import CardPreviewModal from "./components/CardPreviewModal";
 import ImportDeckModal from "./components/ImportDeckModal";
+import MulliganSimulator from "./components/MulliganSimulator";
 
 // DECK ENCODING/DECODING UTILITIES
 const encodeDeck = (deck) => {
@@ -876,6 +877,11 @@ function App() {
       {/* PRECON DECKS TAB */}
       {activeTab === "precon" && (
         <PreconDecksView onLoadPrecon={handleLoadPrecon} />
+      )}
+
+      {/* PRACTICE TAB */}
+      {activeTab === "practice" && (
+        <MulliganSimulator deck={deck} allCards={cards} />
       )}
 
       {/* MODALS */}
