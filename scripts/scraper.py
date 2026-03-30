@@ -61,7 +61,7 @@ def setup_driver():
 def extract_card_links(driver):
     """Extrae todos los links de cartas."""
     driver.get(CARDS_URL)
-    time.sleep(3)
+    time.sleep(10)
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
     links = []

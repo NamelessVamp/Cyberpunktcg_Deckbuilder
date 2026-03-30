@@ -16,6 +16,8 @@ import CardPreviewModal from "./components/CardPreviewModal";
 import ImportDeckModal from "./components/ImportDeckModal";
 import MulliganSimulator from "./components/MulliganSimulator";
 import PackOpener from "./components/PackOpener";
+import { useAuth } from "./contexts/AuthContext";
+import LoginModal from "./components/LoginModal";
 
 // DECK ENCODING/DECODING UTILITIES
 const encodeDeck = (deck) => {
@@ -85,6 +87,8 @@ function App() {
   const cardsPerPage = 18;
   const [previewCard, setPreviewCard] = useState(null);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { user, signOut } = useAuth();
   const [showAnalytics, setShowAnalytics] = useState(false); // ← RESTAURADO
 
   useEffect(() => {
@@ -622,13 +626,53 @@ function App() {
       <div className="relative z-10 p-8">
         {/* Header */}
         <header className="mb-8 border-b border-term-amber/20 pb-4">
-          <h1 className="text-4xl font-bold text-term-amber mb-2 font-mono">
-            CYBERPUNK TCG // DECK_BUILDER.EXE
-          </h1>
-          <p className="text-term-green font-mono">
-            [{filteredCards.length} / {cards.length} CARDS] // [ALPHA/BETA KIT
-            2026]
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-term-amber mb-2 font-mono">
+                CYBERPUNK TCG // DECK_BUILDER.EXE
+              </h1>
+              <p className="text-term-green font-mono">
+                [{filteredCards.length} / {cards.length} CARDS] // [ALPHA/BETA
+                KIT 2026]
+              </p>
+            </div>
+
+            {/* User Profile / Login */}
+            <div>
+              {user ? (
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <p className="text-term-amber font-mono text-sm">
+                      {user.user_metadata?.full_name || user.email}
+                    </p>
+                    <p className="text-term-green/60 font-mono text-xs">
+                      [NETRUNNER ONLINE]
+                    </p>
+                  </div>
+                  {user.user_metadata?.avatar_url && (
+                    <img
+                      src={user.user_metadata.avatar_url}
+                      alt="Avatar"
+                      className="w-10 h-10 rounded-full border-2 border-term-amber"
+                    />
+                  )}
+                  <button
+                    onClick={signOut}
+                    className="bg-term-red/20 border border-term-red text-term-red px-3 py-2 rounded font-mono text-sm hover:bg-term-red/30 transition-colors"
+                  >
+                    [LOGOUT]
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className="bg-term-amber text-term-black px-6 py-3 rounded font-mono font-bold hover:bg-yellow-400 transition-colors"
+                >
+                  [LOGIN / REGISTER]
+                </button>
+              )}
+            </div>
+          </div>
         </header>
 
         {/* TABS */}
@@ -923,6 +967,10 @@ function App() {
           />
         )}
 
+        {showLoginModal && (
+          <LoginModal onClose={() => setShowLoginModal(false)} />
+        )}
+
         {/* Footer */}
         <footer className="mt-12 text-center text-term-amber/40 text-sm font-mono space-y-2">
           <div className="text-xs">
@@ -945,6 +993,9 @@ function App() {
             Close
           </div>
           <div>// NAMELESS_V4MP</div>
+          <a href="/privacy" className="hover:underline">
+            Política de Privacidad
+          </a>
         </footer>
       </div>
     </div>
