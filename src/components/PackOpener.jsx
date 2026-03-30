@@ -248,10 +248,6 @@ export default function PackOpener({ allCards }) {
     }
   };
 
-  const handleViewCollection = () => {
-    console.log("Collection viewer - coming soon");
-  };
-
   return (
     <div className="max-w-5xl mx-auto">
       {/* Terminal Header */}
@@ -383,16 +379,6 @@ export default function PackOpener({ allCards }) {
               24 packs • Pack-by-pack
             </div>
           </div>
-        </button>
-      </div>
-
-      {/* View Collection Button */}
-      <div className="text-center">
-        <button
-          onClick={handleViewCollection}
-          className="bg-term-amber/20 border-2 border-term-amber text-term-amber py-3 px-8 rounded-lg font-mono font-bold hover:bg-term-amber/30 transition-all"
-        >
-          [📋 VIEW COLLECTION]
         </button>
       </div>
 
