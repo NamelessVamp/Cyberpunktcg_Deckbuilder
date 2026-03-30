@@ -18,8 +18,8 @@ body {
   font-family: "Courier New", monospace;
 }
 
-/* Card Container */
-.card-container {
+/* Card Container - DECK BUILDER */
+.deck-card-container {
   background: var(--term-gray);
   border: 2px solid rgba(255, 179, 0, 0.2);
   border-radius: 4px;
@@ -27,7 +27,7 @@ body {
   transition: all 0.3s ease;
 }
 
-.card-container:hover {
+.deck-card-container:hover {
   border-color: var(--term-green);
   box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
 }
@@ -57,7 +57,6 @@ body {
 }
 
 /* Animations */
-
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -135,6 +134,7 @@ button:disabled {
   transition-duration: 150ms;
   transition-timing-function: ease-in-out;
 }
+
 /* Input styles */
 .input-terminal {
   background-color: var(--term-gray);
@@ -150,15 +150,16 @@ button:disabled {
   outline-offset: 2px;
   border-color: var(--term-amber);
 }
-/* OPTIMIZED CARD SIZE */
-.card-container img {
+
+/* OPTIMIZED CARD SIZE - DECK BUILDER */
+.deck-card-container img {
   max-height: 280px;
   width: 100%;
   object-fit: contain;
   background: #1a1a1a;
 }
 
-.card-container {
+.deck-card-container {
   max-width: 100%;
   margin: 0 auto;
 }
@@ -207,4 +208,110 @@ button:disabled {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ========================================
+   PACK OPENER - HOLOGRAPHIC EFFECTS
+   ======================================== */
+
+/* Holographic shine effect for foil cards */
+.foil-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.foil-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 40%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.1) 60%,
+    transparent 70%
+  );
+  transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  animation: foilShine 3s infinite;
+  pointer-events: none;
+}
+
+@keyframes foilShine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+/* Rainbow prismatic effect */
+.foil-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 0, 255, 0.1),
+    rgba(0, 255, 255, 0.1),
+    rgba(255, 255, 0, 0.1),
+    rgba(255, 0, 255, 0.1)
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ========================================
+   PACK OPENER - 3D CARD FLIP
+   ======================================== */
+
+/* Pack Opener Card Container */
+.pack-card-container {
+  perspective: 1000px;
+  cursor: pointer;
+  position: relative;
+  width: 100%;
+}
+
+.card-flipper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 140%; /* Aspect ratio 300x420 */
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.card-flipper.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 8px;
+}
+
+.card-face.front {
+  transform: rotateY(180deg);
+}
+
+.card-face.back {
+  background-size: cover;
+  background-position: center;
+}
+
+/* Pack opener specific sizing */
+.pack-card-container .card-flipper {
+  min-height: 120px;
+}
+
+.pack-card-container .card-face img {
+  object-fit: cover;
 }

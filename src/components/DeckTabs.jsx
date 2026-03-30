@@ -4,6 +4,7 @@ export default function DeckTabs({ activeTab, onTabChange }) {
     { id: "mydecks", label: "MY DECKS" },
     { id: "precon", label: "PRECON DECKS" },
     { id: "practice", label: "PRACTICE" },
+    { id: "packs", label: "PACKS" },
   ];
   return (
     <div className="flex gap-2 mb-6 border-b border-term-amber/20 pb-2">

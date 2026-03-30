@@ -15,6 +15,7 @@ import ConfirmModal from "./components/ConfirmModal";
 import CardPreviewModal from "./components/CardPreviewModal";
 import ImportDeckModal from "./components/ImportDeckModal";
 import MulliganSimulator from "./components/MulliganSimulator";
+import PackOpener from "./components/PackOpener";
 
 // DECK ENCODING/DECODING UTILITIES
 const encodeDeck = (deck) => {
@@ -883,6 +884,9 @@ function App() {
       {activeTab === "practice" && (
         <MulliganSimulator deck={deck} allCards={cards} />
       )}
+
+      {/* PACKS TAB */}
+      {activeTab === "packs" && <PackOpener allCards={cards} />}
 
       {/* MODALS */}
       {showSaveModal && (

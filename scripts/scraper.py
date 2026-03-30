@@ -264,3 +264,18 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+#TODO: RARITY SCRAPING
+#======================
+# WeirdCo has not published official rarity data yet.
+#Once available, scrape from official sources:
+#- choom.gg API (if they add rarity field)
+#- Official WeirdCo card database
+#- Reddit AMA updates
+#CURRENT WORKAROUND:
+#  PackOpener.jsx uses injectRarity() function to assign
+# temporary rarities based on set/number/cost analysis.
+# WHEN UPDATING:
+# 1. Add 'rarity' field to cards.json
+# 2. Remove injectRarity() from PackOpener.jsx
+#3. Update pull rates if official rates differ from temp rates
