@@ -1,0 +1,9 @@
+{
+  "banned": ["example-banned-card-1", "example-banned-card-2"],
+  "restricted": ["example-restricted-card-1", "example-restricted-card-2"],
+  "notes": {
+    "lastUpdated": "2026-03-31",
+    "format": "Alpha/Beta Kit 2026",
+    "source": "WeirdCo Official Banlist"
+  }
+}

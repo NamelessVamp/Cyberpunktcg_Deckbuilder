@@ -1203,6 +1203,7 @@ function App() {
                     onRemoveCard={handleRemoveCard}
                     onClearDeck={handleClearDeck}
                     onShareDeck={handleShareDeck}
+                    allCards={cards} // ← AGREGAR ESTO
                   />
 
                   {/* SHOW ANALYTICS TOGGLE - RESTAURADO */}

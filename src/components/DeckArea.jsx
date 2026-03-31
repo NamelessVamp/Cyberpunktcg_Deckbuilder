@@ -1,12 +1,18 @@
+import { useState } from "react";
 import SmartCardImage from "./SmartCardImage";
 import Tooltip from "./Tooltip";
+import { validateDeckLegality } from "../lib/legalityService";
+import LegalityInfoModal from "./LegalityInfoModal";
 
 export default function DeckArea({
   deck,
   onRemoveCard,
   onClearDeck,
   onShareDeck,
+  allCards, // Nuevo prop necesario
 }) {
+  const [showLegalityModal, setShowLegalityModal] = useState(false);
+
   // Calculate RAM Budget
   const ramBudget = deck.legends.reduce(
     (acc, legend) => {
@@ -17,6 +23,9 @@ export default function DeckArea({
     },
     { Red: 0, Yellow: 0, Green: 0, Blue: 0 },
   );
+
+  // Legality validation
+  const legalityValidation = validateDeckLegality(deck);
 
   return (
     <div className="card-container">
@@ -33,6 +42,37 @@ export default function DeckArea({
           <span className="text-lg">🗑</span> DELETE ALL
         </button>
       </div>
+
+      {/* LEGALITY WARNING */}
+      {!legalityValidation.isLegal && (
+        <div className="mb-6 bg-term-red/10 border-2 border-term-red rounded-lg p-4">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <h3 className="text-term-red font-mono font-bold text-lg mb-2 flex items-center gap-2">
+                <span>🚫</span>
+                <span>DECK LEGALITY ISSUES</span>
+              </h3>
+              <div className="space-y-1 mb-3">
+                {legalityValidation.issues.map((issue, idx) => (
+                  <div
+                    key={idx}
+                    className="text-term-green/80 text-sm font-mono flex items-start gap-2"
+                  >
+                    <span className="text-term-red flex-shrink-0">•</span>
+                    <span>{issue.message}</span>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={() => setShowLegalityModal(true)}
+                className="text-term-amber hover:text-amber-400 text-xs font-mono font-bold underline"
+              >
+                [VIEW FULL BANLIST]
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* LEGENDS SECTION */}
       <div className="mb-6">
@@ -52,15 +92,8 @@ export default function DeckArea({
           </h3>
 
           <Tooltip
-            title="Legends Section"
-            content={
-              <ul className="list-disc pl-4 text-xs">
-                <li>Exactly 3 Legends required</li>
-                <li>All 3 must be UNIQUE (no duplicates)</li>
-                <li>Legends provide RAM for your deck</li>
-                <li>Start face-down, flip for 2 Eddies</li>
-              </ul>
-            }
+            title="LEGENDS SECTION"
+            content="You must include exactly 3 Legends. All 3 must be unique (no duplicates). Legends start face-down and flip for 2 Eddies to activate their abilities."
             position="bottom"
           >
             <span className="text-term-amber cursor-help">ⓘ</span>
@@ -104,22 +137,9 @@ export default function DeckArea({
           </h3>
 
           <Tooltip
-            title="Legends Section"
+            title="RAM BUDGET"
+            content="Your 3 Legends determine which card colors you can play. Each Legend provides RAM of a specific color. Only cards matching your Legend colors are allowed in the Main Deck."
             position="bottom"
-            content={
-              <div className="space-y-2">
-                <p className="font-bold">Deck Requirements:</p>
-                <ul className="list-disc list-inside space-y-1 ml-2">
-                  <li>Exactly 3 Legends required</li>
-                  <li>All 3 must be UNIQUE (no duplicates)</li>
-                  <li>Legends provide RAM for your deck</li>
-                  <li>Start face-down, flip for 2 Eddies</li>
-                </ul>
-                <p className="mt-2 font-bold text-xs opacity-80 italic">
-                  *Check RAM colors below
-                </p>
-              </div>
-            }
           >
             <span className="text-term-amber text-xs cursor-help hover:text-amber-300 transition-colors">
               ⓘ
@@ -172,22 +192,9 @@ export default function DeckArea({
           </h3>
 
           <Tooltip
-            title="Legends Section"
-            position="left"
-            content={
-              <div className="space-y-2">
-                <p className="font-bold">Deck Requirements:</p>
-                <ul className="list-disc list-inside space-y-1 ml-2">
-                  <li>Exactly 3 Legends required</li>
-                  <li>All 3 must be UNIQUE (no duplicates)</li>
-                  <li>Legends provide RAM for your deck</li>
-                  <li>Start face-down, flip for 2 Eddies</li>
-                </ul>
-                <p className="mt-2 font-bold text-xs opacity-80 italic">
-                  *Check RAM colors below
-                </p>
-              </div>
-            }
+            title="MAIN DECK"
+            content="Your Main Deck must contain 40-50 cards. Maximum 3 copies of any card (by name). Cards must match the RAM colors provided by your Legends."
+            position="bottom"
           >
             <span className="text-term-amber text-xs cursor-help hover:text-amber-300 transition-colors">
               ⓘ
@@ -252,6 +259,14 @@ export default function DeckArea({
       >
         [🔗 SHARE DECK]
       </button>
+
+      {/* LEGALITY MODAL */}
+      {showLegalityModal && (
+        <LegalityInfoModal
+          onClose={() => setShowLegalityModal(false)}
+          allCards={allCards}
+        />
+      )}
     </div>
   );
 }
