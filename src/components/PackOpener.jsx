@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SmartCardImage from "./SmartCardImage";
+import Tooltip from "./Tooltip";
 
 export default function PackOpener({ allCards }) {
   const [totalPacks, setTotalPacks] = useState(0);
@@ -260,6 +261,33 @@ export default function PackOpener({ allCards }) {
             <h2 className="text-term-amber font-bold text-3xl font-mono tracking-wider">
               PACK OPENER SIMULATOR
             </h2>
+
+            <Tooltip
+              id="tooltip_packopener"
+              title="PACK OPENER MODES"
+              position="right"
+              content={
+                <div className="space-y-2">
+                  <p className="font-bold">🎮 SIMULATOR MODE (Current):</p>
+                  <ul className="list-disc list-inside space-y-1 ml-2">
+                    <li>Open virtual packs for fun</li>
+                    <li>Does NOT affect your collection</li>
+                    <li>Practice pack opening probabilities</li>
+                  </ul>
+                  <p className="mt-2 font-bold text-red-600">
+                    ⚠️ REAL PACKS MODE (Future):
+                  </p>
+                  <p className="text-term-black/70">
+                    When enabled, opened cards will be added to your physical
+                    collection tracker.
+                  </p>
+                </div>
+              }
+            >
+              <span className="text-term-amber text-xl cursor-help hover:text-amber-300 transition-colors">
+                ⓘ
+              </span>
+            </Tooltip>
           </div>
           <p className="text-term-green/80 font-mono text-sm pl-12">
             Open booster packs • Build your collection • Chase the rare pulls

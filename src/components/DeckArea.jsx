@@ -1,4 +1,6 @@
 import SmartCardImage from "./SmartCardImage";
+import Tooltip from "./Tooltip";
+
 export default function DeckArea({
   deck,
   onRemoveCard,
@@ -34,17 +36,45 @@ export default function DeckArea({
 
       {/* LEGENDS SECTION */}
       <div className="mb-6">
-        <h3 className="text-term-green font-bold font-mono mb-3">
-          LEGENDS [
-          <span
-            className={
-              deck.legends.length === 3 ? "text-term-green" : "text-term-amber"
+        <div className="flex items-center gap-2 mb-3">
+          <h3 className="text-term-green font-bold font-mono">
+            LEGENDS [
+            <span
+              className={
+                deck.legends.length === 3
+                  ? "text-term-green"
+                  : "text-term-amber"
+              }
+            >
+              {deck.legends.length}
+            </span>
+            /3]
+          </h3>
+
+          <Tooltip
+            id="tooltip_legends"
+            title="LEGEND RULES"
+            position="top"
+            content={
+              <div className="space-y-2">
+                <p className="font-bold">Deck Building Rules:</p>
+                <ul className="list-disc list-inside space-y-1 ml-2">
+                  <li>Exactly 3 Legends required</li>
+                  <li>All 3 must be UNIQUE (no duplicates)</li>
+                  <li>Legends provide RAM for your deck</li>
+                  <li>Start face-down, flip for 2 Eddies</li>
+                </ul>
+                <p className="mt-2 text-term-black/70">
+                  Legends define your deck's colors and strategy.
+                </p>
+              </div>
             }
           >
-            {deck.legends.length}
-          </span>
-          /3]
-        </h3>
+            <span className="text-term-amber text-sm cursor-help hover:text-amber-300 transition-colors">
+              ⓘ
+            </span>
+          </Tooltip>
+        </div>
 
         {deck.legends.length > 0 ? (
           <div className="grid grid-cols-3 gap-2">
@@ -77,9 +107,36 @@ export default function DeckArea({
 
       {/* RAM BUDGET */}
       <div className="mb-6 p-3 bg-black/30 rounded border border-term-amber/20">
-        <h3 className="text-term-green/80 font-bold font-mono text-sm mb-2">
-          RAM BUDGET
-        </h3>
+        <div className="flex items-center gap-2 mb-2">
+          <h3 className="text-term-green/80 font-bold font-mono text-sm">
+            RAM BUDGET
+          </h3>
+
+          <Tooltip
+            id="tooltip_ram"
+            title="RAM SYSTEM"
+            position="top"
+            content={
+              <div className="space-y-2">
+                <p className="font-bold">How RAM Colors Work:</p>
+                <ul className="list-disc list-inside space-y-1 ml-2">
+                  <li>Each Legend provides RAM of a specific color</li>
+                  <li>Cards require matching RAM color to be played</li>
+                  <li>Total RAM = sum of all 3 Legends</li>
+                </ul>
+                <p className="mt-2 font-bold">Example:</p>
+                <p className="text-term-black/70">
+                  If you have 2 Red Legends + 1 Blue Legend, you can only play
+                  Red and Blue cards.
+                </p>
+              </div>
+            }
+          >
+            <span className="text-term-amber text-xs cursor-help hover:text-amber-300 transition-colors">
+              ⓘ
+            </span>
+          </Tooltip>
+        </div>
         <div className="grid grid-cols-2 gap-2">
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-term-red"></span>
@@ -110,19 +167,45 @@ export default function DeckArea({
 
       {/* MAIN DECK SECTION */}
       <div className="mb-6">
-        <h3 className="text-term-green font-bold font-mono mb-3">
-          MAIN DECK [
-          <span
-            className={
-              deck.mainDeck.length >= 40 && deck.mainDeck.length <= 50
-                ? "text-term-green"
-                : "text-term-red"
+        <div className="flex items-center gap-2 mb-3">
+          <h3 className="text-term-green font-bold font-mono">
+            MAIN DECK [
+            <span
+              className={
+                deck.mainDeck.length >= 40 && deck.mainDeck.length <= 50
+                  ? "text-term-green"
+                  : "text-term-red"
+              }
+            >
+              {deck.mainDeck.length}
+            </span>
+            /40-50]
+          </h3>
+
+          <Tooltip
+            id="tooltip_maindeck"
+            title="MAIN DECK RULES"
+            position="top"
+            content={
+              <div className="space-y-2">
+                <p className="font-bold">Deck Construction:</p>
+                <ul className="list-disc list-inside space-y-1 ml-2">
+                  <li>Minimum: 40 cards</li>
+                  <li>Maximum: 50 cards</li>
+                  <li>Max 3 copies of any card (by name)</li>
+                  <li>Cards must match Legend RAM colors</li>
+                </ul>
+                <p className="mt-2 text-term-black/70">
+                  Recommended: 40-45 cards for consistency.
+                </p>
+              </div>
             }
           >
-            {deck.mainDeck.length}
-          </span>
-          /40-50]
-        </h3>
+            <span className="text-term-amber text-sm cursor-help hover:text-amber-300 transition-colors">
+              ⓘ
+            </span>
+          </Tooltip>
+        </div>
 
         {deck.mainDeck.length > 0 ? (
           <div className="grid grid-cols-4 gap-2 max-h-96 overflow-y-auto">

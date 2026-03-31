@@ -1,5 +1,6 @@
 import { useState } from "react";
 import * as collectionService from "../lib/collectionService";
+import GuideModal from "./GuideModal";
 
 function LandingPage({ user, collection, allCards, savedDecks, onNavigate }) {
   const [showGuideModal, setShowGuideModal] = useState(false);
@@ -115,6 +116,7 @@ function LandingPage({ user, collection, allCards, savedDecks, onNavigate }) {
         </button>
 
         {/* LEARN TO PLAY */}
+
         <button
           onClick={() => setShowGuideModal(true)}
           className="bg-term-green/10 border-2 border-term-green p-8 rounded-lg hover:bg-term-green/20 transition-all group"
@@ -193,10 +195,10 @@ function LandingPage({ user, collection, allCards, savedDecks, onNavigate }) {
       {/* GUIDE MODAL */}
       {showGuideModal && (
         <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
-          <div className="bg-term-gray border-2 border-term-green max-w-4xl w-full max-h-[90vh] overflow-y-auto p-8 rounded-lg">
+          <div className="bg-term-gray border-2 border-term-green max-w-5xl w-full max-h-[90vh] overflow-y-auto p-8 rounded-lg">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-3xl font-bold text-term-green font-mono">
-                [LEARN TO PLAY]
+                [NETRUNNER'S GUIDE]
               </h2>
               <button
                 onClick={() => setShowGuideModal(false)}
@@ -206,93 +208,8 @@ function LandingPage({ user, collection, allCards, savedDecks, onNavigate }) {
               </button>
             </div>
 
-            <div className="space-y-6 text-term-green font-mono">
-              <section>
-                <h3 className="text-xl font-bold text-term-amber mb-3">
-                  📖 OFFICIAL RULEBOOK
-                </h3>
-                <p className="text-sm mb-3">
-                  Download the official Cyberpunk TCG rulebook to learn the
-                  complete game rules:
-                </p>
-
-                <a
-                  href="https://www.weirdco.com/cyberpunk-tcg"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block bg-term-amber text-term-black px-6 py-2 rounded font-bold hover:bg-yellow-400 transition-colors"
-                >
-                  [DOWNLOAD RULEBOOK]
-                </a>
-              </section>
-
-              <section>
-                <h3 className="text-xl font-bold text-term-amber mb-3">
-                  🎴 DECK BUILDING BASICS
-                </h3>
-                <ul className="space-y-2 text-sm">
-                  <li>✓ Choose exactly 3 Legends (all must be unique)</li>
-                  <li>✓ Build a 40-50 card Main Deck</li>
-                  <li>✓ Maximum 3 copies of any non-Legend card</li>
-                  <li>✓ Cards must match the RAM colors of your Legends</li>
-                  <li>✓ Check your deck's Eddies curve for balance</li>
-                </ul>
-              </section>
-
-              <section>
-                <h3 className="text-xl font-bold text-term-amber mb-3">
-                  ⚙️ HOW TO USE THIS TOOL
-                </h3>
-                <ul className="space-y-2 text-sm">
-                  <li>🔍 Use the search bar and filters to find cards</li>
-                  <li>🎯 Click a card to preview and add to your deck</li>
-                  <li>💾 Save your decks to cloud (login required)</li>
-                  <li>📤 Export decks as text to share on Discord</li>
-                  <li>📊 View analytics to optimize your strategy</li>
-                </ul>
-              </section>
-
-              <section>
-                <h3 className="text-xl font-bold text-term-amber mb-3">
-                  ⌨️ KEYBOARD SHORTCUTS
-                </h3>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div>
-                    <kbd className="px-2 py-1 bg-term-black border border-term-amber/20 rounded">
-                      Ctrl+S
-                    </kbd>{" "}
-                    Save Deck
-                  </div>
-                  <div>
-                    <kbd className="px-2 py-1 bg-term-black border border-term-amber/20 rounded">
-                      Ctrl+F
-                    </kbd>{" "}
-                    Search
-                  </div>
-                  <div>
-                    <kbd className="px-2 py-1 bg-term-black border border-term-amber/20 rounded">
-                      Ctrl+E
-                    </kbd>{" "}
-                    Export
-                  </div>
-                  <div>
-                    <kbd className="px-2 py-1 bg-term-black border border-term-amber/20 rounded">
-                      ESC
-                    </kbd>{" "}
-                    Close Modals
-                  </div>
-                </div>
-              </section>
-            </div>
-
-            <div className="mt-8 text-center">
-              <button
-                onClick={() => setShowGuideModal(false)}
-                className="bg-term-green text-term-black px-8 py-3 rounded font-mono font-bold hover:bg-green-400 transition-colors"
-              >
-                [GOT IT - LET'S BUILD!]
-              </button>
-            </div>
+            {/* TABS */}
+            <GuideModal onClose={() => setShowGuideModal(false)} />
           </div>
         </div>
       )}

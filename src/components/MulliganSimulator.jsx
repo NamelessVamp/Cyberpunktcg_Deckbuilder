@@ -1,6 +1,7 @@
 import { useState } from "react";
 import MulliganModal from "./MulliganModal";
 import SmartCardImage from "./SmartCardImage";
+import Tooltip from "./Tooltip";
 
 export default function MulliganSimulator({ deck, allCards }) {
   const [showModal, setShowModal] = useState(false);
@@ -17,6 +18,30 @@ export default function MulliganSimulator({ deck, allCards }) {
             <h2 className="text-term-amber font-bold text-3xl font-mono tracking-wider">
               OPENING HAND SIMULATOR
             </h2>
+
+            <Tooltip
+              id="tooltip_mulligan"
+              title="MULLIGAN RULES"
+              position="right"
+              content={
+                <div className="space-y-2">
+                  <p className="font-bold">Official Mulligan Rule:</p>
+                  <ul className="list-disc list-inside space-y-1 ml-2">
+                    <li>Return 6 cards to your deck</li>
+                    <li>Draw 6 new cards</li>
+                    <li>Only allowed ONCE per game</li>
+                  </ul>
+                  <p className="mt-2 text-term-black/70">
+                    Use this simulator to practice opening hands and decide if
+                    you should mulligan.
+                  </p>
+                </div>
+              }
+            >
+              <span className="text-term-amber text-lg cursor-help hover:text-amber-300 transition-colors">
+                ⓘ
+              </span>
+            </Tooltip>
           </div>
           <p className="text-term-green/80 font-mono text-sm pl-12">
             Practice your mulligan decisions • Learn optimal opening hands
