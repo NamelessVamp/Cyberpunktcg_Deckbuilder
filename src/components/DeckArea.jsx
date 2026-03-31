@@ -52,27 +52,18 @@ export default function DeckArea({
           </h3>
 
           <Tooltip
-            id="tooltip_legends"
-            title="LEGEND RULES"
-            position="top"
+            title="Legends Section"
             content={
-              <div className="space-y-2">
-                <p className="font-bold">Deck Building Rules:</p>
-                <ul className="list-disc list-inside space-y-1 ml-2">
-                  <li>Exactly 3 Legends required</li>
-                  <li>All 3 must be UNIQUE (no duplicates)</li>
-                  <li>Legends provide RAM for your deck</li>
-                  <li>Start face-down, flip for 2 Eddies</li>
-                </ul>
-                <p className="mt-2 text-term-black/70">
-                  Legends define your deck's colors and strategy.
-                </p>
-              </div>
+              <ul className="list-disc pl-4 text-xs">
+                <li>Exactly 3 Legends required</li>
+                <li>All 3 must be UNIQUE (no duplicates)</li>
+                <li>Legends provide RAM for your deck</li>
+                <li>Start face-down, flip for 2 Eddies</li>
+              </ul>
             }
+            position="bottom"
           >
-            <span className="text-term-amber text-sm cursor-help hover:text-amber-300 transition-colors">
-              ⓘ
-            </span>
+            <span className="text-term-amber cursor-help">ⓘ</span>
           </Tooltip>
         </div>
 
@@ -113,21 +104,19 @@ export default function DeckArea({
           </h3>
 
           <Tooltip
-            id="tooltip_ram"
-            title="RAM SYSTEM"
-            position="top"
+            title="Legends Section"
+            position="bottom"
             content={
               <div className="space-y-2">
-                <p className="font-bold">How RAM Colors Work:</p>
+                <p className="font-bold">Deck Requirements:</p>
                 <ul className="list-disc list-inside space-y-1 ml-2">
-                  <li>Each Legend provides RAM of a specific color</li>
-                  <li>Cards require matching RAM color to be played</li>
-                  <li>Total RAM = sum of all 3 Legends</li>
+                  <li>Exactly 3 Legends required</li>
+                  <li>All 3 must be UNIQUE (no duplicates)</li>
+                  <li>Legends provide RAM for your deck</li>
+                  <li>Start face-down, flip for 2 Eddies</li>
                 </ul>
-                <p className="mt-2 font-bold">Example:</p>
-                <p className="text-term-black/70">
-                  If you have 2 Red Legends + 1 Blue Legend, you can only play
-                  Red and Blue cards.
+                <p className="mt-2 font-bold text-xs opacity-80 italic">
+                  *Check RAM colors below
                 </p>
               </div>
             }
@@ -183,25 +172,24 @@ export default function DeckArea({
           </h3>
 
           <Tooltip
-            id="tooltip_maindeck"
-            title="MAIN DECK RULES"
-            position="top"
+            title="Legends Section"
+            position="left"
             content={
               <div className="space-y-2">
-                <p className="font-bold">Deck Construction:</p>
+                <p className="font-bold">Deck Requirements:</p>
                 <ul className="list-disc list-inside space-y-1 ml-2">
-                  <li>Minimum: 40 cards</li>
-                  <li>Maximum: 50 cards</li>
-                  <li>Max 3 copies of any card (by name)</li>
-                  <li>Cards must match Legend RAM colors</li>
+                  <li>Exactly 3 Legends required</li>
+                  <li>All 3 must be UNIQUE (no duplicates)</li>
+                  <li>Legends provide RAM for your deck</li>
+                  <li>Start face-down, flip for 2 Eddies</li>
                 </ul>
-                <p className="mt-2 text-term-black/70">
-                  Recommended: 40-45 cards for consistency.
+                <p className="mt-2 font-bold text-xs opacity-80 italic">
+                  *Check RAM colors below
                 </p>
               </div>
             }
           >
-            <span className="text-term-amber text-sm cursor-help hover:text-amber-300 transition-colors">
+            <span className="text-term-amber text-xs cursor-help hover:text-amber-300 transition-colors">
               ⓘ
             </span>
           </Tooltip>

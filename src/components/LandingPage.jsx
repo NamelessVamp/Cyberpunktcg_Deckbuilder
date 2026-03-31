@@ -1,6 +1,8 @@
 import { useState } from "react";
 import * as collectionService from "../lib/collectionService";
 import GuideModal from "./GuideModal";
+import PreconCard from "./PreconCard";
+import preconDecksData from "../data/preconDecks.json";
 
 function LandingPage({ user, collection, allCards, savedDecks, onNavigate }) {
   const [showGuideModal, setShowGuideModal] = useState(false);
@@ -139,6 +141,33 @@ function LandingPage({ user, collection, allCards, savedDecks, onNavigate }) {
           </div>
         </button>
       </div>
+
+      {/* PRECON DECKS SECTION */}
+      <section className="mb-12">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold text-term-green font-mono">
+            [STARTER DECKS]
+          </h2>
+          <span className="text-term-green/60 text-sm font-mono">
+            Ready-to-play with strategy guides
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {preconDecksData.preconDecks.map((deck) => (
+            <PreconCard
+              key={deck.id}
+              deck={deck}
+              onLoad={(deckData) => {
+                console.log("Loading precon:", deckData.name);
+                alert(
+                  `Precon "${deckData.name}" loaded!\n(Full integration with deck builder coming in next feature)`,
+                );
+              }}
+            />
+          ))}
+        </div>
+      </section>
 
       {/* RECENT ACTIVITY */}
       {savedDecks.length > 0 && (
