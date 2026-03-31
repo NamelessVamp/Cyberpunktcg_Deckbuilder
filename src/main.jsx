@@ -3,14 +3,11 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
 import { AuthProvider } from "./contexts/AuthContext";
-import { TooltipProvider } from "./contexts/TooltipContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider>
-      <TooltipProvider>
-        <App />
-      </TooltipProvider>
+      <App />
     </AuthProvider>
   </React.StrictMode>,
 );

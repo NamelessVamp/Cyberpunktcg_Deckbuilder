@@ -130,6 +130,10 @@ function LandingPage({ user, collection, allCards, savedDecks, onNavigate }) {
           <p className="text-term-green/60 text-sm font-mono">
             Official rules, deck building guide, and gameplay basics
           </p>
+          <div className="mt-3 flex items-center justify-center gap-2 text-term-green/50 text-xs font-mono">
+            <span className="text-term-amber">ⓘ</span>
+            <span>Hover tooltips throughout the app for quick help</span>
+          </div>
           <div className="mt-4 text-term-green font-mono text-xs">
             [CLICK TO LEARN →]
           </div>

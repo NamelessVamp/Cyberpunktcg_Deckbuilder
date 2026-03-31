@@ -1,132 +1,165 @@
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useTooltipQueue } from "../contexts/TooltipContext";
 
 function Tooltip({ id, title, content, position = "top", children }) {
   const [isVisible, setIsVisible] = useState(false);
-  const [hasBeenSeen, setHasBeenSeen] = useState(false);
   const [triggerRect, setTriggerRect] = useState(null);
-  const [triggerRef, setTriggerRef] = useState(null);
-
-  const { registerTooltip, dismissTooltip, canShowTooltip } = useTooltipQueue();
-
-  // Check if tooltip has been seen and register to queue
-  useEffect(() => {
-    const seen = localStorage.getItem(id);
-    setHasBeenSeen(!!seen);
-
-    if (!seen) {
-      // Register to queue with delay to avoid all showing at once
-      const registrationDelay = setTimeout(() => {
-        registerTooltip(id);
-      }, 500);
-
-      return () => clearTimeout(registrationDelay);
-    }
-  }, [id, registerTooltip]);
-
-  // Show tooltip when it becomes active in queue
-  useEffect(() => {
-    if (!hasBeenSeen && canShowTooltip(id)) {
-      const showDelay = setTimeout(() => {
-        setIsVisible(true);
-      }, 800);
-
-      return () => clearTimeout(showDelay);
-    }
-  }, [id, hasBeenSeen, canShowTooltip]);
+  const triggerRef = useRef(null);
 
   // Update position when tooltip becomes visible
   useEffect(() => {
-    if (isVisible && triggerRef) {
-      const rect = triggerRef.getBoundingClientRect();
-      setTriggerRect(rect);
-    }
-  }, [isVisible, triggerRef]);
+    if (isVisible && triggerRef.current) {
+      const updatePosition = () => {
+        if (triggerRef.current) {
+          const rect = triggerRef.current.getBoundingClientRect();
+          setTriggerRect(rect);
+        }
+      };
 
-  const handleClose = () => {
-    if (!hasBeenSeen) {
-      dismissTooltip(id);
-      setHasBeenSeen(true);
+      updatePosition();
+      window.addEventListener("scroll", updatePosition, true);
+      window.addEventListener("resize", updatePosition);
+
+      return () => {
+        window.removeEventListener("scroll", updatePosition, true);
+        window.removeEventListener("resize", updatePosition);
+      };
     }
-    setIsVisible(false);
-  };
+  }, [isVisible]);
 
   // Calculate tooltip position
   const getTooltipStyle = () => {
-    if (!triggerRect) return {};
+    if (!triggerRect) return { opacity: 0 };
 
     const tooltipWidth = 320;
-    const gap = 8;
+    const tooltipHeight = 200;
+    const gap = 12;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    let left,
+      top,
+      transform = "";
 
     switch (position) {
       case "top":
-        return {
-          left: triggerRect.left + triggerRect.width / 2 - tooltipWidth / 2,
-          top: triggerRect.top - gap,
-          transform: "translateY(-100%)",
-        };
+        left = triggerRect.left + triggerRect.width / 2 - tooltipWidth / 2;
+        top = triggerRect.top - gap;
+        transform = "translateY(-100%)";
+
+        if (left < 10) left = 10;
+        if (left + tooltipWidth > windowWidth - 10) {
+          left = windowWidth - tooltipWidth - 10;
+        }
+        break;
+
       case "bottom":
-        return {
-          left: triggerRect.left + triggerRect.width / 2 - tooltipWidth / 2,
-          top: triggerRect.bottom + gap,
-        };
+        left = triggerRect.left + triggerRect.width / 2 - tooltipWidth / 2;
+        top = triggerRect.bottom + gap;
+
+        if (left < 10) left = 10;
+        if (left + tooltipWidth > windowWidth - 10) {
+          left = windowWidth - tooltipWidth - 10;
+        }
+        break;
+
       case "left":
-        return {
-          right: window.innerWidth - triggerRect.left + gap,
-          top: triggerRect.top + triggerRect.height / 2,
-          transform: "translateY(-50%)",
-        };
+        left = triggerRect.left - tooltipWidth - gap;
+        top = triggerRect.top + triggerRect.height / 2 - tooltipHeight / 2;
+
+        if (left < 10) {
+          left = triggerRect.right + gap;
+        }
+        break;
+
       case "right":
-        return {
-          left: triggerRect.right + gap,
-          top: triggerRect.top + triggerRect.height / 2,
-          transform: "translateY(-50%)",
-        };
+        left = triggerRect.right + gap;
+        top = triggerRect.top + triggerRect.height / 2 - tooltipHeight / 2;
+
+        if (left + tooltipWidth > windowWidth - 10) {
+          left = triggerRect.left - tooltipWidth - gap;
+        }
+        break;
+
       default:
-        return {};
+        left = triggerRect.left;
+        top = triggerRect.top;
     }
+
+    if (top < 10) top = 10;
+    if (top + tooltipHeight > windowHeight - 10) {
+      top = windowHeight - tooltipHeight - 10;
+    }
+
+    return {
+      left: `${left}px`,
+      top: `${top}px`,
+      transform,
+      opacity: 1,
+    };
   };
 
-  const arrowClasses = {
-    top: "top-full left-1/2 -translate-x-1/2 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-term-amber",
+  const getArrowPosition = () => {
+    if (!triggerRect) return {};
+
+    const tooltipStyle = getTooltipStyle();
+    if (tooltipStyle.opacity === 0) return {};
+
+    const tooltipLeft = parseFloat(tooltipStyle.left);
+    const triggerCenter = triggerRect.left + triggerRect.width / 2;
+
+    let arrowLeft = triggerCenter - tooltipLeft;
+
+    const minArrowPos = 30;
+    const maxArrowPos = 290;
+    arrowLeft = Math.max(minArrowPos, Math.min(maxArrowPos, arrowLeft));
+
+    return {
+      left: `${arrowLeft}px`,
+    };
+  };
+
+  const arrowBaseClasses = {
+    top: "top-full border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-term-amber",
     bottom:
-      "bottom-full left-1/2 -translate-x-1/2 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-term-amber",
+      "bottom-full border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-term-amber",
     left: "left-full top-1/2 -translate-y-1/2 border-t-8 border-b-8 border-l-8 border-t-transparent border-b-transparent border-l-term-amber",
     right:
       "right-full top-1/2 -translate-y-1/2 border-t-8 border-b-8 border-r-8 border-t-transparent border-b-transparent border-r-term-amber",
   };
 
-  const showPulseAnimation = !hasBeenSeen && canShowTooltip(id);
-
   return (
     <>
       {/* Trigger Element */}
-      <div
-        ref={setTriggerRef}
-        onMouseEnter={() => hasBeenSeen && setIsVisible(true)}
-        onMouseLeave={() => hasBeenSeen && setIsVisible(false)}
-        onClick={() => setIsVisible(!isVisible)}
+      <span
+        ref={triggerRef}
+        onMouseEnter={() => setIsVisible(true)}
+        onMouseLeave={() => setIsVisible(false)}
         className="inline-block cursor-help"
       >
         {children}
-      </div>
+      </span>
 
       {/* Tooltip Content - Rendered in Portal */}
       {isVisible &&
         triggerRect &&
         createPortal(
           <div
-            className="fixed z-[99999] w-80 animate-fadeIn pointer-events-none"
-            style={{
-              ...getTooltipStyle(),
-              animation: showPulseAnimation
-                ? "pulse 2s ease-in-out infinite"
-                : "none",
-            }}
+            className="fixed z-[99999] w-80 animate-fadeIn pointer-events-none transition-opacity duration-200"
+            style={getTooltipStyle()}
           >
-            {/* Arrow */}
-            <div className={`absolute ${arrowClasses[position]} w-0 h-0`}></div>
+            {/* Arrow - Dynamic position */}
+            {(position === "top" || position === "bottom") && (
+              <div
+                className={`absolute ${arrowBaseClasses[position]} w-0 h-0 -translate-x-1/2`}
+                style={getArrowPosition()}
+              />
+            )}
+            {(position === "left" || position === "right") && (
+              <div
+                className={`absolute ${arrowBaseClasses[position]} w-0 h-0`}
+              />
+            )}
 
             {/* Tooltip Box */}
             <div className="bg-term-amber border-2 border-term-amber/80 rounded-lg shadow-2xl p-4 pointer-events-auto">
@@ -141,8 +174,8 @@ function Tooltip({ id, title, content, position = "top", children }) {
 
                 {/* Close Button */}
                 <button
-                  onClick={handleClose}
-                  className="text-term-black hover:text-red-600 font-bold text-lg leading-none"
+                  onClick={() => setIsVisible(false)}
+                  className="text-term-black hover:text-red-600 font-bold text-lg leading-none transition-colors"
                 >
                   ✕
                 </button>
@@ -152,16 +185,6 @@ function Tooltip({ id, title, content, position = "top", children }) {
               <div className="text-term-black text-xs font-mono leading-relaxed">
                 {content}
               </div>
-
-              {/* First Time Badge */}
-              {showPulseAnimation && (
-                <div className="mt-3 pt-3 border-t border-term-black/20">
-                  <p className="text-term-black/60 text-xs font-mono italic">
-                    💡 This tooltip won't auto-show again. Hover over (ⓘ) to see
-                    it.
-                  </p>
-                </div>
-              )}
             </div>
           </div>,
           document.body,

@@ -258,6 +258,22 @@ function DeckBuildingTab() {
         <h3 className="text-2xl font-bold text-term-amber mb-4">
           ⚙️ USING THIS TOOL
         </h3>
+        <div className="bg-term-blue/10 border-l-4 border-term-blue p-4 rounded mb-4">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">💡</span>
+            <div>
+              <h4 className="text-term-blue font-bold text-sm mb-1">
+                TOOLTIPS AVAILABLE
+              </h4>
+              <p className="text-xs text-term-green/80">
+                Throughout the app, you'll see{" "}
+                <span className="text-term-amber font-bold">(ⓘ)</span> icons.
+                Hover over them to get quick explanations of features and game
+                rules.
+              </p>
+            </div>
+          </div>
+        </div>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div className="bg-term-black/40 border border-term-blue/30 p-3 rounded">
             <span className="text-term-blue font-bold">🔍 Search & Filter</span>
