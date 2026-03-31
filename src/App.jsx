@@ -26,6 +26,7 @@ import CollectionView from "./components/CollectionView";
 import FeedbackModal from "./components/FeedbackModal";
 import * as feedbackService from "./lib/feedbackService";
 import SmartCardImage from "./components/SmartCardImage";
+import LandingPage from "./components/LandingPage";
 
 // DECK ENCODING/DECODING UTILITIES
 const encodeDeck = (deck) => {
@@ -188,6 +189,20 @@ function App() {
 
     loadUserCollection();
   }, [user]);
+
+  // Route to HOME for first-time users
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("afterlife_hasVisited");
+
+    if (!hasVisited) {
+      // Primera vez → HOME
+      setActiveTab("home");
+      localStorage.setItem("afterlife_hasVisited", "true");
+    } else if (!activeTab) {
+      // Returning user → BUILD (solo si activeTab está vacío)
+      setActiveTab("build");
+    }
+  }, []); // ← EMPTY DEPENDENCY ARRAY (solo ejecuta al montar)
 
   // Check for local decks migration on first login
   useEffect(() => {
@@ -928,9 +943,14 @@ function App() {
         <header className="mb-8 border-b border-term-amber/20 pb-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-term-amber mb-2 font-mono">
-                CYBERPUNK TCG // DECK_BUILDER.EXE
-              </h1>
+              <div>
+                <h1 className="text-4xl font-bold text-term-amber mb-2 font-mono">
+                  AFTERLIFE DECKS // DECK_BUILDER.EXE
+                </h1>
+                <p className="text-xs text-term-amber/50 font-mono tracking-wider -mt-1">
+                  [UNOFFICIAL FAN PROJECT - NOT AFFILIATED WITH CDPR OR WEIRDCO]
+                </p>
+              </div>
               <div className="space-y-1">
                 <p className="text-term-green font-mono">
                   [{filteredCards.length} / {cards.length} CARDS] // [ALPHA/BETA
@@ -992,6 +1012,17 @@ function App() {
 
         {/* TABS */}
         <DeckTabs activeTab={activeTab} onTabChange={setActiveTab} />
+
+        {/* HOME TAB - LANDING PAGE */}
+        {activeTab === "home" && (
+          <LandingPage
+            user={user}
+            collection={collection}
+            allCards={cards}
+            savedDecks={savedDecks}
+            onNavigate={setActiveTab}
+          />
+        )}
 
         {/* CONTENT BY TAB */}
         {activeTab === "build" && (
@@ -1408,19 +1439,25 @@ function App() {
                   Not affiliated with CDPR or WeirdCo
                 </div>
 
-                <a
-                  href="/privacy"
-                  className="text-term-blue hover:text-blue-400 transition-colors block mt-2"
-                >
-                  Privacy Policy
-                </a>
+                <div className="flex flex-col gap-1 mt-2">
+                  <a
+                    href="/legal"
+                    className="text-term-blue hover:text-blue-400 transition-colors"
+                  >
+                    [Legal & Disclaimer]
+                  </a>
+
+                  <a
+                    href="https://github.com/NamelessVamp/Cyberpunktcg_Deckbuilder"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-term-amber hover:text-term-amber/80 transition-colors"
+                  >
+                    [GitHub Repository]
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-
-          {/* Bottom Bar */}
-          <div className="text-center text-term-green/40 text-xs font-mono border-t border-term-green/10 pt-4">
-            v0.3.0 // ALPHA_BUILD // {new Date().getFullYear()}
           </div>
         </footer>
       </div>
