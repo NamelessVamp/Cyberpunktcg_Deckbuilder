@@ -1,3 +1,6 @@
+import { useAuth } from "./contexts/AuthContext";
+import LoginModal from "./components/LoginModal";
+import * as deckService from "./lib/deckService";
 import { useState, useEffect } from "react";
 import cardsData from "./data/cards.json";
 import preconDecks from "./data/preconDecks.json";
@@ -16,8 +19,13 @@ import CardPreviewModal from "./components/CardPreviewModal";
 import ImportDeckModal from "./components/ImportDeckModal";
 import MulliganSimulator from "./components/MulliganSimulator";
 import PackOpener from "./components/PackOpener";
-import { useAuth } from "./contexts/AuthContext";
-import LoginModal from "./components/LoginModal";
+import MigrationModal from "./components/MigrationModal";
+import * as migrationHelper from "./lib/migrationHelper";
+import * as collectionService from "./lib/collectionService";
+import CollectionView from "./components/CollectionView";
+import FeedbackModal from "./components/FeedbackModal";
+import * as feedbackService from "./lib/feedbackService";
+import SmartCardImage from "./components/SmartCardImage";
 
 // DECK ENCODING/DECODING UTILITIES
 const encodeDeck = (deck) => {
@@ -81,6 +89,7 @@ function App() {
   const [activeTab, setActiveTab] = useState("build");
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [savedDecks, setSavedDecks] = useState([]);
+  const [isLoadingDecks, setIsLoadingDecks] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [toast, setToast] = useState(null);
   const [confirmModal, setConfirmModal] = useState(null);
@@ -88,7 +97,14 @@ function App() {
   const [previewCard, setPreviewCard] = useState(null);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [showMigrationModal, setShowMigrationModal] = useState(false);
+  const [localDeckCount, setLocalDeckCount] = useState(0);
   const { user, signOut } = useAuth();
+
+  const [collection, setCollection] = useState([]);
+  const [showOwnedOnly, setShowOwnedOnly] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false); // ← RESTAURADO
 
   useEffect(() => {
@@ -123,17 +139,68 @@ function App() {
     }
   }, [cards]);
 
+  // Load decks from Supabase when user logs in
   useEffect(() => {
-    const saved = localStorage.getItem("cyberpunk_decks");
-    if (saved) {
-      try {
-        setSavedDecks(JSON.parse(saved));
-      } catch (e) {
-        console.error("Error loading saved decks:", e);
-      }
-    }
-  }, []);
+    const loadUserDecks = async () => {
+      if (!user || cards.length === 0) return;
 
+      setIsLoadingDecks(true);
+      try {
+        const supabaseDecks = await deckService.loadDecks(user.id);
+
+        // Convert to app format
+        const appDecks = supabaseDecks.map((sd) => ({
+          id: sd.id,
+          name: sd.name,
+          notes: sd.notes || "",
+          deck: deckService.supabaseToDeck(sd, cards),
+          createdAt: sd.created_at,
+          updatedAt: sd.updated_at,
+        }));
+
+        setSavedDecks(appDecks);
+      } catch (error) {
+        console.error("Error loading decks:", error);
+        showToast("Error loading decks from cloud", "error");
+      } finally {
+        setIsLoadingDecks(false);
+      }
+    };
+
+    loadUserDecks();
+  }, [user, cards]);
+
+  // Load user's collection
+  useEffect(() => {
+    const loadUserCollection = async () => {
+      if (!user) {
+        setCollection([]);
+        return;
+      }
+
+      try {
+        const userCollection = await collectionService.loadCollection(user.id);
+        setCollection(userCollection);
+      } catch (error) {
+        console.error("Error loading collection:", error);
+      }
+    };
+
+    loadUserCollection();
+  }, [user]);
+
+  // Check for local decks migration on first login
+  useEffect(() => {
+    if (!user || cards.length === 0) return;
+
+    // Check if user has local decks
+    if (migrationHelper.hasLocalDecks()) {
+      const localDecksJSON = localStorage.getItem("cyberpunk_decks");
+      const localDecks = JSON.parse(localDecksJSON);
+      setLocalDeckCount(localDecks.length);
+      setShowMigrationModal(true);
+    }
+  }, [user, cards]);
   // KEYBOARD SHORTCUTS
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -167,6 +234,11 @@ function App() {
           setShowExportModal(true);
         }
       }
+
+      if (isCtrlOrCmd && e.key === "b") {
+        e.preventDefault();
+        setShowFeedbackModal(true);
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -179,6 +251,7 @@ function App() {
     previewCard,
     filtersOpen,
     confirmModal,
+    showFeedbackModal, // ← AGREGAR
   ]);
 
   const filteredCards = cards.filter((card) => {
@@ -226,6 +299,12 @@ function App() {
 
     if (filters.ramColors && filters.ramColors.length > 0) {
       if (!filters.ramColors.includes(card.ram_color)) return false;
+    }
+    // Filter by owned cards
+    if (showOwnedOnly && user) {
+      if (!collectionService.ownsCard(collection, card.id)) {
+        return false;
+      }
     }
 
     return true;
@@ -330,24 +409,53 @@ function App() {
     });
   };
 
-  const handleSaveDeck = (deckName, deckNotes = "") => {
-    const newDeck = {
-      id: Date.now().toString(),
-      name: deckName,
-      notes: deckNotes,
-      deck: {
-        legends: [...deck.legends],
-        mainDeck: [...deck.mainDeck],
-      },
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+  const handleSaveDeck = async (deckName, deckNotes = "") => {
+    // If user is logged in, save to Supabase
+    if (user) {
+      try {
+        const savedDeck = await deckService.saveDeck(
+          user.id,
+          deckName,
+          deck,
+          deckNotes,
+        );
 
-    const updated = [...savedDecks, newDeck];
-    setSavedDecks(updated);
-    localStorage.setItem("cyberpunk_decks", JSON.stringify(updated));
-    setShowSaveModal(false);
-    showToast(`Deck "${deckName}" saved successfully!`, "success");
+        const appDeck = {
+          id: savedDeck.id,
+          name: savedDeck.name,
+          notes: savedDeck.notes || "",
+          deck: deckService.supabaseToDeck(savedDeck, cards),
+          createdAt: savedDeck.created_at,
+          updatedAt: savedDeck.updated_at,
+        };
+
+        setSavedDecks([appDeck, ...savedDecks]);
+        setShowSaveModal(false);
+        showToast(`Deck "${deckName}" saved to cloud!`, "success");
+      } catch (error) {
+        console.error("Error saving deck:", error);
+        showToast("Error saving deck to cloud", "error");
+      }
+    } else {
+      // Offline mode: save to localStorage
+      const newDeck = {
+        id: Date.now().toString(),
+        name: deckName,
+        notes: deckNotes,
+        deck: {
+          legends: [...deck.legends],
+          mainDeck: [...deck.mainDeck],
+        },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      const updated = [...savedDecks, newDeck];
+      setSavedDecks(updated);
+      localStorage.setItem("cyberpunk_decks", JSON.stringify(updated));
+      setShowSaveModal(false);
+      showToast(`Deck "${deckName}" saved locally!`, "warning");
+    }
   };
 
   const handleLoadDeck = (savedDeck) => {
@@ -362,17 +470,32 @@ function App() {
     setConfirmModal({
       title: "DELETE DECK",
       message: `Are you sure you want to delete "${deckToDelete?.name}"? This cannot be undone.`,
-      onConfirm: () => {
-        const updated = savedDecks.filter((d) => d.id !== deckId);
-        setSavedDecks(updated);
-        localStorage.setItem("cyberpunk_decks", JSON.stringify(updated));
-        showToast("Deck deleted", "success");
-        setConfirmModal(null);
+      onConfirm: async () => {
+        try {
+          if (user) {
+            // Delete from Supabase
+            await deckService.deleteDeck(deckId);
+          }
+
+          // Update local state
+          const updated = savedDecks.filter((d) => d.id !== deckId);
+          setSavedDecks(updated);
+
+          if (!user) {
+            localStorage.setItem("cyberpunk_decks", JSON.stringify(updated));
+          }
+
+          showToast("Deck deleted", "success");
+          setConfirmModal(null);
+        } catch (error) {
+          console.error("Error deleting deck:", error);
+          showToast("Error deleting deck", "error");
+          setConfirmModal(null);
+        }
       },
       onCancel: () => setConfirmModal(null),
     });
   };
-
   const handleShareDeck = () => {
     if (deck.mainDeck.length === 0) {
       showToast("Deck is empty", "warning");
@@ -473,29 +596,56 @@ function App() {
     input.click();
   };
 
-  const handleDuplicateDeck = (deckId) => {
+  const handleDuplicateDeck = async (deckId) => {
     const deckToDuplicate = savedDecks.find((d) => d.id === deckId);
 
     if (!deckToDuplicate) return;
 
-    const duplicatedDeck = {
-      id: Date.now().toString(),
-      name: `${deckToDuplicate.name} (Copy)`,
-      deck: {
-        legends: [...deckToDuplicate.deck.legends],
-        mainDeck: [...deckToDuplicate.deck.mainDeck],
-      },
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    if (user) {
+      try {
+        const duplicatedDeck = await deckService.duplicateDeck(
+          user.id,
+          deckId,
+          cards,
+        );
 
-    const updated = [...savedDecks, duplicatedDeck];
-    setSavedDecks(updated);
-    localStorage.setItem("cyberpunk_decks", JSON.stringify(updated));
-    showToast(`Deck "${duplicatedDeck.name}" created!`, "success");
+        const appDeck = {
+          id: duplicatedDeck.id,
+          name: duplicatedDeck.name,
+          notes: duplicatedDeck.notes || "",
+          deck: deckService.supabaseToDeck(duplicatedDeck, cards),
+          createdAt: duplicatedDeck.created_at,
+          updatedAt: duplicatedDeck.updated_at,
+        };
+
+        setSavedDecks([appDeck, ...savedDecks]);
+        showToast(`Deck "${appDeck.name}" created!`, "success");
+      } catch (error) {
+        console.error("Error duplicating deck:", error);
+        showToast("Error duplicating deck", "error");
+      }
+    } else {
+      // Offline mode
+      const duplicatedDeck = {
+        id: Date.now().toString(),
+        name: `${deckToDuplicate.name} (Copy)`,
+        notes: deckToDuplicate.notes || "",
+        deck: {
+          legends: [...deckToDuplicate.deck.legends],
+          mainDeck: [...deckToDuplicate.deck.mainDeck],
+        },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      const updated = [...savedDecks, duplicatedDeck];
+      setSavedDecks(updated);
+      localStorage.setItem("cyberpunk_decks", JSON.stringify(updated));
+      showToast(`Deck "${duplicatedDeck.name}" created!`, "success");
+    }
   };
 
-  const handleRenameDeck = (deckId) => {
+  const handleRenameDeck = async (deckId) => {
     const deckToRename = savedDecks.find((d) => d.id === deckId);
 
     if (!deckToRename) return;
@@ -511,15 +661,165 @@ function App() {
       return;
     }
 
-    const updated = savedDecks.map((d) =>
-      d.id === deckId
-        ? { ...d, name: newName.trim(), updatedAt: new Date().toISOString() }
-        : d,
-    );
+    if (user) {
+      try {
+        await deckService.updateDeck(
+          deckId,
+          newName.trim(),
+          deckToRename.deck,
+          deckToRename.notes,
+        );
 
-    setSavedDecks(updated);
-    localStorage.setItem("cyberpunk_decks", JSON.stringify(updated));
-    showToast(`Deck renamed to "${newName.trim()}"`, "success");
+        const updated = savedDecks.map((d) =>
+          d.id === deckId
+            ? {
+                ...d,
+                name: newName.trim(),
+                updatedAt: new Date().toISOString(),
+              }
+            : d,
+        );
+
+        setSavedDecks(updated);
+        showToast(`Deck renamed to "${newName.trim()}"`, "success");
+      } catch (error) {
+        console.error("Error renaming deck:", error);
+        showToast("Error renaming deck", "error");
+      }
+    } else {
+      // Offline mode
+      const updated = savedDecks.map((d) =>
+        d.id === deckId
+          ? { ...d, name: newName.trim(), updatedAt: new Date().toISOString() }
+          : d,
+      );
+
+      setSavedDecks(updated);
+      localStorage.setItem("cyberpunk_decks", JSON.stringify(updated));
+      showToast(`Deck renamed to "${newName.trim()}"`, "success");
+    }
+  };
+
+  const handleMigration = async () => {
+    if (!user) return;
+
+    setShowMigrationModal(false);
+    showToast("Migrating decks to cloud...", "success");
+
+    try {
+      const results = await migrationHelper.migrateLocalDecksToSupabase(
+        user.id,
+        cards,
+      );
+
+      if (results.migrated > 0) {
+        // Reload decks from Supabase
+        const supabaseDecks = await deckService.loadDecks(user.id);
+        const appDecks = supabaseDecks.map((sd) => ({
+          id: sd.id,
+          name: sd.name,
+          notes: sd.notes || "",
+          deck: deckService.supabaseToDeck(sd, cards),
+          createdAt: sd.created_at,
+          updatedAt: sd.updated_at,
+        }));
+        setSavedDecks(appDecks);
+
+        showToast(
+          `Successfully migrated ${results.migrated} deck${results.migrated !== 1 ? "s" : ""} to cloud!`,
+          "success",
+        );
+      }
+
+      if (results.failed > 0) {
+        showToast(
+          `Failed to migrate ${results.failed} deck${results.failed !== 1 ? "s" : ""}`,
+          "error",
+        );
+      }
+    } catch (error) {
+      console.error("Migration error:", error);
+      showToast("Migration failed. Please try again.", "error");
+    }
+  };
+
+  const handleAddToCollection = async (cardId, quantity = 1) => {
+    if (!user) {
+      showToast("Login required to track collection", "warning");
+      return;
+    }
+
+    try {
+      await collectionService.addToCollection(user.id, cardId, quantity, false);
+
+      // Reload collection
+      const updated = await collectionService.loadCollection(user.id);
+      setCollection(updated);
+
+      const newQty = collectionService.getCardQuantity(updated, cardId);
+      showToast(`Added to collection (now own ${newQty})`, "success");
+    } catch (error) {
+      console.error("Error adding to collection:", error);
+      showToast("Error updating collection", "error");
+    }
+  };
+
+  const handleRemoveFromCollection = async (cardId, quantity = 1) => {
+    if (!user) return;
+
+    try {
+      await collectionService.removeFromCollection(
+        user.id,
+        cardId,
+        quantity,
+        false,
+      );
+
+      // Reload collection
+      const updated = await collectionService.loadCollection(user.id);
+      setCollection(updated);
+
+      showToast("Removed from collection", "success");
+    } catch (error) {
+      console.error("Error removing from collection:", error);
+      showToast("Error updating collection", "error");
+    }
+  };
+
+  const handleSkipMigration = () => {
+    setShowMigrationModal(false);
+    showToast("Keeping decks local. You can migrate later.", "warning");
+  };
+
+  const handleSubmitFeedback = async (category, message) => {
+    setIsSubmittingFeedback(true);
+
+    try {
+      const userId = user ? user.id : "anonymous";
+      const metadata = feedbackService.getSystemMetadata();
+
+      const result = await feedbackService.submitFeedback(
+        userId,
+        category,
+        message,
+        metadata,
+      );
+
+      if (result.success) {
+        showToast("Feedback sent successfully! Thanks, Netrunner", "success");
+        setIsSubmittingFeedback(false);
+        return true; // ← RETURN TRUE FOR SUCCESS
+      } else {
+        showToast(`Error: ${result.error}`, "error");
+        setIsSubmittingFeedback(false);
+        return false; // ← RETURN FALSE FOR ERROR
+      }
+    } catch (error) {
+      console.error("Feedback submission error:", error);
+      showToast("Error sending feedback. Please try again.", "error");
+      setIsSubmittingFeedback(false);
+      return false;
+    }
   };
 
   const handleLoadPrecon = (preconDeck) => {
@@ -631,10 +931,25 @@ function App() {
               <h1 className="text-4xl font-bold text-term-amber mb-2 font-mono">
                 CYBERPUNK TCG // DECK_BUILDER.EXE
               </h1>
-              <p className="text-term-green font-mono">
-                [{filteredCards.length} / {cards.length} CARDS] // [ALPHA/BETA
-                KIT 2026]
-              </p>
+              <div className="space-y-1">
+                <p className="text-term-green font-mono">
+                  [{filteredCards.length} / {cards.length} CARDS] // [ALPHA/BETA
+                  KIT 2026]
+                </p>
+
+                {user && collection.length > 0 && (
+                  <p className="text-term-amber/80 font-mono text-sm">
+                    📦 COLLECTION: {collection.length} unique cards owned
+                    {(() => {
+                      const stats = collectionService.getCollectionStats(
+                        collection,
+                        cards,
+                      );
+                      return ` (${stats.completionPercent}% complete)`;
+                    })()}
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* User Profile / Login */}
@@ -696,6 +1011,10 @@ function App() {
                   filters={filters}
                   onFilterChange={setFilters}
                   isOpen={filtersOpen}
+                  showOwnedOnly={showOwnedOnly}
+                  onToggleOwnedOnly={setShowOwnedOnly}
+                  collectionCount={collection.length}
+                  isLoggedIn={!!user}
                 />
 
                 {/* Card Grid */}
@@ -706,17 +1025,27 @@ function App() {
                       className="deck-card-container hover:border-term-green transition-all duration-300 cursor-pointer group"
                       onClick={() => setPreviewCard(card)}
                     >
+                      {/* IMAGE CONTAINER WITH BADGES */}
                       <div className="relative overflow-hidden rounded mb-3 bg-term-gray-light">
-                        <img
-                          src={card.image_url}
-                          alt={card.name}
+                        <SmartCardImage
+                          card={card}
                           className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
-                          loading="lazy"
-                          onError={(e) => {
-                            e.target.src =
-                              "https://via.placeholder.com/300x420/1a1a1a/ffb300?text=IMAGE+ERROR";
-                          }}
+                          showLoadingState={true}
                         />
+
+                        {/* Owned Badge */}
+                        {user &&
+                          collectionService.ownsCard(collection, card.id) && (
+                            <div className="absolute top-2 left-2 bg-term-green text-term-black font-mono font-bold text-xs px-2 py-1 rounded flex items-center gap-1">
+                              ✓ x
+                              {collectionService.getCardQuantity(
+                                collection,
+                                card.id,
+                              )}
+                            </div>
+                          )}
+
+                        {/* RAM Color Dot */}
                         {card.ram_color && (
                           <div
                             className={`absolute top-2 right-2 w-3 h-3 rounded-full ${
@@ -734,6 +1063,7 @@ function App() {
                         )}
                       </div>
 
+                      {/* CARD INFO */}
                       <h3 className="text-term-green font-bold font-mono text-lg">
                         {card.name}
                       </h3>
@@ -917,6 +1247,16 @@ function App() {
 
         {activeTab === "packs" && <PackOpener allCards={cards} />}
 
+        {activeTab === "collection" && (
+          <CollectionView
+            collection={collection}
+            allCards={cards}
+            onAddToCollection={handleAddToCollection}
+            onRemoveFromCollection={handleRemoveFromCollection}
+            onViewCard={(card) => setPreviewCard(card)}
+          />
+        )}
+
         {/* MODALS */}
         {showSaveModal && (
           <SaveDeckModal
@@ -939,6 +1279,7 @@ function App() {
             message={toast.message}
             type={toast.type}
             onClose={() => setToast(null)}
+            duration={4000}
           />
         )}
 
@@ -956,6 +1297,13 @@ function App() {
             card={previewCard}
             onClose={() => setPreviewCard(null)}
             onAddToDeck={handleAddToDeck}
+            onAddToCollection={handleAddToCollection}
+            onRemoveFromCollection={handleRemoveFromCollection}
+            ownedQuantity={collectionService.getCardQuantity(
+              collection,
+              previewCard.id,
+            )}
+            isLoggedIn={!!user}
           />
         )}
 
@@ -967,35 +1315,113 @@ function App() {
           />
         )}
 
+        {showMigrationModal && (
+          <MigrationModal
+            localDeckCount={localDeckCount}
+            onMigrate={handleMigration}
+            onSkip={handleSkipMigration}
+            onClose={handleSkipMigration}
+          />
+        )}
+
         {showLoginModal && (
           <LoginModal onClose={() => setShowLoginModal(false)} />
         )}
 
+        {showFeedbackModal && (
+          <FeedbackModal
+            onClose={() => setShowFeedbackModal(false)}
+            onSubmit={handleSubmitFeedback}
+            isSubmitting={isSubmittingFeedback}
+          />
+        )}
+
         {/* Footer */}
-        <footer className="mt-12 text-center text-term-amber/40 text-sm font-mono space-y-2">
-          <div className="text-xs">
-            <span className="text-term-green/60">SHORTCUTS:</span>{" "}
-            <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded text-term-amber/60">
-              Ctrl+S
-            </kbd>{" "}
-            Save{" "}
-            <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded text-term-amber/60">
-              Ctrl+F
-            </kbd>{" "}
-            Search{" "}
-            <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded text-term-amber/60">
-              Ctrl+E
-            </kbd>{" "}
-            Export{" "}
-            <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded text-term-amber/60">
-              ESC
-            </kbd>{" "}
-            Close
+        <footer className="mt-12 border-t border-term-amber/20 pt-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            {/* Column 1: Keyboard Shortcuts */}
+            <div className="text-center md:text-left">
+              <h4 className="text-term-green font-mono font-bold text-sm mb-3">
+                KEYBOARD SHORTCUTS
+              </h4>
+              <div className="text-xs space-y-1 text-term-amber/60 font-mono">
+                <div>
+                  <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
+                    Ctrl+S
+                  </kbd>{" "}
+                  Save Deck
+                </div>
+                <div>
+                  <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
+                    Ctrl+F
+                  </kbd>{" "}
+                  Search
+                </div>
+                <div>
+                  <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
+                    Ctrl+E
+                  </kbd>{" "}
+                  Export
+                </div>
+                <div>
+                  <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
+                    Ctrl+B
+                  </kbd>{" "}
+                  Feedback
+                </div>
+                <div>
+                  <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
+                    ESC
+                  </kbd>{" "}
+                  Close Modals
+                </div>
+              </div>
+            </div>
+
+            {/* Column 2: Feedback & Support */}
+            <div className="text-center">
+              <h4 className="text-term-green font-mono font-bold text-sm mb-3">
+                SUPPORT & FEEDBACK
+              </h4>
+              <button
+                onClick={() => setShowFeedbackModal(true)}
+                className="bg-term-amber/20 border border-term-amber text-term-amber px-6 py-2 rounded font-mono font-bold hover:bg-term-amber/30 transition-colors text-sm"
+              >
+                [SEND FEEDBACK]
+              </button>
+              <p className="text-term-green/60 text-xs font-mono mt-3">
+                Report bugs, request features, or share feedback
+              </p>
+            </div>
+
+            {/* Column 3: Legal & Credits */}
+            <div className="text-center md:text-right">
+              <h4 className="text-term-green font-mono font-bold text-sm mb-3">
+                CREDITS & LEGAL
+              </h4>
+              <div className="text-term-amber/60 text-xs font-mono space-y-1">
+                <div>Built by // NAMELESS_V4MP</div>
+                <div className="text-term-red/60 text-xs">
+                  ⚠️ Unofficial fan project
+                </div>
+                <div className="text-term-red/60 text-xs">
+                  Not affiliated with CDPR or WeirdCo
+                </div>
+
+                <a
+                  href="/privacy"
+                  className="text-term-blue hover:text-blue-400 transition-colors block mt-2"
+                >
+                  Privacy Policy
+                </a>
+              </div>
+            </div>
           </div>
-          <div>// NAMELESS_V4MP</div>
-          <a href="/privacy" className="hover:underline">
-            Política de Privacidad
-          </a>
+
+          {/* Bottom Bar */}
+          <div className="text-center text-term-green/40 text-xs font-mono border-t border-term-green/10 pt-4">
+            v0.3.0 // ALPHA_BUILD // {new Date().getFullYear()}
+          </div>
         </footer>
       </div>
     </div>

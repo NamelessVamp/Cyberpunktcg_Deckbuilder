@@ -1,3 +1,4 @@
+import SmartCardImage from "./SmartCardImage";
 export default function DeckArea({
   deck,
   onRemoveCard,
@@ -53,14 +54,9 @@ export default function DeckArea({
                 className="relative group cursor-pointer"
                 onClick={() => onRemoveCard(legend, "legends")}
               >
-                <img
-                  src={legend.image_url}
-                  alt={legend.name}
-                  className="w-full rounded border-2 border-term-amber/40 group-hover:border-term-amber transition-colors"
-                  onError={(e) => {
-                    e.target.src =
-                      "https://via.placeholder.com/300x420/1a1a1a/ffb300?text=NO+IMAGE";
-                  }}
+                <SmartCardImage
+                  card={legend}
+                  className="w-full h-auto rounded"
                 />
 
                 {/* Remove Overlay */}
@@ -149,23 +145,17 @@ export default function DeckArea({
                   className="relative group cursor-pointer"
                   onClick={() => onRemoveCard(card, "mainDeck")}
                 >
-                  <img
-                    src={card.image_url}
-                    alt={card.name}
-                    className="w-full rounded border-2 border-term-green/40 group-hover:border-term-green transition-colors"
-                    onError={(e) => {
-                      e.target.src =
-                        "https://via.placeholder.com/300x420/1a1a1a/ffb300?text=NO+IMAGE";
-                    }}
+                  <SmartCardImage
+                    card={card}
+                    className="w-full h-auto rounded"
                   />
 
                   {/* Count Badge */}
                   {count > 1 && (
-                    <div className="absolute top-2 right-2 bg-term-amber text-term-black rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg border-2 border-term-black shadow-lg pointer-events-none">
-                      {count}
+                    <div className="absolute bottom-1 right-1 bg-term-amber text-term-black font-mono font-bold text-xs px-1.5 py-0.5 rounded">
+                      x{count}
                     </div>
                   )}
-
                   {/* Remove Overlay */}
                   <div className="absolute inset-0 bg-term-red/60 rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <span className="text-white font-bold text-lg font-mono">

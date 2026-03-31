@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SmartCardImage from "./SmartCardImage";
 
 export default function PackOpener({ allCards }) {
   const [totalPacks, setTotalPacks] = useState(0);
@@ -462,14 +463,14 @@ export default function PackOpener({ allCards }) {
                       <div
                         className={`card-face front ${card.foil ? "foil-card" : ""}`}
                       >
-                        <img
-                          src={card.image_url}
-                          alt={card.name}
+                        <SmartCardImage
+                          card={card}
                           className={`w-full h-full object-cover rounded border-2 ${
                             card.foil
                               ? "border-yellow-400 shadow-lg shadow-yellow-400/50"
                               : "border-term-green/40"
                           }`}
+                          showLoadingState={true}
                           onError={(e) => {
                             e.target.src =
                               "https://via.placeholder.com/300x420/1a1a1a/ffb300?text=NO+IMAGE";

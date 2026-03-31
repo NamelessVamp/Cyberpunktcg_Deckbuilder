@@ -4,7 +4,7 @@ export default function Toast({
   message,
   type = "success",
   onClose,
-  duration = 3000,
+  duration = 5000, // ← CAMBIAR DEFAULT A 5 SEGUNDOS
 }) {
   const [isLeaving, setIsLeaving] = useState(false);
 
@@ -48,12 +48,13 @@ export default function Toast({
 
   return (
     <div
-      className={`fixed top-4 right-4 z-50 transition-all duration-500 ${
+      className={`fixed top-4 right-4 z-[9999] transition-all duration-500 ${
         isLeaving ? "opacity-0 translate-x-8" : "opacity-100 translate-x-0"
       }`}
     >
       <div
-        className={`${bgColor} ${textColor} border-2 rounded px-6 py-4 font-mono shadow-lg min-w-[300px]`}
+        className={`${bgColor} ${textColor} border-2 rounded px-6 py-4 font-mono shadow-lg min-w-[300px] cursor-pointer hover:opacity-90`}
+        onClick={onClose}
       >
         <div className="flex items-center gap-3">
           <span className="text-2xl">{icon}</span>

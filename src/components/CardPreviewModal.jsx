@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
+import SmartCardImage from "./SmartCardImage";
 
-export default function CardPreviewModal({ card, onClose, onAddToDeck }) {
+export default function CardPreviewModal({
+  card,
+  onClose,
+  onAddToDeck,
+  onAddToCollection,
+  onRemoveFromCollection,
+  ownedQuantity = 0,
+  isLoggedIn = false,
+}) {
   const [quantity, setQuantity] = useState(1);
   // Close with ESC key
   useEffect(() => {
@@ -51,14 +60,10 @@ export default function CardPreviewModal({ card, onClose, onAddToDeck }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
           {/* LEFT: Card Image */}
           <div className="flex items-center justify-center">
-            <img
-              src={card.image_url}
-              alt={card.name}
-              className="w-full max-w-md rounded shadow-2xl"
-              onError={(e) => {
-                e.target.src =
-                  "https://via.placeholder.com/400x560/1a1a1a/ffb300?text=IMAGE+ERROR";
-              }}
+            <SmartCardImage
+              card={card}
+              className="w-full h-auto rounded"
+              showLoadingState={true}
             />
           </div>
 
@@ -197,6 +202,40 @@ export default function CardPreviewModal({ card, onClose, onAddToDeck }) {
                   ? "[+ ADD TO DECK]"
                   : `[+ ADD ${quantity} ${quantity === 1 ? "COPY" : "COPIES"} TO DECK]`}
               </button>
+
+              {/* COLLECTION BUTTONS */}
+              {isLoggedIn && (
+                <div className="mt-4 pt-4 border-t border-term-amber/20">
+                  <p className="text-term-green/60 text-xs font-mono mb-2">
+                    COLLECTION:{" "}
+                    {ownedQuantity > 0 ? (
+                      <span className="text-term-amber">
+                        Own {ownedQuantity}{" "}
+                        {ownedQuantity === 1 ? "copy" : "copies"}
+                      </span>
+                    ) : (
+                      <span className="text-term-red/60">Not owned</span>
+                    )}
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => onAddToCollection(card.id, 1)}
+                      className="bg-term-green/20 border border-term-green text-term-green px-3 py-2 rounded font-mono font-bold text-sm hover:bg-term-green/30 transition-colors"
+                    >
+                      [+ ADD]
+                    </button>
+
+                    <button
+                      onClick={() => onRemoveFromCollection(card.id, 1)}
+                      disabled={ownedQuantity === 0}
+                      className="bg-term-red/20 border border-term-red text-term-red px-3 py-2 rounded font-mono font-bold text-sm hover:bg-term-red/30 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      [- REMOVE]
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

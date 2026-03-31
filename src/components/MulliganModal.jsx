@@ -232,9 +232,8 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
                       isTapped ? "w-40" : "w-32"
                     }`}
                   >
-                    <img
-                      src={legend.image_url}
-                      alt={legend.name}
+                    <SmartCardImage
+                      card={legend}
                       className={`w-full rounded border-2 border-term-amber transition-all duration-500 ${
                         isTapped ? "brightness-[0.3] saturate-50 rotate-90" : ""
                       }`}
@@ -267,14 +266,9 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
                 }}
               >
                 <div className="relative group">
-                  <img
-                    src={card.image_url}
-                    alt={card.name}
-                    className="w-full rounded border-2 border-term-green/40 hover:border-term-green transition-colors"
-                    onError={(e) => {
-                      e.target.src =
-                        "https://via.placeholder.com/300x420/1a1a1a/ffb300?text=NO+IMAGE";
-                    }}
+                  <SmartCardImage
+                    card={card}
+                    className="w-full h-auto rounded"
                   />
                   {/* Card Name on Hover */}
                   <div className="absolute bottom-0 left-0 right-0 bg-black/80 text-term-green text-xs font-mono p-1 text-center opacity-0 group-hover:opacity-100 transition-opacity">

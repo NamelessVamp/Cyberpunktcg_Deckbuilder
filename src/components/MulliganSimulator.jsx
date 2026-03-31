@@ -1,5 +1,6 @@
 import { useState } from "react";
 import MulliganModal from "./MulliganModal";
+import SmartCardImage from "./SmartCardImage";
 
 export default function MulliganSimulator({ deck, allCards }) {
   const [showModal, setShowModal] = useState(false);

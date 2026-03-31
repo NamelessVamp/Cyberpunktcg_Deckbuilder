@@ -2,6 +2,7 @@ export default function DeckTabs({ activeTab, onTabChange }) {
   const tabs = [
     { id: "build", label: "BUILD" },
     { id: "mydecks", label: "MY DECKS" },
+    { id: "collection", label: "COLLECTION" },
     { id: "precon", label: "PRECON DECKS" },
     { id: "practice", label: "PRACTICE" },
     { id: "packs", label: "PACKS" },

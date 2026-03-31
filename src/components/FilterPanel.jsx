@@ -5,6 +5,10 @@ export default function FilterPanel({
   filters,
   onFilterChange,
   isOpen,
+  showOwnedOnly,
+  onToggleOwnedOnly,
+  collectionCount,
+  isLoggedIn,
 }) {
   const [openSection, setOpenSection] = useState(null);
 
@@ -109,6 +113,31 @@ export default function FilterPanel({
         </button>
       </div>
 
+      {/* COLLECTION FILTER - FIRST */}
+      {isLoggedIn && collectionCount > 0 && (
+        <div className="mb-4 pb-4 border-b border-term-amber/20">
+          <h3 className="text-term-green/80 font-bold text-sm mb-2 font-mono">
+            COLLECTION
+          </h3>
+
+          <label className="flex items-center gap-2 cursor-pointer bg-term-gray-light p-2 rounded hover:bg-term-gray transition-colors">
+            <input
+              type="checkbox"
+              checked={showOwnedOnly}
+              onChange={(e) => onToggleOwnedOnly(e.target.checked)}
+              className="w-4 h-4 accent-term-green"
+            />
+            <span className="text-term-green font-mono text-sm">
+              Show only owned cards
+            </span>
+          </label>
+
+          <p className="text-term-amber/60 text-xs font-mono mt-2">
+            {collectionCount} unique cards owned
+          </p>
+        </div>
+      )}
+
       {/* DROPDOWN BUTTONS ROW */}
       <div className="flex flex-wrap gap-2 mb-4">
         <DropdownButton
@@ -140,9 +169,6 @@ export default function FilterPanel({
           activeCount={filters.set ? 1 : 0}
         />
       </div>
-
-      {/* COLLAPSIBLE SECTIONS */}
-
       {/* COLOR SECTION */}
       {openSection === "color" && (
         <div className="mb-4 p-4 bg-term-gray-light rounded border border-term-amber/30 animate-slideDown">

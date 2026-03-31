@@ -14,14 +14,27 @@ const cardsData = JSON.parse(fs.readFileSync(cardsPath, "utf8"));
 
 // Initialize Supabase (you'll need to set these env vars)
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
+const supabaseServiceKey = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-  console.error("❌ Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY");
+if (!supabaseUrl || !supabaseServiceKey) {
+  console.error(
+    "❌ Missing VITE_SUPABASE_URL or VITE_SUPABASE_SERVICE_ROLE_KEY",
+  );
+  console.log(
+    "💡 Make sure you have VITE_SUPABASE_SERVICE_ROLE_KEY in your .env file",
+  );
   process.exit(1);
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Use service role key to bypass RLS for admin operations
+const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false,
+  },
+});
+
+console.log("🔑 Using service role key for admin operations\n");
 
 async function backupCardImages() {
   console.log("🔄 Starting image backup to Supabase Storage...\n");

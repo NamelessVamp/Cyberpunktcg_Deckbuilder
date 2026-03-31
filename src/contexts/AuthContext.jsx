@@ -32,16 +32,17 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // TODO: Re-enable when Google OAuth is approved
   // Sign in with Google
-  const signInWithGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: window.location.origin,
-      },
-    });
-    if (error) throw error;
-  };
+  // const signInWithGoogle = async () => {
+  //   const { error } = await supabase.auth.signInWithOAuth({
+  //     provider: 'google',
+  //     options: {
+  //       redirectTo: window.location.origin,
+  //     },
+  //   })
+  //   if (error) throw error
+  // }
 
   // Sign in with Discord
   const signInWithDiscord = async () => {
@@ -49,6 +50,11 @@ export const AuthProvider = ({ children }) => {
       provider: "discord",
       options: {
         redirectTo: window.location.origin,
+        skipBrowserRedirect: false,
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
+        },
       },
     });
     if (error) throw error;
@@ -56,14 +62,22 @@ export const AuthProvider = ({ children }) => {
 
   // Sign out
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    // Clear local session only, don't revoke Discord OAuth
+    const { error } = await supabase.auth.signOut({ scope: "local" });
+    if (error) {
+      console.error("Logout error:", error);
+      // Fallback: force reload anyway
+      window.location.reload();
+      return;
+    }
+
+    window.location.reload();
   };
 
   const value = {
     user,
     loading,
-    signInWithGoogle,
+    // signInWithGoogle, // TODO: Re-enable when approved
     signInWithDiscord,
     signOut,
   };

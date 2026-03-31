@@ -27,6 +27,14 @@ body {
   transition: all 0.3s ease;
 }
 
+/* Filter Panel Container */
+.card-container {
+  background: var(--term-gray);
+  border: 2px solid rgba(255, 179, 0, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
 .deck-card-container:hover {
   border-color: var(--term-green);
   box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
@@ -314,4 +322,19 @@ button:disabled {
 
 .pack-card-container .card-face img {
   object-fit: cover;
+}
+/* Toast Animation */
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
 }
