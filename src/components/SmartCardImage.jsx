@@ -9,9 +9,10 @@ export default function SmartCardImage({
   card,
   className = "",
   showLoadingState = false,
+  eagerLoad = false, // ← NUEVO: permite forzar eager loading
   ...props
 }) {
-  const [currentSrc, setCurrentSrc] = useState(0); // 0 = primary, 1 = fallback, 2 = placeholder
+  const [currentSrc, setCurrentSrc] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -27,14 +28,12 @@ export default function SmartCardImage({
 
   const handleError = () => {
     if (currentSrc < srcArray.length - 1) {
-      // Try next fallback
       const nextIndex = currentSrc + 1;
       console.warn(
         `[SmartCardImage] Failed to load image for "${card.name}" (attempt ${currentSrc + 1}). Trying fallback ${nextIndex + 1}...`,
       );
       setCurrentSrc(nextIndex);
     } else {
-      // All sources failed
       console.error(
         `[SmartCardImage] All image sources failed for "${card.name}"`,
       );
@@ -45,8 +44,6 @@ export default function SmartCardImage({
 
   const handleLoad = () => {
     setIsLoading(false);
-
-    // Log if using fallback/placeholder
     if (currentSrc === 1) {
       console.info(
         `[SmartCardImage] Using Supabase fallback for "${card.name}"`,
@@ -70,11 +67,11 @@ export default function SmartCardImage({
         className={`${className} ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
         onError={handleError}
         onLoad={handleLoad}
-        loading="lazy"
+        loading={eagerLoad ? "eager" : "lazy"}
         {...props}
       />
 
-      {/* Error Badge (optional visual indicator) */}
+      {/* Error Badge */}
       {hasError && currentSrc === 2 && (
         <div className="absolute top-2 left-2 bg-term-red/80 text-white text-xs px-2 py-1 rounded font-mono font-bold">
           NO IMG

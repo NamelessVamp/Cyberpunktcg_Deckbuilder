@@ -1082,18 +1082,20 @@ function App() {
 
         {/* HOME TAB - LANDING PAGE */}
         {activeTab === "home" && (
-          <LandingPage
-            user={user}
-            collection={collection}
-            allCards={cards}
-            savedDecks={savedDecks}
-            onNavigate={setActiveTab}
-          />
+          <div key="home-tab">
+            <LandingPage
+              user={user}
+              collection={collection}
+              allCards={cards}
+              savedDecks={savedDecks}
+              onNavigate={setActiveTab}
+            />
+          </div>
         )}
 
         {/* CONTENT BY TAB */}
         {activeTab === "build" && (
-          <>
+          <div key="build-tab">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* LEFT COLUMN: CARD BROWSER (2/3) */}
               <div className="lg:col-span-2">
@@ -1271,9 +1273,24 @@ function App() {
                     onClearDeck={handleClearDeck}
                     onShareDeck={handleShareDeck}
                     allCards={cards}
-                    showAnalytics={showAnalytics} // ← NUEVO
-                    onToggleAnalytics={() => setShowAnalytics(!showAnalytics)} // ← NUEVO
+                    showAnalytics={showAnalytics}
+                    onToggleAnalytics={() => setShowAnalytics(!showAnalytics)}
                   />
+
+                  {/* SHOW ANALYTICS TOGGLE */}
+                  {deck.mainDeck.length > 0 && (
+                    <button
+                      onClick={() => setShowAnalytics(!showAnalytics)}
+                      className="w-full bg-term-gray border-2 border-term-amber text-term-amber py-2 px-4 rounded font-mono font-bold hover:bg-term-amber/30 transition-all"
+                    >
+                      [{showAnalytics ? "HIDE" : "SHOW"} ANALYTICS ▼]
+                    </button>
+                  )}
+
+                  {/* DECK ANALYTICS */}
+                  {showAnalytics && deck.mainDeck.length > 0 && (
+                    <DeckAnalytics deck={deck} />
+                  )}
 
                   {/* SAVE + IMPORT + EXPORT BUTTONS */}
                   <div className="grid grid-cols-3 gap-2">
@@ -1308,39 +1325,51 @@ function App() {
                 </div>
               </div>
             </div>
-          </>
+          </div>
         )}
 
         {activeTab === "mydecks" && (
-          <MyDecksView
-            savedDecks={savedDecks}
-            onLoadDeck={handleLoadDeck}
-            onDeleteDeck={handleDeleteDeck}
-            onDuplicateDeck={handleDuplicateDeck}
-            onRenameDeck={handleRenameDeck}
-            onExportAll={handleExportAllDecks}
-            onImportAll={handleImportAllDecks}
-          />
+          <div key="mydecks-tab">
+            <MyDecksView
+              savedDecks={savedDecks}
+              onLoadDeck={handleLoadDeck}
+              onDeleteDeck={handleDeleteDeck}
+              onDuplicateDeck={handleDuplicateDeck}
+              onRenameDeck={handleRenameDeck}
+              onExportAll={handleExportAllDecks}
+              onImportAll={handleImportAllDecks}
+            />
+          </div>
         )}
 
         {activeTab === "precon" && (
-          <PreconDecksView onLoadPrecon={handleLoadPrecon} />
+          <div key="precon-tab">
+            <PreconDecksView onLoadPrecon={handleLoadPrecon} />
+          </div>
         )}
 
         {activeTab === "practice" && (
-          <MulliganSimulator deck={deck} allCards={cards} />
+          <div key="practice-tab">
+            <MulliganSimulator deck={deck} allCards={cards} />
+          </div>
         )}
 
-        {activeTab === "packs" && <PackOpener allCards={cards} />}
+        {activeTab === "packs" && (
+          <div key="packs-tab">
+            <PackOpener allCards={cards} />
+          </div>
+        )}
 
         {activeTab === "collection" && (
-          <CollectionView
-            collection={collection}
-            allCards={cards}
-            onAddToCollection={handleAddToCollection}
-            onRemoveFromCollection={handleRemoveFromCollection}
-            onViewCard={(card) => setPreviewCard(card)}
-          />
+          <div key="collection-tab">
+            <CollectionView
+              collection={collection}
+              allCards={cards}
+              onAddToCollection={handleAddToCollection}
+              onRemoveFromCollection={handleRemoveFromCollection}
+              onViewCard={(card) => setPreviewCard(card)}
+            />
+          </div>
         )}
 
         {/* MODALS */}

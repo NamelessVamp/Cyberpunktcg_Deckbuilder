@@ -1,15 +1,7 @@
 import PreconCard from "./PreconCard";
 import preconDecksData from "../data/preconDecks.json";
 
-function PreconDecksView({ onNavigate }) {
-  const handleLoadPrecon = (deckData) => {
-    console.log("Loading precon:", deckData.name);
-    // TODO: Integration with deck builder
-    alert(
-      `Precon "${deckData.name}" loaded!\n(Full integration with deck builder coming in next phase)`,
-    );
-  };
-
+function PreconDecksView({ onLoadPrecon }) {
   return (
     <div className="max-w-6xl mx-auto">
       {/* HEADER */}
@@ -26,7 +18,7 @@ function PreconDecksView({ onNavigate }) {
       {/* PRECON CARDS GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {preconDecksData.preconDecks.map((deck) => (
-          <PreconCard key={deck.id} deck={deck} onLoad={handleLoadPrecon} />
+          <PreconCard key={deck.id} deck={deck} onLoad={onLoadPrecon} />
         ))}
       </div>
 
