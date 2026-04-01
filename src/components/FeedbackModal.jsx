@@ -5,6 +5,20 @@ export default function FeedbackModal({ onClose, onSubmit, isSubmitting }) {
   const [message, setMessage] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
+  // PARCHE: El temporizador ahora está vigilado por useEffect para evitar Memory Leaks
+  useEffect(() => {
+    let timer;
+    if (submitSuccess) {
+      timer = setTimeout(() => {
+        onClose();
+      }, 1500);
+    }
+    // Si el usuario cierra el modal con la "X" antes de 1.5s, esto destruye el temporizador
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [submitSuccess, onClose]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -16,10 +30,7 @@ export default function FeedbackModal({ onClose, onSubmit, isSubmitting }) {
 
     if (success) {
       setSubmitSuccess(true);
-      // Auto-close after 1.5 seconds
-      setTimeout(() => {
-        onClose();
-      }, 1500);
+      // El temporizador ahora lo maneja el useEffect de arriba
     }
   };
 

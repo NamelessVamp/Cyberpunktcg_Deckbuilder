@@ -9,20 +9,12 @@ export default function Toast({
   const [isLeaving, setIsLeaving] = useState(false);
 
   useEffect(() => {
-    // Start fade-out 500ms before closing
-    const fadeTimer = setTimeout(() => {
-      setIsLeaving(true);
-    }, duration - 500);
-
-    // Close after full duration
-    const closeTimer = setTimeout(() => {
+    const timer = setTimeout(() => {
       onClose();
     }, duration);
 
-    return () => {
-      clearTimeout(fadeTimer);
-      clearTimeout(closeTimer);
-    };
+    // PARCHE: Limpiar el temporizador si el componente muere antes
+    return () => clearTimeout(timer);
   }, [duration, onClose]);
 
   const bgColor = {

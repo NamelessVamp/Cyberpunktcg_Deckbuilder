@@ -136,11 +136,11 @@ export default function PackOpener({ allCards }) {
     } else if (rares.length > 0) {
       foilCard = { ...randomCard(rares), foil: true, slot: 12 };
     } else {
-      foilCard = { ...randomCard(uncommons), foil: true, slot: 12 } || {
-        ...randomCard(commons),
-        foil: true,
-        slot: 12,
-      };
+      // PARCHE: Asignación segura para evitar el crash del objeto vacío { ...null }
+      const backupCard = randomCard(uncommons) || randomCard(commons);
+      if (backupCard) {
+        foilCard = { ...backupCard, foil: true, slot: 12 };
+      }
     }
 
     if (foilCard) {
