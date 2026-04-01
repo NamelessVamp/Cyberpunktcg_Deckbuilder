@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import SmartCardImage from "./SmartCardImage";
 
 export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
   const [hand, setHand] = useState([]);
