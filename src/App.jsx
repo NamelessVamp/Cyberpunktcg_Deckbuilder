@@ -1275,16 +1275,6 @@ function App() {
                     onToggleAnalytics={() => setShowAnalytics(!showAnalytics)}
                   />
 
-                  {/* SHOW ANALYTICS TOGGLE */}
-                  {deck.mainDeck.length > 0 && (
-                    <button
-                      onClick={() => setShowAnalytics(!showAnalytics)}
-                      className="w-full bg-term-gray border-2 border-term-amber text-term-amber py-2 px-4 rounded font-mono font-bold hover:bg-term-amber/30 transition-all"
-                    >
-                      [{showAnalytics ? "HIDE" : "SHOW"} ANALYTICS ▼]
-                    </button>
-                  )}
-
                   {/* DECK ANALYTICS */}
                   {showAnalytics && deck.mainDeck.length > 0 && (
                     <DeckAnalytics deck={deck} />
