@@ -75,3 +75,5 @@ async function checkImageHealth() {
 }
 
 checkImageHealth();
+
+//para correr el comando usa node scripts/checkImageHealth.js

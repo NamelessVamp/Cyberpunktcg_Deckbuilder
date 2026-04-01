@@ -34,6 +34,7 @@ const encodeDeck = (deck) => {
     const deckData = {
       legends: deck.legends.map((c) => c.id),
       mainDeck: deck.mainDeck.map((c) => c.id),
+      sideboard: deck.sideboard.map((c) => c.id), // ← NUEVO
     };
     const jsonString = JSON.stringify(deckData);
     return btoa(jsonString);
@@ -56,7 +57,11 @@ const decodeDeck = (encodedString, allCards) => {
       .map((id) => allCards.find((c) => c.id === id))
       .filter(Boolean);
 
-    return { legends, mainDeck };
+    const sideboard = (deckData.sideboard || []) // ← NUEVO
+      .map((id) => allCards.find((c) => c.id === id))
+      .filter(Boolean);
+
+    return { legends, mainDeck, sideboard }; // ← AGREGAR sideboard
   } catch (error) {
     console.error("Error decoding deck:", error);
     return null;
@@ -82,11 +87,15 @@ function App() {
     keywords: [],
     set: "",
   });
+
   const [filtersOpen, setFiltersOpen] = useState(false);
+
   const [deck, setDeck] = useState({
     legends: [],
     mainDeck: [],
+    sideboard: [], // ← NUEVO
   });
+
   const [activeTab, setActiveTab] = useState("build");
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [savedDecks, setSavedDecks] = useState([]);
@@ -401,12 +410,69 @@ function App() {
     }
   };
 
+  const handleAddToSideboard = (card, quantity = 1) => {
+    // Check sideboard max 15
+    if (deck.sideboard.length >= 15) {
+      showToast("Sideboard is full (max 15 cards)", "warning");
+      return;
+    }
+
+    // Check max 3 copies by name
+    const currentCount = deck.sideboard.filter(
+      (c) => c.name === card.name,
+    ).length;
+    const canAdd = Math.min(
+      quantity,
+      Math.min(3 - currentCount, 15 - deck.sideboard.length),
+    );
+
+    if (canAdd === 0) {
+      if (currentCount >= 3) {
+        showToast(
+          `Already have 3 copies of ${card.name} in sideboard`,
+          "warning",
+        );
+      } else {
+        showToast("Sideboard is full (max 15 cards)", "warning");
+      }
+      return;
+    }
+
+    setDeck((prev) => {
+      const newSideboard = [...prev.sideboard];
+      for (let i = 0; i < canAdd; i++) {
+        newSideboard.push(card);
+      }
+      return { ...prev, sideboard: newSideboard };
+    });
+
+    if (canAdd < quantity) {
+      showToast(
+        `${card.name}: Added ${canAdd} to sideboard (limit reached)`,
+        "warning",
+      );
+    } else {
+      showToast(
+        `${card.name}: Added ${canAdd} ${canAdd === 1 ? "copy" : "copies"} to sideboard`,
+        "success",
+      );
+    }
+  };
+
   const handleRemoveCard = (card, from) => {
     if (from === "legends") {
       setDeck((prev) => ({
         ...prev,
         legends: prev.legends.filter((c) => c.id !== card.id),
       }));
+    } else if (from === "sideboard") {
+      // ← NUEVO
+      setDeck((prev) => {
+        const index = prev.sideboard.findIndex((c) => c.id === card.id);
+        const newSideboard = [...prev.sideboard];
+        newSideboard.splice(index, 1);
+        return { ...prev, sideboard: newSideboard };
+      });
     } else {
       setDeck((prev) => {
         const index = prev.mainDeck.findIndex((c) => c.id === card.id);
@@ -421,6 +487,7 @@ function App() {
     setDeck({
       legends: [],
       mainDeck: [],
+      sideboard: [], // ← NUEVO
     });
   };
 
@@ -873,7 +940,7 @@ function App() {
       }
     });
 
-    setDeck({ legends, mainDeck });
+    setDeck({ legends, mainDeck, sideboard: [] }); // ← AGREGAR sideboard vacío
 
     const deckRamColors = [
       ...new Set(legends.map((c) => c.ram_color).filter(Boolean)),
@@ -1203,23 +1270,10 @@ function App() {
                     onRemoveCard={handleRemoveCard}
                     onClearDeck={handleClearDeck}
                     onShareDeck={handleShareDeck}
-                    allCards={cards} // ← AGREGAR ESTO
+                    allCards={cards}
+                    showAnalytics={showAnalytics} // ← NUEVO
+                    onToggleAnalytics={() => setShowAnalytics(!showAnalytics)} // ← NUEVO
                   />
-
-                  {/* SHOW ANALYTICS TOGGLE - RESTAURADO */}
-                  {deck.mainDeck.length > 0 && (
-                    <button
-                      onClick={() => setShowAnalytics(!showAnalytics)}
-                      className="w-full bg-term-amber/20 border-2 border-term-amber text-term-amber py-2 px-4 rounded font-mono font-bold hover:bg-term-amber/30 transition-all"
-                    >
-                      [{showAnalytics ? "HIDE" : "SHOW"} ANALYTICS ▼]
-                    </button>
-                  )}
-
-                  {/* DECK ANALYTICS - RESTAURADO */}
-                  {showAnalytics && deck.mainDeck.length > 0 && (
-                    <DeckAnalytics deck={deck} />
-                  )}
 
                   {/* SAVE + IMPORT + EXPORT BUTTONS */}
                   <div className="grid grid-cols-3 gap-2">
@@ -1329,6 +1383,7 @@ function App() {
             card={previewCard}
             onClose={() => setPreviewCard(null)}
             onAddToDeck={handleAddToDeck}
+            onAddToSideboard={handleAddToSideboard} // ← NUEVO
             onAddToCollection={handleAddToCollection}
             onRemoveFromCollection={handleRemoveFromCollection}
             ownedQuantity={collectionService.getCardQuantity(

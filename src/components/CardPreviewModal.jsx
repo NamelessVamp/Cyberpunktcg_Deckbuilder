@@ -5,6 +5,7 @@ export default function CardPreviewModal({
   card,
   onClose,
   onAddToDeck,
+  onAddToSideboard,
   onAddToCollection,
   onRemoveFromCollection,
   ownedQuantity = 0,
@@ -196,11 +197,30 @@ export default function CardPreviewModal({
               {/* Add to Deck Button */}
               <button
                 onClick={handleAddAndClose}
-                className="w-full bg-[#00ff41] text-black py-3 px-6 rounded font-bold hover:bg-[#00ff41]/80 transition-colors"
+                className="w-full bg-term-green text-term-black py-3 px-6 rounded font-bold hover:bg-green-400 transition-colors mb-2"
               >
                 {card.type === "LEGEND"
                   ? "[+ ADD TO DECK]"
                   : `[+ ADD ${quantity} ${quantity === 1 ? "COPY" : "COPIES"} TO DECK]`}
+              </button>
+
+              {/* Add to Sideboard Button - NUEVO */}
+              <button
+                onClick={() => {
+                  if (onAddToSideboard) {
+                    onAddToSideboard(
+                      card,
+                      card.type === "LEGEND" ? 1 : quantity,
+                    );
+                  }
+                  setQuantity(1);
+                  onClose();
+                }}
+                className="w-full bg-term-blue/20 border-2 border-term-blue text-term-blue py-2 px-4 rounded font-mono font-bold hover:bg-term-blue/30 transition-colors mb-4"
+              >
+                {card.type === "LEGEND"
+                  ? "[+ ADD TO SIDEBOARD]"
+                  : `[+ ADD ${quantity} ${quantity === 1 ? "COPY" : "COPIES"} TO SIDEBOARD]`}
               </button>
 
               {/* COLLECTION BUTTONS */}

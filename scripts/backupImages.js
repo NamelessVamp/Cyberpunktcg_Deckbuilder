@@ -119,3 +119,5 @@ async function backupCardImages() {
 }
 
 backupCardImages();
+
+//para correr el comando usa node scripts/backupImages.js
