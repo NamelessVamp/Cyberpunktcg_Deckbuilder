@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getImageUrl } from "../lib/imageService";
 
 /**
@@ -9,12 +9,13 @@ export default function SmartCardImage({
   card,
   className = "",
   showLoadingState = false,
-  eagerLoad = false, // ← NUEVO: permite forzar eager loading
+  eagerLoad = false,
   ...props
 }) {
   const [currentSrc, setCurrentSrc] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const imgRef = useRef(null); // <-- EL ESCÁNER
 
   const sources = getImageUrl(card);
   const srcArray = [sources.primary, sources.fallback, sources.placeholder];
@@ -26,17 +27,22 @@ export default function SmartCardImage({
     setHasError(false);
   }, [card.id]);
 
+  // FIX: PHANTOM CACHE BUG
+  // Si la imagen ya se cargó instantáneamente desde el caché, quita el loading
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete) {
+      setIsLoading(false);
+    }
+  }, [currentSrc, card.id]);
+
   const handleError = () => {
     if (currentSrc < srcArray.length - 1) {
       const nextIndex = currentSrc + 1;
       console.warn(
-        `[SmartCardImage] Failed to load image for "${card.name}" (attempt ${currentSrc + 1}). Trying fallback ${nextIndex + 1}...`,
+        `[SmartCardImage] Failed to load image for "${card.name}". Trying fallback...`,
       );
       setCurrentSrc(nextIndex);
     } else {
-      console.error(
-        `[SmartCardImage] All image sources failed for "${card.name}"`,
-      );
       setHasError(true);
       setIsLoading(false);
     }
@@ -44,17 +50,10 @@ export default function SmartCardImage({
 
   const handleLoad = () => {
     setIsLoading(false);
-    if (currentSrc === 1) {
-      console.info(
-        `[SmartCardImage] Using Supabase fallback for "${card.name}"`,
-      );
-    } else if (currentSrc === 2) {
-      console.warn(`[SmartCardImage] Using placeholder for "${card.name}"`);
-    }
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full h-full">
       {/* Loading Skeleton */}
       {showLoadingState && isLoading && (
         <div className="absolute inset-0 bg-term-gray-light animate-pulse rounded" />
@@ -62,6 +61,7 @@ export default function SmartCardImage({
 
       {/* Image */}
       <img
+        ref={imgRef} // <-- CONECTAMOS EL ESCÁNER AQUÍ
         src={srcArray[currentSrc]}
         alt={card.name}
         className={`${className} ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}

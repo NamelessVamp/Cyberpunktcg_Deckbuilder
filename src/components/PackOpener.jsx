@@ -487,29 +487,32 @@ export default function PackOpener({ allCards }) {
                         </div>
                       </div>
 
-                      {/* Front Face */}
+                      {/* Front Face - FOIL MAGIC */}
                       <div
-                        className={`card-face front ${card.foil ? "foil-card" : ""}`}
+                        className={`card-face front rounded border-2 ${
+                          card.foil
+                            ? "foil-card border-transparent"
+                            : "border-term-green/40"
+                        }`}
                       >
                         <SmartCardImage
                           card={card}
-                          className={`w-full h-full object-cover rounded border-2 ${
-                            card.foil
-                              ? "border-yellow-400 shadow-lg shadow-yellow-400/50"
-                              : "border-term-green/40"
-                          }`}
+                          className="w-full h-full object-cover rounded"
                           showLoadingState={true}
+                          eagerLoad={true}
                           onError={(e) => {
                             e.target.src =
                               "https://via.placeholder.com/300x420/1a1a1a/ffb300?text=NO+IMAGE";
                           }}
                         />
+                        {/* Foil Badge */}
                         {card.foil && (
-                          <div className="absolute top-1 right-1 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 text-black rounded-full px-2 py-0.5 text-[10px] font-bold shadow-lg animate-pulse">
+                          <div className="absolute top-1 right-1 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 text-black rounded-full px-2 py-0.5 text-[10px] font-bold shadow-lg animate-pulse z-10">
                             ✨ FOIL
                           </div>
                         )}
-                        <div className="absolute bottom-0 left-0 right-0 bg-black/90 text-term-green text-[10px] font-mono p-1 text-center truncate">
+                        {/* Card Name */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/90 text-term-green text-[10px] font-mono p-1 text-center truncate z-10">
                           {card.name}
                         </div>
                       </div>

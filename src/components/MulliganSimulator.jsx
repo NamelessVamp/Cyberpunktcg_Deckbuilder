@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MulliganModal from "./MulliganModal";
 import SmartCardImage from "./SmartCardImage";
 import Tooltip from "./Tooltip";

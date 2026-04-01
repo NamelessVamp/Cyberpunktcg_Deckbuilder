@@ -908,39 +908,37 @@ function App() {
     const legends = [];
     const mainDeck = [];
 
-    preconDeck.legends.forEach((legendName) => {
-      const card = cards.find((c) => {
-        const nameLower = c.name.toLowerCase();
-        const searchLower = legendName.toLowerCase();
-        if (nameLower === searchLower) return true;
-        if (c.subtitle) {
-          const fullName = `${c.name} (${c.subtitle})`.toLowerCase();
-          if (fullName === searchLower) return true;
-        }
-        return false;
+    // 1. Cargar las Legends usando el 'id' del objeto JSON
+    if (preconDeck.legends && Array.isArray(preconDeck.legends)) {
+      preconDeck.legends.forEach((legendObj) => {
+        const card = cards.find((c) => c.id === legendObj.id);
+        if (card) legends.push(card);
       });
-      if (card) legends.push(card);
-    });
+    }
 
-    Object.entries(preconDeck.mainDeck).forEach(([cardName, count]) => {
-      const card = cards.find((c) => {
-        const nameLower = c.name.toLowerCase();
-        const searchLower = cardName.toLowerCase();
-        if (nameLower === searchLower) return true;
-        if (c.subtitle) {
-          const fullName = `${c.name} (${c.subtitle})`.toLowerCase();
-          if (fullName === searchLower) return true;
+    // 2. Cargar el Main Deck
+    // Maneja si en el futuro decides usar arrays u objetos para el mainDeck
+    if (preconDeck.mainDeck && !Array.isArray(preconDeck.mainDeck)) {
+      Object.entries(preconDeck.mainDeck).forEach(([cardName, count]) => {
+        const card = cards.find((c) => {
+          const nameLower = c.name.toLowerCase();
+          const searchLower = cardName.toLowerCase();
+          if (nameLower === searchLower) return true;
+          if (c.subtitle) {
+            const fullName = `${c.name} (${c.subtitle})`.toLowerCase();
+            if (fullName === searchLower) return true;
+          }
+          return false;
+        });
+        if (card) {
+          for (let i = 0; i < count; i++) {
+            mainDeck.push(card);
+          }
         }
-        return false;
       });
-      if (card) {
-        for (let i = 0; i < count; i++) {
-          mainDeck.push(card);
-        }
-      }
-    });
+    }
 
-    setDeck({ legends, mainDeck, sideboard: [] }); // ← AGREGAR sideboard vacío
+    setDeck({ legends, mainDeck, sideboard: [] });
 
     const deckRamColors = [
       ...new Set(legends.map((c) => c.ram_color).filter(Boolean)),
