@@ -908,35 +908,34 @@ function App() {
     const legends = [];
     const mainDeck = [];
 
-    // 1. Cargar las Legends usando el 'id' del objeto JSON
-    if (preconDeck.legends && Array.isArray(preconDeck.legends)) {
-      preconDeck.legends.forEach((legendObj) => {
-        const card = cards.find((c) => c.id === legendObj.id);
-        if (card) legends.push(card);
-      });
-    }
+    // LEGENDS BY ID
+    preconDeck.legends.forEach((legendData) => {
+      const card = cards.find((c) => c.id === legendData.id);
+      if (card) legends.push(card);
+      else console.warn(`Legend not found: ${legendData.id}`);
+    });
 
-    // 2. Cargar el Main Deck
-    // Maneja si en el futuro decides usar arrays u objetos para el mainDeck
-    if (preconDeck.mainDeck && !Array.isArray(preconDeck.mainDeck)) {
-      Object.entries(preconDeck.mainDeck).forEach(([cardName, count]) => {
-        const card = cards.find((c) => {
-          const nameLower = c.name.toLowerCase();
-          const searchLower = cardName.toLowerCase();
-          if (nameLower === searchLower) return true;
-          if (c.subtitle) {
-            const fullName = `${c.name} (${c.subtitle})`.toLowerCase();
-            if (fullName === searchLower) return true;
-          }
-          return false;
-        });
-        if (card) {
-          for (let i = 0; i < count; i++) {
-            mainDeck.push(card);
-          }
+    // MAIN DECK BY NAME (mantener compatibilidad)
+    Object.entries(preconDeck.mainDeck).forEach(([cardName, count]) => {
+      const card = cards.find((c) => {
+        const nameLower = c.name.toLowerCase();
+        const searchLower = cardName.toLowerCase();
+        if (nameLower === searchLower) return true;
+        if (c.subtitle) {
+          const fullName = `${c.name} (${c.subtitle})`.toLowerCase();
+          if (fullName === searchLower) return true;
         }
+        return false;
       });
-    }
+
+      if (card) {
+        for (let i = 0; i < count; i++) {
+          mainDeck.push(card);
+        }
+      } else {
+        console.warn(`Card not found: ${cardName}`);
+      }
+    });
 
     setDeck({ legends, mainDeck, sideboard: [] });
 
@@ -958,13 +957,14 @@ function App() {
       set: "",
     });
 
+    setFiltersOpen(true); // ← Abrir filtros
     setActiveTab("build");
+
     showToast(
-      `${preconDeck.name} loaded! Gallery filtered to ${deckRamColors.join(" + ")} cards only.`,
+      `${preconDeck.name} loaded! Gallery auto-filtered to ${deckRamColors.join(" + ")} RAM colors.`,
       "success",
     );
   };
-
   const showToast = (message, type = "success") => {
     setToast({ message, type });
   };

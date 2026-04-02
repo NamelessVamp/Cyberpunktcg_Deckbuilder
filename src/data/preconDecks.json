@@ -4,41 +4,64 @@
       "id": "alpha-arasaka",
       "name": "ARASAKA CONTROL // ALPHA KIT",
       "difficulty": "Beginner",
-      "description": "The official Arasaka starter deck from Alpha Kit. A defensive control deck that uses high-power Units and Corpo agents to dominate the late game. Protect your Gigs with Blockers while building Street Cred for devastating effects.",
-      "strategy": "Play defensively early. Use Blocker units like Corpo Security to protect your Gigs from direct attacks. Build your board slowly with mid-cost Units. Once you hit 12+ Street Cred, activate powerful triggered effects. Goro Takemura and Adam Smasher provide strong late-game pressure.",
+      "description": "The official Arasaka starter deck from Alpha Kit. A defensive control deck that uses high-power Units and Corpo agents to dominate the late game.",
+      "strategy": "Play defensively early. Use Blocker units like Corpo Security to protect your Gigs from direct attacks. Build your board slowly with mid-cost Units.",
       "keyCards": [
+        "Saburo Arasaka (Legend - Global power buff)",
         "Goro Takemura (Legend - Defensive utility, protects Units)",
-        "Adam Smasher (Legend - High Power, intimidation factor)",
-        "Corpo Security (Blocker - Your main defensive tool)",
-        "Arasaka Enforcer (Mid-game power Unit)",
-        "Corporate Headquarters (Street Cred payoff card)"
+        "Corpo Security (Blocker - Your main defensive tool)"
       ],
       "legends": [
-        { "id": "goro-takemura", "name": "Goro Takemura" },
-        { "id": "adam-smasher", "name": "Adam Smasher" },
-        { "id": "yorinobu-arasaka", "name": "Yorinobu Arasaka" }
+        {
+          "id": "yorinobu-arasaka-embracing-destruction",
+          "name": "Yorinobu Arasaka"
+        },
+        { "id": "goro-takemura-hands-unclean", "name": "Goro Takemura" },
+        { "id": "saburo-arasaka-stubborn-patriach", "name": "Saburo Arasaka" }
       ],
-      "mainDeck": []
+      "mainDeck": {
+        "Mantis Blades": 3,
+        "Satori": 2,
+        "Sandevistan": 2,
+        "Industrial Assembly": 3,
+        "Corporate Surveillance": 3,
+        "Corpo Security": 3,
+        "Ruthless Lowlife": 2,
+        "Swordwise Huscle": 3,
+        "Emergency Atlus": 3,
+        "Goro Takemura (Losing His Way)": 2,
+        "Armored Minotaur": 1
+      }
     },
     {
       "id": "alpha-merc",
       "name": "MERC AGGRO // ALPHA KIT",
       "difficulty": "Beginner",
-      "description": "The official Merc starter deck from Alpha Kit. An aggressive rush strategy focused on stealing Gigs fast. Deploy cheap Units, equip powerful Cyberware, and attack relentlessly before your opponent stabilizes.",
-      "strategy": "Go fast. Play 1-3 cost Units immediately. Equip them with Mantis Blades or Gorilla Arms to boost Power. Attack the opponent directly every turn to steal multiple Gigs. Jackie Welles can GO SOLO for instant attacks. Don't worry about losing Units - speed is everything.",
+      "description": "The official Merc starter deck from Alpha Kit. An aggressive rush strategy focused on stealing Gigs fast.",
+      "strategy": "Go fast. Equip your units with Kiroshi Optics. Attack the opponent directly every turn to steal multiple Gigs. Jackie Welles can GO SOLO for instant attacks.",
       "keyCards": [
         "Jackie Welles (Legend - GO SOLO ability for instant attacks)",
-        "Panam Palmer (Legend - Nomad synergy and mobility)",
-        "Street Merc (Low-cost aggressive Unit)",
-        "Mantis Blades (Gear - +3 Power, game-ending on fast Units)",
-        "Rapid Strike (Program - Ready a Unit for double attacks)"
+        "Viktor Vektor (Legend - Deck searching and economy)",
+        "Floor It (Plan - Bounce enemy units to clear the way)"
       ],
       "legends": [
-        { "id": "jackie-welles", "name": "Jackie Welles" },
-        { "id": "panam-palmer", "name": "Panam Palmer" },
-        { "id": "rogue-amendiares", "name": "Rogue Amendiares" }
+        { "id": "jackie-welles-pour-one-out-for-me", "name": "Jackie Welles" },
+        { "id": "v-corporate-exile", "name": "V" },
+        { "id": "viktor-vektor-sit-down-and-relax", "name": "Viktor Vektor" }
       ],
-      "mainDeck": []
+      "mainDeck": {
+        "Kiroshi Optics": 3,
+        "Mandibular Upgrade": 2,
+        "Dying Night": 2,
+        "Floor It": 3,
+        "Reboot Optics": 3,
+        "Secondhand Bombus": 3,
+        "Evelyn Parker (Scheming Siren)": 2,
+        "T-Bug (Amateur Philosopher)": 3,
+        "Delamain Cab": 3,
+        "MT0D12 Flathead": 2,
+        "Jackie Welles (Ride Or Die Choom)": 1
+      }
     }
   ]
 }
