@@ -27,6 +27,7 @@ import FeedbackModal from "./components/FeedbackModal";
 import * as feedbackService from "./lib/feedbackService";
 import SmartCardImage from "./components/SmartCardImage";
 import LandingPage from "./components/LandingPage";
+import LegalDisclaimer from "./components/LegalDisclaimer";
 
 // DECK ENCODING/DECODING UTILITIES
 const encodeDeck = (deck) => {
@@ -1360,6 +1361,12 @@ function App() {
           </div>
         )}
 
+        {activeTab === "legal" && (
+          <div key="legal-tab">
+            <LegalDisclaimer />
+          </div>
+        )}
+
         {/* MODALS */}
         {showSaveModal && (
           <SaveDeckModal
@@ -1512,14 +1519,13 @@ function App() {
                   Not affiliated with CDPR or WeirdCo
                 </div>
 
-                <div className="flex flex-col gap-1 mt-2">
-                  <a
-                    href="/legal"
-                    className="text-term-blue hover:text-blue-400 transition-colors"
+                <div className="flex flex-col items-center md:items-end gap-1 mt-2">
+                  <button
+                    onClick={() => setActiveTab("legal")}
+                    className="text-term-blue hover:text-blue-400 transition-colors font-mono text-xs text-right"
                   >
                     [Legal & Disclaimer]
-                  </a>
-
+                  </button>
                   <a
                     href="https://github.com/NamelessVamp/Cyberpunktcg_Deckbuilder"
                     target="_blank"

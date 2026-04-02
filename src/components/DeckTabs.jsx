@@ -7,6 +7,7 @@ export default function DeckTabs({ activeTab, onTabChange }) {
     { id: "practice", label: "PRACTICE", icon: "🎯" },
     { id: "packs", label: "PACKS", icon: "🎁" },
     { id: "collection", label: "COLLECTION", icon: "💎" },
+    { id: "legal", label: "LEGAL", icon: "⚖️" },
   ];
   return (
     <div className="flex gap-2 mb-6 border-b border-term-amber/20 pb-2">
