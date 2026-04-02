@@ -17,14 +17,14 @@ function LandingPage({ user, collection, allCards, savedDecks, onNavigate }) {
     <div className="max-w-6xl mx-auto">
       {/* HERO SECTION */}
       <div className="text-center mb-16 border-2 border-term-amber/30 bg-term-gray/20 p-12 rounded-lg">
-        <h1 className="text-6xl font-bold text-term-amber mb-4 font-mono tracking-wider">
+        <h1 className="text-5xl md:text-7xl font-bold text-term-amber mb-4 tracking-tight font-mono">
           AFTERLIFE DECKS
         </h1>
-        <p className="text-2xl text-term-green font-mono mb-2">
-          // CYBERPUNK TCG DECK BUILDER //
+        <p className="text-xl md:text-2xl text-term-green/80 mb-2 font-mono">
+          Professional Deck Builder for Cyberpunk 2077 TCG
         </p>
-        <p className="text-term-amber/60 font-mono text-sm">
-          [ALPHA/BETA KIT 2026 - COMMUNITY EDITION]
+        <p className="text-lg md:text-xl text-term-green/60 mb-8 font-mono">
+          Build. Analyze. Dominate Night City.
         </p>
 
         <div className="mt-8 flex justify-center gap-4 text-xs font-mono text-term-green/60">

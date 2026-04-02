@@ -1,16 +1,35 @@
-# React + Vite
+# Afterlife Decks
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Professional Deck Building Tool for Cyberpunk 2077 Trading Card Game**
 
-Currently, two official plugins are available:
+Build, analyze, and share your Night City strategies.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🔍 **Advanced Search & Filtering** - Find cards by name, faction, cost, power, RAM, and keywords
+- ⚖️ **Real-Time Deck Validation** - Ensure tournament-legal decks with instant feedback
+- 📊 **Deck Analytics** - Visualize your mana curve, tribal synergies, and consistency metrics
+- 💾 **Cloud Save System** - Sync your decks across devices with Discord authentication
+- 📦 **Collection Tracker** - Track owned cards and missing pieces
+- 🎲 **Mulligan Simulator** - Test your opening hands
+- 🃏 **Pack Opener** - Simulate opening Alpha/Beta packs
+- 📤 **Export to Text** - Share decks on Discord without URL censorship
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Tech Stack
+
+- React + Vite
+- Supabase (Auth + Database)
+- Tailwind CSS
+- Local JSON card database
+
+---
+
+## Legal
+
+Afterlife Decks is an unofficial fan project. All Cyberpunk 2077™ content is owned by CD Projekt Red.
+
+See [Legal Disclaimer](./src/components/LegalDisclaimer.jsx) for full details.
