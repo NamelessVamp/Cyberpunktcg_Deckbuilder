@@ -13,6 +13,7 @@ export default function DeckArea({
   allCards,
   showAnalytics, // ← NUEVO
   onToggleAnalytics, // ← NUEVO
+  onGenerateProxies,
 }) {
   const [showLegalityModal, setShowLegalityModal] = useState(false);
 
@@ -351,6 +352,15 @@ export default function DeckArea({
           className="w-full mt-2 bg-term-amber/20 border-2 border-term-amber text-term-amber py-2 px-4 rounded font-mono font-bold text-sm hover:bg-term-amber/30 transition-all"
         >
           [{showAnalytics ? "HIDE" : "SHOW"} ANALYTICS ▼]
+        </button>
+      )}
+
+      {deck.legends.length > 0 && (
+        <button
+          onClick={onGenerateProxies}
+          className="w-full py-2 bg-term-amber/20 text-term-amber border border-term-amber rounded font-mono hover:bg-term-amber/30 transition-colors mt-2"
+        >
+          [GENERATE PROXIES]
         </button>
       )}
 

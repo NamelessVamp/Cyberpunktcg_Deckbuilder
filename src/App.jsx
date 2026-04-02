@@ -28,6 +28,7 @@ import * as feedbackService from "./lib/feedbackService";
 import SmartCardImage from "./components/SmartCardImage";
 import LandingPage from "./components/LandingPage";
 import LegalDisclaimer from "./components/LegalDisclaimer";
+import ProxyModal from "./components/ProxyModal";
 
 // DECK ENCODING/DECODING UTILITIES
 const encodeDeck = (deck) => {
@@ -113,7 +114,7 @@ function App() {
   const [showMigrationModal, setShowMigrationModal] = useState(false);
   const [localDeckCount, setLocalDeckCount] = useState(0);
   const { user, signOut } = useAuth();
-
+  const [showProxyModal, setShowProxyModal] = useState(false);
   const [collection, setCollection] = useState([]);
   const [showOwnedOnly, setShowOwnedOnly] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false); // ← RESTAURADO
@@ -1274,7 +1275,15 @@ function App() {
                     allCards={cards}
                     showAnalytics={showAnalytics}
                     onToggleAnalytics={() => setShowAnalytics(!showAnalytics)}
+                    onGenerateProxies={() => setShowProxyModal(true)} // ← NUEVO
                   />
+
+                  {showProxyModal && (
+                    <ProxyModal
+                      deck={deck}
+                      onClose={() => setShowProxyModal(false)}
+                    />
+                  )}
 
                   {/* DECK ANALYTICS */}
                   {showAnalytics && deck.mainDeck.length > 0 && (
