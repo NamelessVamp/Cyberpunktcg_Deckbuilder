@@ -1,0 +1,268 @@
+{
+  "guides": {
+    "alpha-arasaka": {
+      "id": "alpha-arasaka",
+      "name": "ARASAKA CONTROL // ALPHA KIT",
+      "archetype": "Midrange Control",
+      "difficulty": "Medium",
+      "overview": "Arasaka Control is a defensive midrange deck that uses cheap blockers and removal to survive the early game, then deploys high-value threats to dominate the late game. The deck leverages Saburo Arasaka's passive ability to buff all red units, creating a resilient board state that's hard to break.",
+
+      "gameplan": {
+        "early": "Survive with cheap blockers (Corpo Security, Ruthless Lowlife). Sell excess lands and low-impact cards to build RAM. Avoid overcommitting to the board — you want to force your opponent to overextend.",
+        "mid": "Deploy your high-impact units (Swordwise Huscle, Goro Takemura). Use removal (Industrial Assembly) to clear threats. Start pressuring with Mantis Blades + Sandevistan combos.",
+        "late": "Once you have board control, Saburo Arasaka makes all your units massive. Close out with buffed attackers. Emergency Atlus provides life cushion if needed."
+      },
+
+      "winConditions": [
+        "Board control through efficient trades + removal",
+        "Saburo Arasaka passive buff snowball",
+        "Mantis Blades + Sandevistan burst damage"
+      ],
+
+      "eddiesCurve": {
+        "description": "Arasaka wants to hit 4-5 Eddies by turn 3-4 to deploy key threats. Your curve is top-heavy, so you NEED to sell aggressively.",
+        "sellTargets": [
+          "Extra lands after turn 3",
+          "Corporate Surveillance (situational card)",
+          "Low-impact units when you have better options"
+        ],
+        "keepTargets": [
+          "Mantis Blades (your best weapon)",
+          "Sandevistan (enables combos)",
+          "Industrial Assembly (premium removal)",
+          "Saburo Arasaka (win condition)"
+        ]
+      },
+
+      "mulliganGuide": {
+        "alwaysKeep": [
+          "Corpo Security (best early blocker)",
+          "Ruthless Lowlife (2-drop that trades up)",
+          "Mantis Blades (core weapon)"
+        ],
+        "onThePlay": [
+          "Keep 2-3 drop units to contest early board",
+          "Keep 1 removal spell (Industrial Assembly)",
+          "Mulligan away expensive cards (Armored Minotaur, Saburo)"
+        ],
+        "onTheDraw": [
+          "Keep blockers (Corpo Security)",
+          "Keep card draw (Corporate Surveillance if desperate)",
+          "You have an extra draw, so you can keep slightly greedier hands"
+        ],
+        "neverKeep": [
+          "Saburo Arasaka (too slow for opening hand)",
+          "Emergency Atlus (reactive card, not proactive)",
+          "Multiple copies of the same Legend"
+        ]
+      },
+
+      "keySynergies": [
+        {
+          "cards": ["Mantis Blades", "Sandevistan"],
+          "description": "Equip Mantis Blades to a unit, then use Sandevistan to give it Quick (attack immediately). This enables surprise kills and racing damage."
+        },
+        {
+          "cards": ["Saburo Arasaka", "All Red Units"],
+          "description": "Saburo's passive gives +1/+1 to all your red units. Every Corpo Security becomes a 2/3, every Swordwise Huscle becomes a 4/3. This snowballs hard."
+        },
+        {
+          "cards": ["Yorinobu Arasaka", "Industrial Assembly"],
+          "description": "Yorinobu's ability lets you sacrifice units for value. Pair with Industrial Assembly to clear threats while developing board."
+        },
+        {
+          "cards": ["Goro Takemura (Losing His Way)", "Corpo Security"],
+          "description": "Goro buffs units when they block. Corpo Security becomes a nightmare to attack into with Goro on board."
+        }
+      ],
+
+      "matchupGuide": {
+        "vs-merc-aggro": {
+          "difficulty": "Favorable (60-40)",
+          "gameplan": "Your entire deck is built to counter aggro. Mulligan for early blockers (Corpo Security, Ruthless Lowlife). Trade efficiently — you have more value in the late game. Emergency Atlus is your safety net.",
+          "keyCards": [
+            "Corpo Security (best blocker)",
+            "Emergency Atlus (life cushion)",
+            "Industrial Assembly (clears their best threat)"
+          ],
+          "tips": [
+            "Don't race damage — you WILL lose. Block everything.",
+            "Save Industrial Assembly for their equipped units (Dying Night, Kiroshi Optics).",
+            "Once you stabilize, Saburo wins the game automatically."
+          ]
+        }
+      },
+
+      "upgradePath": {
+        "coreToKeep": [
+          "Mantis Blades (3x)",
+          "Satori (2x)",
+          "Sandevistan (2x)",
+          "Industrial Assembly (3x)",
+          "Saburo Arasaka (Legend)"
+        ],
+        "firstCuts": [
+          "Ruthless Lowlife (generic 2-drop, can upgrade)",
+          "Corporate Surveillance (slow card draw)",
+          "Armored Minotaur (expensive, no immediate impact)"
+        ],
+        "suggestedUpgrades": [
+          {
+            "card": "Advanced Netrunning Rig",
+            "reason": "Better card draw engine than Corporate Surveillance"
+          },
+          {
+            "card": "Trauma Team Platinum",
+            "reason": "Premium removal + life gain, upgrades over Industrial Assembly"
+          },
+          {
+            "card": "Relic Prototype",
+            "reason": "Late-game bomb that can steal opponent's units"
+          }
+        ]
+      },
+
+      "commonMistakes": [
+        "Selling Mantis Blades early — this is your best card, NEVER sell it",
+        "Overcommitting to the board vs aggro — you don't need to race, just survive",
+        "Keeping Saburo in opening hand — he's a late-game card, mulligan him away",
+        "Not using Yorinobu's sacrifice ability — free value is free value"
+      ]
+    },
+
+    "alpha-merc": {
+      "id": "alpha-merc",
+      "name": "MERC AGGRO // ALPHA KIT",
+      "archetype": "Tempo Aggro",
+      "difficulty": "Easy",
+      "overview": "Merc Aggro is a fast, aggressive deck that aims to deal 20 damage before the opponent stabilizes. The deck uses cheap units, equipment, and combat tricks to push damage early and close out games before slower decks can react.",
+
+      "gameplan": {
+        "early": "Deploy cheap units (Secondhand Bombus, Evelyn Parker) and equip them with weapons (Dying Night, Kiroshi Optics). Attack every turn. Sell excess cards to keep the pressure on.",
+        "mid": "Use Floor It and Reboot Optics to push through blockers. T-Bug and Delamain Cab provide card advantage to refuel. Keep attacking — you can't afford to slow down.",
+        "late": "If the game goes long, you're in trouble. Use Jackie Welles (Legend) to finish with burst damage, or rely on MT0D12 Flathead to push the last points of damage."
+      },
+
+      "winConditions": [
+        "Early equipment snowball (Dying Night + cheap units)",
+        "Tempo advantage through combat tricks (Floor It, Reboot Optics)",
+        "Jackie Welles + Viktor Vektor combo for burst damage"
+      ],
+
+      "eddiesCurve": {
+        "description": "Merc Aggro wants to hit 2-3 Eddies by turn 2-3 to deploy threats. You're a low-curve deck, so you can sell aggressively after turn 3-4.",
+        "sellTargets": [
+          "Excess lands after turn 3",
+          "Situational cards (Reboot Optics if they have no units)",
+          "High-cost cards if stuck in early game (MT0D12 Flathead)"
+        ],
+        "keepTargets": [
+          "Dying Night (your best weapon)",
+          "Kiroshi Optics (card draw + damage)",
+          "Floor It (combat trick for racing)",
+          "Jackie Welles (finisher)"
+        ]
+      },
+
+      "mulliganGuide": {
+        "alwaysKeep": [
+          "Secondhand Bombus (best 1-drop)",
+          "Dying Night (best weapon)",
+          "Evelyn Parker (2-drop that trades up)"
+        ],
+        "onThePlay": [
+          "Keep aggressive 1-2 drops (Secondhand Bombus, Evelyn Parker)",
+          "Keep 1 weapon (Dying Night or Kiroshi Optics)",
+          "Mulligan away card draw (T-Bug, Delamain Cab) — you need threats"
+        ],
+        "onTheDraw": [
+          "Keep same aggressive curve",
+          "Can keep 1 card draw spell (T-Bug) if you have 2 units already",
+          "Still mulligan away late-game cards (MT0D12 Flathead)"
+        ],
+        "neverKeep": [
+          "Viktor Vektor (defensive Legend, not proactive)",
+          "MT0D12 Flathead (too slow for opening hand)",
+          "Multiple copies of the same weapon"
+        ]
+      },
+
+      "keySynergies": [
+        {
+          "cards": ["Dying Night", "Secondhand Bombus"],
+          "description": "Equip Dying Night to your 1-drop on turn 2. This creates a 3-power attacker that demands an answer immediately."
+        },
+        {
+          "cards": ["Kiroshi Optics", "Any Unit"],
+          "description": "Kiroshi Optics gives +2 power AND draws a card when equipped. This is insane value — always prioritize playing this."
+        },
+        {
+          "cards": ["Jackie Welles", "Viktor Vektor"],
+          "description": "Jackie deals damage when he attacks. Viktor heals damage. Together, they create a racing engine that's hard to stop."
+        },
+        {
+          "cards": ["Floor It", "Equipped Unit"],
+          "description": "Floor It gives +3 power for a turn. Combo this with an already-equipped unit to push lethal damage or win combat."
+        },
+        {
+          "cards": ["T-Bug", "Delamain Cab"],
+          "description": "Both cards draw you extra cards. Use them to refuel after your initial hand runs out."
+        }
+      ],
+
+      "matchupGuide": {
+        "vs-arasaka-control": {
+          "difficulty": "Unfavorable (40-60)",
+          "gameplan": "You MUST win before turn 6-7. Mulligan for your fastest hands (1-drop + weapon). Attack every turn. Use Floor It to push through their blockers. If they stabilize with Emergency Atlus, you lose.",
+          "keyCards": [
+            "Dying Night (best weapon)",
+            "Floor It (pushes through blockers)",
+            "Jackie Welles (finisher)"
+          ],
+          "tips": [
+            "Don't hold back — you can't afford to play around removal",
+            "Save Floor It for lethal or winning a key combat",
+            "If they have Corpo Security, use Reboot Optics to tap it before attacking",
+            "Count their life total — you need to deal 20 damage FAST"
+          ]
+        }
+      },
+
+      "upgradePath": {
+        "coreToKeep": [
+          "Dying Night (2x)",
+          "Kiroshi Optics (3x)",
+          "Floor It (3x)",
+          "Secondhand Bombus (3x)",
+          "Jackie Welles (Legend)"
+        ],
+        "firstCuts": [
+          "Evelyn Parker (generic 2-drop, can upgrade)",
+          "Delamain Cab (slow card draw)",
+          "Mandibular Upgrade (situational)"
+        ],
+        "suggestedUpgrades": [
+          {
+            "card": "Thermal Katana",
+            "reason": "Better weapon than Dying Night, gives trample damage"
+          },
+          {
+            "card": "Panam Palmer",
+            "reason": "Aggressive 2-drop with built-in evasion"
+          },
+          {
+            "card": "Johnny Silverhand",
+            "reason": "Alternative Legend that gives your units haste"
+          }
+        ]
+      },
+
+      "commonMistakes": [
+        "Holding back damage — you're aggro, ATTACK EVERY TURN",
+        "Selling Dying Night or Kiroshi Optics — these are your best cards",
+        "Playing around removal — you don't have time, just go for it",
+        "Not using Viktor Vektor's ability — free life is free life"
+      ]
+    }
+  }
+}

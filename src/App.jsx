@@ -1340,10 +1340,8 @@ function App() {
           </div>
         )}
 
-        {activeTab === "precon" && (
-          <div key="precon-tab">
-            <PreconDecksView onLoadPrecon={handleLoadPrecon} />
-          </div>
+        {activeTab === "precon" && cards && cards.length > 0 && (
+          <PreconDecksView onLoadPrecon={handleLoadPrecon} allCards={cards} />
         )}
 
         {activeTab === "practice" && (
