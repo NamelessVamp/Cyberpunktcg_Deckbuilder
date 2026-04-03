@@ -15,10 +15,31 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Helper function to enrich user with Discord data
+  const enrichUserWithDiscord = (session) => {
+    if (!session?.user) return null;
+
+    const discordIdentity = session.user.identities?.find(
+      (identity) => identity.provider === "discord",
+    );
+
+    return {
+      ...session.user,
+      // Discord-specific fields
+      discord_username:
+        discordIdentity?.identity_data?.full_name ||
+        discordIdentity?.identity_data?.custom_claims?.global_name ||
+        session.user.email?.split("@")[0],
+      discord_avatar: discordIdentity?.identity_data?.avatar_url || null,
+      discord_discriminator:
+        discordIdentity?.identity_data?.custom_claims?.discriminator || null,
+    };
+  };
+
   useEffect(() => {
     // Check active session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+      setUser(enrichUserWithDiscord(session));
       setLoading(false);
     });
 
@@ -26,23 +47,11 @@ export const AuthProvider = ({ children }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      setUser(enrichUserWithDiscord(session));
     });
 
     return () => subscription.unsubscribe();
   }, []);
-
-  // TODO: Re-enable when Google OAuth is approved
-  // Sign in with Google
-  // const signInWithGoogle = async () => {
-  //   const { error } = await supabase.auth.signInWithOAuth({
-  //     provider: 'google',
-  //     options: {
-  //       redirectTo: window.location.origin,
-  //     },
-  //   })
-  //   if (error) throw error
-  // }
 
   // Sign in with Discord
   const signInWithDiscord = async () => {
@@ -77,7 +86,6 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
-    // signInWithGoogle, // TODO: Re-enable when approved
     signInWithDiscord,
     signOut,
   };

@@ -31,6 +31,9 @@ import LegalDisclaimer from "./components/LegalDisclaimer";
 import ProxyModal from "./components/ProxyModal";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import { useLanguage } from "./i18n/LanguageContext";
+import AnalyticsModal from "./components/AnalyticsModal";
+import AdminFeedbackViewer from "./components/AdminFeedbackViewer";
+import { useIsAdmin } from "./hooks/useIsAdmin";
 
 // DECK ENCODING/DECODING UTILITIES
 const encodeDeck = (deck) => {
@@ -121,6 +124,8 @@ function App() {
   const [collection, setCollection] = useState([]);
   const [showOwnedOnly, setShowOwnedOnly] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false); // ← RESTAURADO
+  const { isAdmin, loading: adminLoading } = useIsAdmin();
+  const [showAdminFeedback, setShowAdminFeedback] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -267,6 +272,13 @@ function App() {
       if (isCtrlOrCmd && e.key === "b") {
         e.preventDefault();
         setShowFeedbackModal(true);
+      }
+      // Admin Panel: Ctrl+Shift+F (solo para admins)
+      if (e.ctrlKey && e.shiftKey && e.key === "F") {
+        e.preventDefault();
+        if (isAdmin) {
+          setShowAdminFeedback(true);
+        }
       }
     };
 
@@ -1053,14 +1065,24 @@ function App() {
               {/* User Profile / Login */}
               {user ? (
                 <div className="flex items-center gap-4">
+                  {/* Discord Avatar */}
+                  {user.discord_avatar && (
+                    <img
+                      src={user.discord_avatar}
+                      alt="Discord Avatar"
+                      className="w-10 h-10 rounded-full border-2 border-term-amber"
+                    />
+                  )}
+
                   <div className="text-right">
-                    <p className="text-term-amber font-mono text-sm">
-                      {user.email}
+                    <p className="text-term-amber font-mono text-sm font-bold">
+                      {user.discord_username || user.email?.split("@")[0]}
                     </p>
                     <p className="text-term-green/60 font-mono text-xs">
                       {savedDecks.length} saved decks
                     </p>
                   </div>
+
                   <button
                     onClick={signOut}
                     className="px-4 py-2 bg-term-red/20 text-term-red border border-term-red rounded font-mono hover:bg-term-red/30 transition-colors"
@@ -1288,6 +1310,13 @@ function App() {
                     />
                   )}
 
+                  {showAnalytics && (
+                    <AnalyticsModal
+                      deck={deck}
+                      onClose={() => setShowAnalytics(false)}
+                    />
+                  )}
+
                   {/* DECK ANALYTICS */}
                   {showAnalytics && deck.mainDeck.length > 0 && (
                     <DeckAnalytics deck={deck} />
@@ -1457,6 +1486,15 @@ function App() {
           />
         )}
 
+        {/* Admin Feedback Viewer - Solo visible para admins */}
+        {showAdminFeedback && isAdmin && user && (
+          <AdminFeedbackViewer
+            onClose={() => setShowAdminFeedback(false)}
+            user={user}
+            showToast={showToast}
+          />
+        )}
+
         {/* Footer */}
         <footer className="mt-12 border-t border-term-amber/20 pt-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -1545,6 +1583,15 @@ function App() {
                     [GitHub Repository]
                   </a>
                 </div>
+                {/* Admin Access - Solo visible para admins */}
+                {isAdmin && !adminLoading && (
+                  <button
+                    onClick={() => setShowAdminFeedback(true)}
+                    className="text-term-red hover:text-red-400 transition-colors font-mono text-xs"
+                  >
+                    [ADMIN PANEL]
+                  </button>
+                )}
               </div>
             </div>
           </div>
