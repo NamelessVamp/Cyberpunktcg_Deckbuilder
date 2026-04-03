@@ -1,0 +1,215 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "download": "Download",
+    "upload": "Upload",
+    "clear": "Clear",
+    "reset": "Reset",
+    "apply": "Apply",
+    "cards": "CARDS"
+  },
+
+  "navigation": {
+    "home": "HOME",
+    "build": "BUILD",
+    "mydecks": "MY DECKS",
+    "precon": "PRECON DECKS",
+    "practice": "PRACTICE",
+    "packs": "PACK OPENER",
+    "collection": "COLLECTION",
+    "legal": "LEGAL"
+  },
+
+  "deckBuilder": {
+    "title": "CYBERPUNK 2077 TCG // DECK BUILDER",
+    "subtitle": "Professional deck building tool for Cyberpunk 2077 TCG",
+    "searchPlaceholder": "Search cards...",
+    "currentDeck": "CURRENT_DECK.DAT",
+    "legends": "LEGENDS",
+    "mainDeck": "MAIN DECK",
+    "sideboard": "SIDEBOARD",
+    "deckStats": {
+      "total": "Total Cards",
+      "avgCost": "Avg. Cost",
+      "avgPower": "Avg. Power"
+    },
+    "validation": {
+      "legendsRequired": "You need exactly 3 unique Legends",
+      "deckSize": "Main deck must be 40-50 cards",
+      "maxCopies": "Maximum 3 copies per card (except Legends)",
+      "sideboardSize": "Sideboard can have up to 15 cards"
+    },
+    "actions": {
+      "saveDeck": "SAVE DECK",
+      "clearDeck": "CLEAR DECK",
+      "exportDeck": "EXPORT DECK",
+      "importDeck": "IMPORT DECK",
+      "showAnalytics": "SHOW ANALYTICS",
+      "generateProxies": "GENERATE PROXIES",
+      "loadPrecon": "LOAD DECK",
+      "strategyGuide": "STRATEGY GUIDE"
+    }
+  },
+
+  "filters": {
+    "title": "FILTERS",
+    "showOwnedOnly": "Show Owned Only",
+    "cardTypes": "Card Types",
+    "factions": "Factions",
+    "ramColors": "RAM Colors",
+    "keywords": "Keywords",
+    "costRange": "Cost Range",
+    "powerRange": "Power Range",
+    "ramRange": "RAM Range",
+    "set": "Set",
+    "clearFilters": "CLEAR FILTERS"
+  },
+
+  "cardTypes": {
+    "Legend": "Legend",
+    "Unit": "Unit",
+    "Equipment": "Equipment",
+    "Event": "Event",
+    "Upgrade": "Upgrade"
+  },
+
+  "factions": {
+    "Arasaka": "Arasaka",
+    "Merc": "Merc",
+    "Netrunner": "Netrunner",
+    "Nomad": "Nomad",
+    "Corpo": "Corpo"
+  },
+
+  "ramColors": {
+    "red": "Red",
+    "blue": "Blue",
+    "yellow": "Yellow",
+    "green": "Green",
+    "purple": "Purple"
+  },
+
+  "proxyGenerator": {
+    "title": "PROXY GENERATOR",
+    "totalCards": "Total Cards",
+    "estimatedPages": "Estimated Pages",
+    "cardsPerPage": "cards per page",
+    "printQuality": "Print Quality",
+    "cardSize": "Card Size",
+    "paperSize": "Paper Size",
+    "showCutLines": "Show cut lines (black borders for easier cutting)",
+    "preview": "Preview (First 9 cards)",
+    "moreCards": "more cards will be included",
+    "generating": "GENERATING...",
+    "generate": "GENERATE PROXIES",
+    "quality": {
+      "fast": "150 DPI (Fast, ~5MB)",
+      "high": "300 DPI (High Quality, ~15MB)"
+    },
+    "sizes": {
+      "poker": "Poker (63x88mm - Standard TCG)",
+      "bridge": "Bridge (57x89mm - Narrower)"
+    },
+    "paper": {
+      "a4": "A4 (210x297mm - Global Standard)",
+      "letter": "US Letter (8.5x11 inches)"
+    }
+  },
+
+  "preconExplainer": {
+    "tabs": {
+      "overview": "OVERVIEW",
+      "gameplan": "GAMEPLAN",
+      "mulligan": "MULLIGAN",
+      "synergies": "SYNERGIES",
+      "matchups": "MATCHUPS",
+      "upgrades": "UPGRADES"
+    },
+    "archetype": "Archetype",
+    "difficulty": "Difficulty",
+    "deckOverview": "DECK OVERVIEW",
+    "winConditions": "WIN CONDITIONS",
+    "commonMistakes": "COMMON MISTAKES TO AVOID",
+    "earlyGame": "EARLY GAME (Turns 1-3)",
+    "midGame": "MID GAME (Turns 4-6)",
+    "lateGame": "LATE GAME (Turn 7+)",
+    "eddiesCurve": "EDDIES CURVE STRATEGY",
+    "sellThese": "SELL THESE (Fodder)",
+    "keepThese": "KEEP THESE (Bombs)",
+    "alwaysKeep": "ALWAYS KEEP",
+    "onThePlay": "ON THE PLAY (Going First)",
+    "onTheDraw": "ON THE DRAW (Going Second)",
+    "neverKeep": "NEVER KEEP",
+    "coreToKeep": "CORE CARDS TO KEEP",
+    "firstCuts": "FIRST CARDS TO CUT",
+    "suggestedUpgrades": "SUGGESTED UPGRADES"
+  },
+
+  "collection": {
+    "title": "COLLECTION TRACKER",
+    "subtitle": "Track your physical card collection",
+    "stats": {
+      "uniqueCards": "Unique Cards",
+      "totalCards": "Total Cards",
+      "completion": "Completion"
+    },
+    "actions": {
+      "addToCollection": "ADD TO COLLECTION",
+      "removeFromCollection": "REMOVE FROM COLLECTION"
+    },
+    "messages": {
+      "loginRequired": "Login required to track collection",
+      "addedToCollection": "Added to collection",
+      "removedFromCollection": "Removed from collection"
+    }
+  },
+
+  "feedback": {
+    "title": "SEND FEEDBACK",
+    "category": "Category",
+    "categories": {
+      "bug": "Bug Report",
+      "feature": "Feature Request",
+      "improvement": "Improvement Suggestion",
+      "other": "Other"
+    },
+    "messagePlaceholder": "Describe your feedback in detail...",
+    "submit": "SUBMIT FEEDBACK",
+    "submitting": "SUBMITTING...",
+    "success": "Feedback submitted successfully!",
+    "error": "Error submitting feedback"
+  },
+
+  "legal": {
+    "title": "LEGAL DISCLAIMER",
+    "sections": {
+      "unofficial": "Unofficial Fan Project",
+      "copyright": "Copyright & Trademarks",
+      "fanContent": "Fan Content Policy Compliance",
+      "warranty": "No Warranty",
+      "privacy": "Data & Privacy",
+      "dmca": "DMCA Contact",
+      "support": "Support Official Releases"
+    }
+  },
+
+  "toasts": {
+    "deckSaved": "Deck saved successfully",
+    "deckLoaded": "Deck loaded",
+    "deckDeleted": "Deck deleted",
+    "deckCleared": "Deck cleared",
+    "cardAdded": "Card added to deck",
+    "cardRemoved": "Card removed from deck",
+    "loginRequired": "Login required for this action",
+    "error": "An error occurred"
+  }
+}

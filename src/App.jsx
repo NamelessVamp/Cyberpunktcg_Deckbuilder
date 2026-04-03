@@ -29,6 +29,8 @@ import SmartCardImage from "./components/SmartCardImage";
 import LandingPage from "./components/LandingPage";
 import LegalDisclaimer from "./components/LegalDisclaimer";
 import ProxyModal from "./components/ProxyModal";
+import LanguageSwitcher from "./components/LanguageSwitcher";
+import { useLanguage } from "./i18n/LanguageContext";
 
 // DECK ENCODING/DECODING UTILITIES
 const encodeDeck = (deck) => {
@@ -71,6 +73,7 @@ const decodeDeck = (encodedString, allCards) => {
 };
 
 function App() {
+  const { t } = useLanguage(); // ← AGREGAR ESTA LÍNEA
   const [showExportModal, setShowExportModal] = useState(false);
   const [exportDeckName, setExportDeckName] = useState("");
   const [cards, setCards] = useState([]);
@@ -1008,8 +1011,9 @@ function App() {
       <div className="relative z-10 p-8">
         {/* Header */}
         <header className="mb-8 border-b border-term-amber/20 pb-4">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            {/* LEFT: Title + Stats */}
+            <div className="flex-1">
               <div>
                 <h1 className="text-4xl font-bold text-term-amber mb-2 font-mono">
                   AFTERLIFE DECKS // DECK_BUILDER.EXE
@@ -1018,49 +1022,48 @@ function App() {
                   [UNOFFICIAL FAN PROJECT - NOT AFFILIATED WITH CDPR OR WEIRDCO]
                 </p>
               </div>
+
               <div className="space-y-1">
                 <p className="text-term-green font-mono">
-                  [{filteredCards.length} / {cards.length} CARDS] // [ALPHA/BETA
-                  KIT 2026]
+                  [{filteredCards.length} / {cards.length} {t("common.cards")}]
+                  // [ALPHA/BETA KIT 2026]
                 </p>
 
                 {user && collection.length > 0 && (
                   <p className="text-term-amber/80 font-mono text-sm">
-                    📦 COLLECTION: {collection.length} unique cards owned
+                    📦 {t("collection.title")}: {collection.length}{" "}
+                    {t("collection.stats.uniqueCards")}
                     {(() => {
                       const stats = collectionService.getCollectionStats(
                         collection,
                         cards,
                       );
-                      return ` (${stats.completionPercent}% complete)`;
+                      return ` (${stats.completionPercent}% ${t("collection.stats.completion")})`;
                     })()}
                   </p>
                 )}
               </div>
             </div>
 
-            {/* User Profile / Login */}
-            <div>
+            {/* RIGHT: Language Switcher + User Menu */}
+            <div className="flex items-center gap-4">
+              {/* Language Switcher */}
+              <LanguageSwitcher />
+
+              {/* User Profile / Login */}
               {user ? (
                 <div className="flex items-center gap-4">
                   <div className="text-right">
                     <p className="text-term-amber font-mono text-sm">
-                      {user.user_metadata?.full_name || user.email}
+                      {user.email}
                     </p>
                     <p className="text-term-green/60 font-mono text-xs">
-                      [NETRUNNER ONLINE]
+                      {savedDecks.length} saved decks
                     </p>
                   </div>
-                  {user.user_metadata?.avatar_url && (
-                    <img
-                      src={user.user_metadata.avatar_url}
-                      alt="Avatar"
-                      className="w-10 h-10 rounded-full border-2 border-term-amber"
-                    />
-                  )}
                   <button
                     onClick={signOut}
-                    className="bg-term-red/20 border border-term-red text-term-red px-3 py-2 rounded font-mono text-sm hover:bg-term-red/30 transition-colors"
+                    className="px-4 py-2 bg-term-red/20 text-term-red border border-term-red rounded font-mono hover:bg-term-red/30 transition-colors"
                   >
                     [LOGOUT]
                   </button>
@@ -1068,9 +1071,9 @@ function App() {
               ) : (
                 <button
                   onClick={() => setShowLoginModal(true)}
-                  className="bg-term-amber text-term-black px-6 py-3 rounded font-mono font-bold hover:bg-yellow-400 transition-colors"
+                  className="px-4 py-2 bg-term-green/20 text-term-green border border-term-green rounded font-mono hover:bg-term-green/30 transition-colors"
                 >
-                  [LOGIN / REGISTER]
+                  [LOGIN]
                 </button>
               )}
             </div>

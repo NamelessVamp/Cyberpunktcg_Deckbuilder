@@ -1,0 +1,215 @@
+{
+  "common": {
+    "loading": "Carregando...",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "delete": "Excluir",
+    "confirm": "Confirmar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "export": "Exportar",
+    "import": "Importar",
+    "download": "Baixar",
+    "upload": "Enviar",
+    "clear": "Limpar",
+    "reset": "Redefinir",
+    "apply": "Aplicar",
+    "cards": "CARTAS"
+  },
+
+  "navigation": {
+    "home": "INÍCIO",
+    "build": "CONSTRUIR",
+    "mydecks": "MEUS DECKS",
+    "precon": "DECKS PRECON",
+    "practice": "PRÁTICA",
+    "packs": "ABRIR PACOTES",
+    "collection": "COLEÇÃO",
+    "legal": "LEGAL"
+  },
+
+  "deckBuilder": {
+    "title": "CYBERPUNK 2077 TCG // CONSTRUTOR DE DECKS",
+    "subtitle": "Ferramenta profissional para construir decks de Cyberpunk 2077 TCG",
+    "searchPlaceholder": "Buscar cartas...",
+    "currentDeck": "DECK_ATUAL.DAT",
+    "legends": "LENDAS",
+    "mainDeck": "DECK PRINCIPAL",
+    "sideboard": "RESERVA",
+    "deckStats": {
+      "total": "Total de Cartas",
+      "avgCost": "Custo Médio",
+      "avgPower": "Poder Médio"
+    },
+    "validation": {
+      "legendsRequired": "Você precisa de exatamente 3 Lendas únicas",
+      "deckSize": "O deck principal deve ter 40-50 cartas",
+      "maxCopies": "Máximo de 3 cópias por carta (exceto Lendas)",
+      "sideboardSize": "A reserva pode ter até 15 cartas"
+    },
+    "actions": {
+      "saveDeck": "SALVAR DECK",
+      "clearDeck": "LIMPAR DECK",
+      "exportDeck": "EXPORTAR DECK",
+      "importDeck": "IMPORTAR DECK",
+      "showAnalytics": "MOSTRAR ANÁLISE",
+      "generateProxies": "GERAR PROXIES",
+      "loadPrecon": "CARREGAR DECK",
+      "strategyGuide": "GUIA DE ESTRATÉGIA"
+    }
+  },
+
+  "filters": {
+    "title": "FILTROS",
+    "showOwnedOnly": "Mostrar Apenas Cartas Próprias",
+    "cardTypes": "Tipos de Carta",
+    "factions": "Facções",
+    "ramColors": "Cores de RAM",
+    "keywords": "Palavras-Chave",
+    "costRange": "Faixa de Custo",
+    "powerRange": "Faixa de Poder",
+    "ramRange": "Faixa de RAM",
+    "set": "Set",
+    "clearFilters": "LIMPAR FILTROS"
+  },
+
+  "cardTypes": {
+    "Legend": "Lenda",
+    "Unit": "Unidade",
+    "Equipment": "Equipamento",
+    "Event": "Evento",
+    "Upgrade": "Melhoria"
+  },
+
+  "factions": {
+    "Arasaka": "Arasaka",
+    "Merc": "Mercenário",
+    "Netrunner": "Netrunner",
+    "Nomad": "Nômade",
+    "Corpo": "Corpo"
+  },
+
+  "ramColors": {
+    "red": "Vermelho",
+    "blue": "Azul",
+    "yellow": "Amarelo",
+    "green": "Verde",
+    "purple": "Roxo"
+  },
+
+  "proxyGenerator": {
+    "title": "GERADOR DE PROXIES",
+    "totalCards": "Total de Cartas",
+    "estimatedPages": "Páginas Estimadas",
+    "cardsPerPage": "cartas por página",
+    "printQuality": "Qualidade de Impressão",
+    "cardSize": "Tamanho da Carta",
+    "paperSize": "Tamanho do Papel",
+    "showCutLines": "Mostrar linhas de corte (bordas pretas para cortar mais fácil)",
+    "preview": "Pré-visualização (Primeiras 9 cartas)",
+    "moreCards": "mais cartas serão incluídas",
+    "generating": "GERANDO...",
+    "generate": "GERAR PROXIES",
+    "quality": {
+      "fast": "150 DPI (Rápido, ~5MB)",
+      "high": "300 DPI (Alta Qualidade, ~15MB)"
+    },
+    "sizes": {
+      "poker": "Poker (63x88mm - TCG Padrão)",
+      "bridge": "Bridge (57x89mm - Mais Estreito)"
+    },
+    "paper": {
+      "a4": "A4 (210x297mm - Padrão Global)",
+      "letter": "Carta US (8.5x11 polegadas)"
+    }
+  },
+
+  "preconExplainer": {
+    "tabs": {
+      "overview": "VISÃO GERAL",
+      "gameplan": "PLANO DE JOGO",
+      "mulligan": "MULLIGAN",
+      "synergies": "SINERGIAS",
+      "matchups": "CONFRONTOS",
+      "upgrades": "MELHORIAS"
+    },
+    "archetype": "Arquétipo",
+    "difficulty": "Dificuldade",
+    "deckOverview": "VISÃO GERAL DO DECK",
+    "winConditions": "CONDIÇÕES DE VITÓRIA",
+    "commonMistakes": "ERROS COMUNS A EVITAR",
+    "earlyGame": "JOGO INICIAL (Turnos 1-3)",
+    "midGame": "JOGO MÉDIO (Turnos 4-6)",
+    "lateGame": "JOGO FINAL (Turno 7+)",
+    "eddiesCurve": "ESTRATÉGIA DE CURVA DE EDDIES",
+    "sellThese": "VENDA ESTAS (Isca)",
+    "keepThese": "MANTENHA ESTAS (Bombas)",
+    "alwaysKeep": "SEMPRE MANTER",
+    "onThePlay": "INDO PRIMEIRO",
+    "onTheDraw": "INDO SEGUNDO",
+    "neverKeep": "NUNCA MANTER",
+    "coreToKeep": "CARTAS PRINCIPAIS A MANTER",
+    "firstCuts": "PRIMEIRAS CARTAS A CORTAR",
+    "suggestedUpgrades": "MELHORIAS SUGERIDAS"
+  },
+
+  "collection": {
+    "title": "RASTREADOR DE COLEÇÃO",
+    "subtitle": "Rastreie sua coleção de cartas físicas",
+    "stats": {
+      "uniqueCards": "Cartas Únicas",
+      "totalCards": "Total de Cartas",
+      "completion": "Conclusão"
+    },
+    "actions": {
+      "addToCollection": "ADICIONAR À COLEÇÃO",
+      "removeFromCollection": "REMOVER DA COLEÇÃO"
+    },
+    "messages": {
+      "loginRequired": "Login necessário para rastrear coleção",
+      "addedToCollection": "Adicionado à coleção",
+      "removedFromCollection": "Removido da coleção"
+    }
+  },
+
+  "feedback": {
+    "title": "ENVIAR FEEDBACK",
+    "category": "Categoria",
+    "categories": {
+      "bug": "Relatório de Bug",
+      "feature": "Solicitação de Recurso",
+      "improvement": "Sugestão de Melhoria",
+      "other": "Outro"
+    },
+    "messagePlaceholder": "Descreva seu feedback em detalhes...",
+    "submit": "ENVIAR FEEDBACK",
+    "submitting": "ENVIANDO...",
+    "success": "Feedback enviado com sucesso!",
+    "error": "Erro ao enviar feedback"
+  },
+
+  "legal": {
+    "title": "AVISO LEGAL",
+    "sections": {
+      "unofficial": "Projeto de Fã Não Oficial",
+      "copyright": "Copyright e Marcas Registradas",
+      "fanContent": "Conformidade com Política de Conteúdo de Fã",
+      "warranty": "Sem Garantia",
+      "privacy": "Dados e Privacidade",
+      "dmca": "Contato DMCA",
+      "support": "Apoie as Versões Oficiais"
+    }
+  },
+
+  "toasts": {
+    "deckSaved": "Deck salvo com sucesso",
+    "deckLoaded": "Deck carregado",
+    "deckDeleted": "Deck excluído",
+    "deckCleared": "Deck limpo",
+    "cardAdded": "Carta adicionada ao deck",
+    "cardRemoved": "Carta removida do deck",
+    "loginRequired": "Login necessário para esta ação",
+    "error": "Ocorreu um erro"
+  }
+}
