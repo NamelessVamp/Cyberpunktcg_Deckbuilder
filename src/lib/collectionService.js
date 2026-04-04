@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
 
 // =====================================================
-// COLLECTION CRUD OPERATIONS
+// COLLECTION CRUD OPERATIONS (FIXED FOR 406 ERROR)
 // =====================================================
 
 /**
@@ -14,16 +14,16 @@ export const addToCollection = async (
   isFoil = false,
 ) => {
   // Check if card already exists
+  // CAMBIO: Usa .maybeSingle() en vez de .single()
   const { data: existing, error: checkError } = await supabase
     .from("collection")
     .select("*")
     .eq("user_id", userId)
     .eq("card_id", cardId)
     .eq("is_foil", isFoil)
-    .single();
+    .maybeSingle(); // ← FIX: maybeSingle() no tira error si hay 0 o múltiples filas
 
-  if (checkError && checkError.code !== "PGRST116") {
-    // PGRST116 = not found, which is OK
+  if (checkError) {
     throw checkError;
   }
 
@@ -65,15 +65,21 @@ export const removeFromCollection = async (
   quantity = 1,
   isFoil = false,
 ) => {
+  // CAMBIO: Usa .maybeSingle()
   const { data: existing, error: checkError } = await supabase
     .from("collection")
     .select("*")
     .eq("user_id", userId)
     .eq("card_id", cardId)
     .eq("is_foil", isFoil)
-    .single();
+    .maybeSingle(); // ← FIX
 
   if (checkError) throw checkError;
+
+  if (!existing) {
+    // No existe la carta, no hacer nada
+    return null;
+  }
 
   const newQuantity = existing.quantity - quantity;
 

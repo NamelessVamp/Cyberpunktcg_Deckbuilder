@@ -1567,14 +1567,6 @@ function App() {
                   >
                     [Legal & Disclaimer]
                   </button>
-                  <a
-                    href="https://github.com/NamelessVamp/Cyberpunktcg_Deckbuilder"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-term-amber hover:text-term-amber/80 transition-colors"
-                  >
-                    [GitHub Repository]
-                  </a>
                 </div>
                 {/* Admin Access - Solo visible para admins */}
                 {isAdmin && !adminLoading && (
