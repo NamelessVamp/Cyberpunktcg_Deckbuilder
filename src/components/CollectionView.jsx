@@ -1,3 +1,5 @@
+import SmartCardImage from "./SmartCardImage";
+
 export default function CollectionView({
   collection,
   allCards,

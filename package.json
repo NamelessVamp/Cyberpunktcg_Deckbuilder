@@ -9,8 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "backup-images": "node scripts/backupImages.js",
-    "check-images": "node scripts/checkImageHealth.js",
-    "extract-i18n": "node scripts/extractTranslations.js"
+    "check-images": "node scripts/checkImageHealth.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.100.1",
