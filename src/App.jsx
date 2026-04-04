@@ -1037,7 +1037,6 @@ function App() {
                   [{filteredCards.length} / {cards.length} CARDS] // [ALPHA/BETA
                   KIT 2026]
                 </p>
-                // REEMPLAZAR LÍNEAS 1041-1053 DE App.jsx
                 {user && collection.length > 0 && (
                   <p className="text-term-amber/80 font-mono text-sm">
                     📦 COLLECTION: {collection.length} unique cards
