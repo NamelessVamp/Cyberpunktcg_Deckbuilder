@@ -15,7 +15,21 @@
     "clear": "Clear",
     "reset": "Reset",
     "apply": "Apply",
-    "cards": "CARDS"
+    "cards": "CARDS",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "back": "Back",
+    "next": "Next",
+    "skip": "Skip",
+    "reveal": "Reveal",
+    "revealAll": "REVEAL ALL",
+    "click": "CLICK",
+    "keepHand": "KEEP HAND",
+    "mulligan": "MULLIGAN",
+    "shuffling": "SHUFFLING...",
+    "generating": "GENERATING...",
+    "opening": "OPENING..."
   },
 
   "navigation": {
@@ -29,6 +43,20 @@
     "legal": "LEGAL"
   },
 
+  "header": {
+    "title": "CYBERPUNK 2077 TCG // DECK BUILDER",
+    "loginWithDiscord": "LOGIN WITH DISCORD",
+    "logout": "LOGOUT",
+    "loggedInAs": "Logged in as"
+  },
+
+  "footer": {
+    "disclaimer": "Fan-made tool • Not affiliated with CD PROJEKT RED or WeirdCo",
+    "legal": "Legal Disclaimer",
+    "sendFeedback": "Send Feedback",
+    "adminPanel": "Admin Panel"
+  },
+
   "deckBuilder": {
     "title": "CYBERPUNK 2077 TCG // DECK BUILDER",
     "subtitle": "Professional deck building tool for Cyberpunk 2077 TCG",
@@ -37,6 +65,7 @@
     "legends": "LEGENDS",
     "mainDeck": "MAIN DECK",
     "sideboard": "SIDEBOARD",
+    "ramWall": "RAM WALL",
     "deckStats": {
       "total": "Total Cards",
       "avgCost": "Avg. Cost",
@@ -54,10 +83,18 @@
       "exportDeck": "EXPORT DECK",
       "importDeck": "IMPORT DECK",
       "showAnalytics": "SHOW ANALYTICS",
+      "hideAnalytics": "HIDE ANALYTICS",
       "generateProxies": "GENERATE PROXIES",
       "loadPrecon": "LOAD DECK",
-      "strategyGuide": "STRATEGY GUIDE"
+      "strategyGuide": "STRATEGY GUIDE",
+      "mulligan": "MULLIGAN SIMULATOR"
     }
+  },
+
+  "searchBar": {
+    "placeholder": "Search cards by name, type, faction...",
+    "results": "{{count}} cards found",
+    "noResults": "No cards found"
   },
 
   "filters": {
@@ -72,6 +109,220 @@
     "ramRange": "RAM Range",
     "set": "Set",
     "clearFilters": "CLEAR FILTERS"
+  },
+
+  "deckArea": {
+    "addToDeck": "ADD TO DECK",
+    "removeFromDeck": "REMOVE FROM DECK",
+    "viewDetails": "VIEW DETAILS"
+  },
+
+  "mulligan": {
+    "title": "OPENING HAND SIMULATOR",
+    "deckInfo": "Deck: Current ({{count}} cards)",
+    "randomPool": "Random Test Pool ({{legends}})",
+    "mulliganStatus": "Mulligan: {{used}}/1 Used",
+    "mulliganAvailable": "0/1 Used",
+    "legendsCount": "LEGENDS [{{count}}/3]",
+    "hand": "HAND (6)",
+    "analysis": "NETRUNNER ANALYSIS",
+    "curve": "CURVE",
+    "defense": "DEFENSE",
+    "advice": "FIXER'S ADVICE",
+    "playable": "{{count}} playable Turn 1-2",
+    "units": "{{count}} Units",
+    "keepHand": "[✅ KEEP HAND]",
+    "mulliganButton": "[🔄 MULLIGAN (1 LEFT)]",
+    "mulliganUsed": "[MULLIGAN USED]",
+    "shuffling": "[SHUFFLING...]",
+    "goingFirst": "⚠️ Going First: 2 Legends start tapped (shown above)",
+    "revealAll": "[ REVEAL ALL ]",
+    "click": "CLICK",
+    "foil": "✨ FOIL",
+    "statuses": {
+      "solid": "SOLID",
+      "okay": "OKAY",
+      "bricked": "BRICKED",
+      "good": "GOOD",
+      "risky": "RISKY",
+      "noBlockers": "NO BLOCKERS"
+    },
+    "adviceMessages": {
+      "bricked": "⚠️ BRICKED HAND: All cards are high-cost. You will have no early plays. HIGHLY RECOMMEND MULLIGAN.",
+      "noDefense": "⚠️ NO DEFENSE: You have no Units to block attacks. Consider Mulligan unless you plan hyper-aggressive.",
+      "solid": "✅ KEEP THIS HAND. Solid curve and defense. Don't waste your Mulligan on a playable opening.",
+      "playable": "⚠️ PLAYABLE BUT RISKY: This hand can work but has weaknesses. Mulligan if uncomfortable."
+    }
+  },
+
+  "packOpener": {
+    "title": "PACK OPENER",
+    "singlePack": "OPEN 1 PACK",
+    "openBox": "OPEN BOOSTER BOX (24 PACKS)",
+    "stats": {
+      "title": "COLLECTION STATS",
+      "totalPacks": "Total Packs Opened",
+      "totalCards": "Total Cards",
+      "commons": "Commons",
+      "uncommons": "Uncommons",
+      "rares": "Rares",
+      "novaRares": "Nova Rares",
+      "iconicRares": "Iconic Rares",
+      "foils": "Foils"
+    },
+    "openingPack": "OPENING PACK {{current}}/{{total}}...",
+    "viewCollection": "VIEW COLLECTION ({{count}} cards)",
+    "clearCollection": "CLEAR COLLECTION",
+    "openAnother": "OPEN ANOTHER PACK",
+    "continueDraft": "CONTINUE DRAFT",
+    "finishDraft": "FINISH DRAFT",
+    "boxMode": "BOX OPENER MODE",
+    "singleMode": "SINGLE PACK MODE",
+    "foil": "✨ FOIL",
+    "click": "CLICK TO REVEAL"
+  },
+
+  "myDecks": {
+    "title": "MY DECKS",
+    "noDecksSaved": "No decks saved yet",
+    "startBuilding": "Start building your first deck!",
+    "newDeck": "NEW DECK",
+    "load": "LOAD",
+    "duplicate": "DUPLICATE",
+    "delete": "DELETE",
+    "export": "EXPORT",
+    "confirmDelete": "Are you sure you want to delete this deck?",
+    "lastModified": "Last modified: {{date}}",
+    "cards": "{{count}} cards"
+  },
+
+  "saveDeckModal": {
+    "title": "SAVE DECK",
+    "deckName": "Deck Name",
+    "namePlaceholder": "My Awesome Deck",
+    "notes": "Notes (optional)",
+    "notesPlaceholder": "Add notes about your deck strategy...",
+    "save": "SAVE DECK",
+    "saving": "SAVING...",
+    "cancel": "CANCEL"
+  },
+
+  "exportModal": {
+    "title": "EXPORT DECK",
+    "format": "Export Format",
+    "plainText": "Plain Text",
+    "shareUrl": "Share URL",
+    "copyList": "COPY LIST",
+    "copyUrl": "COPY URL",
+    "close": "CLOSE"
+  },
+
+  "importModal": {
+    "title": "IMPORT DECK",
+    "pasteList": "Paste your deck list here",
+    "format": "Format: 3x Card Name",
+    "import": "IMPORT",
+    "cancel": "CANCEL"
+  },
+
+  "analytics": {
+    "title": "DECK ANALYTICS",
+    "eddieCurve": "Eddie Curve",
+    "avgCost": "Average Cost: {{value}}",
+    "typeDistribution": "Type Distribution",
+    "factionSynergy": "Faction Synergy",
+    "ramDistribution": "RAM Distribution"
+  },
+
+  "cardPreview": {
+    "title": "Card Details",
+    "type": "Type",
+    "faction": "Faction",
+    "cost": "Cost",
+    "power": "Power",
+    "ram": "RAM",
+    "rarity": "Rarity",
+    "set": "Set",
+    "addToDeck": "ADD TO DECK",
+    "removeFromDeck": "REMOVE FROM DECK",
+    "addToCollection": "ADD TO COLLECTION",
+    "removeFromCollection": "REMOVE FROM COLLECTION",
+    "inDeck": "In Deck: {{count}}",
+    "close": "CLOSE"
+  },
+
+  "collection": {
+    "title": "COLLECTION TRACKER",
+    "subtitle": "Track your physical card collection",
+    "stats": {
+      "uniqueCards": "Unique Cards",
+      "totalCards": "Total Cards",
+      "completion": "Completion"
+    },
+    "actions": {
+      "addToCollection": "ADD TO COLLECTION",
+      "removeFromCollection": "REMOVE FROM COLLECTION"
+    },
+    "messages": {
+      "loginRequired": "Login required to track collection",
+      "addedToCollection": "Added to collection",
+      "removedFromCollection": "Removed from collection"
+    }
+  },
+
+  "feedback": {
+    "title": "SEND FEEDBACK",
+    "category": "Category",
+    "categories": {
+      "bug": "Bug Report",
+      "feature": "Feature Request",
+      "improvement": "Improvement Suggestion",
+      "other": "Other"
+    },
+    "messagePlaceholder": "Describe your feedback in detail...",
+    "submit": "SUBMIT FEEDBACK",
+    "submitting": "SUBMITTING...",
+    "success": "Feedback submitted successfully!",
+    "error": "Error submitting feedback"
+  },
+
+  "legal": {
+    "title": "LEGAL DISCLAIMER",
+    "acknowledge": "I Understand",
+    "sections": {
+      "unofficial": "Unofficial Fan Project",
+      "copyright": "Copyright & Trademarks",
+      "fanContent": "Fan Content Policy Compliance",
+      "warranty": "No Warranty",
+      "privacy": "Data & Privacy",
+      "dmca": "DMCA Contact",
+      "support": "Support Official Releases"
+    }
+  },
+
+  "landing": {
+    "welcome": "Welcome to Afterlife Decks",
+    "subtitle": "The most advanced deck builder for Cyberpunk 2077 TCG",
+    "getStarted": "GET STARTED",
+    "features": {
+      "deckBuilder": "Professional Deck Builder",
+      "analytics": "Deep Analytics",
+      "collection": "Collection Tracker",
+      "proxies": "Proxy Generator"
+    }
+  },
+
+  "toast": {
+    "deckSaved": "Deck saved successfully",
+    "deckLoaded": "Deck loaded",
+    "deckDeleted": "Deck deleted",
+    "deckCleared": "Deck cleared",
+    "cardAdded": "Card added to deck",
+    "cardRemoved": "Card removed from deck",
+    "loginRequired": "Login required for this action",
+    "error": "An error occurred",
+    "copied": "Copied to clipboard!",
+    "collectionUpdated": "Collection updated"
   },
 
   "cardTypes": {
@@ -152,64 +403,5 @@
     "coreToKeep": "CORE CARDS TO KEEP",
     "firstCuts": "FIRST CARDS TO CUT",
     "suggestedUpgrades": "SUGGESTED UPGRADES"
-  },
-
-  "collection": {
-    "title": "COLLECTION TRACKER",
-    "subtitle": "Track your physical card collection",
-    "stats": {
-      "uniqueCards": "Unique Cards",
-      "totalCards": "Total Cards",
-      "completion": "Completion"
-    },
-    "actions": {
-      "addToCollection": "ADD TO COLLECTION",
-      "removeFromCollection": "REMOVE FROM COLLECTION"
-    },
-    "messages": {
-      "loginRequired": "Login required to track collection",
-      "addedToCollection": "Added to collection",
-      "removedFromCollection": "Removed from collection"
-    }
-  },
-
-  "feedback": {
-    "title": "SEND FEEDBACK",
-    "category": "Category",
-    "categories": {
-      "bug": "Bug Report",
-      "feature": "Feature Request",
-      "improvement": "Improvement Suggestion",
-      "other": "Other"
-    },
-    "messagePlaceholder": "Describe your feedback in detail...",
-    "submit": "SUBMIT FEEDBACK",
-    "submitting": "SUBMITTING...",
-    "success": "Feedback submitted successfully!",
-    "error": "Error submitting feedback"
-  },
-
-  "legal": {
-    "title": "LEGAL DISCLAIMER",
-    "sections": {
-      "unofficial": "Unofficial Fan Project",
-      "copyright": "Copyright & Trademarks",
-      "fanContent": "Fan Content Policy Compliance",
-      "warranty": "No Warranty",
-      "privacy": "Data & Privacy",
-      "dmca": "DMCA Contact",
-      "support": "Support Official Releases"
-    }
-  },
-
-  "toasts": {
-    "deckSaved": "Deck saved successfully",
-    "deckLoaded": "Deck loaded",
-    "deckDeleted": "Deck deleted",
-    "deckCleared": "Deck cleared",
-    "cardAdded": "Card added to deck",
-    "cardRemoved": "Card removed from deck",
-    "loginRequired": "Login required for this action",
-    "error": "An error occurred"
   }
 }

@@ -28,16 +28,24 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
   const loadFeedbacks = async () => {
     setLoading(true);
     try {
+      console.log("🔍 [ADMIN] Loading feedbacks...");
+
       const { data, error } = await supabase
         .from("feedback")
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("❌ [ADMIN] Error loading feedbacks:", error);
+        throw error;
+      }
+
+      console.log("✅ [ADMIN] Feedbacks loaded:", data?.length || 0);
+      console.log("📊 [ADMIN] Sample feedback:", data?.[0]);
 
       setFeedbacks(data || []);
     } catch (error) {
-      console.error("Error loading feedbacks:", error);
+      console.error("❌ [ADMIN] Error in loadFeedbacks:", error);
       if (showToast) {
         showToast(`Error loading feedbacks: ${error.message}`, "error");
       }
@@ -47,13 +55,26 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
   };
 
   const toggleResolved = async (feedbackId, currentStatus) => {
+    console.log("🔄 [ADMIN] toggleResolved called");
+    console.log("  Feedback ID:", feedbackId);
+    console.log("  Current status:", currentStatus);
+    console.log("  New status will be:", !currentStatus);
+
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("feedback")
         .update({ resolved: !currentStatus })
-        .eq("id", feedbackId);
+        .eq("id", feedbackId)
+        .select();
 
-      if (error) throw error;
+      console.log("📝 [ADMIN] Update response:", { data, error });
+
+      if (error) {
+        console.error("❌ [ADMIN] Error updating:", error);
+        throw error;
+      }
+
+      console.log("✅ [ADMIN] Feedback updated successfully");
 
       // Show success toast
       if (showToast) {
@@ -67,24 +88,42 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
 
       // Reload feedbacks
       await loadFeedbacks();
+
+      // Update selected feedback to reflect change
+      if (data && data[0]) {
+        setSelectedFeedback(data[0]);
+      }
     } catch (error) {
-      console.error("Error updating feedback:", error);
+      console.error("❌ [ADMIN] Error in toggleResolved:", error);
       if (showToast) {
-        showToast(`Error updating feedback: ${error.message}`, "error");
+        showToast(`Error: ${error.message}`, "error");
       }
     }
   };
 
   const deleteFeedback = async (feedbackId) => {
-    if (!confirm("Are you sure you want to delete this feedback?")) return;
+    console.log("🗑️ [ADMIN] deleteFeedback called for:", feedbackId);
+
+    // NATIVE CONFIRM (no Toast aquí)
+    if (!window.confirm("Are you sure you want to delete this feedback?")) {
+      console.log("🚫 [ADMIN] Deletion cancelled by user");
+      return;
+    }
 
     try {
+      console.log("🔄 [ADMIN] Deleting feedback...");
+
       const { error } = await supabase
         .from("feedback")
         .delete()
         .eq("id", feedbackId);
 
-      if (error) throw error;
+      if (error) {
+        console.error("❌ [ADMIN] Delete error:", error);
+        throw error;
+      }
+
+      console.log("✅ [ADMIN] Feedback deleted successfully");
 
       // Show success toast
       if (showToast) {
@@ -94,9 +133,9 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
       await loadFeedbacks();
       setSelectedFeedback(null);
     } catch (error) {
-      console.error("Error deleting feedback:", error);
+      console.error("❌ [ADMIN] Error in deleteFeedback:", error);
       if (showToast) {
-        showToast(`Error deleting feedback: ${error.message}`, "error");
+        showToast(`Error deleting: ${error.message}`, "error");
       }
     }
   };
@@ -122,10 +161,21 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
   const resolvedCount = feedbacks.filter((fb) => fb.resolved).length;
   const unresolvedCount = feedbacks.length - resolvedCount;
 
+  // DEBUG: Log counts
+  useEffect(() => {
+    console.log("📊 [ADMIN] Feedback counts:", {
+      total: feedbacks.length,
+      resolved: resolvedCount,
+      unresolved: unresolvedCount,
+      bugs: categoryCounts.bug,
+      features: categoryCounts.feature,
+    });
+  }, [feedbacks, resolvedCount, unresolvedCount, categoryCounts]);
+
   return (
     <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-[60] p-4">
       <div className="bg-term-gray border-2 border-term-red rounded-lg max-w-7xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header - Solo ✕ para cerrar */}
+        {/* Header */}
         <div className="bg-term-gray border-b border-term-red p-4 flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-bold text-term-red font-mono">
@@ -200,7 +250,6 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
         {/* Filters */}
         <div className="bg-black/20 border-b border-term-amber/20 p-4">
           <div className="flex gap-4">
-            {/* Category Filter */}
             <div className="flex-1">
               <label className="block text-term-amber font-mono text-xs mb-2">
                 FILTER BY CATEGORY:
@@ -218,7 +267,6 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
               </select>
             </div>
 
-            {/* Status Filter */}
             <div className="flex-1">
               <label className="block text-term-amber font-mono text-xs mb-2">
                 FILTER BY STATUS:
@@ -234,7 +282,6 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
               </select>
             </div>
 
-            {/* Refresh Button */}
             <div className="flex items-end">
               <button
                 onClick={loadFeedbacks}
@@ -290,7 +337,7 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
                       </span>
 
                       {fb.resolved && (
-                        <span className="text-term-green text-xs font-mono font-bold">
+                        <span className="text-term-green text-lg font-mono font-bold">
                           ✓
                         </span>
                       )}
@@ -313,7 +360,6 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
           <div className="flex-1 overflow-y-auto">
             {selectedFeedback ? (
               <div className="p-6 space-y-6">
-                {/* Header */}
                 <div className="flex items-start justify-between">
                   <div>
                     <span
@@ -333,12 +379,13 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
 
                   <div className="flex gap-2">
                     <button
-                      onClick={() =>
+                      onClick={() => {
+                        console.log("🖱️ [ADMIN] Mark Resolved button clicked");
                         toggleResolved(
                           selectedFeedback.id,
                           selectedFeedback.resolved,
-                        )
-                      }
+                        );
+                      }}
                       className={`px-3 py-1 rounded font-mono text-sm transition-colors ${
                         selectedFeedback.resolved
                           ? "bg-term-red/20 text-term-red border border-term-red hover:bg-term-red/30"
@@ -359,7 +406,6 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
                   </div>
                 </div>
 
-                {/* Message */}
                 <div className="bg-term-gray/50 border border-term-green/30 rounded p-4">
                   <h3 className="text-term-amber font-mono font-bold mb-2">
                     MESSAGE:
@@ -369,7 +415,6 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
                   </p>
                 </div>
 
-                {/* Metadata */}
                 <div className="bg-term-gray/50 border border-term-blue/30 rounded p-4">
                   <h3 className="text-term-blue font-mono font-bold mb-3">
                     METADATA:
@@ -423,7 +468,6 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
                   </div>
                 </div>
 
-                {/* Status */}
                 <div
                   className={`border rounded p-4 ${
                     selectedFeedback.resolved
@@ -453,7 +497,7 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
           </div>
         </div>
 
-        {/* Footer - Solo stats, sin botón redundante */}
+        {/* Footer */}
         <div className="border-t border-term-amber p-4">
           <div className="flex justify-between items-center">
             <p className="text-term-green/60 font-mono text-xs">

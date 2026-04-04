@@ -15,7 +15,21 @@
     "clear": "Limpiar",
     "reset": "Reiniciar",
     "apply": "Aplicar",
-    "cards": "CARTAS"
+    "cards": "CARTAS",
+    "yes": "Sí",
+    "no": "No",
+    "ok": "OK",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "skip": "Saltar",
+    "reveal": "Revelar",
+    "revealAll": "REVELAR TODO",
+    "click": "CLIC",
+    "keepHand": "MANTENER MANO",
+    "mulligan": "MULLIGAN",
+    "shuffling": "BARAJANDO...",
+    "generating": "GENERANDO...",
+    "opening": "ABRIENDO..."
   },
 
   "navigation": {
@@ -29,6 +43,20 @@
     "legal": "LEGAL"
   },
 
+  "header": {
+    "title": "CYBERPUNK 2077 TCG // CONSTRUCTOR DE MAZOS",
+    "loginWithDiscord": "INICIAR SESIÓN CON DISCORD",
+    "logout": "CERRAR SESIÓN",
+    "loggedInAs": "Sesión iniciada como"
+  },
+
+  "footer": {
+    "disclaimer": "Herramienta de fans • No afiliado con CD PROJEKT RED o WeirdCo",
+    "legal": "Aviso Legal",
+    "sendFeedback": "Enviar Feedback",
+    "adminPanel": "Panel de Admin"
+  },
+
   "deckBuilder": {
     "title": "CYBERPUNK 2077 TCG // CONSTRUCTOR DE MAZOS",
     "subtitle": "Herramienta profesional para construir mazos de Cyberpunk 2077 TCG",
@@ -37,6 +65,7 @@
     "legends": "LEYENDAS",
     "mainDeck": "MAZO PRINCIPAL",
     "sideboard": "RESERVA",
+    "ramWall": "MURO DE RAM",
     "deckStats": {
       "total": "Total de Cartas",
       "avgCost": "Costo Prom.",
@@ -54,10 +83,18 @@
       "exportDeck": "EXPORTAR MAZO",
       "importDeck": "IMPORTAR MAZO",
       "showAnalytics": "MOSTRAR ANÁLISIS",
+      "hideAnalytics": "OCULTAR ANÁLISIS",
       "generateProxies": "GENERAR PROXIES",
       "loadPrecon": "CARGAR MAZO",
-      "strategyGuide": "GUÍA DE ESTRATEGIA"
+      "strategyGuide": "GUÍA DE ESTRATEGIA",
+      "mulligan": "SIMULADOR DE MULLIGAN"
     }
+  },
+
+  "searchBar": {
+    "placeholder": "Buscar cartas por nombre, tipo, facción...",
+    "results": "{{count}} cartas encontradas",
+    "noResults": "No se encontraron cartas"
   },
 
   "filters": {
@@ -72,6 +109,220 @@
     "ramRange": "Rango de RAM",
     "set": "Set",
     "clearFilters": "LIMPIAR FILTROS"
+  },
+
+  "deckArea": {
+    "addToDeck": "AGREGAR AL MAZO",
+    "removeFromDeck": "QUITAR DEL MAZO",
+    "viewDetails": "VER DETALLES"
+  },
+
+  "mulligan": {
+    "title": "SIMULADOR DE MANO INICIAL",
+    "deckInfo": "Mazo: Actual ({{count}} cartas)",
+    "randomPool": "Pool de Prueba Aleatorio ({{legends}})",
+    "mulliganStatus": "Mulligan: {{used}}/1 Usado",
+    "mulliganAvailable": "0/1 Usado",
+    "legendsCount": "LEYENDAS [{{count}}/3]",
+    "hand": "MANO (6)",
+    "analysis": "ANÁLISIS NETRUNNER",
+    "curve": "CURVA",
+    "defense": "DEFENSA",
+    "advice": "CONSEJO DEL FIXER",
+    "playable": "{{count}} jugables Turno 1-2",
+    "units": "{{count}} Unidades",
+    "keepHand": "[✅ MANTENER MANO]",
+    "mulliganButton": "[🔄 MULLIGAN (QUEDA 1)]",
+    "mulliganUsed": "[MULLIGAN USADO]",
+    "shuffling": "[BARAJANDO...]",
+    "goingFirst": "⚠️ Yendo Primero: 2 Leyendas empiezan giradas (mostradas arriba)",
+    "revealAll": "[ REVELAR TODO ]",
+    "click": "CLIC",
+    "foil": "✨ FOIL",
+    "statuses": {
+      "solid": "SÓLIDA",
+      "okay": "ACEPTABLE",
+      "bricked": "BLOQUEADA",
+      "good": "BUENA",
+      "risky": "ARRIESGADA",
+      "noBlockers": "SIN BLOQUEADORES"
+    },
+    "adviceMessages": {
+      "bricked": "⚠️ MANO BLOQUEADA: Todas las cartas son de alto costo. No tendrás jugadas tempranas. SE RECOMIENDA MULLIGAN.",
+      "noDefense": "⚠️ SIN DEFENSA: No tienes Unidades para bloquear ataques. Considera Mulligan a menos que planees ser hiper-agresivo.",
+      "solid": "✅ MANTÉN ESTA MANO. Curva sólida y defensa. No desperdicies tu Mulligan en una apertura jugable.",
+      "playable": "⚠️ JUGABLE PERO ARRIESGADA: Esta mano puede funcionar pero tiene debilidades. Mulligan si te sientes incómodo."
+    }
+  },
+
+  "packOpener": {
+    "title": "ABRIR SOBRES",
+    "singlePack": "ABRIR 1 SOBRE",
+    "openBox": "ABRIR CAJA DE SOBRES (24 SOBRES)",
+    "stats": {
+      "title": "ESTADÍSTICAS DE COLECCIÓN",
+      "totalPacks": "Total de Sobres Abiertos",
+      "totalCards": "Total de Cartas",
+      "commons": "Comunes",
+      "uncommons": "Poco Comunes",
+      "rares": "Raras",
+      "novaRares": "Raras Nova",
+      "iconicRares": "Raras Icónicas",
+      "foils": "Foils"
+    },
+    "openingPack": "ABRIENDO SOBRE {{current}}/{{total}}...",
+    "viewCollection": "VER COLECCIÓN ({{count}} cartas)",
+    "clearCollection": "LIMPIAR COLECCIÓN",
+    "openAnother": "ABRIR OTRO SOBRE",
+    "continueDraft": "CONTINUAR DRAFT",
+    "finishDraft": "TERMINAR DRAFT",
+    "boxMode": "MODO CAJA DE SOBRES",
+    "singleMode": "MODO SOBRE INDIVIDUAL",
+    "foil": "✨ FOIL",
+    "click": "CLIC PARA REVELAR"
+  },
+
+  "myDecks": {
+    "title": "MIS MAZOS",
+    "noDecksSaved": "No hay mazos guardados aún",
+    "startBuilding": "¡Empieza a construir tu primer mazo!",
+    "newDeck": "NUEVO MAZO",
+    "load": "CARGAR",
+    "duplicate": "DUPLICAR",
+    "delete": "ELIMINAR",
+    "export": "EXPORTAR",
+    "confirmDelete": "¿Estás seguro de que quieres eliminar este mazo?",
+    "lastModified": "Última modificación: {{date}}",
+    "cards": "{{count}} cartas"
+  },
+
+  "saveDeckModal": {
+    "title": "GUARDAR MAZO",
+    "deckName": "Nombre del Mazo",
+    "namePlaceholder": "Mi Mazo Increíble",
+    "notes": "Notas (opcional)",
+    "notesPlaceholder": "Agrega notas sobre tu estrategia del mazo...",
+    "save": "GUARDAR MAZO",
+    "saving": "GUARDANDO...",
+    "cancel": "CANCELAR"
+  },
+
+  "exportModal": {
+    "title": "EXPORTAR MAZO",
+    "format": "Formato de Exportación",
+    "plainText": "Texto Plano",
+    "shareUrl": "URL para Compartir",
+    "copyList": "COPIAR LISTA",
+    "copyUrl": "COPIAR URL",
+    "close": "CERRAR"
+  },
+
+  "importModal": {
+    "title": "IMPORTAR MAZO",
+    "pasteList": "Pega tu lista de mazo aquí",
+    "format": "Formato: 3x Nombre de Carta",
+    "import": "IMPORTAR",
+    "cancel": "CANCELAR"
+  },
+
+  "analytics": {
+    "title": "ANÁLISIS DEL MAZO",
+    "eddieCurve": "Curva de Eddies",
+    "avgCost": "Costo Promedio: {{value}}",
+    "typeDistribution": "Distribución de Tipos",
+    "factionSynergy": "Sinergia de Facción",
+    "ramDistribution": "Distribución de RAM"
+  },
+
+  "cardPreview": {
+    "title": "Detalles de la Carta",
+    "type": "Tipo",
+    "faction": "Facción",
+    "cost": "Costo",
+    "power": "Poder",
+    "ram": "RAM",
+    "rarity": "Rareza",
+    "set": "Set",
+    "addToDeck": "AGREGAR AL MAZO",
+    "removeFromDeck": "QUITAR DEL MAZO",
+    "addToCollection": "AGREGAR A COLECCIÓN",
+    "removeFromCollection": "QUITAR DE COLECCIÓN",
+    "inDeck": "En el Mazo: {{count}}",
+    "close": "CERRAR"
+  },
+
+  "collection": {
+    "title": "RASTREADOR DE COLECCIÓN",
+    "subtitle": "Rastrea tu colección de cartas físicas",
+    "stats": {
+      "uniqueCards": "Cartas Únicas",
+      "totalCards": "Total de Cartas",
+      "completion": "Completitud"
+    },
+    "actions": {
+      "addToCollection": "AGREGAR A COLECCIÓN",
+      "removeFromCollection": "QUITAR DE COLECCIÓN"
+    },
+    "messages": {
+      "loginRequired": "Necesitas iniciar sesión para rastrear tu colección",
+      "addedToCollection": "Agregado a la colección",
+      "removedFromCollection": "Quitado de la colección"
+    }
+  },
+
+  "feedback": {
+    "title": "ENVIAR FEEDBACK",
+    "category": "Categoría",
+    "categories": {
+      "bug": "Reporte de Bug",
+      "feature": "Solicitud de Característica",
+      "improvement": "Sugerencia de Mejora",
+      "other": "Otro"
+    },
+    "messagePlaceholder": "Describe tu feedback en detalle...",
+    "submit": "ENVIAR FEEDBACK",
+    "submitting": "ENVIANDO...",
+    "success": "¡Feedback enviado exitosamente!",
+    "error": "Error al enviar feedback"
+  },
+
+  "legal": {
+    "title": "AVISO LEGAL",
+    "acknowledge": "Entiendo",
+    "sections": {
+      "unofficial": "Proyecto Fan No Oficial",
+      "copyright": "Copyright y Marcas Registradas",
+      "fanContent": "Cumplimiento de Política de Contenido Fan",
+      "warranty": "Sin Garantía",
+      "privacy": "Datos y Privacidad",
+      "dmca": "Contacto DMCA",
+      "support": "Apoya las Versiones Oficiales"
+    }
+  },
+
+  "landing": {
+    "welcome": "Bienvenido a Afterlife Decks",
+    "subtitle": "El constructor de mazos más avanzado para Cyberpunk 2077 TCG",
+    "getStarted": "COMENZAR",
+    "features": {
+      "deckBuilder": "Constructor de Mazos Profesional",
+      "analytics": "Análisis Profundo",
+      "collection": "Rastreador de Colección",
+      "proxies": "Generador de Proxies"
+    }
+  },
+
+  "toast": {
+    "deckSaved": "Mazo guardado exitosamente",
+    "deckLoaded": "Mazo cargado",
+    "deckDeleted": "Mazo eliminado",
+    "deckCleared": "Mazo limpiado",
+    "cardAdded": "Carta agregada al mazo",
+    "cardRemoved": "Carta removida del mazo",
+    "loginRequired": "Se requiere iniciar sesión para esta acción",
+    "error": "Ocurrió un error",
+    "copied": "¡Copiado al portapapeles!",
+    "collectionUpdated": "Colección actualizada"
   },
 
   "cardTypes": {
@@ -152,64 +403,5 @@
     "coreToKeep": "CARTAS NÚCLEO A MANTENER",
     "firstCuts": "PRIMERAS CARTAS A CORTAR",
     "suggestedUpgrades": "MEJORAS SUGERIDAS"
-  },
-
-  "collection": {
-    "title": "RASTREADOR DE COLECCIÓN",
-    "subtitle": "Rastrea tu colección de cartas físicas",
-    "stats": {
-      "uniqueCards": "Cartas Únicas",
-      "totalCards": "Total de Cartas",
-      "completion": "Completitud"
-    },
-    "actions": {
-      "addToCollection": "AGREGAR A COLECCIÓN",
-      "removeFromCollection": "QUITAR DE COLECCIÓN"
-    },
-    "messages": {
-      "loginRequired": "Necesitas iniciar sesión para rastrear tu colección",
-      "addedToCollection": "Agregado a la colección",
-      "removedFromCollection": "Quitado de la colección"
-    }
-  },
-
-  "feedback": {
-    "title": "ENVIAR FEEDBACK",
-    "category": "Categoría",
-    "categories": {
-      "bug": "Reporte de Bug",
-      "feature": "Solicitud de Característica",
-      "improvement": "Sugerencia de Mejora",
-      "other": "Otro"
-    },
-    "messagePlaceholder": "Describe tu feedback en detalle...",
-    "submit": "ENVIAR FEEDBACK",
-    "submitting": "ENVIANDO...",
-    "success": "¡Feedback enviado exitosamente!",
-    "error": "Error al enviar feedback"
-  },
-
-  "legal": {
-    "title": "AVISO LEGAL",
-    "sections": {
-      "unofficial": "Proyecto Fan No Oficial",
-      "copyright": "Copyright y Marcas Registradas",
-      "fanContent": "Cumplimiento de Política de Contenido Fan",
-      "warranty": "Sin Garantía",
-      "privacy": "Datos y Privacidad",
-      "dmca": "Contacto DMCA",
-      "support": "Apoya las Versiones Oficiales"
-    }
-  },
-
-  "toasts": {
-    "deckSaved": "Mazo guardado exitosamente",
-    "deckLoaded": "Mazo cargado",
-    "deckDeleted": "Mazo eliminado",
-    "deckCleared": "Mazo limpiado",
-    "cardAdded": "Carta agregada al mazo",
-    "cardRemoved": "Carta removida del mazo",
-    "loginRequired": "Se requiere iniciar sesión para esta acción",
-    "error": "Ocurrió un error"
   }
 }
