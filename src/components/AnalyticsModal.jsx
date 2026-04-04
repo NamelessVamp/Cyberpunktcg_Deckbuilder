@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { useLanguage } from "../i18n/LanguageContext";
 
 export default function AnalyticsModal({ deck, onClose }) {
-  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState("curve");
 
   // Calculate analytics data

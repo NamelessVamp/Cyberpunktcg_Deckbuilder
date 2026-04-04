@@ -29,8 +29,6 @@ import SmartCardImage from "./components/SmartCardImage";
 import LandingPage from "./components/LandingPage";
 import LegalDisclaimer from "./components/LegalDisclaimer";
 import ProxyModal from "./components/ProxyModal";
-import LanguageSwitcher from "./components/LanguageSwitcher";
-import { useLanguage } from "./i18n/LanguageContext";
 import AnalyticsModal from "./components/AnalyticsModal";
 import AdminFeedbackViewer from "./components/AdminFeedbackViewer";
 import { useIsAdmin } from "./hooks/useIsAdmin";
@@ -76,7 +74,6 @@ const decodeDeck = (encodedString, allCards) => {
 };
 
 function App() {
-  const { t } = useLanguage(); // ← AGREGAR ESTA LÍNEA
   const [showExportModal, setShowExportModal] = useState(false);
   const [exportDeckName, setExportDeckName] = useState("");
   const [cards, setCards] = useState([]);
@@ -1037,8 +1034,8 @@ function App() {
 
               <div className="space-y-1">
                 <p className="text-term-green font-mono">
-                  [{filteredCards.length} / {cards.length} {t("common.cards")}]
-                  // [ALPHA/BETA KIT 2026]
+                  [{filteredCards.length} / {cards.length} CARDS] // [ALPHA/BETA
+                  KIT 2026]
                 </p>
 
                 {user && collection.length > 0 && (
@@ -1059,9 +1056,6 @@ function App() {
 
             {/* RIGHT: Language Switcher + User Menu */}
             <div className="flex items-center gap-4">
-              {/* Language Switcher */}
-              <LanguageSwitcher />
-
               {/* User Profile / Login */}
               {user ? (
                 <div className="flex items-center gap-4">

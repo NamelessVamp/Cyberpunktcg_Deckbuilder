@@ -1,17 +1,13 @@
-import { useLanguage } from "../i18n/LanguageContext";
-
 export default function DeckTabs({ activeTab, onTabChange }) {
-  const { t } = useLanguage();
-
   const tabs = [
-    { id: "home", label: t("navigation.home"), icon: "🏠" },
-    { id: "build", label: t("navigation.build"), icon: "🔨" },
-    { id: "mydecks", label: t("navigation.mydecks"), icon: "📚" },
-    { id: "precon", label: t("navigation.precon"), icon: "📦" },
-    { id: "practice", label: t("navigation.practice"), icon: "🎯" },
-    { id: "packs", label: t("navigation.packs"), icon: "🎁" },
-    { id: "collection", label: t("navigation.collection"), icon: "💎" },
-    { id: "legal", label: t("navigation.legal"), icon: "⚖️" },
+    { id: "home", label: "HOME", icon: "🏠" },
+    { id: "build", label: "BUILD", icon: "🔨" },
+    { id: "mydecks", label: "MY DECKS", icon: "📚" },
+    { id: "precon", label: "PRECON", icon: "📦" },
+    { id: "practice", label: "PRACTICE", icon: "🎯" },
+    { id: "packs", label: "PACKS", icon: "🎁" },
+    { id: "collection", label: "COLLECTION", icon: "💎" },
+    { id: "legal", label: "LEGAL", icon: "⚖️" },
   ];
 
   return (
