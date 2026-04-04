@@ -65,7 +65,7 @@ export default function PreconExplainer({ guide, onClose }) {
                 <h3 className="text-xl font-bold text-term-amber font-mono mb-3">
                   DECK OVERVIEW
                 </h3>
-                <p className="text-term-green font-mono leading-relaxed">
+                <p className="text-term-green font-sans leading-relaxed">
                   {guide.overview}
                 </p>
               </div>
@@ -78,7 +78,7 @@ export default function PreconExplainer({ guide, onClose }) {
                   {guide.winConditions.map((condition, index) => (
                     <li
                       key={index}
-                      className="text-term-green font-mono flex gap-2"
+                      className="text-term-green font-sans flex gap-2"
                     >
                       <span className="text-term-amber">→</span>
                       {condition}
@@ -95,7 +95,7 @@ export default function PreconExplainer({ guide, onClose }) {
                   {guide.commonMistakes.map((mistake, index) => (
                     <li
                       key={index}
-                      className="text-term-red font-mono flex gap-2"
+                      className="text-term-red font-sans flex gap-2"
                     >
                       <span className="text-term-red">✗</span>
                       {mistake}

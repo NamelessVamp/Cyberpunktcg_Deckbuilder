@@ -135,7 +135,7 @@ export default function CardPreviewModal({
               {/* Card Text */}
               {card.text && (
                 <div className="mb-6 p-4 bg-black/40 rounded border border-term-amber/20">
-                  <p className="text-term-green/90 font-mono text-sm leading-relaxed whitespace-pre-wrap">
+                  <p className="text-term-green/90 font-sans text-sm leading-relaxed whitespace-pre-wrap">
                     {card.text}
                   </p>
                 </div>
