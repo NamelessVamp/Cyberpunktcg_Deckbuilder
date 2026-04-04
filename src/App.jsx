@@ -1292,7 +1292,8 @@ function App() {
                     allCards={cards}
                     showAnalytics={showAnalytics}
                     onToggleAnalytics={() => setShowAnalytics(!showAnalytics)}
-                    onGenerateProxies={() => setShowProxyModal(true)} // ← NUEVO
+                    onGenerateProxies={() => setShowProxyModal(true)}
+                    onAddToDeck={handleAddToDeck} // ← AGREGAR ESTO
                   />
 
                   {showProxyModal && (

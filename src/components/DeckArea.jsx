@@ -4,6 +4,7 @@ import Tooltip from "./Tooltip";
 import { validateDeckLegality } from "../lib/legalityService";
 import LegalityInfoModal from "./LegalityInfoModal";
 import DeckAnalytics from "./DeckAnalytics"; // ← NUEVO
+import SuggestedCards from "./SuggestedCards";
 
 export default function DeckArea({
   deck,
@@ -11,9 +12,10 @@ export default function DeckArea({
   onClearDeck,
   onShareDeck,
   allCards,
-  showAnalytics, // ← NUEVO
-  onToggleAnalytics, // ← NUEVO
+  showAnalytics,
+  onToggleAnalytics,
   onGenerateProxies,
+  onAddToDeck, // ← AGREGAR ESTO
 }) {
   const [showLegalityModal, setShowLegalityModal] = useState(false);
 
@@ -363,6 +365,13 @@ export default function DeckArea({
           [GENERATE PROXIES]
         </button>
       )}
+
+      {/* SUGGESTED CARDS */}
+      <SuggestedCards
+        deck={deck}
+        allCards={allCards}
+        onAddCard={(card) => onAddToDeck(card, 1)}
+      />
 
       {/* DECK ANALYTICS - NUEVO */}
       {showAnalytics && deck.mainDeck.length > 0 && (
