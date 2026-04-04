@@ -1037,17 +1037,16 @@ function App() {
                   [{filteredCards.length} / {cards.length} CARDS] // [ALPHA/BETA
                   KIT 2026]
                 </p>
-
+                // REEMPLAZAR LÍNEAS 1041-1053 DE App.jsx
                 {user && collection.length > 0 && (
                   <p className="text-term-amber/80 font-mono text-sm">
-                    📦 {t("collection.title")}: {collection.length}{" "}
-                    {t("collection.stats.uniqueCards")}
+                    📦 COLLECTION: {collection.length} unique cards
                     {(() => {
                       const stats = collectionService.getCollectionStats(
                         collection,
                         cards,
                       );
-                      return ` (${stats.completionPercent}% ${t("collection.stats.completion")})`;
+                      return ` (${stats.completionPercent}% complete)`;
                     })()}
                   </p>
                 )}
