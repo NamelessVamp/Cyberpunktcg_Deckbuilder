@@ -120,6 +120,17 @@ function calculateDeckAnalytics(deck) {
     typeCounts[type] = (typeCounts[type] || 0) + 1;
   });
 
+  // Playable Hand Probability
+  const cheapCards = allCards.filter((card) => card.cost <= 2).length;
+  const deckSize = allCards.length;
+  const handSize = 6;
+
+  // P(≥1 carta barata en mano inicial)
+  const playableHandProbability =
+    cheapCards > 0 && deckSize >= handSize
+      ? calculateHypergeometric(deckSize, cheapCards, handSize)
+      : 0;
+
   return {
     curveCounts,
     avgCost,
@@ -127,6 +138,8 @@ function calculateDeckAnalytics(deck) {
     tagCounts,
     typeCounts,
     totalCards: allCards.length,
+    playableHandProbability, // ← NUEVO
+    cheapCards, // ← NUEVO
   };
 }
 
@@ -397,6 +410,76 @@ function ConsistencyTab({ analytics }) {
         </p>
       </div>
 
+      {/* Playable Hand Probability */}
+      <div className="bg-term-gray/50 border-2 border-term-blue rounded p-6">
+        <h3 className="text-term-blue font-mono font-bold mb-3 text-lg">
+          OPENING HAND ANALYSIS
+        </h3>
+
+        <div className="mb-4">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-term-green font-mono text-sm">
+              Probability of playable hand:
+            </span>
+            <span className="text-term-amber font-mono text-2xl font-bold">
+              {(analytics.playableHandProbability * 100).toFixed(1)}%
+            </span>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="bg-term-gray-light rounded overflow-hidden h-4">
+            <div
+              className={`h-full transition-all duration-500 ${
+                analytics.playableHandProbability >= 0.8
+                  ? "bg-term-green"
+                  : analytics.playableHandProbability >= 0.6
+                    ? "bg-term-amber"
+                    : "bg-term-red"
+              }`}
+              style={{ width: `${analytics.playableHandProbability * 100}%` }}
+            ></div>
+          </div>
+        </div>
+
+        <div className="text-term-green/80 font-sans text-sm space-y-2">
+          <p>
+            • Cheap cards (0-2 cost):{" "}
+            <span className="text-term-amber font-bold">
+              {analytics.cheapCards}
+            </span>{" "}
+            / {analytics.totalCards}
+          </p>
+          <p>
+            • This deck has a{" "}
+            <span className="text-term-amber font-bold">
+              {(analytics.playableHandProbability * 100).toFixed(1)}%
+            </span>{" "}
+            chance of drawing at least one playable card (cost ≤2) in your
+            opening hand of 6.
+          </p>
+
+          {analytics.playableHandProbability >= 0.85 && (
+            <p className="text-term-green">
+              ✓ Excellent consistency! You'll almost always have turn 1 plays.
+            </p>
+          )}
+
+          {analytics.playableHandProbability >= 0.65 &&
+            analytics.playableHandProbability < 0.85 && (
+              <p className="text-term-amber">
+                → Good consistency. Consider adding 2-3 more cheap cards for
+                reliability.
+              </p>
+            )}
+
+          {analytics.playableHandProbability < 0.65 && (
+            <p className="text-term-red">
+              ⚠ Low consistency! Add more 0-2 cost cards to avoid dead hands.
+            </p>
+          )}
+        </div>
+      </div>
+
       {/* Consistency Checks */}
       <div>
         <h3 className="text-term-amber font-mono font-bold mb-3">
@@ -516,4 +599,35 @@ function ConsistencyTab({ analytics }) {
       </div>
     </div>
   );
+}
+
+// ============================================================================
+// HYPERGEOMETRIC DISTRIBUTION
+// ============================================================================
+
+function calculateHypergeometric(N, K, n) {
+  // P(X ≥ 1) = 1 - P(X = 0)
+  // N = deck size
+  // K = success cards (cost ≤ 2)
+  // n = hand size (6)
+
+  if (K === 0 || N < n) return 0;
+  if (K >= n) return 1; // Si hay más cartas baratas que el tamaño de mano
+
+  const pZero = binomial(N - K, n) / binomial(N, n);
+  return Math.max(0, Math.min(1, 1 - pZero));
+}
+
+function binomial(n, k) {
+  if (k > n || k < 0) return 0;
+  if (k === 0 || k === n) return 1;
+
+  // Optimización: C(n,k) = C(n, n-k)
+  k = Math.min(k, n - k);
+
+  let result = 1;
+  for (let i = 1; i <= k; i++) {
+    result *= (n - i + 1) / i;
+  }
+  return result;
 }
