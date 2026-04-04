@@ -13,7 +13,7 @@ export default function SaveDeckModal({ deck, onSave, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-term-black border-2 border-term-amber p-6 rounded max-w-md w-full">
         <h2 className="text-term-amber font-bold text-xl mb-4 font-mono">
           SAVE_DECK.EXE

@@ -85,7 +85,7 @@ export default function ImportDeckModal({ onImport, onClose, allCards }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-term-gray border-2 border-term-amber rounded-lg max-w-2xl w-full p-6">
         <h2 className="text-term-amber text-2xl font-mono font-bold mb-4">
           [IMPORT DECK]

@@ -1,6 +1,6 @@
 export default function ConfirmModal({ title, message, onConfirm, onCancel }) {
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-term-gray border-2 border-term-amber rounded-lg p-6 max-w-md w-full mx-4">
         <h2 className="text-term-amber text-xl font-mono font-bold mb-4">
           {title}

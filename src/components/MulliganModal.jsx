@@ -141,7 +141,7 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4 overflow-y-auto"
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto"
       onClick={onClose}
     >
       <div

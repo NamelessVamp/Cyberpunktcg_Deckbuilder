@@ -35,7 +35,7 @@ export default function FeedbackModal({ onClose, onSubmit, isSubmitting }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[9000] p-4">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9000] p-4">
       <div className="bg-term-gray border-2 border-term-amber rounded-lg max-w-xl w-full max-h-[85vh] overflow-y-auto">
         {/* Header */}
         <div className="bg-term-amber/10 border-b border-term-amber/40 p-3">
