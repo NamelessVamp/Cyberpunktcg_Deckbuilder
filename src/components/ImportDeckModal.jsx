@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ImportDeckModal({ onImport, onClose, allCards }) {
   const [deckText, setDeckText] = useState("");
@@ -85,49 +86,66 @@ export default function ImportDeckModal({ onImport, onClose, allCards }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-term-gray border-2 border-term-amber rounded-lg max-w-2xl w-full p-6">
-        <h2 className="text-term-amber text-2xl font-mono font-bold mb-4">
-          [IMPORT DECK]
-        </h2>
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <motion.div
+          className="bg-term-gray border-2 border-term-amber rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          initial={{ scale: 0.9, y: 20 }}
+          animate={{ scale: 1, y: 0 }}
+          exit={{ scale: 0.9, y: 20 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          style={{ position: "relative" }}
+        >
+          <div className="bg-term-gray border-2 border-term-amber rounded-lg max-w-2xl w-full p-6">
+            <h2 className="text-term-amber text-2xl font-mono font-bold mb-4">
+              [IMPORT DECK]
+            </h2>
 
-        <p className="text-term-green/80 font-mono text-sm mb-4">
-          Paste your decklist below. Format: "3x Card Name" or "Card Name"
-        </p>
-
-        <textarea
-          value={deckText}
-          onChange={(e) => {
-            setDeckText(e.target.value);
-            setError("");
-          }}
-          placeholder="3x V (Streetkid)&#10;2x Dying Night&#10;1x Viktor Vektor&#10;..."
-          className="w-full h-64 bg-black/40 text-term-green border border-term-amber/30 rounded p-3 font-mono text-sm focus:border-term-amber focus:outline-none resize-none"
-        />
-
-        {error && (
-          <div className="mt-3 p-3 bg-term-red/20 border border-term-red/40 rounded">
-            <p className="text-term-red font-mono text-xs whitespace-pre-wrap">
-              {error}
+            <p className="text-term-green/80 font-mono text-sm mb-4">
+              Paste your decklist below. Format: "3x Card Name" or "Card Name"
             </p>
-          </div>
-        )}
 
-        <div className="flex gap-3 mt-6">
-          <button
-            onClick={handleImport}
-            className="flex-1 bg-term-green text-term-black px-6 py-3 rounded font-mono font-bold hover:bg-green-400 transition-colors"
-          >
-            [IMPORT]
-          </button>
-          <button
-            onClick={onClose}
-            className="flex-1 bg-term-gray border border-term-amber/30 text-term-amber px-6 py-3 rounded font-mono font-bold hover:border-term-amber transition-colors"
-          >
-            [CANCEL]
-          </button>
-        </div>
-      </div>
-    </div>
+            <textarea
+              value={deckText}
+              onChange={(e) => {
+                setDeckText(e.target.value);
+                setError("");
+              }}
+              placeholder="3x V (Streetkid)&#10;2x Dying Night&#10;1x Viktor Vektor&#10;..."
+              className="w-full h-64 bg-black/40 text-term-green border border-term-amber/30 rounded p-3 font-mono text-sm focus:border-term-amber focus:outline-none resize-none"
+            />
+
+            {error && (
+              <div className="mt-3 p-3 bg-term-red/20 border border-term-red/40 rounded">
+                <p className="text-term-red font-mono text-xs whitespace-pre-wrap">
+                  {error}
+                </p>
+              </div>
+            )}
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={handleImport}
+                className="flex-1 bg-term-green text-term-black px-6 py-3 rounded font-mono font-bold hover:bg-green-400 transition-colors"
+              >
+                [IMPORT]
+              </button>
+              <button
+                onClick={onClose}
+                className="flex-1 bg-term-gray border border-term-amber/30 text-term-amber px-6 py-3 rounded font-mono font-bold hover:border-term-amber transition-colors"
+              >
+                [CANCEL]
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }

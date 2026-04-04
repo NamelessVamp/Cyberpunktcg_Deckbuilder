@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import SmartCardImage from "./SmartCardImage";
 
 export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
@@ -140,207 +141,218 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
   }, [randomLegends]);
 
   return (
-    <div
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto"
-      onClick={onClose}
-    >
-      <div
-        className="bg-term-gray border-2 border-term-amber rounded-lg p-6 max-w-6xl w-full max-h-[95vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto"
+        onClick={onClose}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-term-amber font-bold text-2xl font-mono">
-            🎲 OPENING HAND SIMULATOR
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-term-amber transition-colors text-3xl"
-          >
-            ✕
-          </button>
-        </div>
-
-        {/* Deck Info */}
-        <div className="flex justify-between items-center mb-6 text-sm font-mono">
-          <div className="text-term-green">
-            Deck:{" "}
-            {deck.mainDeck.length > 0
-              ? `Current (${deck.mainDeck.length} cards)`
-              : `Random Test Pool (${randomLegends.map((l) => l.name).join(", ")})`}
-          </div>
-          <div className="text-term-amber">
-            Mulligan: {mulliganUsed ? "1/1 Used" : "0/1 Used"}
-          </div>
-        </div>
-
-        {/* Legends Display */}
-        <div className="mb-6">
-          <h3 className="text-term-green font-bold font-mono mb-3">
-            LEGENDS [{deck.legends.length || 3}/3]
-          </h3>
-          <div className="flex justify-center items-center gap-6 min-h-[200px]">
-            {(deck.legends.length > 0 ? deck.legends : randomLegends).map(
-              (legend, idx) => {
-                const isTapped = goingFirst && idx > 0;
-                return (
-                  <div
-                    key={idx}
-                    className={`relative transition-all duration-500 ${isTapped ? "w-40" : "w-32"}`}
-                  >
-                    <SmartCardImage
-                      card={legend}
-                      eagerLoad={true}
-                      className={`w-full rounded border-2 border-term-amber transition-all duration-500 ${isTapped ? "brightness-[0.3] saturate-50 rotate-90" : ""}`}
-                    />
-                  </div>
-                );
-              },
-            )}
-          </div>
-        </div>
-
-        {/* Hand Display (UNBOXING STYLE) */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-3">
-            <h3 className="text-term-green font-bold font-mono">HAND (6)</h3>
-            {revealedCards.length < hand.length && !isAnimating && (
-              <button
-                onClick={() => setRevealedCards(hand.map((_, i) => i))}
-                className="text-term-amber text-xs font-mono border border-term-amber/30 px-2 py-1 rounded hover:bg-term-amber/20"
-              >
-                [ REVEAL ALL ]
-              </button>
-            )}
+        <motion.div
+          className="bg-term-gray border-2 border-term-blue rounded-lg max-w-6xl w-full my-8"
+          onClick={(e) => e.stopPropagation()}
+          initial={{ scale: 0.9, y: 20 }}
+          animate={{ scale: 1, y: 0 }}
+          exit={{ scale: 0.9, y: 20 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          style={{ position: "relative" }}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-term-amber font-bold text-2xl font-mono">
+              🎲 OPENING HAND SIMULATOR
+            </h2>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-term-amber transition-colors text-3xl"
+            >
+              ✕
+            </button>
           </div>
 
-          <div
-            className={`grid grid-cols-3 md:grid-cols-6 gap-2 transition-opacity duration-300 ${isAnimating ? "opacity-0" : "opacity-100"}`}
-          >
-            {hand.map((card, idx) => {
-              const isRevealed = revealedCards.includes(idx);
-              return (
-                <div
-                  key={`${card.id}-${idx}`}
-                  className="pack-card-container cursor-pointer"
-                  onClick={() => handleRevealCard(idx)}
-                >
-                  <div
-                    className={`card-flipper ${isRevealed ? "flipped" : ""}`}
-                  >
-                    {/* Back Face */}
+          {/* Deck Info */}
+          <div className="flex justify-between items-center mb-6 text-sm font-mono">
+            <div className="text-term-green">
+              Deck:{" "}
+              {deck.mainDeck.length > 0
+                ? `Current (${deck.mainDeck.length} cards)`
+                : `Random Test Pool (${randomLegends.map((l) => l.name).join(", ")})`}
+            </div>
+            <div className="text-term-amber">
+              Mulligan: {mulliganUsed ? "1/1 Used" : "0/1 Used"}
+            </div>
+          </div>
+
+          {/* Legends Display */}
+          <div className="mb-6">
+            <h3 className="text-term-green font-bold font-mono mb-3">
+              LEGENDS [{deck.legends.length || 3}/3]
+            </h3>
+            <div className="flex justify-center items-center gap-6 min-h-[200px]">
+              {(deck.legends.length > 0 ? deck.legends : randomLegends).map(
+                (legend, idx) => {
+                  const isTapped = goingFirst && idx > 0;
+                  return (
                     <div
-                      className="card-face back"
-                      style={{
-                        backgroundImage: "url(/BackCardTCGCybeprunk.png)",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                      }}
-                    >
-                      <div className="absolute inset-0 bg-black/20 rounded flex items-center justify-center hover:bg-black/40 transition-colors">
-                        <span className="text-white font-mono text-[10px] opacity-0 hover:opacity-100 transition-opacity bg-black/60 px-2 py-1 rounded">
-                          CLICK
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Front Face */}
-                    <div
-                      className={`card-face front rounded border-2 ${card.foil ? "foil-card border-transparent" : "border-term-green/40"}`}
+                      key={idx}
+                      className={`relative transition-all duration-500 ${isTapped ? "w-40" : "w-32"}`}
                     >
                       <SmartCardImage
-                        card={card}
+                        card={legend}
                         eagerLoad={true}
-                        className="w-full h-full object-cover rounded"
+                        className={`w-full rounded border-2 border-term-amber transition-all duration-500 ${isTapped ? "brightness-[0.3] saturate-50 rotate-90" : ""}`}
                       />
-                      {card.foil && (
-                        <div className="absolute top-1 right-1 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 text-black rounded-full px-2 py-0.5 text-[10px] font-bold shadow-lg animate-pulse z-10">
-                          ✨ FOIL
+                    </div>
+                  );
+                },
+              )}
+            </div>
+          </div>
+
+          {/* Hand Display (UNBOXING STYLE) */}
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-term-green font-bold font-mono">HAND (6)</h3>
+              {revealedCards.length < hand.length && !isAnimating && (
+                <button
+                  onClick={() => setRevealedCards(hand.map((_, i) => i))}
+                  className="text-term-amber text-xs font-mono border border-term-amber/30 px-2 py-1 rounded hover:bg-term-amber/20"
+                >
+                  [ REVEAL ALL ]
+                </button>
+              )}
+            </div>
+
+            <div
+              className={`grid grid-cols-3 md:grid-cols-6 gap-2 transition-opacity duration-300 ${isAnimating ? "opacity-0" : "opacity-100"}`}
+            >
+              {hand.map((card, idx) => {
+                const isRevealed = revealedCards.includes(idx);
+                return (
+                  <div
+                    key={`${card.id}-${idx}`}
+                    className="pack-card-container cursor-pointer"
+                    onClick={() => handleRevealCard(idx)}
+                  >
+                    <div
+                      className={`card-flipper ${isRevealed ? "flipped" : ""}`}
+                    >
+                      {/* Back Face */}
+                      <div
+                        className="card-face back"
+                        style={{
+                          backgroundImage: "url(/BackCardTCGCybeprunk.png)",
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
+                      >
+                        <div className="absolute inset-0 bg-black/20 rounded flex items-center justify-center hover:bg-black/40 transition-colors">
+                          <span className="text-white font-mono text-[10px] opacity-0 hover:opacity-100 transition-opacity bg-black/60 px-2 py-1 rounded">
+                            CLICK
+                          </span>
                         </div>
-                      )}
-                      <div className="absolute bottom-0 left-0 right-0 bg-black/90 text-term-green text-[10px] font-mono p-1 text-center truncate z-10">
-                        {card.name}
+                      </div>
+
+                      {/* Front Face */}
+                      <div
+                        className={`card-face front rounded border-2 ${card.foil ? "foil-card border-transparent" : "border-term-green/40"}`}
+                      >
+                        <SmartCardImage
+                          card={card}
+                          eagerLoad={true}
+                          className="w-full h-full object-cover rounded"
+                        />
+                        {card.foil && (
+                          <div className="absolute top-1 right-1 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 text-black rounded-full px-2 py-0.5 text-[10px] font-bold shadow-lg animate-pulse z-10">
+                            ✨ FOIL
+                          </div>
+                        )}
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/90 text-term-green text-[10px] font-mono p-1 text-center truncate z-10">
+                          {card.name}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* Analysis Panel (Solo aparece cuando revelas todo) */}
-        {analysis && revealedCards.length === 6 && (
-          <div className="mb-6 p-4 bg-black/40 rounded border border-term-amber/30">
-            <h3 className="text-term-green font-bold font-mono mb-3 flex items-center gap-2">
-              🧠 NETRUNNER ANALYSIS
-            </h3>
-            <div className="space-y-3 text-sm font-mono">
-              <div className="flex items-center gap-3">
-                <span className={analysis.curveScore.color}>
-                  {analysis.curveScore.emoji}
-                </span>
-                <span className="text-term-amber">📊 CURVE:</span>
-                <span className={analysis.curveScore.color}>
-                  {analysis.curveScore.status}
-                </span>
-                <span className="text-term-green/60 text-xs">
-                  ({hand.filter((c) => c.cost <= 3).length} playable Turn 1-2)
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className={analysis.defenseScore.color}>
-                  {analysis.defenseScore.emoji}
-                </span>
-                <span className="text-term-amber">🛡️ DEFENSE:</span>
-                <span className={analysis.defenseScore.color}>
-                  {analysis.defenseScore.status}
-                </span>
-                <span className="text-term-green/60 text-xs">
-                  ({hand.filter((c) => c.type === "UNIT").length} Units)
-                </span>
-              </div>
-              <div className="pt-3 border-t border-term-amber/20">
-                <div className="text-term-amber mb-1">💡 FIXER'S ADVICE:</div>
-                <div className="text-term-green/90 text-xs leading-relaxed">
-                  {analysis.advice}
+          {/* Analysis Panel (Solo aparece cuando revelas todo) */}
+          {analysis && revealedCards.length === 6 && (
+            <div className="mb-6 p-4 bg-black/40 rounded border border-term-amber/30">
+              <h3 className="text-term-green font-bold font-mono mb-3 flex items-center gap-2">
+                🧠 NETRUNNER ANALYSIS
+              </h3>
+              <div className="space-y-3 text-sm font-mono">
+                <div className="flex items-center gap-3">
+                  <span className={analysis.curveScore.color}>
+                    {analysis.curveScore.emoji}
+                  </span>
+                  <span className="text-term-amber">📊 CURVE:</span>
+                  <span className={analysis.curveScore.color}>
+                    {analysis.curveScore.status}
+                  </span>
+                  <span className="text-term-green/60 text-xs">
+                    ({hand.filter((c) => c.cost <= 3).length} playable Turn 1-2)
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className={analysis.defenseScore.color}>
+                    {analysis.defenseScore.emoji}
+                  </span>
+                  <span className="text-term-amber">🛡️ DEFENSE:</span>
+                  <span className={analysis.defenseScore.color}>
+                    {analysis.defenseScore.status}
+                  </span>
+                  <span className="text-term-green/60 text-xs">
+                    ({hand.filter((c) => c.type === "UNIT").length} Units)
+                  </span>
+                </div>
+                <div className="pt-3 border-t border-term-amber/20">
+                  <div className="text-term-amber mb-1">💡 FIXER'S ADVICE:</div>
+                  <div className="text-term-green/90 text-xs leading-relaxed">
+                    {analysis.advice}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <button
-            onClick={onClose}
-            className="bg-term-green text-term-black py-3 px-6 rounded font-mono font-bold hover:bg-green-400 transition-colors"
-          >
-            [✅ KEEP HAND]
-          </button>
-          <button
-            onClick={handleMulligan}
-            disabled={mulliganUsed || isAnimating}
-            className={`py-3 px-6 rounded font-mono font-bold transition-colors ${
-              mulliganUsed || isAnimating
-                ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                : "bg-term-amber text-term-black hover:bg-yellow-400"
-            }`}
-          >
-            {mulliganUsed
-              ? "[MULLIGAN USED]"
-              : isAnimating
-                ? "[SHUFFLING...]"
-                : "[🔄 MULLIGAN (1 LEFT)]"}
-          </button>
-        </div>
-
-        {goingFirst && (
-          <div className="text-center text-term-amber/80 text-xs font-mono">
-            ⚠️ Going First: 2 Legends start tapped (shown above)
+          {/* Action Buttons */}
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <button
+              onClick={onClose}
+              className="bg-term-green text-term-black py-3 px-6 rounded font-mono font-bold hover:bg-green-400 transition-colors"
+            >
+              [✅ KEEP HAND]
+            </button>
+            <button
+              onClick={handleMulligan}
+              disabled={mulliganUsed || isAnimating}
+              className={`py-3 px-6 rounded font-mono font-bold transition-colors ${
+                mulliganUsed || isAnimating
+                  ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                  : "bg-term-amber text-term-black hover:bg-yellow-400"
+              }`}
+            >
+              {mulliganUsed
+                ? "[MULLIGAN USED]"
+                : isAnimating
+                  ? "[SHUFFLING...]"
+                  : "[🔄 MULLIGAN (1 LEFT)]"}
+            </button>
           </div>
-        )}
-      </div>
-    </div>
+
+          {goingFirst && (
+            <div className="text-center text-term-amber/80 text-xs font-mono">
+              ⚠️ Going First: 2 Legends start tapped (shown above)
+            </div>
+          )}
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }

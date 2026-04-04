@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import jsPDF from "jspdf";
 import SmartCardImage from "./SmartCardImage";
 
@@ -208,186 +209,201 @@ export default function ProxyModal({ deck, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-term-gray border-2 border-term-amber rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="sticky top-0 bg-term-gray border-b border-term-amber p-4 flex justify-between items-center z-10">
-          <h2 className="text-2xl font-bold text-term-amber font-mono">
-            [PROXY GENERATOR]
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-term-red hover:text-red-400 font-mono text-xl"
-          >
-            [X]
-          </button>
-        </div>
-
-        {/* Settings */}
-        <div className="p-6 space-y-6">
-          {/* Card Count */}
-          <div className="bg-term-gray/50 border border-term-green/30 rounded p-4">
-            <p className="text-term-green font-mono">
-              <strong className="text-term-amber">Total Cards:</strong>{" "}
-              {allCards.length} ({deck.legends.length} Legends +{" "}
-              {deck.mainDeck.length} Main Deck)
-            </p>
-            <p className="text-term-green/60 font-mono text-sm mt-2">
-              Estimated Pages: {Math.ceil(allCards.length / 9)} (9 cards per
-              page)
-            </p>
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <motion.div
+          className="bg-term-gray border-2 border-term-amber rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          initial={{ scale: 0.9, y: 20 }}
+          animate={{ scale: 1, y: 0 }}
+          exit={{ scale: 0.9, y: 20 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          style={{ position: "relative" }}
+        >
+          {/* Header */}
+          <div className="sticky top-0 bg-term-gray border-b border-term-amber p-4 flex justify-between items-center z-10">
+            <h2 className="text-2xl font-bold text-term-amber font-mono">
+              [PROXY GENERATOR]
+            </h2>
+            <button
+              onClick={onClose}
+              className="text-term-red hover:text-red-400 font-mono text-xl"
+            >
+              [X]
+            </button>
           </div>
 
-          {/* Quality Settings */}
-          <div>
-            <label className="block text-term-amber font-mono mb-2">
-              Print Quality:
-            </label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 text-term-green font-mono cursor-pointer">
-                <input
-                  type="radio"
-                  value="150"
-                  checked={quality === "150"}
-                  onChange={(e) => setQuality(e.target.value)}
-                  className="accent-term-amber"
-                />
-                150 DPI (Fast, ~5MB)
-              </label>
-              <label className="flex items-center gap-2 text-term-green font-mono cursor-pointer">
-                <input
-                  type="radio"
-                  value="300"
-                  checked={quality === "300"}
-                  onChange={(e) => setQuality(e.target.value)}
-                  className="accent-term-amber"
-                />
-                300 DPI (High Quality, ~15MB)
-              </label>
-            </div>
-          </div>
-
-          {/* Card Size */}
-          <div>
-            <label className="block text-term-amber font-mono mb-2">
-              Card Size:
-            </label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 text-term-green font-mono cursor-pointer">
-                <input
-                  type="radio"
-                  value="poker"
-                  checked={cardSize === "poker"}
-                  onChange={(e) => setCardSize(e.target.value)}
-                  className="accent-term-amber"
-                />
-                Poker (63x88mm - Standard TCG)
-              </label>
-              <label className="flex items-center gap-2 text-term-green font-mono cursor-pointer">
-                <input
-                  type="radio"
-                  value="bridge"
-                  checked={cardSize === "bridge"}
-                  onChange={(e) => setCardSize(e.target.value)}
-                  className="accent-term-amber"
-                />
-                Bridge (57x89mm - Narrower)
-              </label>
-            </div>
-          </div>
-
-          {/* Paper Size */}
-          <div>
-            <label className="block text-term-amber font-mono mb-2">
-              Paper Size:
-            </label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 text-term-green font-mono cursor-pointer">
-                <input
-                  type="radio"
-                  value="a4"
-                  checked={paperSize === "a4"}
-                  onChange={(e) => setPaperSize(e.target.value)}
-                  className="accent-term-amber"
-                />
-                A4 (210x297mm - Global Standard)
-              </label>
-              <label className="flex items-center gap-2 text-term-green font-mono cursor-pointer">
-                <input
-                  type="radio"
-                  value="letter"
-                  checked={paperSize === "letter"}
-                  onChange={(e) => setPaperSize(e.target.value)}
-                  className="accent-term-amber"
-                />
-                US Letter (8.5x11 inches)
-              </label>
-            </div>
-          </div>
-
-          {/* Cut Lines */}
-          <div>
-            <label className="flex items-center gap-2 text-term-amber font-mono cursor-pointer">
-              <input
-                type="checkbox"
-                checked={showCutLines}
-                onChange={(e) => setShowCutLines(e.target.checked)}
-                className="accent-term-amber"
-              />
-              Show cut lines (black borders for easier cutting)
-            </label>
-          </div>
-
-          {/* Preview Grid */}
-          <div>
-            <h3 className="text-term-amber font-mono mb-3">
-              Preview (First 9 cards):
-            </h3>
-            <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto border border-term-green/30 rounded p-2 bg-black/20">
-              {allCards.slice(0, 9).map((card, index) => (
-                <div
-                  key={`preview-${card.id}-${index}`}
-                  className="relative aspect-[63/88] border border-term-green/20"
-                >
-                  <SmartCardImage
-                    card={card}
-                    className="w-full h-full object-cover rounded"
-                    eagerLoad={true}
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/80 text-term-green text-xs font-mono p-1 text-center truncate">
-                    {card.name}
-                  </div>
-                </div>
-              ))}
-            </div>
-            {allCards.length > 9 && (
-              <p className="text-term-green/60 font-mono text-sm mt-2">
-                + {allCards.length - 9} more cards will be included
+          {/* Settings */}
+          <div className="p-6 space-y-6">
+            {/* Card Count */}
+            <div className="bg-term-gray/50 border border-term-green/30 rounded p-4">
+              <p className="text-term-green font-mono">
+                <strong className="text-term-amber">Total Cards:</strong>{" "}
+                {allCards.length} ({deck.legends.length} Legends +{" "}
+                {deck.mainDeck.length} Main Deck)
               </p>
-            )}
+              <p className="text-term-green/60 font-mono text-sm mt-2">
+                Estimated Pages: {Math.ceil(allCards.length / 9)} (9 cards per
+                page)
+              </p>
+            </div>
+
+            {/* Quality Settings */}
+            <div>
+              <label className="block text-term-amber font-mono mb-2">
+                Print Quality:
+              </label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 text-term-green font-mono cursor-pointer">
+                  <input
+                    type="radio"
+                    value="150"
+                    checked={quality === "150"}
+                    onChange={(e) => setQuality(e.target.value)}
+                    className="accent-term-amber"
+                  />
+                  150 DPI (Fast, ~5MB)
+                </label>
+                <label className="flex items-center gap-2 text-term-green font-mono cursor-pointer">
+                  <input
+                    type="radio"
+                    value="300"
+                    checked={quality === "300"}
+                    onChange={(e) => setQuality(e.target.value)}
+                    className="accent-term-amber"
+                  />
+                  300 DPI (High Quality, ~15MB)
+                </label>
+              </div>
+            </div>
+
+            {/* Card Size */}
+            <div>
+              <label className="block text-term-amber font-mono mb-2">
+                Card Size:
+              </label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 text-term-green font-mono cursor-pointer">
+                  <input
+                    type="radio"
+                    value="poker"
+                    checked={cardSize === "poker"}
+                    onChange={(e) => setCardSize(e.target.value)}
+                    className="accent-term-amber"
+                  />
+                  Poker (63x88mm - Standard TCG)
+                </label>
+                <label className="flex items-center gap-2 text-term-green font-mono cursor-pointer">
+                  <input
+                    type="radio"
+                    value="bridge"
+                    checked={cardSize === "bridge"}
+                    onChange={(e) => setCardSize(e.target.value)}
+                    className="accent-term-amber"
+                  />
+                  Bridge (57x89mm - Narrower)
+                </label>
+              </div>
+            </div>
+
+            {/* Paper Size */}
+            <div>
+              <label className="block text-term-amber font-mono mb-2">
+                Paper Size:
+              </label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 text-term-green font-mono cursor-pointer">
+                  <input
+                    type="radio"
+                    value="a4"
+                    checked={paperSize === "a4"}
+                    onChange={(e) => setPaperSize(e.target.value)}
+                    className="accent-term-amber"
+                  />
+                  A4 (210x297mm - Global Standard)
+                </label>
+                <label className="flex items-center gap-2 text-term-green font-mono cursor-pointer">
+                  <input
+                    type="radio"
+                    value="letter"
+                    checked={paperSize === "letter"}
+                    onChange={(e) => setPaperSize(e.target.value)}
+                    className="accent-term-amber"
+                  />
+                  US Letter (8.5x11 inches)
+                </label>
+              </div>
+            </div>
+
+            {/* Cut Lines */}
+            <div>
+              <label className="flex items-center gap-2 text-term-amber font-mono cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={showCutLines}
+                  onChange={(e) => setShowCutLines(e.target.checked)}
+                  className="accent-term-amber"
+                />
+                Show cut lines (black borders for easier cutting)
+              </label>
+            </div>
+
+            {/* Preview Grid */}
+            <div>
+              <h3 className="text-term-amber font-mono mb-3">
+                Preview (First 9 cards):
+              </h3>
+              <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto border border-term-green/30 rounded p-2 bg-black/20">
+                {allCards.slice(0, 9).map((card, index) => (
+                  <div
+                    key={`preview-${card.id}-${index}`}
+                    className="relative aspect-[63/88] border border-term-green/20"
+                  >
+                    <SmartCardImage
+                      card={card}
+                      className="w-full h-full object-cover rounded"
+                      eagerLoad={true}
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/80 text-term-green text-xs font-mono p-1 text-center truncate">
+                      {card.name}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {allCards.length > 9 && (
+                <p className="text-term-green/60 font-mono text-sm mt-2">
+                  + {allCards.length - 9} more cards will be included
+                </p>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Footer Actions */}
-        <div className="sticky bottom-0 bg-term-gray border-t border-term-amber p-4 flex justify-between items-center">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-term-red/20 text-term-red border border-term-red rounded font-mono hover:bg-term-red/30 transition-colors"
-          >
-            [CANCEL]
-          </button>
+          {/* Footer Actions */}
+          <div className="sticky bottom-0 bg-term-gray border-t border-term-amber p-4 flex justify-between items-center">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-term-red/20 text-term-red border border-term-red rounded font-mono hover:bg-term-red/30 transition-colors"
+            >
+              [CANCEL]
+            </button>
 
-          <button
-            onClick={handleGeneratePDF}
-            disabled={isGenerating || allCards.length === 0}
-            className="px-6 py-2 bg-term-amber/20 text-term-amber border border-term-amber rounded font-mono hover:bg-term-amber/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isGenerating
-              ? `[GENERATING... ${progress}%]`
-              : `[GENERATE PROXIES]`}
-          </button>
-        </div>
-      </div>
-    </div>
+            <button
+              onClick={handleGeneratePDF}
+              disabled={isGenerating || allCards.length === 0}
+              className="px-6 py-2 bg-term-amber/20 text-term-amber border border-term-amber rounded font-mono hover:bg-term-amber/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isGenerating
+                ? `[GENERATING... ${progress}%]`
+                : `[GENERATE PROXIES]`}
+            </button>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }

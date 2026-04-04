@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AnalyticsModal({ deck, onClose }) {
   const [activeTab, setActiveTab] = useState("curve");
@@ -13,55 +14,69 @@ export default function AnalyticsModal({ deck, onClose }) {
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-term-gray border-2 border-term-amber rounded-lg max-w-5xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="bg-term-gray border-b border-term-amber p-4 flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-term-amber font-mono">
-            [DECK ANALYTICS]
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-term-red hover:text-red-400 font-mono text-xl"
-          >
-            [X]
-          </button>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex border-b border-term-green/30 bg-black/20">
-          {tabs.map((tab) => (
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <motion.div
+          className="bg-term-gray border-2 border-term-amber rounded-lg max-w-5xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+          initial={{ scale: 0.9, y: 20 }}
+          animate={{ scale: 1, y: 0 }}
+          exit={{ scale: 0.9, y: 20 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          {/* Header */}
+          <div className="bg-term-gray border-b border-term-amber p-4 flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-term-amber font-mono">
+              [DECK ANALYTICS]
+            </h2>
             <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 px-4 font-mono text-sm transition-colors ${
-                activeTab === tab.id
-                  ? "bg-term-amber/20 text-term-amber border-b-2 border-term-amber"
-                  : "text-term-green hover:bg-term-green/10"
-              }`}
+              onClick={onClose}
+              className="text-term-red hover:text-red-400 font-mono text-xl"
             >
-              {tab.label}
+              [X]
             </button>
-          ))}
-        </div>
+          </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {activeTab === "curve" && <CurveTab analytics={analytics} />}
+          {/* Tabs */}
+          <div className="flex border-b border-term-green/30 bg-black/20">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 py-3 px-4 font-mono text-sm transition-colors ${
+                  activeTab === tab.id
+                    ? "bg-term-amber/20 text-term-amber border-b-2 border-term-amber"
+                    : "text-term-green hover:bg-term-green/10"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
 
-          {activeTab === "synergies" && (
-            <SynergiesTab deck={deck} analytics={analytics} />
-          )}
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto p-6">
+            {activeTab === "curve" && <CurveTab analytics={analytics} />}
 
-          {activeTab === "consistency" && (
-            <ConsistencyTab analytics={analytics} />
-          )}
-        </div>
+            {activeTab === "synergies" && (
+              <SynergiesTab deck={deck} analytics={analytics} />
+            )}
 
-        {/* Footer */}
-        <div className="border-t border-term-amber p-4 flex justify-end"></div>
-      </div>
-    </div>
+            {activeTab === "consistency" && (
+              <ConsistencyTab analytics={analytics} />
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="border-t border-term-amber p-4 flex justify-end"></div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
 
