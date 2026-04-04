@@ -501,8 +501,26 @@ function App() {
     setDeck({
       legends: [],
       mainDeck: [],
-      sideboard: [], // ← NUEVO
+      sideboard: [],
     });
+
+    // Resetear filtros
+    setFilters({
+      types: [],
+      factions: [],
+      costMin: 0,
+      costMax: 9,
+      powerMin: 0,
+      powerMax: 15,
+      ramMin: 1,
+      ramMax: 5,
+      ramColors: [],
+      keywords: [],
+      set: "",
+    });
+
+    // Cerrar panel de filtros
+    setFiltersOpen(false);
   };
 
   const handleSaveDeck = async (deckName, deckNotes = "") => {
@@ -971,7 +989,7 @@ function App() {
       set: "",
     });
 
-    setFiltersOpen(true); // ← Abrir filtros
+    setFiltersOpen(false); // ← Abrir filtros
     setActiveTab("build");
 
     showToast(
