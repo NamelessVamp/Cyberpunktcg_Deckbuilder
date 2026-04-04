@@ -989,7 +989,7 @@ function App() {
       set: "",
     });
 
-    setFiltersOpen(false); // ← Abrir filtros
+    setFiltersOpen(false); // ← Cerrar filtros
     setActiveTab("build");
 
     showToast(
