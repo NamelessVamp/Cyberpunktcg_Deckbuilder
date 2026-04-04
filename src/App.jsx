@@ -1309,11 +1309,6 @@ function App() {
                     />
                   )}
 
-                  {/* DECK ANALYTICS */}
-                  {showAnalytics && deck.mainDeck.length > 0 && (
-                    <DeckAnalytics deck={deck} />
-                  )}
-
                   {/* SAVE + IMPORT + EXPORT BUTTONS */}
                   <div className="grid grid-cols-3 gap-2">
                     <button

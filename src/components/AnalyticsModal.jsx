@@ -59,14 +59,7 @@ export default function AnalyticsModal({ deck, onClose }) {
         </div>
 
         {/* Footer */}
-        <div className="border-t border-term-amber p-4 flex justify-end">
-          <button
-            onClick={onClose}
-            className="px-6 py-2 bg-term-amber/20 text-term-amber border border-term-amber rounded font-mono hover:bg-term-amber/30 transition-colors"
-          >
-            [CLOSE]
-          </button>
-        </div>
+        <div className="border-t border-term-amber p-4 flex justify-end"></div>
       </div>
     </div>
   );

@@ -206,10 +206,7 @@ export default function LegalDisclaimer() {
       {/* Footer */}
       <div className="mt-12 pt-6 border-t border-term-amber/20 text-center">
         <p className="text-term-green/60 font-mono text-sm">
-          Built with ❤️ by the Cyberpunk TCG community
-        </p>
-        <p className="text-term-amber/60 font-mono text-xs mt-2">
-          "In Night City, you can be anyone... even a deck builder."
+          Built with passion and coffee by a enthusiastic fan
         </p>
       </div>
     </div>
