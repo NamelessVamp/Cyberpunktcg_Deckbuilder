@@ -48,12 +48,12 @@ function GuideModal({ onClose }) {
         </button>
 
         <a
-          href="https://www.weirdco.com/cyberpunk-tcg"
+          href="https://cyberpunktcg.com/gameplay-guide"
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 bg-term-amber text-term-black px-8 py-3 rounded font-mono font-bold hover:bg-yellow-400 transition-colors text-center"
         >
-          [📥 DOWNLOAD RULEBOOK]
+          [CHECK RULEBOOK]
         </a>
       </div>
     </>
