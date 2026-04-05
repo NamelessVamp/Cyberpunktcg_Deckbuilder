@@ -27,33 +27,68 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
   const getAllowedColors = (legends) => {
     const colors = new Set();
     legends.forEach((legend) => {
-      if (legend.tags && Array.isArray(legend.tags)) {
-        legend.tags.forEach((tag) => {
-          const upperTag = tag.toUpperCase();
-          if (["ARASAKA", "MERC", "NETRUNNER", "CORPO"].includes(upperTag)) {
-            colors.add(upperTag);
-          }
-        });
+      // ✅ FIX: Usar 'ram_color' que es el verdadero color
+      if (legend.ram_color) {
+        colors.add(legend.ram_color);
       }
     });
+
+    console.log(
+      "🎨 [MULLIGAN] Legend RAM colors:",
+      legends.map((l) => `${l.name} (${l.ram_color})`),
+    );
     return Array.from(colors);
   };
 
   const generateTestPool = () => {
+    // ✅ FIX: Asegurar que siempre haya legends antes de generar pool
     const legends = deck.legends.length > 0 ? deck.legends : randomLegends;
+
+    // ❌ QUITAR ESTE IF (era el bug)
+    // if (!legends || legends.length === 0) {
+    //   return allCards.filter((c) => c.type !== "LEGEND");
+    // }
+
+    // ✅ FIX: Si NO hay legends, retornar array vacío
+    // El useEffect se encargará de regenerar cuando randomLegends esté listo
     if (!legends || legends.length === 0) {
-      return allCards.filter((c) => c.type !== "LEGEND");
+      return [];
     }
 
     const allowedColors = getAllowedColors(legends);
+
+    // ✅ AGREGAR: Debug log para verificar colores permitidos
+    console.log("🎨 [MULLIGAN] Allowed colors:", allowedColors);
+    console.log(
+      "🃏 [MULLIGAN] Legends:",
+      legends.map((l) => l.name),
+    );
+
     let eligibleCards = allCards.filter((c) => {
       if (c.type === "LEGEND") return false;
-      if (!c.tags || c.tags.length === 0) return true;
-      return c.tags.some((tag) => allowedColors.includes(tag.toUpperCase()));
+
+      // ✅ FIX: Filtrar por ram_color, NO por faction
+      if (!c.ram_color) return false;
+
+      return allowedColors.includes(c.ram_color);
     });
 
     if (eligibleCards.length === 0) {
-      eligibleCards = allCards.filter((c) => c.type !== "LEGEND");
+      console.warn(
+        "⚠️ [MULLIGAN] No hay cartas de los colores permitidos. Usando fallback.",
+      );
+      // Fallback: usar cartas sin ram_color (neutrales)
+      eligibleCards = allCards.filter((c) => {
+        if (c.type === "LEGEND") return false;
+        return !c.ram_color;
+      });
+
+      if (eligibleCards.length === 0) {
+        console.warn(
+          "⚠️ [MULLIGAN] No hay neutrales. Usando todas las cartas.",
+        );
+        eligibleCards = allCards.filter((c) => c.type !== "LEGEND");
+      }
     }
 
     const pool = [];
@@ -63,18 +98,27 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
         pool.push(card);
       }
     });
+
+    console.log("📦 [MULLIGAN] Pool size:", pool.length);
     return pool;
   };
 
   const drawHand = () => {
     const source =
       deck.mainDeck.length > 0 ? deck.mainDeck : generateTestPool();
+
+    // ✅ FIX: Si el pool está vacío, no intentar robar
+    if (source.length === 0) {
+      console.warn("⚠️ [MULLIGAN] Pool vacío, esperando randomLegends...");
+      return;
+    }
+
     const shuffled = shuffle(source);
     const drawn = shuffled.slice(0, 6);
 
     setHand(drawn);
     analyzeHand(drawn);
-    setRevealedCards([]); // Ocultamos las cartas nuevas
+    setRevealedCards([]);
   };
 
   const analyzeHand = (cards) => {
@@ -151,7 +195,7 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
         transition={{ duration: 0.2 }}
       >
         <motion.div
-          className="bg-term-gray border-2 border-term-blue rounded-lg max-w-6xl w-full my-8"
+          className="bg-term-gray border-2 border-term-blue rounded-lg max-w-6xl w-full my-8 p-6 max-h-[90vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
           initial={{ scale: 0.9, y: 20 }}
           animate={{ scale: 1, y: 0 }}

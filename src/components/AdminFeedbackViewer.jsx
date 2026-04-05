@@ -7,6 +7,7 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
   const [filterCategory, setFilterCategory] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
   const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]); // IDs seleccionados para bulk actions
 
   // Load feedbacks from Supabase
   useEffect(() => {
@@ -104,7 +105,6 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
   const deleteFeedback = async (feedbackId) => {
     console.log("🗑️ [ADMIN] deleteFeedback called for:", feedbackId);
 
-    // NATIVE CONFIRM (no Toast aquí)
     if (!window.confirm("Are you sure you want to delete this feedback?")) {
       console.log("🚫 [ADMIN] Deletion cancelled by user");
       return;
@@ -125,7 +125,6 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
 
       console.log("✅ [ADMIN] Feedback deleted successfully");
 
-      // Show success toast
       if (showToast) {
         showToast("Feedback deleted successfully", "success");
       }
@@ -138,6 +137,97 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
         showToast(`Error deleting: ${error.message}`, "error");
       }
     }
+  };
+
+  // ========== BULK ACTIONS ==========
+  const bulkDeleteFeedbacks = async () => {
+    if (selectedIds.length === 0) {
+      if (showToast) {
+        showToast("No feedbacks selected", "error");
+      }
+      return;
+    }
+
+    const confirmMsg = `Are you sure you want to delete ${selectedIds.length} feedback${selectedIds.length > 1 ? "s" : ""}?`;
+    if (!window.confirm(confirmMsg)) {
+      return;
+    }
+
+    try {
+      console.log("🗑️ [ADMIN] Bulk deleting:", selectedIds);
+
+      const { error } = await supabase
+        .from("feedback")
+        .delete()
+        .in("id", selectedIds);
+
+      if (error) throw error;
+
+      console.log("✅ [ADMIN] Bulk delete successful");
+
+      if (showToast) {
+        showToast(
+          `${selectedIds.length} feedback(s) deleted successfully`,
+          "success",
+        );
+      }
+
+      setSelectedIds([]);
+      setSelectedFeedback(null);
+      await loadFeedbacks();
+    } catch (error) {
+      console.error("❌ [ADMIN] Bulk delete error:", error);
+      if (showToast) {
+        showToast(`Error: ${error.message}`, "error");
+      }
+    }
+  };
+
+  const bulkMarkResolved = async () => {
+    if (selectedIds.length === 0) {
+      if (showToast) {
+        showToast("No feedbacks selected", "error");
+      }
+      return;
+    }
+
+    try {
+      console.log("✓ [ADMIN] Bulk marking as resolved:", selectedIds);
+
+      const { error } = await supabase
+        .from("feedback")
+        .update({ resolved: true })
+        .in("id", selectedIds);
+
+      if (error) throw error;
+
+      console.log("✅ [ADMIN] Bulk resolved successful");
+
+      if (showToast) {
+        showToast(
+          `${selectedIds.length} feedback(s) marked as resolved`,
+          "success",
+        );
+      }
+
+      setSelectedIds([]);
+      setSelectedFeedback(null);
+      await loadFeedbacks();
+    } catch (error) {
+      console.error("❌ [ADMIN] Bulk resolved error:", error);
+      if (showToast) {
+        showToast(`Error: ${error.message}`, "error");
+      }
+    }
+  };
+
+  const toggleSelectFeedback = (feedbackId, e) => {
+    e.stopPropagation(); // Prevenir que se abra el detail view
+    setSelectedIds((prev) =>
+      prev.includes(feedbackId)
+        ? prev.filter((id) => id !== feedbackId)
+        : [...prev, feedbackId],
+    );
   };
 
   // Filter feedbacks
@@ -176,22 +266,48 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
     <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-[60] p-4">
       <div className="bg-term-gray border-2 border-term-red rounded-lg max-w-7xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-term-gray border-b border-term-red p-4 flex justify-between items-center">
-          <div>
-            <h2 className="text-2xl font-bold text-term-red font-mono">
-              [ADMIN] FEEDBACK VIEWER
-            </h2>
-            <p className="text-term-green/60 font-mono text-xs mt-1">
-              Logged in as: {user?.discord_username || user?.email || "Unknown"}
-            </p>
+        <div className="bg-term-gray border-b border-term-red p-4">
+          <div className="flex justify-between items-start mb-3">
+            <div>
+              <h2 className="text-2xl font-bold text-term-red font-mono">
+                [ADMIN] FEEDBACK VIEWER
+              </h2>
+              <p className="text-term-green/60 font-mono text-xs mt-1">
+                Logged in as:{" "}
+                {user?.discord_username || user?.email || "Unknown"}
+              </p>
+            </div>
+            <button
+              onClick={onClose}
+              className="text-term-red hover:text-red-400 font-mono text-2xl transition-colors"
+              title="Close (ESC)"
+            >
+              ✕
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="text-term-red hover:text-red-400 font-mono text-2xl transition-colors"
-            title="Close (ESC)"
-          >
-            ✕
-          </button>
+
+          {/* BULK ACTION BUTTONS */}
+          {selectedIds.length > 0 && (
+            <div className="flex gap-2 pt-3 border-t border-term-amber/20">
+              <div className="flex-1 flex items-center gap-2">
+                <span className="text-term-amber font-mono text-sm">
+                  {selectedIds.length} selected
+                </span>
+              </div>
+              <button
+                onClick={bulkMarkResolved}
+                className="px-4 py-2 bg-term-green/20 text-term-green border border-term-green rounded font-mono text-sm hover:bg-term-green/30 transition-colors"
+              >
+                [MARK RESOLVED]
+              </button>
+              <button
+                onClick={bulkDeleteFeedbacks}
+                className="px-4 py-2 bg-term-red/20 text-term-red border border-term-red rounded font-mono text-sm hover:bg-term-red/30 transition-colors"
+              >
+                [DELETE SELECTED]
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Stats Bar */}
@@ -314,42 +430,59 @@ export default function AdminFeedbackViewer({ onClose, user, showToast }) {
                 {filteredFeedbacks.map((fb) => (
                   <div
                     key={fb.id}
-                    onClick={() => setSelectedFeedback(fb)}
-                    className={`p-4 cursor-pointer transition-colors ${
+                    className={`p-4 cursor-pointer transition-colors flex gap-3 ${
                       selectedFeedback?.id === fb.id
                         ? "bg-term-amber/20 border-l-4 border-term-amber"
-                        : "hover:bg-term-green/10"
+                        : selectedIds.includes(fb.id)
+                          ? "bg-term-blue/10"
+                          : "hover:bg-term-green/10"
                     }`}
                   >
-                    <div className="flex items-start justify-between mb-2">
-                      <span
-                        className={`text-xs font-mono font-bold px-2 py-1 rounded ${
-                          fb.category === "bug"
-                            ? "bg-term-red/20 text-term-red"
-                            : fb.category === "feature"
-                              ? "bg-term-blue/20 text-term-blue"
-                              : fb.category === "improvement"
-                                ? "bg-term-amber/20 text-term-amber"
-                                : "bg-term-green/20 text-term-green"
-                        }`}
-                      >
-                        {fb.category.toUpperCase()}
-                      </span>
-
-                      {fb.resolved && (
-                        <span className="text-term-green text-lg font-mono font-bold">
-                          ✓
-                        </span>
-                      )}
+                    {/* Checkbox (SIEMPRE VISIBLE) */}
+                    <div className="flex-shrink-0 pt-1">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.includes(fb.id)}
+                        onChange={(e) => toggleSelectFeedback(fb.id, e)}
+                        className="w-4 h-4 cursor-pointer accent-term-green"
+                      />
                     </div>
 
-                    <p className="text-term-green font-mono text-sm line-clamp-2 mb-2">
-                      {fb.message}
-                    </p>
+                    {/* Feedback Content */}
+                    <div
+                      className="flex-1"
+                      onClick={() => setSelectedFeedback(fb)}
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <span
+                          className={`text-xs font-mono font-bold px-2 py-1 rounded ${
+                            fb.category === "bug"
+                              ? "bg-term-red/20 text-term-red"
+                              : fb.category === "feature"
+                                ? "bg-term-blue/20 text-term-blue"
+                                : fb.category === "improvement"
+                                  ? "bg-term-amber/20 text-term-amber"
+                                  : "bg-term-green/20 text-term-green"
+                          }`}
+                        >
+                          {fb.category.toUpperCase()}
+                        </span>
 
-                    <p className="text-term-green/40 font-mono text-xs">
-                      {new Date(fb.created_at).toLocaleString()}
-                    </p>
+                        {fb.resolved && (
+                          <span className="text-term-green text-lg font-mono font-bold">
+                            ✓
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="text-term-green font-mono text-sm line-clamp-2 mb-2">
+                        {fb.message}
+                      </p>
+
+                      <p className="text-term-green/40 font-mono text-xs">
+                        {new Date(fb.created_at).toLocaleString()}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>

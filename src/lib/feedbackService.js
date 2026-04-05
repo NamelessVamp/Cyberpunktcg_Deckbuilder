@@ -37,7 +37,35 @@ export async function submitFeedback(userId, category, message, metadata = {}) {
  * Get browser/system metadata for debugging
  */
 export function getSystemMetadata() {
+  const userAgent = navigator.userAgent;
+
+  // Browser detection
+  let browser = "Unknown";
+  if (userAgent.includes("Firefox")) browser = "Firefox";
+  else if (userAgent.includes("Edg"))
+    browser = "Edge"; // ← Edge antes de Chrome
+  else if (userAgent.includes("Chrome")) browser = "Chrome";
+  else if (userAgent.includes("Safari")) browser = "Safari";
+  else if (userAgent.includes("Opera")) browser = "Opera";
+
+  // OS detection
+  let os = "Unknown";
+  if (userAgent.includes("Windows NT 10")) os = "Windows 10/11";
+  else if (userAgent.includes("Windows")) os = "Windows";
+  else if (userAgent.includes("Mac OS X")) os = "macOS";
+  else if (userAgent.includes("Linux")) os = "Linux";
+  else if (userAgent.includes("Android")) os = "Android";
+  else if (
+    userAgent.includes("iOS") ||
+    userAgent.includes("iPhone") ||
+    userAgent.includes("iPad")
+  )
+    os = "iOS";
+
   return {
+    browser, // ← NUEVO: Browser detectado
+    os, // ← NUEVO: OS detectado
+    url: window.location.href, // ← NUEVO: URL actual
     userAgent: navigator.userAgent,
     platform: navigator.platform,
     language: navigator.language,

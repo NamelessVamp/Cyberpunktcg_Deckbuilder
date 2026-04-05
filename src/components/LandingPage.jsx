@@ -4,6 +4,21 @@ import GuideModal from "./GuideModal";
 import PreconCard from "./PreconCard";
 import preconDecksData from "../data/preconDecks.json";
 
+// Kickstarter widget iframe
+const KickstarterWidget = () => (
+  <div className="flex justify-center">
+    <div className="w-[220px] h-[420px] border-2 border-term-amber/50 rounded-lg shadow-2xl overflow-hidden">
+      <iframe
+        src="https://www.kickstarter.com/projects/cyberpunktcg/the-official-cyberpunk-trading-card-game/widget/card.html?v=2"
+        width="220"
+        height="420"
+        frameborder="0"
+        scrolling="no"
+      ></iframe>
+    </div>
+  </div>
+);
+
 function LandingPage({ user, collection, allCards, savedDecks, onNavigate }) {
   const [showGuideModal, setShowGuideModal] = useState(false);
 
@@ -16,26 +31,40 @@ function LandingPage({ user, collection, allCards, savedDecks, onNavigate }) {
   return (
     <div className="max-w-6xl mx-auto">
       {/* HERO SECTION */}
-      <div className="text-center mb-16 border-2 border-term-amber/30 bg-term-gray/20 p-12 rounded-lg">
-        <h1 className="text-5xl md:text-7xl font-bold text-term-amber mb-4 tracking-tight font-mono">
-          AFTERLIFE DECKS
-        </h1>
-        <p className="text-xl md:text-2xl text-term-green/80 mb-2 font-mono">
-          Professional Deck Builder for Cyberpunk 2077 TCG
-        </p>
-        <p className="text-lg md:text-xl text-term-green/60 mb-8 font-mono">
-          Build. Analyze. Dominate Night City.
-        </p>
+      <div className="mb-16 border-2 border-term-amber/30 bg-term-gray/20 p-12 rounded-lg">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr,auto] gap-8 items-center">
+          {/* Left: Hero text */}
+          <div className="text-center lg:text-left">
+            <h1 className="text-5xl md:text-7xl font-bold text-term-amber mb-4 tracking-tight font-mono">
+              AFTERLIFE DECKS
+            </h1>
+            <p className="text-xl md:text-2xl text-term-green/80 mb-2 font-mono">
+              Professional Deck Builder for Cyberpunk 2077 TCG
+            </p>
+            <p className="text-lg md:text-xl text-term-green/60 mb-8 font-mono">
+              Build. Analyze. Dominate Night City.
+            </p>
 
-        <div className="mt-8 flex justify-center gap-4 text-xs font-mono text-term-green/60">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-term-green rounded-full animate-pulse"></span>
-            ONLINE
+            {/* Stats */}
+            <div className="mt-8 flex justify-center lg:justify-start gap-4 text-xs font-mono text-term-green/60">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-term-green rounded-full animate-pulse"></span>
+                ONLINE
+              </div>
+              <span>//</span>
+              <div>{allCards.length} CARDS LOADED</div>
+              <span>//</span>
+              <div>{savedDecks.length} DECKS SAVED</div>
+            </div>
           </div>
-          <span>//</span>
-          <div>{allCards.length} CARDS LOADED</div>
-          <span>//</span>
-          <div>{savedDecks.length} DECKS SAVED</div>
+
+          {/* Right: Kickstarter widget */}
+          <div className="hidden lg:block">
+            <KickstarterWidget />
+            <p className="text-term-green/60 font-mono text-xs text-center mt-3">
+              Support the official game
+            </p>
+          </div>
         </div>
       </div>
 
