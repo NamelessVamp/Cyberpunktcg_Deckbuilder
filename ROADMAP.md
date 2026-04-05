@@ -1,6 +1,6 @@
 # AFTERLIFE DECKS — ROADMAP ACTUALIZADO
-# Verificado contra repo: 2026-04-04
-# Último commit: 4b5eda9 "correcion de links"
+# Verificado contra repo: 2026-04-05
+# Último commit: [PENDING - Mulligan + Admin Fixes]
 
 ---
 
@@ -60,7 +60,12 @@
 **Fundamento:** Testeo de consistencia de manos iniciales.  
 **Archivos:** `MulliganSimulator.jsx`, `MulliganModal.jsx`  
 **Fuente:** Regla de Mulligan Oficial  
-**Status:** ✅ COMPLETADO
+**Status:** ✅ COMPLETADO  
+**HOTFIX 2026-04-05:** Fixed color filtering bug
+- **Bug:** Used `faction` instead of `ram_color` causing wrong colored cards in hand
+- **Fix:** `getAllowedColors()` now reads `legend.ram_color` (Red/Blue/Green/Yellow)
+- **Fix:** Card filtering changed from faction matching to `ram_color` matching
+- **Fix:** Added modal overflow fix (`max-h-[90vh]` + scroll)
 
 ### ✅ 8. Pack Opener
 **Fundamento:** Gamificación y simulador de unboxing.  
@@ -92,119 +97,71 @@
 
 **Status:** ✅ COMPLETADO
 
+**HOTFIX 2026-04-05:** Admin Panel + Feedback Fixes
+- **Fix:** RLS policies now check `admin_users` table instead of `auth.users.metadata`
+- **Fix:** feedbackService now captures browser/OS/URL metadata (was showing N/A)
+- **Fix:** AdminFeedbackViewer bulk delete with checkboxes (was tedious single-item deletion)
+- **UX:** Permanent checkboxes on left, bulk actions appear dynamically in header
+
 ---
 
 ## ✅ FASE 4: ONBOARDING & EDUCATIONAL LAYER (100% ✅)
 
-**ACTUALIZACIÓN:** Esta fase estaba marcada como 90%, pero todos los componentes existen.
-
-### ✅ 17. Landing Page / Home Dashboard
-**Fundamento:** Reducir la tasa de rebote dando la bienvenida con métricas claras.  
-**Archivos:** `LandingPage.jsx`  
-**Status:** ✅ COMPLETADO
-
-### ✅ 18. Sistema de Tooltips Educativos (Semi-Agresivos)
-**Fundamento:** Enseñar mecánicas inyectando la información en el contexto.  
-**Archivos:** `Tooltip.jsx`  
-**Status:** ✅ COMPLETADO (Verificado en repo)
-
-### ✅ 19. Guía de Principiantes (Modal Completo)
-**Fundamento:** Centralizar tutoriales y reglas.  
-**Archivos:** `GuideModal.jsx`  
-**Status:** ✅ COMPLETADO
-
-### ✅ 21. Precon Deck Explainers
-**Fundamento:** Condición de victoria de los mazos de fábrica explicada para novatos.  
-**Archivos:** `preconGuides.json`, `PreconDecksView.jsx`, `PreconExplainer.jsx`  
-**Status:** ✅ COMPLETADO
-
-### ✅ 22. Card Legality Warnings
-**Fundamento:** Prevenir mazos con cartas baneadas.  
-**Archivos:** `LegalityBadge.jsx`, `LegalityInfoModal.jsx`, `lib/legalityService.js`  
-**Status:** ✅ COMPLETADO
-
-### ✅ 23.5 Actualización de Metadatos (SEO / Legal)
-**Fundamento:** Blindaje del proyecto bajo "Afterlife Decks".  
-**Archivos:** `index.html`  
-**Status:** ✅ COMPLETADO
-
-### ✅ 23. Suggested Cards (AI Helper)
-**Fundamento:** Analizar los colores de las Legends actuales y sugerir las cartas más usadas de esa facción.  
-**Archivos:** `SuggestedCards.jsx` (en `DeckArea.jsx`)  
-**Status:** ✅ COMPLETADO (Verificado en repo)
-
----
-
-## ✅ FASE 5: EXPORT, ANALYTICS & PROXIES (100% ✅)
-
-**ACTUALIZACIÓN:** Todos los features están implementados.
-
-### ✅ 24. Curva de Eddies
-**Archivos:** `DeckAnalytics.jsx`  
-**Status:** ✅ COMPLETADO
-
-### ✅ 25. Export Texto Plano
-**Archivos:** `ExportModal.jsx`  
-**Status:** ✅ COMPLETADO
-
-### ✅ 26. Alerta de "Mazo Lento" (Soft Warning)
-**Archivos:** `DeckAnalytics.jsx`  
-**Threshold:** avg cost > 2.5  
-**Status:** ✅ COMPLETADO
-
-### ✅ 27. Generador de Proxies (Quality: MEDIUM)
-**Archivos:** `ProxyModal.jsx`  
-**Status:** ✅ COMPLETADO
-
-### ✅ 28. Sinergia de Tags (%)
-**Archivos:** `DeckAnalytics.jsx`  
-**Feature:** Faction Synergy con "Strong Tribal" detection  
-**Status:** ✅ COMPLETADO
-
-### ✅ 29. Estadísticas de Consistencia
-**Fundamento:** Calcular matemáticamente la probabilidad hipergeométrica de robar la carta clave en turno 1.  
-**Archivos:** `AnalyticsModal.jsx`  
-**Feature:** "Opening Hand Probability" (playable cards cost ≤2)  
-**Commit:** 2bec00f "feat: add opening hand probability analysis"  
-**Status:** ✅ COMPLETADO (Hypergeometric distribution implemented)
-
-### ✅ 30. Import desde Texto (Clipboard)
-**Archivos:** `ImportDeckModal.jsx`  
-**Status:** ✅ COMPLETADO
-
----
-
-## ✅ FASE 6: THE VAULT (100% ✅)
-
-**ACTUALIZACIÓN:** Collection system completamente funcional.
-
-### ✅ 31. Collection Tracker
-**Archivos:** `Collection.jsx`, `CollectionTab.jsx`  
-**Status:** ✅ COMPLETADO
-
-### ✅ 32. Pack Opener → Collection Integration
-**Archivos:** `PackOpener.jsx`, `lib/collectionService.js`  
-**Status:** ✅ COMPLETADO
-
-### ✅ 33. Collection Analytics (Sin Precios)
-**Archivos:** `Collection.jsx`  
 **Features:**
-- Total cards owned
-- Completion percentage
-- Cards by type/faction breakdown
+- ✅ LandingPage with action cards (Build/Packs/Learn)
+- ✅ SuggestedCards.jsx (verified in repo)
+- ✅ Tooltip system (verified in repo)
+- ✅ GuideModal with game rules
+- ✅ Precon decks display
+
 **Status:** ✅ COMPLETADO
 
-### ❌ 34. Wishlist / Trade Manager
-**Fundamento:** Herramienta social marcando cartas como "Buscadas" o "Disponibles".  
-**Archivos:** `Collection.jsx` (Requiere nueva columna en tabla Supabase)  
+**ADDITION 2026-04-05:** Kickstarter Widget Integration
+- **Location:** LandingPage.jsx hero section
+- **Implementation:** Grid layout (text left, widget right)
+- **Features:** Responsive (`hidden lg:block`), 220x420px exact fit
+- **Purpose:** Support official game, community disclaimer
+
+---
+
+## ✅ FASE 5: ADVANCED ANALYTICS (100% ✅)
+
+### ✅ 17. Opening Hand Probability (Hypergeometric)
+**Fundamento:** Estadística matemática rigurosa.  
+**Archivos:** `AnalyticsModal.jsx`  
+**Commit:** 2bec00f "feat: add opening hand probability analysis"  
+**Status:** ✅ COMPLETADO
+
+### ✅ 18. Deck Naming & Notes
+**Archivos:** `DeckHeader.jsx`  
+**Status:** ✅ COMPLETADO
+
+### ✅ 19. Detailed Analytics Breakdown
+**Archivos:** `AnalyticsModal.jsx`  
+**Status:** ✅ COMPLETADO
+
+---
+
+## ✅ FASE 6: COLLECTION TRACKING (100% ✅)
+
+### ✅ 20-27. Collection System
+**Fundamento:** Rastreador completo de cartas físicas.  
+**Archivos:** `CollectionTab.jsx`, `lib/collectionService.js`  
+**Features:**
+- ✅ Add/Remove cards
+- ✅ Filter by owned/missing
+- ✅ Collection stats (completion %, unique cards)
+- ✅ Owned badges in gallery
+- ✅ Dedicated Collection tab
+**Status:** ✅ COMPLETADO
+
+### ❌ 28. Wishlist & Price Tracker
 **Status:** ❌ NO IMPLEMENTADO  
 **Prioridad:** Baja (community feature)
 
 ---
 
 ## 🔄 FASE 7: CLOUD SHARING, UX & COMMUNITY (70% ⏳)
-
-**ACTUALIZACIÓN:** Mayoría de features core completados.
 
 ### ✅ 35. URL Sharing (Base64)
 **Archivos:** `lib/deckService.js`  
@@ -254,8 +211,6 @@
 ---
 
 ## 🔄 FASE 8: UI/UX ENHANCEMENTS (33% ⏳)
-
-**ACTUALIZACIÓN:** Modal animations completadas, pending button/card animations.
 
 ### ✅ 43. Modal Blur & Animations (Framer Motion)
 **Fundamento:** Difuminado de fondo + animaciones de entrada (fade-in, slide-up).  
@@ -343,17 +298,17 @@
 
 ## 📊 RESUMEN EJECUTIVO
 
-| Fase | Status | Completion | Notas |
-|------|--------|------------|-------|
-| Fase 1 | ✅ | 100% | Deck Building Core |
-| Fase 2 | ✅ | 100% | Simulators |
-| Fase 3 | ✅ | 100% | Supabase Migration |
-| Fase 4 | ✅ | 100% | Onboarding (SuggestedCards + Tooltip verificados) |
-| Fase 5 | ✅ | 100% | Analytics (Hypergeometric implementado) |
-| Fase 6 | ✅ | 100% | Collection (Wishlist pendiente, baja prioridad) |
-| Fase 7 | 🔄 | 70% | Cloud Sharing (UUID links, Public Gallery pending) |
-| Fase 8 | 🔄 | 33% | UI/UX Polish (Modal animations done, buttons pending) |
-| Fase 9 | ❌ | 0% | Arena Simulator (future) |
+| Fase   | Status | Completion | Notas                                                 |
+| ------ | ------ | ---------- | ----------------------------------------------------- |
+| Fase 1 | ✅      | 100%       | Deck Building Core                                    |
+| Fase 2 | ✅      | 100%       | Simulators (Mulligan color bug fixed)                 |
+| Fase 3 | ✅      | 100%       | Supabase (Admin RLS + Feedback metadata fixed)        |
+| Fase 4 | ✅      | 100%       | Onboarding (Kickstarter widget added)                 |
+| Fase 5 | ✅      | 100%       | Analytics (Hypergeometric implementado)               |
+| Fase 6 | ✅      | 100%       | Collection (Wishlist pendiente, baja prioridad)       |
+| Fase 7 | 🔄      | 70%        | Cloud Sharing (UUID links, Public Gallery pending)    |
+| Fase 8 | 🔄      | 33%        | UI/UX Polish (Modal animations done, buttons pending) |
+| Fase 9 | ❌      | 0%         | Arena Simulator (future)                              |
 
 ---
 
@@ -374,6 +329,29 @@
 ---
 
 ## 📝 CHANGELOG
+
+**2026-04-05 (HOTFIX DAY):**
+- 🐛 **FIXED:** Mulligan Simulator color filtering (used `faction` instead of `ram_color`)
+  - `getAllowedColors()` now reads `legend.ram_color` (Red/Blue/Green/Yellow)
+  - Card pool filtering changed from faction matching to `ram_color` matching
+  - Added debug logs for color verification
+- 🐛 **FIXED:** Admin Panel RLS policies (DELETE operations blocked)
+  - Policies now check `admin_users` table instead of `auth.users.metadata`
+  - SQL Editor fix: `DROP POLICY` + `CREATE POLICY` with `admin_users` JOIN
+- 🐛 **FIXED:** Feedback metadata showing "N/A"
+  - feedbackService now captures browser/OS/URL via `getSystemMetadata()`
+  - Browser detection: Chrome, Firefox, Safari, Edge
+  - OS detection: Windows, macOS, Linux, Android, iOS
+- ✨ **ADDED:** AdminFeedbackViewer bulk delete with checkboxes
+  - Permanent checkboxes on left (no "SELECT MODE" toggle)
+  - Bulk actions appear dynamically when items selected
+  - Visual feedback: blue highlight for selected items
+- ✨ **ADDED:** Kickstarter widget to LandingPage hero
+  - Grid layout (text left, widget right)
+  - Responsive: hidden on mobile (`hidden lg:block`)
+  - Exact fit wrapper (220x420px) with border
+- 🔧 **FIXED:** MulliganModal overflow when analysis panel opens
+  - Added `max-h-[90vh]` + `overflow-y-auto` to modal container
 
 **2026-04-04:**
 - ✅ CORRECTED: Fase 4 from 90% → 100% (SuggestedCards.jsx verified)
