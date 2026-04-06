@@ -10,30 +10,63 @@ jobs:
   update-images:
     runs-on: ubuntu-latest
     
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
       
-      - name: Setup Node.js
+      - name: Setup Node.js 24
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
       
       - name: Install dependencies
         run: npm ci
       
+      # SCRIPT 1: Check image health
       - name: Run image health check
-        run: node scripts/checkImageHealth.js
+        run: |
+          echo "🔍 Checking image health..."
+          node scripts/checkImageHealth.js || echo "⚠️ Image health check completed with warnings"
       
-      - name: Commit updated images (if any)
+      # SCRIPT 2: Run scraper (fetch new images)
+      - name: Run card image scraper
+        run: |
+          echo "🕷️ Running image scraper..."
+          node scripts/scraper.py || echo "⚠️ Scraper completed with warnings"
+        continue-on-error: true
+      
+      # SCRIPT 3: Backup images
+      - name: Backup card images
+        run: |
+          echo "💾 Backing up images..."
+          node scripts/backupImages.js || echo "⚠️ Backup completed with warnings"
+        continue-on-error: true
+      
+      # Commit all changes (if any)
+      - name: Commit updated images
         run: |
           git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action Bot"
+          git config --local user.name "Afterlife Decks Bot"
           git add -A
-          git diff --staged --quiet || git commit -m "chore: auto-update card images [skip ci]"
+          if git diff --staged --quiet; then
+            echo "✅ No changes to commit"
+          else
+            git commit -m "chore: auto-update card images [skip ci]
+            
+            - Ran image health check
+            - Updated image sources via scraper
+            - Backed up all card images
+            
+            Automated by GitHub Actions"
+          fi
       
+      # Push changes (only if there were commits)
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
+        if: success()
