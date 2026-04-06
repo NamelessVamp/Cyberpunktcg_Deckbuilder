@@ -1,7 +1,7 @@
 // EX MACHINA — React hook for feature flags
 
 import { useState, useEffect } from "react";
-import { featureFlagService } from "../lib/featureFlagService";
+import { featureFlagService } from "../lib/useFeatureFlag";
 import { useAuth } from "../contexts/AuthContext";
 
 export function useFeatureFlag(featureName) {
