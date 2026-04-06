@@ -89,25 +89,6 @@
     "ram_color": "Red"
   },
   {
-    "id": "el-sombreron-la-venganza-lenta",
-    "name": "El Sombrerón",
-    "subtitle": "La Venganza Lenta",
-    "url": "https://cyberpunktcg.com/cards/el-sombreron-la-venganza-lenta",
-    "date_added": "2026-04-06",
-    "cost": 4,
-    "power": 4,
-    "ram": 4,
-    "type": "UNIT",
-    "faction": "GANGER",
-    "keywords": ["ATTACK"],
-    "text": "ATTACK While fighting a rival Unit, double this Unit's power.",
-    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b019.webp?Expires=1775588376&Key-Pair-Id=K3SGRHESIHQPEW&Signature=Bt1jz5u~idC8x-0JXPNL~h1IXkghvuiKx2b~-G1vuyU7J6M6f2c9YcePovoLxHkHlaz9QVHC7w1ZUyQ-EXqKIjdfTUQXpHUZzmQS1GkytCENlnZ9fH1elGAvk6wGIEJAoo8~2Ii4q3huDyRyiXVxZ-IKjmilgx4rtUDgtkEqDS5uveWYI2gHf4XI4k-sRy9yT2iY1v98wJjgnqJms3mWQaR0J0FVFlgEVGSM5ljh0AzJ-zU~YFi0hZVnkBU7TjvGaGoRGp8jQjseZnYFCDVD6Y09mq6CJ~Wpbo7KOMarrTScNeobks6i9pcAEv8H8FG-4dwHyFvFKRdqyFylaQImYA__",
-    "set": "Spoiler Set (SPOILER)",
-    "number": "019",
-    "artist": "Rafael de Latorre & Clonerh",
-    "ram_color": "Red"
-  },
-  {
     "id": "kerry-eurodyne-the-last-rockerboy",
     "name": "Kerry Eurodyne",
     "subtitle": "The Last Rockerboy",
