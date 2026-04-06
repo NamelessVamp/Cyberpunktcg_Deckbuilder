@@ -32,6 +32,8 @@ import ProxyModal from "./components/ProxyModal";
 import AnalyticsModal from "./components/AnalyticsModal";
 import AdminFeedbackViewer from "./components/AdminFeedbackViewer";
 import { useIsAdmin } from "./hooks/useIsAdmin";
+import SimulatorBeta from "./components/SimulatorBeta";
+import { useFeatureFlag } from "./hooks/useFeatureFlag";
 
 // DECK ENCODING/DECODING UTILITIES
 const encodeDeck = (deck) => {
@@ -102,6 +104,7 @@ function App() {
   });
 
   const [activeTab, setActiveTab] = useState("build");
+  const { isEnabled: canAccessSimulator } = useFeatureFlag("phase9_simulator");
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [savedDecks, setSavedDecks] = useState([]);
   const [isLoadingDecks, setIsLoadingDecks] = useState(false);
@@ -207,6 +210,7 @@ function App() {
   }, [user]);
 
   // Route to HOME for first-time users
+
   useEffect(() => {
     const hasVisited = localStorage.getItem("afterlife_hasVisited");
 
@@ -1403,6 +1407,12 @@ function App() {
               onRemoveFromCollection={handleRemoveFromCollection}
               onViewCard={(card) => setPreviewCard(card)}
             />
+          </div>
+        )}
+
+        {activeTab === "simulator" && (
+          <div key="simulator-tab">
+            <SimulatorBeta currentDeck={deck} />
           </div>
         )}
 

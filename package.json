@@ -9,7 +9,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "backup-images": "node scripts/backupImages.js",
-    "check-images": "node scripts/checkImageHealth.js"
+    "check-images": "node scripts/checkImageHealth.js",
+    "test:game": "node src/lib/game/GameState.test.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.100.1",
