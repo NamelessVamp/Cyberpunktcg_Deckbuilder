@@ -2,80 +2,90 @@ name: Update Card Images
 
 on:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: "0 3 * * *"
   workflow_dispatch:
 
 jobs:
   update-images:
     runs-on: ubuntu-latest
-    
+
     permissions:
-      contents: write  # Permite hacer push
-    
+      contents: write # Permite hacer push
+
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      
+        with:
+          fetch-depth: 0 # Fetch full history for proper pull
+
       - name: Setup Node.js 24
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
-      
+          node-version: "24"
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      
+          python-version: "3.11"
+
       - name: Install Node dependencies
         run: npm ci
-      
+
       - name: Install Python dependencies
         run: |
           pip install selenium beautifulsoup4 requests
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
           fi
-      
+
       - name: Run image health check
         run: |
           echo "🔍 Checking image health..."
           node scripts/checkImageHealth.js
         continue-on-error: true
-      
+
       - name: Run card image scraper
         run: |
           echo "🕷️ Running image scraper..."
           python scripts/scraper.py
         continue-on-error: true
-      
+
       - name: Backup card images
         run: |
           echo "💾 Backing up images..."
           node scripts/backupImages.js
         continue-on-error: true
-      
-      - name: Commit updated images
+
+      - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "Afterlife Decks Bot"
           git add -A
+
+          # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "✅ No changes to commit"
-          else
-            git commit -m "chore: auto-update card images [skip ci]
-            
-            - Health check: $(date)
-            - Scraper: Updated image sources
-            - Backup: All images backed up
-            
-            Automated by GitHub Actions"
+            exit 0
           fi
-      
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+
+          # Commit changes
+          git commit -m "chore: auto-update card images [skip ci]
+
+          - Health check: $(date)
+          - Scraper: Updated image sources
+          - Backup: All images backed up
+
+          Automated by GitHub Actions"
+
+          # Pull with rebase to avoid conflicts
+          echo "📥 Pulling latest changes..."
+          git pull --rebase origin main
+
+          # Push changes
+          echo "📤 Pushing changes..."
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
