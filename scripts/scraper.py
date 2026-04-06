@@ -1,6 +1,7 @@
 import json
 import re
 import time
+from datetime import datetime
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -44,6 +45,23 @@ VALID_FACTIONS = {
 }
 
 
+def load_existing_cards():
+    """
+    Carga cards.json existente y devuelve un diccionario {id: card_data}.
+    Si el archivo no existe, devuelve dict vacío.
+    """
+    if OUTPUT_FILE.exists():
+        try:
+            with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
+                cards_list = json.load(f)
+                # Convertir lista a dict con ID como clave
+                return {card["id"]: card for card in cards_list}
+        except (json.JSONDecodeError, KeyError) as e:
+            print(f"⚠️  Warning: Could not load existing cards.json: {e}")
+            return {}
+    return {}
+
+
 def setup_driver():
     """Setup Chrome driver sin dependencias externas innecesarias."""
     chrome_options = Options()
@@ -51,9 +69,6 @@ def setup_driver():
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-
-    # En versiones modernas de Selenium, no necesitas Service(ChromeDriverManager().install())
-    # Selenium buscará Chrome automáticamente en tu sistema.
     driver = webdriver.Chrome(options=chrome_options)
     return driver
 
@@ -225,10 +240,14 @@ def parse_card_page(driver, url):
 
 
 def main():
-    print("🔥 CYBERPUNK TCG SCRAPER v2.3 (Path Fix)")
+    print("🔥 CYBERPUNK TCG SCRAPER v3.0 (UPSERT LOGIC)")
     print("=" * 50)
     print(f"📂 Output: {OUTPUT_FILE}")
     print("=" * 50)
+
+    # 🆕 PASO 1: Cargar cartas existentes
+    existing_cards = load_existing_cards()
+    print(f"📦 Loaded {len(existing_cards)} existing cards from JSON\n")
 
     driver = setup_driver()
 
@@ -236,15 +255,37 @@ def main():
         # Extract card links
         print(f"📡 Fetching {CARDS_URL}...")
         card_links = extract_card_links(driver)
-        print(f"✅ Found {len(card_links)} cards")
+        print(f"✅ Found {len(card_links)} cards on website\n")
 
         # Parse each card
-        cards = []
+        final_cards = []
+        new_cards_count = 0
+        updated_cards_count = 0
+
         for i, link in enumerate(card_links, 1):
-            print(f"⚡ [{i}/{len(card_links)}] Scraping {link.split('/')[-1]}...")
-            card = parse_card_page(driver, link)
-            if card:
-                cards.append(card)
+            card_id = link.split("/")[-1]
+            print(f"⚡ [{i}/{len(card_links)}] Scraping {card_id}...", end=" ")
+
+            scraped_card = parse_card_page(driver, link)
+            if not scraped_card:
+                print("❌ FAILED")
+                continue
+
+            # 🆕 UPSERT LOGIC
+            if card_id in existing_cards:
+                # Carta YA EXISTE → Preservar date_added
+                scraped_card["date_added"] = existing_cards[card_id].get(
+                    "date_added", datetime.now().strftime("%Y-%m-%d")
+                )
+                print("✅ UPDATED (preserved date)")
+                updated_cards_count += 1
+            else:
+                # Carta NUEVA → Agregar timestamp HOY
+                scraped_card["date_added"] = datetime.now().strftime("%Y-%m-%d")
+                print(f"🆕 NEW CARD! (added {scraped_card['date_added']})")
+                new_cards_count += 1
+
+            final_cards.append(scraped_card)
             time.sleep(1)
 
         # Save to JSON
@@ -253,10 +294,15 @@ def main():
 
         print(f"\n💾 Saving to {OUTPUT_FILE}...")
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-            json.dump(cards, f, indent=2, ensure_ascii=False)
+            json.dump(final_cards, f, indent=2, ensure_ascii=False)
 
-        print(f"✅ COMPLETE! {len(cards)} cards saved to:")
-        print(f"   {OUTPUT_FILE.absolute()}")
+        print("\n" + "=" * 50)
+        print("✅ SCRAPING COMPLETE!")
+        print("=" * 50)
+        print(f"📊 Total cards: {len(final_cards)}")
+        print(f"🆕 New cards: {new_cards_count}")
+        print(f"🔄 Updated cards: {updated_cards_count}")
+        print(f"💾 Saved to: {OUTPUT_FILE.absolute()}")
 
     finally:
         driver.quit()
@@ -264,7 +310,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
+
 #TODO: RARITY SCRAPING
 #======================
 # WeirdCo has not published official rarity data yet.
