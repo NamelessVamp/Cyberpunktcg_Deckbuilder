@@ -2,9 +2,8 @@ name: Update Card Images
 
 on:
   schedule:
-    # Runs at 3 AM UTC every day
     - cron: '0 3 * * *'
-  workflow_dispatch: # Manual trigger button
+  workflow_dispatch:
 
 jobs:
   update-images:
@@ -22,30 +21,42 @@ jobs:
         with:
           node-version: '24'
       
-      - name: Install dependencies
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install Node dependencies
         run: npm ci
       
-      # SCRIPT 1: Check image health
+      - name: Install Python dependencies
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+      
+      # SCRIPT 1: Check image health (Node.js)
       - name: Run image health check
         run: |
           echo "🔍 Checking image health..."
-          node scripts/checkImageHealth.js || echo "⚠️ Image health check completed with warnings"
+          node scripts/checkImageHealth.js
+        continue-on-error: true
       
-      # SCRIPT 2: Run scraper (fetch new images)
+      # SCRIPT 2: Run scraper (Python)
       - name: Run card image scraper
         run: |
           echo "🕷️ Running image scraper..."
-          node scripts/scraper.py || echo "⚠️ Scraper completed with warnings"
+          python scripts/scraper.py
         continue-on-error: true
       
-      # SCRIPT 3: Backup images
+      # SCRIPT 3: Backup images (Node.js)
       - name: Backup card images
         run: |
           echo "💾 Backing up images..."
-          node scripts/backupImages.js || echo "⚠️ Backup completed with warnings"
+          node scripts/backupImages.js
         continue-on-error: true
       
-      # Commit all changes (if any)
+      # Commit all changes
       - name: Commit updated images
         run: |
           git config --local user.email "action@github.com"
@@ -56,17 +67,15 @@ jobs:
           else
             git commit -m "chore: auto-update card images [skip ci]
             
-            - Ran image health check
-            - Updated image sources via scraper
-            - Backed up all card images
+            - Health check: $(date)
+            - Scraper: Updated image sources
+            - Backup: All images backed up
             
             Automated by GitHub Actions"
           fi
       
-      # Push changes (only if there were commits)
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
-        if: success()
