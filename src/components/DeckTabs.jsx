@@ -20,20 +20,42 @@ export default function DeckTabs({ activeTab, onTabChange }) {
   ];
 
   return (
-    <div className="flex gap-2 mb-6 border-b border-term-amber/20 pb-2 overflow-x-auto">
+    <div className="flex gap-1 sm:gap-2 mb-4 sm:mb-6 border-b border-term-amber/20 pb-2 overflow-x-auto scrollbar-hide">
       {tabs.map((tab) => (
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
-          className={`px-6 py-2 rounded-t font-mono font-bold transition-colors whitespace-nowrap flex items-center gap-2 ${
-            activeTab === tab.id
-              ? "bg-term-amber text-term-black"
-              : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
-          }`}
+          className={`
+            flex-shrink-0
+            px-1.5 sm:px-4 md:px-6 
+            py-1 sm:py-2 
+            rounded-t 
+            font-mono font-bold 
+            transition-colors 
+            touch-optimized
+            flex items-center justify-center gap-1 sm:gap-2
+            text-[9px] xs:text-[10px] sm:text-sm md:text-base
+            leading-tight
+            ${
+              activeTab === tab.id
+                ? "bg-term-amber text-term-black"
+                : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10 active:bg-term-amber/20"
+            }
+          `}
+          aria-label={`${tab.label} tab`}
+          aria-current={activeTab === tab.id ? "page" : undefined}
         >
-          <span>[{tab.label}]</span>
+          {/* Brackets hidden on mobile */}
+          <span className="hidden sm:inline">[</span>
+
+          {/* Text always visible */}
+          <span className="whitespace-nowrap">{tab.label}</span>
+
+          <span className="hidden sm:inline">]</span>
+
+          {/* Beta badge */}
           {tab.isBeta && (
-            <span className="px-2 py-0.5 bg-term-green text-term-black text-xs rounded font-bold">
+            <span className="px-1 sm:px-2 py-0.5 bg-term-green text-term-black text-[8px] sm:text-xs rounded font-bold whitespace-nowrap">
               BETA
             </span>
           )}

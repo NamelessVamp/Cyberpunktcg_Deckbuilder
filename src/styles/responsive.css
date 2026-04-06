@@ -1,0 +1,224 @@
+/* ============================================================================
+   MOBILE-FIRST RESPONSIVE ARCHITECTURE
+   Base: 320px (Mobile)
+   SM: 640px+ (Large Mobile)
+   MD: 768px+ (Tablet)
+   LG: 1024px+ (Desktop)
+   XL: 1280px+ (Large Desktop)
+   ============================================================================ */
+
+/* ========================================
+   BASE (MOBILE 320px-640px)
+   ======================================== */
+
+/* Typography - Mobile optimized */
+body {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: 1.5rem; /* 24px */
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.4;
+}
+
+/* Buttons - Touch-friendly (min 44x44px) */
+button,
+.btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem; /* 14px */
+}
+
+/* Inputs - Touch-friendly */
+input,
+select,
+textarea {
+  min-height: 44px;
+  font-size: 16px; /* Prevents iOS zoom on focus */
+  padding: 0.75rem;
+}
+
+/* Cards - Full width on mobile */
+.card-container,
+.deck-card-container {
+  width: 100%;
+  margin: 0 0 1rem 0;
+  padding: 0.75rem;
+}
+
+/* Modals - Full screen on mobile */
+.modal-container {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  max-height: 100vh;
+}
+
+/* Grid - Single column on mobile */
+.grid-responsive {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+/* ========================================
+   SMALL (640px+) - Large Mobile
+   ======================================== */
+
+@media (min-width: 640px) {
+  body {
+    font-size: 15px;
+  }
+
+  h1 {
+    font-size: 1.75rem; /* 28px */
+  }
+
+  h2 {
+    font-size: 1.5rem; /* 24px */
+  }
+
+  button,
+  .btn {
+    padding: 0.625rem 1rem;
+    font-size: 0.9375rem; /* 15px */
+  }
+
+  .grid-responsive {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  /* Modals - Add padding */
+  .modal-container {
+    inset: 1rem;
+    width: calc(100% - 2rem);
+    height: calc(100% - 2rem);
+    border-radius: 0.5rem;
+  }
+}
+
+/* ========================================
+   MEDIUM (768px+) - Tablet
+   ======================================== */
+
+@media (min-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 2rem; /* 32px */
+  }
+
+  h2 {
+    font-size: 1.75rem; /* 28px */
+  }
+
+  button,
+  .btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem; /* 16px */
+  }
+
+  .grid-responsive {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Modals - Max width */
+  .modal-container {
+    max-width: 90vw;
+    max-height: 90vh;
+    inset: auto;
+    margin: auto;
+  }
+}
+
+/* ========================================
+   LARGE (1024px+) - Desktop
+   ======================================== */
+
+@media (min-width: 1024px) {
+  h1 {
+    font-size: 2.25rem; /* 36px */
+  }
+
+  h2 {
+    font-size: 2rem; /* 32px */
+  }
+
+  button,
+  .btn {
+    padding: 0.75rem 1.5rem;
+  }
+
+  .grid-responsive {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+
+  .modal-container {
+    max-width: 1200px;
+  }
+}
+
+/* ========================================
+   EXTRA LARGE (1280px+) - Large Desktop
+   ======================================== */
+
+@media (min-width: 1280px) {
+  .grid-responsive {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Safe area padding (iPhone notch) */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Touch action optimizations */
+.touch-optimized {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent text selection on UI elements */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

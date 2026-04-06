@@ -12,7 +12,7 @@ const KickstarterWidget = () => (
         src="https://www.kickstarter.com/projects/cyberpunktcg/the-official-cyberpunk-trading-card-game/widget/card.html?v=2"
         width="220"
         height="420"
-        frameborder="0"
+        frameBorder="0"
         scrolling="no"
       ></iframe>
     </div>

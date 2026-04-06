@@ -1,3 +1,9 @@
+/* Mobile-First Responsive Architecture */
+@import "./styles/responsive.css";
+
+/* WCAG AA Accessibility */
+@import "./styles/accessibility.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -8,6 +8,7 @@ export default function AnalyticsModal({ deck, onClose }) {
   const analytics = calculateDeckAnalytics(deck);
 
   const tabs = [
+    { id: "validation", label: "SYSTEM CHECK" },
     { id: "curve", label: "EDDIES CURVE" },
     { id: "synergies", label: "SYNERGIES" },
     { id: "consistency", label: "CONSISTENCY" },
@@ -16,43 +17,46 @@ export default function AnalyticsModal({ deck, onClose }) {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-0 sm:p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
       >
         <motion.div
-          className="bg-term-gray border-2 border-term-amber rounded-lg max-w-5xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+          className="bg-term-gray border-0 sm:border-2 border-term-amber rounded-none sm:rounded-lg w-full h-full sm:max-w-5xl sm:w-full sm:max-h-[90vh] overflow-hidden flex flex-col"
           initial={{ scale: 0.9, y: 20 }}
           animate={{ scale: 1, y: 0 }}
           exit={{ scale: 0.9, y: 20 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
           {/* Header */}
-          <div className="bg-term-gray border-b border-term-amber p-4 flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-term-amber font-mono">
-              [DECK ANALYTICS]
+          <div className="bg-term-gray border-b border-term-amber p-3 sm:p-4 flex justify-between items-center safe-area-top">
+            <h2 className="text-lg sm:text-2xl font-bold text-term-amber font-mono">
+              DECK ANALYTICS
             </h2>
             <button
               onClick={onClose}
-              className="text-term-red hover:text-red-400 font-mono text-xl"
+              className="text-term-red hover:text-red-400 font-mono text-xl min-w-[44px] min-h-[44px] touch-optimized"
+              aria-label="Close analytics"
             >
               [X]
             </button>
           </div>
 
           {/* Tabs */}
-          <div className="flex border-b border-term-green/30 bg-black/20">
+          <div className="flex border-b border-term-green/30 bg-black/20 overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 py-3 px-4 font-mono text-sm transition-colors ${
+                className={`flex-shrink-0 py-2 sm:py-3 px-3 sm:px-4 font-mono text-xs sm:text-sm transition-colors touch-optimized ${
                   activeTab === tab.id
                     ? "bg-term-amber/20 text-term-amber border-b-2 border-term-amber"
-                    : "text-term-green hover:bg-term-green/10"
+                    : "text-term-green hover:bg-term-green/10 active:bg-term-green/20"
                 }`}
+                aria-label={`${tab.label} tab`}
+                aria-current={activeTab === tab.id ? "page" : undefined}
               >
                 {tab.label}
               </button>
@@ -60,7 +64,11 @@ export default function AnalyticsModal({ deck, onClose }) {
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto p-3 sm:p-6 safe-area-bottom">
+            {activeTab === "validation" && (
+              <ValidationTab deck={deck} analytics={analytics} />
+            )}
+
             {activeTab === "curve" && <CurveTab analytics={analytics} />}
 
             {activeTab === "synergies" && (
@@ -156,6 +164,237 @@ function calculateDeckAnalytics(deck) {
     playableHandProbability, // ← NUEVO
     cheapCards, // ← NUEVO
   };
+}
+
+// ============================================================================
+// VALIDATION TAB (SYSTEM CHECK)
+// ============================================================================
+
+function ValidationTab({ deck, analytics }) {
+  // Calculate RAM Budget
+  const ramBudget = {};
+  const ramUsed = {};
+
+  deck.legends.forEach((legend) => {
+    if (legend.ram_color && legend.ram !== undefined) {
+      ramBudget[legend.ram_color] =
+        (ramBudget[legend.ram_color] || 0) + legend.ram;
+    }
+  });
+
+  [...deck.mainDeck, ...deck.sideboard].forEach((card) => {
+    if (card.ram_color && card.ram !== undefined && card.ram > 0) {
+      ramUsed[card.ram_color] = (ramUsed[card.ram_color] || 0) + card.ram;
+    }
+  });
+
+  // Calculate errors
+  const errors = [];
+  const warnings = [];
+
+  // RAM validation
+  Object.keys(ramUsed).forEach((color) => {
+    const budget = ramBudget[color] || 0;
+    const used = ramUsed[color] || 0;
+    if (used > budget) {
+      errors.push({
+        type: "RAM_OVERLOAD",
+        color,
+        message: `${color} RAM overload: ${used}/${budget} used`,
+      });
+    }
+  });
+
+  // Deck size validation
+  const deckSize = deck.mainDeck.length;
+  if (deckSize < 40) {
+    errors.push({
+      type: "DECK_SIZE",
+      message: `Deck too small: ${deckSize}/40 minimum`,
+    });
+  } else if (deckSize > 50) {
+    errors.push({
+      type: "DECK_SIZE",
+      message: `Deck too large: ${deckSize}/50 maximum`,
+    });
+  }
+
+  // Legend validation
+  if (deck.legends.length !== 3) {
+    errors.push({
+      type: "LEGENDS",
+      message: `Invalid Legends: ${deck.legends.length}/3 required`,
+    });
+  }
+
+  // Sideboard validation
+  if (deck.sideboard.length > 15) {
+    errors.push({
+      type: "SIDEBOARD",
+      message: `Sideboard too large: ${deck.sideboard.length}/15 maximum`,
+    });
+  }
+
+  // Warnings (not errors)
+  if (analytics.avgCost > 3.5) {
+    warnings.push({
+      type: "CURVE",
+      message: `High average cost (${analytics.avgCost}) — deck may be too slow`,
+    });
+  }
+
+  if (analytics.playableHandProbability < 0.65) {
+    warnings.push({
+      type: "CONSISTENCY",
+      message: `Low T1 playability (${(analytics.playableHandProbability * 100).toFixed(1)}%) — add more cheap cards`,
+    });
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* System Status Header */}
+      <div className="text-center">
+        <h3 className="text-term-amber font-mono text-2xl font-bold mb-2">
+          SYSTEM_CHECK.EXE
+        </h3>
+        <p className="text-term-green/60 font-mono text-sm">
+          Real-time deck validation and diagnostics
+        </p>
+      </div>
+
+      {/* RAM Budget Panel */}
+      <div className="bg-term-gray/50 border border-term-amber/40 rounded p-4">
+        <h4 className="text-term-amber font-mono font-bold mb-3">RAM BUDGET</h4>
+        <div className="space-y-3">
+          {Object.keys(ramBudget).map((color) => {
+            const budget = ramBudget[color];
+            const used = ramUsed[color] || 0;
+            const percentage = (used / budget) * 100;
+            const isOverload = used > budget;
+
+            return (
+              <div key={color}>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-term-green font-mono text-sm">
+                    {color}
+                  </span>
+                  <span
+                    className={`font-mono text-sm font-bold ${
+                      isOverload ? "text-term-red" : "text-term-green"
+                    }`}
+                  >
+                    {used}/{budget}
+                  </span>
+                </div>
+                <div className="bg-term-gray-light rounded overflow-hidden h-6">
+                  <div
+                    className={`h-full transition-all duration-500 ${
+                      isOverload
+                        ? "bg-term-red animate-pulse"
+                        : percentage > 80
+                          ? "bg-term-amber"
+                          : "bg-term-green"
+                    }`}
+                    style={{ width: `${Math.min(percentage, 100)}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Deck Size Panel */}
+      <div className="bg-term-gray/50 border border-term-blue/40 rounded p-4">
+        <h4 className="text-term-blue font-mono font-bold mb-3">DECK SIZE</h4>
+        <div className="flex justify-between items-center mb-1">
+          <span className="text-term-green font-mono text-sm">Main Deck</span>
+          <span
+            className={`font-mono text-sm font-bold ${
+              deckSize < 40 || deckSize > 50
+                ? "text-term-red"
+                : "text-term-green"
+            }`}
+          >
+            {deckSize}/50
+          </span>
+        </div>
+        <div className="bg-term-gray-light rounded overflow-hidden h-6">
+          <div
+            className={`h-full transition-all duration-500 ${
+              deckSize < 40
+                ? "bg-term-red"
+                : deckSize > 50
+                  ? "bg-term-red"
+                  : "bg-term-green"
+            }`}
+            style={{ width: `${(deckSize / 50) * 100}%` }}
+          />
+        </div>
+        <p className="text-term-green/60 font-mono text-xs mt-2">
+          Legal range: 40-50 cards
+        </p>
+      </div>
+
+      {/* Errors Panel */}
+      {errors.length > 0 && (
+        <div className="bg-term-red/10 border-2 border-term-red/40 rounded p-4">
+          <h4 className="text-term-red font-mono font-bold mb-3 flex items-center gap-2">
+            <span className="text-xl">⚠️</span>
+            CRITICAL ERRORS ({errors.length})
+          </h4>
+          <div className="space-y-2">
+            {errors.map((error, idx) => (
+              <div
+                key={idx}
+                className="flex items-start gap-2 text-term-red font-mono text-sm"
+              >
+                <span className="text-term-red">•</span>
+                <span className="flex-1">
+                  [{error.type}] {error.message}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Warnings Panel */}
+      {warnings.length > 0 && (
+        <div className="bg-term-amber/10 border border-term-amber/40 rounded p-4">
+          <h4 className="text-term-amber font-mono font-bold mb-3">
+            ⚡ WARNINGS ({warnings.length})
+          </h4>
+          <div className="space-y-2">
+            {warnings.map((warning, idx) => (
+              <div
+                key={idx}
+                className="flex items-start gap-2 text-term-amber font-mono text-sm"
+              >
+                <span>→</span>
+                <span className="flex-1">
+                  [{warning.type}] {warning.message}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* All Clear */}
+      {errors.length === 0 && warnings.length === 0 && (
+        <div className="bg-term-green/10 border-2 border-term-green/40 rounded p-6 text-center">
+          <div className="text-term-green text-6xl mb-3">✓</div>
+          <h4 className="text-term-green font-mono font-bold text-xl mb-2">
+            ALL SYSTEMS NOMINAL
+          </h4>
+          <p className="text-term-green/60 font-mono text-sm">
+            Deck is tournament-legal and ready for testing
+          </p>
+        </div>
+      )}
+    </div>
+  );
 }
 
 // ============================================================================

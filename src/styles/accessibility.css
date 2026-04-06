@@ -1,0 +1,235 @@
+/* ============================================================================
+   ACCESSIBILITY: WCAG AA COMPLIANT COLORS
+   ============================================================================ */
+
+:root {
+  /* Original colors (maintained for compatibility) */
+  --term-black: #0a0a0a;
+  --term-gray: #1a1a1a;
+  --term-gray-light: #2a2a2a;
+  --term-green: #00ff41;
+  --term-amber: #ffb300;
+  --term-red: #ff1744;
+  --term-blue: #00e5ff;
+
+  /* WCAG AA Compliant colors (4.5:1 contrast minimum) */
+  /* Text on dark backgrounds (#0a0a0a, #1a1a1a) */
+  --term-green-a11y: #00ff66; /* Enhanced brightness for better contrast */
+  --term-amber-a11y: #ffc933; /* Lighter amber for 4.5:1 ratio */
+  --term-red-a11y: #ff5252; /* Lighter red for readability */
+  --term-blue-a11y: #33e0ff; /* Lighter blue for contrast */
+  
+  /* Secondary text colors (muted, still accessible) */
+  --term-green-muted: #00cc55;
+  --term-amber-muted: #ffaa00;
+  
+  /* Status indicators with text labels (not color-only) */
+  --status-success: #00ff66;
+  --status-warning: #ffc933;
+  --status-error: #ff5252;
+  --status-info: #33e0ff;
+}
+
+/* ========================================
+   TEXT COLOR CLASSES (A11Y)
+   ======================================== */
+
+.text-a11y-green {
+  color: var(--term-green-a11y);
+}
+
+.text-a11y-amber {
+  color: var(--term-amber-a11y);
+}
+
+.text-a11y-red {
+  color: var(--term-red-a11y);
+}
+
+.text-a11y-blue {
+  color: var(--term-blue-a11y);
+}
+
+/* ========================================
+   STATUS INDICATORS (Never color-only)
+   ======================================== */
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.status-indicator::before {
+  content: attr(data-icon);
+  display: inline-block;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.status-success {
+  color: var(--status-success);
+}
+
+.status-success::before {
+  content: '✓';
+}
+
+.status-warning {
+  color: var(--status-warning);
+}
+
+.status-warning::before {
+  content: '⚠';
+}
+
+.status-error {
+  color: var(--status-error);
+}
+
+.status-error::before {
+  content: '✗';
+}
+
+.status-info {
+  color: var(--status-info);
+}
+
+.status-info::before {
+  content: 'ℹ';
+}
+
+/* ========================================
+   RAM COLOR INDICATORS (With labels)
+   ======================================== */
+
+.ram-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.ram-indicator::before {
+  content: '■';
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.ram-red {
+  background: rgba(255, 82, 82, 0.1);
+  border: 1px solid var(--term-red-a11y);
+  color: var(--term-red-a11y);
+}
+
+.ram-yellow {
+  background: rgba(255, 201, 51, 0.1);
+  border: 1px solid var(--term-amber-a11y);
+  color: var(--term-amber-a11y);
+}
+
+.ram-green {
+  background: rgba(0, 255, 102, 0.1);
+  border: 1px solid var(--term-green-a11y);
+  color: var(--term-green-a11y);
+}
+
+/* ========================================
+   FOCUS INDICATORS (WCAG 2.4.7)
+   ======================================== */
+
+*:focus-visible {
+  outline: 3px solid var(--term-amber-a11y);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--term-green-a11y);
+  outline-offset: 3px;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--term-amber-a11y);
+  outline-offset: 0;
+  border-color: var(--term-amber-a11y);
+}
+
+/* ========================================
+   ARIA LIVE REGIONS
+   ======================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+[aria-live] {
+  /* Ensure live regions are visible but can be styled */
+  position: relative;
+}
+
+/* ========================================
+   SKIP LINKS (WCAG 2.4.1)
+   ======================================== */
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--term-amber);
+  color: var(--term-black);
+  padding: 1rem 2rem;
+  text-decoration: none;
+  font-weight: bold;
+  z-index: 9999;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid var(--term-green-a11y);
+  outline-offset: 0;
+}
+
+/* ========================================
+   CONTRAST CHECKER UTILITY
+   ======================================== */
+
+/* 
+To test contrast:
+- Text on #0a0a0a: Minimum 4.5:1 ratio
+- Large text (18pt+): Minimum 3:1 ratio
+- UI components: Minimum 3:1 ratio
+
+Use tools:
+- https://webaim.org/resources/contrastchecker/
+- Chrome DevTools Lighthouse
+- axe DevTools extension
+*/
+
+/* Example usage:
+<div class="ram-indicator ram-red" aria-label="Red RAM: 4 of 5 used">
+  RED 4/5
+</div>
+
+<button class="status-indicator status-success" aria-label="Deck validation passed">
+  Valid
+</button>
+*/

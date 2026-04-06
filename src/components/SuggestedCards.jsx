@@ -18,10 +18,10 @@ export default function SuggestedCards({ deck, allCards, onAddCard }) {
         className="w-full p-3 bg-term-green/10 hover:bg-term-green/20 transition-colors flex justify-between items-center"
       >
         <span className="text-term-green font-mono font-bold">
-          [+] SUGERENCIAS DEL FIXER
+          FIXER RECOMMENDATIONS
         </span>
         <span className="text-term-green font-mono text-sm">
-          {isOpen ? "▲" : "▼"}
+          {isOpen ? "[HIDE]" : "[SHOW]"}
         </span>
       </button>
 

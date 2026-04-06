@@ -1025,6 +1025,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-term-black text-term-green relative">
+      {/* Skip to main content link (WCAG 2.4.1) */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
       {/* Background Grid Pattern - RESTAURADO */}
       <div className="fixed inset-0 pointer-events-none opacity-10">
         <div
@@ -1116,402 +1121,411 @@ function App() {
           </div>
         </header>
 
-        {/* TABS */}
-        <DeckTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* Main content area */}
+        <main id="main-content" role="main">
+          {/* TABS */}
+          <DeckTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-        {/* HOME TAB - LANDING PAGE */}
-        {activeTab === "home" && (
-          <div key="home-tab">
-            <LandingPage
-              user={user}
-              collection={collection}
-              allCards={cards}
-              savedDecks={savedDecks}
-              onNavigate={setActiveTab}
-            />
-          </div>
-        )}
+          {/* HOME TAB - LANDING PAGE */}
+          {activeTab === "home" && (
+            <div key="home-tab">
+              <LandingPage
+                user={user}
+                collection={collection}
+                allCards={cards}
+                savedDecks={savedDecks}
+                onNavigate={setActiveTab}
+              />
+            </div>
+          )}
 
-        {/* CONTENT BY TAB */}
-        {activeTab === "build" && (
-          <div key="build-tab">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* LEFT COLUMN: CARD BROWSER (2/3) */}
-              <div className="lg:col-span-2">
-                <SearchBar
-                  onSearch={setSearchTerm}
-                  onToggleFilters={() => setFiltersOpen(!filtersOpen)}
-                  filtersOpen={filtersOpen}
-                  onCloseFilters={() => setFiltersOpen(false)}
-                />
-
-                <FilterPanel
-                  cards={cards}
-                  filters={filters}
-                  onFilterChange={setFilters}
-                  isOpen={filtersOpen}
-                  showOwnedOnly={showOwnedOnly}
-                  onToggleOwnedOnly={setShowOwnedOnly}
-                  collectionCount={collection.length}
-                  isLoggedIn={!!user}
-                />
-
-                {/* Card Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-0">
-                  {currentCards.map((card) => (
-                    <div
-                      key={card.id}
-                      className="deck-card-container hover:border-term-green transition-all duration-300 cursor-pointer group"
-                      onClick={() => setPreviewCard(card)}
-                    >
-                      {/* IMAGE CONTAINER WITH BADGES */}
-                      <div className="relative overflow-hidden rounded mb-3 bg-term-gray-light">
-                        <SmartCardImage
-                          card={card}
-                          className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
-                          showLoadingState={true}
-                        />
-
-                        {/* Owned Badge */}
-                        {user &&
-                          collectionService.ownsCard(collection, card.id) && (
-                            <div className="absolute top-2 left-2 bg-term-green text-term-black font-mono font-bold text-xs px-2 py-1 rounded flex items-center gap-1">
-                              ✓ x
-                              {collectionService.getCardQuantity(
-                                collection,
-                                card.id,
-                              )}
-                            </div>
-                          )}
-
-                        {/* RAM Color Dot */}
-                        {card.ram_color && (
-                          <div
-                            className={`absolute top-2 right-2 w-3 h-3 rounded-full ${
-                              card.ram_color === "Red"
-                                ? "bg-term-red"
-                                : card.ram_color === "Yellow"
-                                  ? "bg-term-amber"
-                                  : card.ram_color === "Green"
-                                    ? "bg-term-green"
-                                    : card.ram_color === "Blue"
-                                      ? "bg-term-blue"
-                                      : "bg-gray-500"
-                            }`}
-                          ></div>
-                        )}
-                      </div>
-
-                      {/* CARD INFO */}
-                      <h3 className="text-term-green font-bold font-mono text-lg">
-                        {card.name}
-                      </h3>
-
-                      {card.subtitle && (
-                        <p className="text-term-amber/60 text-sm font-mono mb-2">
-                          {card.subtitle}
-                        </p>
-                      )}
-
-                      <div className="flex gap-3 text-xs font-mono mb-2">
-                        {card.cost !== undefined && (
-                          <span className="text-term-blue">
-                            COST: {card.cost}
-                          </span>
-                        )}
-                        {card.power !== undefined && (
-                          <span className="text-term-red">
-                            PWR: {card.power}
-                          </span>
-                        )}
-                        <span className="text-term-green">RAM: {card.ram}</span>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-xs font-mono">
-                        <span className="text-term-amber/80">{card.type}</span>
-                        {card.faction && (
-                          <>
-                            <span className="text-term-amber/40">//</span>
-                            <span className="text-term-green/80">
-                              {card.faction}
-                            </span>
-                          </>
-                        )}
-                      </div>
-
-                      {card.keywords && card.keywords.length > 0 && (
-                        <div className="mt-2 flex flex-wrap gap-1">
-                          {card.keywords.map((keyword, idx) => (
-                            <span
-                              key={idx}
-                              className="text-xs px-2 py-0.5 bg-term-amber/10 text-term-amber rounded font-mono"
-                            >
-                              {keyword}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      <div className="mt-3 text-center">
-                        <span className="text-term-green text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity">
-                          [CLICK TO PREVIEW]
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* PAGINATION */}
-                {totalPages > 1 && (
-                  <div className="mt-6 flex items-center justify-center gap-4">
-                    <button
-                      onClick={() => {
-                        setCurrentPage((prev) => Math.max(prev - 1, 1));
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                      disabled={currentPage === 1}
-                      className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
-                        currentPage === 1
-                          ? "bg-term-gray border border-term-amber/20 text-term-amber/40 cursor-not-allowed"
-                          : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
-                      }`}
-                    >
-                      [◄ PREV]
-                    </button>
-
-                    <span className="text-term-green font-mono">
-                      PAGE {currentPage} / {totalPages}
-                    </span>
-
-                    <button
-                      onClick={() => {
-                        setCurrentPage((prev) =>
-                          Math.min(prev + 1, totalPages),
-                        );
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                      disabled={currentPage === totalPages}
-                      className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
-                        currentPage === totalPages
-                          ? "bg-term-gray border border-term-amber/20 text-term-amber/40 cursor-not-allowed"
-                          : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
-                      }`}
-                    >
-                      [NEXT ►]
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* RIGHT COLUMN: DECK + ANALYTICS (1/3) */}
-              <div className="lg:col-span-1">
-                <div className="lg:sticky lg:top-8 space-y-6">
-                  <DeckArea
-                    deck={deck}
-                    onRemoveCard={handleRemoveCard}
-                    onClearDeck={handleClearDeck}
-                    onShareDeck={handleShareDeck}
-                    allCards={cards}
-                    showAnalytics={showAnalytics}
-                    onToggleAnalytics={() => setShowAnalytics(!showAnalytics)}
-                    onGenerateProxies={() => setShowProxyModal(true)}
-                    onAddToDeck={handleAddToDeck} // ← AGREGAR ESTO
+          {/* CONTENT BY TAB */}
+          {activeTab === "build" && (
+            <div key="build-tab">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* LEFT COLUMN: CARD BROWSER (2/3) */}
+                <div className="lg:col-span-2">
+                  <SearchBar
+                    onSearch={setSearchTerm}
+                    onToggleFilters={() => setFiltersOpen(!filtersOpen)}
+                    filtersOpen={filtersOpen}
+                    onCloseFilters={() => setFiltersOpen(false)}
                   />
 
-                  {showProxyModal && (
-                    <ProxyModal
-                      deck={deck}
-                      onClose={() => setShowProxyModal(false)}
-                    />
+                  <FilterPanel
+                    cards={cards}
+                    filters={filters}
+                    onFilterChange={setFilters}
+                    isOpen={filtersOpen}
+                    showOwnedOnly={showOwnedOnly}
+                    onToggleOwnedOnly={setShowOwnedOnly}
+                    collectionCount={collection.length}
+                    isLoggedIn={!!user}
+                  />
+
+                  {/* Card Grid */}
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-0">
+                    {currentCards.map((card) => (
+                      <div
+                        key={card.id}
+                        className="deck-card-container hover:border-term-green transition-all duration-300 cursor-pointer group"
+                        onClick={() => setPreviewCard(card)}
+                      >
+                        {/* IMAGE CONTAINER WITH BADGES */}
+                        <div className="relative overflow-hidden rounded mb-3 bg-term-gray-light">
+                          <SmartCardImage
+                            card={card}
+                            className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+                            showLoadingState={true}
+                          />
+
+                          {/* Owned Badge */}
+                          {user &&
+                            collectionService.ownsCard(collection, card.id) && (
+                              <div className="absolute top-2 left-2 bg-term-green text-term-black font-mono font-bold text-xs px-2 py-1 rounded flex items-center gap-1">
+                                ✓ x
+                                {collectionService.getCardQuantity(
+                                  collection,
+                                  card.id,
+                                )}
+                              </div>
+                            )}
+
+                          {/* RAM Color Dot */}
+                          {card.ram_color && (
+                            <div
+                              className={`absolute top-2 right-2 w-3 h-3 rounded-full ${
+                                card.ram_color === "Red"
+                                  ? "bg-term-red"
+                                  : card.ram_color === "Yellow"
+                                    ? "bg-term-amber"
+                                    : card.ram_color === "Green"
+                                      ? "bg-term-green"
+                                      : card.ram_color === "Blue"
+                                        ? "bg-term-blue"
+                                        : "bg-gray-500"
+                              }`}
+                            ></div>
+                          )}
+                        </div>
+
+                        {/* CARD INFO */}
+                        <h3 className="text-term-green font-bold font-mono text-lg">
+                          {card.name}
+                        </h3>
+
+                        {card.subtitle && (
+                          <p className="text-term-amber/60 text-sm font-mono mb-2">
+                            {card.subtitle}
+                          </p>
+                        )}
+
+                        <div className="flex gap-3 text-xs font-mono mb-2">
+                          {card.cost !== undefined && (
+                            <span className="text-term-blue">
+                              COST: {card.cost}
+                            </span>
+                          )}
+                          {card.power !== undefined && (
+                            <span className="text-term-red">
+                              PWR: {card.power}
+                            </span>
+                          )}
+                          <span className="text-term-green">
+                            RAM: {card.ram}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-xs font-mono">
+                          <span className="text-term-amber/80">
+                            {card.type}
+                          </span>
+                          {card.faction && (
+                            <>
+                              <span className="text-term-amber/40">//</span>
+                              <span className="text-term-green/80">
+                                {card.faction}
+                              </span>
+                            </>
+                          )}
+                        </div>
+
+                        {card.keywords && card.keywords.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-1">
+                            {card.keywords.map((keyword, idx) => (
+                              <span
+                                key={idx}
+                                className="text-xs px-2 py-0.5 bg-term-amber/10 text-term-amber rounded font-mono"
+                              >
+                                {keyword}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        <div className="mt-3 text-center">
+                          <span className="text-term-green text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+                            [CLICK TO PREVIEW]
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* PAGINATION */}
+                  {totalPages > 1 && (
+                    <div className="mt-6 flex items-center justify-center gap-4">
+                      <button
+                        onClick={() => {
+                          setCurrentPage((prev) => Math.max(prev - 1, 1));
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        }}
+                        disabled={currentPage === 1}
+                        className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
+                          currentPage === 1
+                            ? "bg-term-gray border border-term-amber/20 text-term-amber/40 cursor-not-allowed"
+                            : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
+                        }`}
+                      >
+                        [◄ PREV]
+                      </button>
+
+                      <span className="text-term-green font-mono">
+                        PAGE {currentPage} / {totalPages}
+                      </span>
+
+                      <button
+                        onClick={() => {
+                          setCurrentPage((prev) =>
+                            Math.min(prev + 1, totalPages),
+                          );
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        }}
+                        disabled={currentPage === totalPages}
+                        className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
+                          currentPage === totalPages
+                            ? "bg-term-gray border border-term-amber/20 text-term-amber/40 cursor-not-allowed"
+                            : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
+                        }`}
+                      >
+                        [NEXT ►]
+                      </button>
+                    </div>
                   )}
+                </div>
 
-                  {showAnalytics && (
-                    <AnalyticsModal
+                {/* RIGHT COLUMN: DECK + ANALYTICS (1/3) */}
+                <div className="lg:col-span-1">
+                  <div className="lg:sticky lg:top-8 space-y-6">
+                    <DeckArea
                       deck={deck}
-                      onClose={() => setShowAnalytics(false)}
+                      onRemoveCard={handleRemoveCard}
+                      onClearDeck={handleClearDeck}
+                      onShareDeck={handleShareDeck}
+                      allCards={cards}
+                      showAnalytics={showAnalytics}
+                      onToggleAnalytics={() => setShowAnalytics(!showAnalytics)}
+                      onGenerateProxies={() => setShowProxyModal(true)}
+                      onAddToDeck={handleAddToDeck} // ← AGREGAR ESTO
                     />
-                  )}
 
-                  {/* SAVE + IMPORT + EXPORT BUTTONS */}
-                  <div className="grid grid-cols-3 gap-2">
-                    <button
-                      onClick={() => setShowSaveModal(true)}
-                      disabled={
-                        deck.mainDeck.length === 0 && deck.legends.length === 0
-                      }
-                      className="bg-term-green text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-green-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                    >
-                      [SAVE]
-                    </button>
+                    {showProxyModal && (
+                      <ProxyModal
+                        deck={deck}
+                        onClose={() => setShowProxyModal(false)}
+                      />
+                    )}
 
-                    <button
-                      onClick={() => setShowImportModal(true)}
-                      className="bg-term-blue text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-blue-400 transition-colors"
-                    >
-                      [IMPORT]
-                    </button>
+                    {showAnalytics && (
+                      <AnalyticsModal
+                        deck={deck}
+                        onClose={() => setShowAnalytics(false)}
+                      />
+                    )}
 
-                    <button
-                      onClick={() => {
-                        setExportDeckName("My Deck");
-                        setShowExportModal(true);
-                      }}
-                      disabled={deck.mainDeck.length === 0}
-                      className="bg-term-amber text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-yellow-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                    >
-                      [EXPORT]
-                    </button>
+                    {/* SAVE + IMPORT + EXPORT BUTTONS */}
+                    <div className="grid grid-cols-3 gap-2">
+                      <button
+                        onClick={() => setShowSaveModal(true)}
+                        disabled={
+                          deck.mainDeck.length === 0 &&
+                          deck.legends.length === 0
+                        }
+                        className="bg-term-green text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-green-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                      >
+                        [SAVE]
+                      </button>
+
+                      <button
+                        onClick={() => setShowImportModal(true)}
+                        className="bg-term-blue text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-blue-400 transition-colors"
+                      >
+                        [IMPORT]
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setExportDeckName("My Deck");
+                          setShowExportModal(true);
+                        }}
+                        disabled={deck.mainDeck.length === 0}
+                        className="bg-term-amber text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-yellow-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                      >
+                        [EXPORT]
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {activeTab === "mydecks" && (
-          <div key="mydecks-tab">
-            <MyDecksView
-              savedDecks={savedDecks}
-              onLoadDeck={handleLoadDeck}
-              onDeleteDeck={handleDeleteDeck}
-              onDuplicateDeck={handleDuplicateDeck}
-              onRenameDeck={handleRenameDeck}
-              onExportAll={handleExportAllDecks}
-              onImportAll={handleImportAllDecks}
+          {activeTab === "mydecks" && (
+            <div key="mydecks-tab">
+              <MyDecksView
+                savedDecks={savedDecks}
+                onLoadDeck={handleLoadDeck}
+                onDeleteDeck={handleDeleteDeck}
+                onDuplicateDeck={handleDuplicateDeck}
+                onRenameDeck={handleRenameDeck}
+                onExportAll={handleExportAllDecks}
+                onImportAll={handleImportAllDecks}
+              />
+            </div>
+          )}
+
+          {activeTab === "precon" && cards && cards.length > 0 && (
+            <PreconDecksView onLoadPrecon={handleLoadPrecon} allCards={cards} />
+          )}
+
+          {activeTab === "practice" && (
+            <div key="practice-tab">
+              <MulliganSimulator deck={deck} allCards={cards} />
+            </div>
+          )}
+
+          {activeTab === "packs" && (
+            <div key="packs-tab">
+              <PackOpener allCards={cards} />
+            </div>
+          )}
+
+          {activeTab === "collection" && (
+            <div key="collection-tab">
+              <CollectionView
+                collection={collection}
+                allCards={cards}
+                onAddToCollection={handleAddToCollection}
+                onRemoveFromCollection={handleRemoveFromCollection}
+                onViewCard={(card) => setPreviewCard(card)}
+              />
+            </div>
+          )}
+
+          {activeTab === "simulator" && (
+            <div key="simulator-tab">
+              <SimulatorBeta currentDeck={deck} />
+            </div>
+          )}
+
+          {activeTab === "legal" && (
+            <div key="legal-tab">
+              <LegalDisclaimer />
+            </div>
+          )}
+
+          {/* MODALS */}
+          {showSaveModal && (
+            <SaveDeckModal
+              deck={deck}
+              onSave={handleSaveDeck}
+              onClose={() => setShowSaveModal(false)}
             />
-          </div>
-        )}
+          )}
 
-        {activeTab === "precon" && cards && cards.length > 0 && (
-          <PreconDecksView onLoadPrecon={handleLoadPrecon} allCards={cards} />
-        )}
+          {showExportModal && (
+            <ExportModal
+              deck={deck}
+              deckName={exportDeckName}
+              onClose={() => setShowExportModal(false)}
+            />
+          )}
 
-        {activeTab === "practice" && (
-          <div key="practice-tab">
-            <MulliganSimulator deck={deck} allCards={cards} />
-          </div>
-        )}
+          {toast && (
+            <Toast
+              message={toast.message}
+              type={toast.type}
+              onClose={() => setToast(null)}
+              duration={4000}
+            />
+          )}
 
-        {activeTab === "packs" && (
-          <div key="packs-tab">
-            <PackOpener allCards={cards} />
-          </div>
-        )}
+          {confirmModal && (
+            <ConfirmModal
+              title={confirmModal.title}
+              message={confirmModal.message}
+              onConfirm={confirmModal.onConfirm}
+              onCancel={confirmModal.onCancel}
+            />
+          )}
 
-        {activeTab === "collection" && (
-          <div key="collection-tab">
-            <CollectionView
-              collection={collection}
-              allCards={cards}
+          {previewCard && (
+            <CardPreviewModal
+              card={previewCard}
+              onClose={() => setPreviewCard(null)}
+              onAddToDeck={handleAddToDeck}
+              onAddToSideboard={handleAddToSideboard} // ← NUEVO
               onAddToCollection={handleAddToCollection}
               onRemoveFromCollection={handleRemoveFromCollection}
-              onViewCard={(card) => setPreviewCard(card)}
+              ownedQuantity={collectionService.getCardQuantity(
+                collection,
+                previewCard.id,
+              )}
+              isLoggedIn={!!user}
             />
-          </div>
-        )}
+          )}
 
-        {activeTab === "simulator" && (
-          <div key="simulator-tab">
-            <SimulatorBeta currentDeck={deck} />
-          </div>
-        )}
+          {showImportModal && (
+            <ImportDeckModal
+              allCards={cards}
+              onImport={handleImportDeck}
+              onClose={() => setShowImportModal(false)}
+            />
+          )}
 
-        {activeTab === "legal" && (
-          <div key="legal-tab">
-            <LegalDisclaimer />
-          </div>
-        )}
+          {showMigrationModal && (
+            <MigrationModal
+              localDeckCount={localDeckCount}
+              onMigrate={handleMigration}
+              onSkip={handleSkipMigration}
+              onClose={handleSkipMigration}
+            />
+          )}
 
-        {/* MODALS */}
-        {showSaveModal && (
-          <SaveDeckModal
-            deck={deck}
-            onSave={handleSaveDeck}
-            onClose={() => setShowSaveModal(false)}
-          />
-        )}
+          {showLoginModal && (
+            <LoginModal onClose={() => setShowLoginModal(false)} />
+          )}
 
-        {showExportModal && (
-          <ExportModal
-            deck={deck}
-            deckName={exportDeckName}
-            onClose={() => setShowExportModal(false)}
-          />
-        )}
+          {showFeedbackModal && (
+            <FeedbackModal
+              onClose={() => setShowFeedbackModal(false)}
+              onSubmit={handleSubmitFeedback}
+              isSubmitting={isSubmittingFeedback}
+            />
+          )}
 
-        {toast && (
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-            duration={4000}
-          />
-        )}
+          {/* Admin Feedback Viewer - Solo visible para admins */}
+          {showAdminFeedback && isAdmin && user && (
+            <AdminFeedbackViewer
+              onClose={() => setShowAdminFeedback(false)}
+              user={user}
+              showToast={showToast}
+            />
+          )}
 
-        {confirmModal && (
-          <ConfirmModal
-            title={confirmModal.title}
-            message={confirmModal.message}
-            onConfirm={confirmModal.onConfirm}
-            onCancel={confirmModal.onCancel}
-          />
-        )}
+          {/* Footer */}
+        </main>
 
-        {previewCard && (
-          <CardPreviewModal
-            card={previewCard}
-            onClose={() => setPreviewCard(null)}
-            onAddToDeck={handleAddToDeck}
-            onAddToSideboard={handleAddToSideboard} // ← NUEVO
-            onAddToCollection={handleAddToCollection}
-            onRemoveFromCollection={handleRemoveFromCollection}
-            ownedQuantity={collectionService.getCardQuantity(
-              collection,
-              previewCard.id,
-            )}
-            isLoggedIn={!!user}
-          />
-        )}
-
-        {showImportModal && (
-          <ImportDeckModal
-            allCards={cards}
-            onImport={handleImportDeck}
-            onClose={() => setShowImportModal(false)}
-          />
-        )}
-
-        {showMigrationModal && (
-          <MigrationModal
-            localDeckCount={localDeckCount}
-            onMigrate={handleMigration}
-            onSkip={handleSkipMigration}
-            onClose={handleSkipMigration}
-          />
-        )}
-
-        {showLoginModal && (
-          <LoginModal onClose={() => setShowLoginModal(false)} />
-        )}
-
-        {showFeedbackModal && (
-          <FeedbackModal
-            onClose={() => setShowFeedbackModal(false)}
-            onSubmit={handleSubmitFeedback}
-            isSubmitting={isSubmittingFeedback}
-          />
-        )}
-
-        {/* Admin Feedback Viewer - Solo visible para admins */}
-        {showAdminFeedback && isAdmin && user && (
-          <AdminFeedbackViewer
-            onClose={() => setShowAdminFeedback(false)}
-            user={user}
-            showToast={showToast}
-          />
-        )}
-
-        {/* Footer */}
         <footer className="mt-12 border-t border-term-amber/20 pt-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             {/* Column 1: Keyboard Shortcuts */}
