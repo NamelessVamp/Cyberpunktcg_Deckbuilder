@@ -40,6 +40,7 @@ export default function FilterPanel({
       ramColors: [],
       keywords: [],
       set: "",
+      showOnlyNew: false, // ← AGREGAR
     });
   };
 
@@ -138,8 +139,8 @@ export default function FilterPanel({
         </div>
       )}
 
-      {/* DROPDOWN BUTTONS ROW */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      {/* DROPDOWN BUTTONS ROW + NEW FILTER CHECKBOX */}
+      <div className="flex flex-wrap gap-2 mb-4 items-center">
         <DropdownButton
           section="color"
           label="Color"
@@ -168,7 +169,21 @@ export default function FilterPanel({
           label="Set"
           activeCount={filters.set ? 1 : 0}
         />
+
+        {/* NEW CARDS CHECKBOX - A LA DERECHA */}
+        <label className="flex items-center gap-2 cursor-pointer px-3 py-2 bg-term-gray border border-term-amber/30 rounded hover:border-term-amber transition-colors">
+          <input
+            type="checkbox"
+            checked={filters.showOnlyNew || false}
+            onChange={(e) => updateFilter("showOnlyNew", e.target.checked)}
+            className="w-4 h-4 accent-term-green cursor-pointer"
+          />
+          <span className="text-term-amber/80 text-sm font-mono whitespace-nowrap">
+            New Only
+          </span>
+        </label>
       </div>
+
       {/* COLOR SECTION */}
       {openSection === "color" && (
         <div className="mb-4 p-4 bg-term-gray-light rounded border border-term-amber/30 animate-slideDown">
