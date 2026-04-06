@@ -9,6 +9,9 @@ jobs:
   update-images:
     runs-on: ubuntu-latest
     
+    permissions:
+      contents: write  # Permite hacer push
+    
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     
@@ -31,32 +34,29 @@ jobs:
       
       - name: Install Python dependencies
         run: |
+          pip install selenium beautifulsoup4 requests
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
           fi
       
-      # SCRIPT 1: Check image health (Node.js)
       - name: Run image health check
         run: |
           echo "🔍 Checking image health..."
           node scripts/checkImageHealth.js
         continue-on-error: true
       
-      # SCRIPT 2: Run scraper (Python)
       - name: Run card image scraper
         run: |
           echo "🕷️ Running image scraper..."
           python scripts/scraper.py
         continue-on-error: true
       
-      # SCRIPT 3: Backup images (Node.js)
       - name: Backup card images
         run: |
           echo "💾 Backing up images..."
           node scripts/backupImages.js
         continue-on-error: true
       
-      # Commit all changes
       - name: Commit updated images
         run: |
           git config --local user.email "action@github.com"
