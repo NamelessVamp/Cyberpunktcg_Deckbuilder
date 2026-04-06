@@ -35,6 +35,15 @@ import { useIsAdmin } from "./hooks/useIsAdmin";
 import SimulatorBeta from "./components/SimulatorBeta";
 import { useFeatureFlag } from "./hooks/useFeatureFlag";
 
+const isNewCard = (card, days = 7) => {
+  if (!card.date_added) return false;
+  const addedDate = new Date(card.date_added);
+  const today = new Date();
+  const diffTime = today.getTime() - addedDate.getTime();
+  const diffDays = diffTime / (1000 * 60 * 60 * 24);
+  return diffDays <= days && diffDays >= 0;
+};
+
 // DECK ENCODING/DECODING UTILITIES
 const encodeDeck = (deck) => {
   try {
@@ -93,6 +102,7 @@ function App() {
     ramColors: [],
     keywords: [],
     set: "",
+    showOnlyNew: false,
   });
 
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -347,6 +357,11 @@ function App() {
       if (!collectionService.ownsCard(collection, card.id)) {
         return false;
       }
+    }
+
+    // ⚡ NUEVO: Filtro "Solo Nuevas"
+    if (filters.showOnlyNew && !isNewCard(card)) {
+      return false;
     }
 
     return true;
@@ -1190,6 +1205,13 @@ function App() {
                                 )}
                               </div>
                             )}
+
+                          {/* NEW Badge */}
+                          {isNewCard(card) && (
+                            <div className="absolute top-2 right-2 bg-term-green text-term-black font-mono font-bold text-xs px-2 py-1 rounded animate-pulse flex items-center gap-1">
+                              NEW
+                            </div>
+                          )}
 
                           {/* RAM Color Dot */}
                           {card.ram_color && (
