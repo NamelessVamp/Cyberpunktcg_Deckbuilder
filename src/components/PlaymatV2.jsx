@@ -1,0 +1,279 @@
+import { useState, useRef, useEffect } from "react";
+import CyberCard from "./simulator/CyberCard";
+
+export default function PlaymatV2({ game, onGameUpdate }) {
+  const [backgroundImage, setBackgroundImage] = useState(null);
+  const [draggingCard, setDraggingCard] = useState(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [highestZ, setHighestZ] = useState(1000);
+  const fileInputRef = useRef(null);
+
+  // Handle background image upload
+  const handleBackgroundUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setBackgroundImage(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Dice roller with animation
+  const rollDie = (sides, dieId) => {
+    const dieElement = document.getElementById(dieId);
+    if (!dieElement || dieElement.classList.contains("rolling")) return;
+
+    dieElement.classList.add("rolling");
+    setTimeout(() => {
+      const result = Math.floor(Math.random() * sides) + 1;
+      dieElement.querySelector("span").textContent = result;
+      dieElement.classList.remove("rolling");
+    }, 300);
+  };
+
+  // Get player zones from game state
+  const playerHand = game?.players[1]?.hand || [];
+  const playerField = game?.players[1]?.field || [];
+  const playerLegends = game?.players[1]?.legends || [];
+  const playerEddies = game?.players[1]?.eddies || [];
+  const playerDeck = game?.players[1]?.deck || [];
+  const playerTrash = game?.players[1]?.trash || [];
+  const playerGigs = game?.players[1]?.gigs || [];
+
+  return (
+    <div className="game-wrapper flex flex-col gap-4 items-center">
+      {/* Controls */}
+      <div className="controls flex justify-end w-[1200px]">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleBackgroundUpload}
+          className="hidden"
+        />
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="border border-term-amber px-4 py-1.5 cursor-pointer bg-term-amber/10 font-bold font-mono text-term-amber hover:bg-term-amber hover:text-black transition-all"
+        >
+          [+] UPLOAD CUSTOM PLAYMAT
+        </button>
+      </div>
+
+      {/* Main Playmat */}
+      <div
+        className="playmat w-[1200px] h-[700px] bg-transparent border-2 border-term-amber relative font-mono text-term-amber flex p-5 box-border gap-4 select-none overflow-hidden"
+        style={{
+          backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* LEFT COLUMN - Dice Box */}
+        <div className="col-left w-[90px] flex flex-col justify-end gap-4">
+          <div className="dice-box border border-term-amber rounded-lg flex flex-col items-center justify-evenly h-[520px] bg-transparent">
+            {[
+              { sides: 20, id: "die20" },
+              { sides: 12, id: "die12" },
+              { sides: 10, id: "die10" },
+              { sides: 8, id: "die8" },
+              { sides: 6, id: "die6" },
+              { sides: 4, id: "die4" },
+            ].map((die) => (
+              <div
+                key={die.id}
+                id={die.id}
+                onClick={() => rollDie(die.sides, die.id)}
+                className="die-slot w-[50px] h-[50px] border border-term-amber flex justify-center items-center text-[13px] font-bold rotate-45 cursor-grab transition-colors hover:bg-term-amber/40 relative z-[100]"
+                style={{
+                  textShadow:
+                    "1px 1px 2px #000, -1px -1px 2px #000, 0 0 5px #000",
+                }}
+              >
+                <span className="-rotate-45 pointer-events-none block">
+                  D{die.sides}
+                </span>
+              </div>
+            ))}
+          </div>
+          <div className="fixer-box h-[30px] flex justify-center items-center relative">
+            <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+              FIXER
+            </div>
+          </div>
+        </div>
+
+        {/* CENTER COLUMN */}
+        <div className="col-center flex-grow flex flex-col gap-4">
+          {/* Gigs Row */}
+          <div className="gigs-row flex gap-5 h-[100px] items-start -mt-5">
+            <div className="gig-box flex-1 h-full border border-term-amber border-t-0 rounded-b-lg relative bg-transparent flex justify-center items-center flex-wrap gap-2.5 p-2.5 pb-6">
+              <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+                RIVAL GIGS
+              </div>
+            </div>
+            <div className="gig-box flex-1 h-full border border-term-amber border-t-0 rounded-b-lg relative bg-transparent flex justify-center items-center flex-wrap gap-2.5 p-2.5 pb-6">
+              <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+                FRIENDLY GIGS
+              </div>
+              {playerGigs.map((card, idx) => (
+                <CyberCard key={`gig-${idx}`} card={card} />
+              ))}
+            </div>
+          </div>
+
+          {/* Field Box */}
+          <div className="field-box flex-grow border border-term-amber rounded-lg relative bg-transparent p-5 flex items-center mt-5">
+            <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+              FIELD
+            </div>
+            <div className="dashed-units-area border border-dashed border-term-amber w-[120px] h-full rounded-lg flex flex-col relative z-[5]">
+              {[0, 1, 2].map((slotIdx) => (
+                <div
+                  key={`slot-${slotIdx}`}
+                  className={`dashed-slot flex-1 ${slotIdx < 2 ? "border-b border-dashed border-term-amber" : ""} relative flex justify-center items-center`}
+                >
+                  {playerField
+                    .filter((c) => c.fieldSlot === slotIdx)
+                    .map((card, idx) => (
+                      <CyberCard key={`field-${slotIdx}-${idx}`} card={card} />
+                    ))}
+                </div>
+              ))}
+            </div>
+            <p
+              className="units-text absolute left-[140px] top-1/2 -translate-y-1/2 w-[400px] text-[10px] text-term-amber/70 m-0 leading-tight pointer-events-none"
+              style={{
+                textShadow:
+                  "1px 1px 2px #000, -1px -1px 2px #000, 0 0 5px #000",
+              }}
+            >
+              <strong>UNITS</strong> Are the members of your crew that attack
+              your rival and their Units. Units can't attack on the turn they're
+              played.
+            </p>
+          </div>
+
+          {/* Bottom Row - Legends + Eddies */}
+          <div className="bottom-row h-[180px] flex gap-5">
+            {/* Legends */}
+            <div className="legends-container flex-1 flex flex-col gap-4">
+              <div className="legends-box h-[110px] border border-term-amber rounded-lg relative bg-transparent flex p-2 gap-2">
+                <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+                  LEGENDS
+                </div>
+                {[0, 1, 2].map((idx) => (
+                  <div
+                    key={`legend-${idx}`}
+                    className="legend-card flex-1 border border-dashed border-term-amber/50 rounded relative"
+                  >
+                    {playerLegends[idx] && (
+                      <CyberCard card={playerLegends[idx]} />
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p
+                className="rules-text text-[9px] text-term-amber/70 m-0 leading-tight pt-1 pointer-events-none"
+                style={{
+                  textShadow:
+                    "1px 1px 2px #000, -1px -1px 2px #000, 0 0 5px #000",
+                }}
+              >
+                <strong>SPEND FOR EDDIES</strong> You can spend a Legend like an
+                Eddie to pay a card's cost.
+                <br />
+                <strong>CALL A LEGEND</strong> Once per turn, you may spend 2
+                Eddies to flip any Legend card.
+              </p>
+            </div>
+
+            {/* Eddies */}
+            <div className="eddies-container flex-1 flex flex-col gap-4">
+              <div className="eddies-box h-[110px] border border-term-amber rounded-lg relative bg-transparent flex p-2.5 flex-wrap gap-1.5">
+                <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+                  EDDIES
+                </div>
+                {playerEddies.map((card, idx) => (
+                  <CyberCard key={`eddie-${idx}`} card={card} />
+                ))}
+              </div>
+              <p
+                className="rules-text text-[9px] text-term-amber/70 m-0 leading-tight pt-1 pointer-events-none"
+                style={{
+                  textShadow:
+                    "1px 1px 2px #000, -1px -1px 2px #000, 0 0 5px #000",
+                }}
+              >
+                <strong>SELL FOR EDDIES</strong> Once per turn, you can add
+                another Eddie by selling a card with the [€$] symbol in the top
+                left corner. To sell a card show it to your rival and place it
+                face-down in this area.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN */}
+        <div className="col-right w-[120px] flex flex-col items-center gap-5">
+          <div
+            className="logo-box h-[60px] flex flex-col items-end justify-center w-full font-bold italic"
+            style={{
+              textShadow: "1px 1px 2px #000, -1px -1px 2px #000, 0 0 5px #000",
+            }}
+          >
+            <span className="text-[20px]">CYBERPUNK</span>
+            <span className="text-[8px] text-term-amber/70">
+              TRADING CARD GAME
+            </span>
+          </div>
+          <div className="spacer flex-grow"></div>
+
+          {/* Deck */}
+          <div className="deck-trash-box w-[100px] h-[140px] border border-term-amber rounded-lg relative bg-transparent flex justify-center items-center">
+            <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+              DECK
+            </div>
+            {playerDeck.length > 0 && (
+              <CyberCard card={playerDeck[0]} isFlipped={true} />
+            )}
+          </div>
+
+          {/* Trash */}
+          <div className="deck-trash-box w-[100px] h-[140px] border border-term-amber rounded-lg relative bg-transparent flex justify-center items-center">
+            <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+              TRASH
+            </div>
+            {playerTrash.length > 0 && (
+              <CyberCard card={playerTrash[playerTrash.length - 1]} />
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Player Hand */}
+      <div className="hand-zone w-[1000px] min-h-[140px] border-2 border-dashed border-term-amber rounded-xl bg-transparent flex justify-center items-center gap-4 p-4 relative box-border">
+        <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+          PLAYER HAND
+        </div>
+        {playerHand.map((card, idx) => (
+          <CyberCard key={`hand-${idx}`} card={card} />
+        ))}
+      </div>
+
+      {/* CSS for dice animation */}
+      <style>{`
+        .rolling {
+          animation: shake 0.3s ease-in-out;
+        }
+        @keyframes shake {
+          0% { transform: rotate(45deg) scale(1); }
+          50% { transform: rotate(45deg) scale(1.2); background-color: #f7e018; color: #000; }
+          100% { transform: rotate(45deg) scale(1); }
+        }
+      `}</style>
+    </div>
+  );
+}

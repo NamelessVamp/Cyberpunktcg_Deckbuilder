@@ -4,14 +4,18 @@ import { useAuth } from "../contexts/AuthContext";
 import { loadDecks } from "../lib/deckService";
 import cards from "../data/cards.json";
 import { GameState } from "../lib/game/GameState";
-import PlaymatView from "./PlaymatView";
+import PlaymatV2 from "./PlaymatV2";
 
 // Precon deck IDs (from Alpha Kit)
 const PRECON_DECKS = {
   merc: {
     id: "precon-merc",
-    name: "Alpha Kit - Merc Deck",
-    legend_ids: ["v-streetkid", "jackie-welles", "panam-palmer"],
+    name: "📦 Alpha Kit - Merc Deck",
+    legend_ids: [
+      "v-streetkid",
+      "jackie-welles-the-good-friend",
+      "panam-palmer-nomad-queen",
+    ],
     main_deck_ids: [
       "dying-night",
       "dying-night",
@@ -61,8 +65,12 @@ const PRECON_DECKS = {
   },
   arasaka: {
     id: "precon-arasaka",
-    name: "Alpha Kit - Arasaka Deck",
-    legend_ids: ["saburo-arasaka", "yorinobu-arasaka", "goro-takemura"],
+    name: "📦 Alpha Kit - Arasaka Deck",
+    legend_ids: [
+      "saburo-arasaka-emperor",
+      "yorinobu-arasaka-embracing-destruction",
+      "goro-takemura-loyal-soldier",
+    ],
     main_deck_ids: [
       "satori",
       "satori",
@@ -125,7 +133,6 @@ export default function SimulatorBeta({ currentDeck }) {
   useEffect(() => {
     async function loadAllDecks() {
       setIsLoadingDecks(true);
-
       let decks = [];
 
       // Add precon decks (always available)
@@ -183,7 +190,6 @@ export default function SimulatorBeta({ currentDeck }) {
   // Start game with selected deck
   function startGame(deck) {
     const playerDeck = prepareDeckForGame(deck);
-
     // For now, opponent uses same deck (TODO: Add AI deck selection)
     const opponentDeck = prepareDeckForGame(deck);
 
@@ -191,7 +197,7 @@ export default function SimulatorBeta({ currentDeck }) {
     newGame.startGame();
 
     setGame(newGame);
-    setSelectedDeck(null);
+    setSelectedDeck(deck);
   }
 
   if (featureLoading) {
@@ -232,7 +238,7 @@ export default function SimulatorBeta({ currentDeck }) {
             ADMIN BETA
           </span>
           <span className="text-term-amber/60 text-sm font-mono">
-            Phase 9 Simulator v0.1.0
+            Phase 9 Simulator v0.2.0 - Playmat V2
           </span>
         </div>
 
@@ -261,18 +267,12 @@ export default function SimulatorBeta({ currentDeck }) {
                         onClick={() => setSelectedDeck(deck)}
                         className="p-4 bg-term-gray-light border border-term-amber/40 rounded hover:bg-term-amber/10 transition-colors text-left"
                       >
-                        <div className="text-term-amber font-bold mb-2 font-mono flex items-center gap-2">
-                          {deck.id.startsWith("precon-") && (
-                            <span className="text-term-green">📦</span>
-                          )}
-                          {deck.id === "current-build" && (
-                            <span className="text-term-green">⚡</span>
-                          )}
+                        <div className="text-term-amber font-bold mb-2 font-mono">
                           {deck.name}
                         </div>
                         <div className="text-term-green/60 text-sm font-mono">
-                          {deck.main_deck_ids.length} cards +{" "}
-                          {deck.legend_ids.length} Legends
+                          {deck.main_deck_ids?.length || 0} cards +{" "}
+                          {deck.legend_ids?.length || 0} Legends
                         </div>
                         {deck.notes && (
                           <div className="text-term-amber/40 text-xs mt-2 font-mono line-clamp-2">
@@ -290,17 +290,15 @@ export default function SimulatorBeta({ currentDeck }) {
                 <h2 className="text-2xl text-term-amber mb-4 font-mono">
                   Ready to Play?
                 </h2>
-
                 <div className="mb-6">
                   <div className="text-term-green font-bold text-xl mb-2 font-mono">
                     {selectedDeck.name}
                   </div>
                   <div className="text-term-amber/60 text-sm font-mono">
-                    {selectedDeck.main_deck_ids.length} cards +{" "}
-                    {selectedDeck.legend_ids.length} Legends
+                    {selectedDeck.main_deck_ids?.length || 0} cards +{" "}
+                    {selectedDeck.legend_ids?.length || 0} Legends
                   </div>
                 </div>
-
                 <div className="flex gap-4">
                   <button
                     onClick={() => startGame(selectedDeck)}
@@ -308,7 +306,6 @@ export default function SimulatorBeta({ currentDeck }) {
                   >
                     START GAME
                   </button>
-
                   <button
                     onClick={() => setSelectedDeck(null)}
                     className="px-6 py-3 bg-term-gray-light text-term-amber font-bold rounded font-mono border border-term-amber/40 hover:bg-term-amber/10 transition-colors"
@@ -320,7 +317,7 @@ export default function SimulatorBeta({ currentDeck }) {
             )}
           </>
         ) : (
-          /* Game UI */
+          /* Game UI with PlaymatV2 */
           <div className="space-y-6">
             {/* Win Condition Check */}
             {game.winner && (
@@ -343,20 +340,10 @@ export default function SimulatorBeta({ currentDeck }) {
               </div>
             )}
 
-            {/* Playmat */}
-            <PlaymatView
+            {/* Playmat V2 */}
+            <PlaymatV2
               game={game}
-              onCardClick={(card, zone, index) => {
-                console.log(
-                  "Card clicked:",
-                  card.name,
-                  "in",
-                  zone,
-                  "at index",
-                  index,
-                );
-                // TODO: Implement card actions
-              }}
+              onGameUpdate={(updatedGame) => setGame(updatedGame)}
             />
 
             {/* Actions */}
@@ -364,7 +351,6 @@ export default function SimulatorBeta({ currentDeck }) {
               <h3 className="text-term-amber font-bold mb-4 font-mono">
                 ACTIONS
               </h3>
-
               <div className="flex gap-4 flex-wrap">
                 <button
                   onClick={() => {
@@ -376,7 +362,6 @@ export default function SimulatorBeta({ currentDeck }) {
                 >
                   {game.phase === "END" ? "END TURN ▶" : `NEXT PHASE ▶`}
                 </button>
-
                 <button
                   onClick={() => {
                     setGame(null);
@@ -386,7 +371,6 @@ export default function SimulatorBeta({ currentDeck }) {
                 >
                   FORFEIT GAME
                 </button>
-
                 <div className="flex-1 flex items-center justify-end gap-4 text-sm font-mono">
                   <div className="text-term-amber/60">
                     TURN {game.turn} • {game.phase}
@@ -396,73 +380,6 @@ export default function SimulatorBeta({ currentDeck }) {
                       OVERTIME
                     </div>
                   )}
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Stats (below playmat) */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-term-gray border border-term-green/40 rounded p-4">
-                <h4 className="text-term-green font-bold mb-2 font-mono text-sm">
-                  YOU (P1)
-                </h4>
-                <div className="space-y-1 text-xs font-mono">
-                  <div className="flex justify-between">
-                    <span className="text-term-green/60">Deck:</span>
-                    <span className="text-term-green">
-                      {game.players[1].deck.length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-term-green/60">Hand:</span>
-                    <span className="text-term-green">
-                      {game.players[1].hand.length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-term-green/60">Gigs:</span>
-                    <span className="text-term-green">
-                      {game.players[1].gigs.length}/6
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-term-green/60">Street Cred:</span>
-                    <span className="text-term-green">
-                      ☆ {game.players[1].streetCred}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-term-gray border border-term-red/40 rounded p-4">
-                <h4 className="text-term-red font-bold mb-2 font-mono text-sm">
-                  OPPONENT (P2)
-                </h4>
-                <div className="space-y-1 text-xs font-mono">
-                  <div className="flex justify-between">
-                    <span className="text-term-red/60">Deck:</span>
-                    <span className="text-term-red">
-                      {game.players[2].deck.length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-term-red/60">Hand:</span>
-                    <span className="text-term-red">
-                      {game.players[2].hand.length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-term-red/60">Gigs:</span>
-                    <span className="text-term-red">
-                      {game.players[2].gigs.length}/6
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-term-red/60">Street Cred:</span>
-                    <span className="text-term-red">
-                      ☆ {game.players[2].streetCred}
-                    </span>
-                  </div>
                 </div>
               </div>
             </div>
