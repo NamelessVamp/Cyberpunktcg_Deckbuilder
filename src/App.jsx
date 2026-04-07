@@ -136,7 +136,7 @@ function App() {
   const [showAnalytics, setShowAnalytics] = useState(false); // ← RESTAURADO
   const { isAdmin, loading: adminLoading } = useIsAdmin();
   const [showAdminFeedback, setShowAdminFeedback] = useState(false);
-  const [freeBuildMode, setFreeBuildMode] = useState(false);
+  const [freeBuildMode, setFreeBuildMode] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
