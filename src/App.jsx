@@ -136,6 +136,7 @@ function App() {
   const [showAnalytics, setShowAnalytics] = useState(false); // ← RESTAURADO
   const { isAdmin, loading: adminLoading } = useIsAdmin();
   const [showAdminFeedback, setShowAdminFeedback] = useState(false);
+  const [freeBuildMode, setFreeBuildMode] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -347,7 +348,9 @@ function App() {
         return false;
     }
 
-    if (card.ram < filters.ramMin || card.ram > filters.ramMax) return false;
+    if (card.ram !== undefined && card.ram !== null) {
+      if (card.ram < filters.ramMin || card.ram > filters.ramMax) return false;
+    }
 
     if (filters.ramColors && filters.ramColors.length > 0) {
       if (!filters.ramColors.includes(card.ram_color)) return false;
@@ -413,7 +416,11 @@ function App() {
         { Red: 0, Yellow: 0, Green: 0, Blue: 0 },
       );
 
-      if (card.ram_color && ramBudget[card.ram_color] < card.ram) {
+      if (
+        !freeBuildMode &&
+        card.ram_color &&
+        ramBudget[card.ram_color] < card.ram
+      ) {
         showToast(
           `RAM insuficiente: Necesitas ${card.ram} ${card.ram_color} RAM (tienes ${ramBudget[card.ram_color]})`,
           "error",
@@ -444,33 +451,32 @@ function App() {
   };
 
   const handleAddToSideboard = (card, quantity = 1) => {
-    // Check sideboard max 15
+    // Check if sideboard is full
     if (deck.sideboard.length >= 15) {
       showToast("Sideboard is full (max 15 cards)", "warning");
       return;
     }
 
-    // Check max 3 copies by name
+    // Check max 3 copies
     const currentCount = deck.sideboard.filter(
       (c) => c.name === card.name,
     ).length;
-    const canAdd = Math.min(
-      quantity,
-      Math.min(3 - currentCount, 15 - deck.sideboard.length),
-    );
+    const canAdd = Math.min(quantity, 3 - currentCount);
 
     if (canAdd === 0) {
-      if (currentCount >= 3) {
-        showToast(
-          `Already have 3 copies of ${card.name} in sideboard`,
-          "warning",
-        );
-      } else {
-        showToast("Sideboard is full (max 15 cards)", "warning");
-      }
+      showToast(`Maximum 3 copies of ${card.name} allowed`, "warning");
       return;
     }
 
+    if (deck.sideboard.length + canAdd > 15) {
+      showToast(
+        `Only ${15 - deck.sideboard.length} slots left in sideboard`,
+        "warning",
+      );
+      return;
+    }
+
+    // Add to sideboard
     setDeck((prev) => {
       const newSideboard = [...prev.sideboard];
       for (let i = 0; i < canAdd; i++) {
@@ -479,17 +485,7 @@ function App() {
       return { ...prev, sideboard: newSideboard };
     });
 
-    if (canAdd < quantity) {
-      showToast(
-        `${card.name}: Added ${canAdd} to sideboard (limit reached)`,
-        "warning",
-      );
-    } else {
-      showToast(
-        `${card.name}: Added ${canAdd} ${canAdd === 1 ? "copy" : "copies"} to sideboard`,
-        "success",
-      );
-    }
+    showToast(`Added ${canAdd}x ${card.name} to sideboard`, "success");
   };
 
   const handleRemoveCard = (card, from) => {
@@ -1348,7 +1344,10 @@ function App() {
                       showAnalytics={showAnalytics}
                       onToggleAnalytics={() => setShowAnalytics(!showAnalytics)}
                       onGenerateProxies={() => setShowProxyModal(true)}
-                      onAddToDeck={handleAddToDeck} // ← AGREGAR ESTO
+                      onAddToDeck={handleAddToDeck}
+                      onAddToSideboard={handleAddToSideboard}
+                      freeBuildMode={freeBuildMode}
+                      onToggleFreeBuild={() => setFreeBuildMode(!freeBuildMode)}
                     />
 
                     {showProxyModal && (
@@ -1496,7 +1495,7 @@ function App() {
               card={previewCard}
               onClose={() => setPreviewCard(null)}
               onAddToDeck={handleAddToDeck}
-              onAddToSideboard={handleAddToSideboard} // ← NUEVO
+              onAddToSideboard={handleAddToSideboard}
               onAddToCollection={handleAddToCollection}
               onRemoveFromCollection={handleRemoveFromCollection}
               ownedQuantity={collectionService.getCardQuantity(
@@ -1504,6 +1503,23 @@ function App() {
                 previewCard.id,
               )}
               isLoggedIn={!!user}
+              allFilteredCards={filteredCards}
+              currentIndex={filteredCards.findIndex(
+                (c) => c.id === previewCard.id,
+              )}
+              onNavigate={(direction) => {
+                const currentIdx = filteredCards.findIndex(
+                  (c) => c.id === previewCard.id,
+                );
+                if (direction === "prev" && currentIdx > 0) {
+                  setPreviewCard(filteredCards[currentIdx - 1]);
+                } else if (
+                  direction === "next" &&
+                  currentIdx < filteredCards.length - 1
+                ) {
+                  setPreviewCard(filteredCards[currentIdx + 1]);
+                }
+              }}
             />
           )}
 

@@ -11,16 +11,34 @@ export default function CardPreviewModal({
   onRemoveFromCollection,
   ownedQuantity = 0,
   isLoggedIn = false,
+  // ← NUEVO: Navigation props
+  allFilteredCards = null,
+  currentIndex = null,
+  onNavigate = null,
 }) {
   const [quantity, setQuantity] = useState(1);
-  // Close with ESC key
+
+  // Close with ESC key + Arrow navigation
   useEffect(() => {
-    const handleEsc = (e) => {
+    const handleKeyPress = (e) => {
       if (e.key === "Escape") onClose();
+
+      // Arrow navigation (only if onNavigate is provided)
+      if (onNavigate) {
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          onNavigate("prev");
+        }
+        if (e.key === "ArrowRight") {
+          e.preventDefault();
+          onNavigate("next");
+        }
+      }
     };
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, [onClose]);
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [onClose, onNavigate]);
 
   const handleIncrement = () => {
     if (quantity < 3) setQuantity(quantity + 1);
@@ -68,6 +86,45 @@ export default function CardPreviewModal({
           >
             ✕
           </button>
+
+          {/* ARROW NAVIGATION BUTTONS */}
+          {onNavigate && allFilteredCards && currentIndex !== null && (
+            <>
+              {/* Navigation Buttons - Bottom Left Corner */}
+              <div className="absolute bottom-3 left-4 flex gap-2 z-10">
+                {/* Left Arrow */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onNavigate("prev");
+                  }}
+                  disabled={currentIndex === 0}
+                  className="bg-term-amber/90 hover:bg-term-amber text-term-black font-mono font-bold px-3 py-1.5 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+                  title="Previous card (←)"
+                >
+                  ← PREV
+                </button>
+
+                {/* Card Counter */}
+                <div className="bg-term-gray/90 border border-term-amber/40 text-term-amber font-mono text-xs px-2 py-1.5 rounded flex items-center">
+                  {currentIndex + 1} / {allFilteredCards.length}
+                </div>
+
+                {/* Right Arrow */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onNavigate("next");
+                  }}
+                  disabled={currentIndex === allFilteredCards.length - 1}
+                  className="bg-term-amber/90 hover:bg-term-amber text-term-black font-mono font-bold px-3 py-1.5 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+                  title="Next card (→)"
+                >
+                  NEXT →
+                </button>
+              </div>
+            </>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
             {/* LEFT: Card Image */}

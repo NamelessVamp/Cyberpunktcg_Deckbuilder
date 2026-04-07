@@ -3,8 +3,10 @@ import SmartCardImage from "./SmartCardImage";
 import Tooltip from "./Tooltip";
 import { validateDeckLegality } from "../lib/legalityService";
 import LegalityInfoModal from "./LegalityInfoModal";
-import DeckAnalytics from "./DeckAnalytics"; // ← NUEVO
+import DeckAnalytics from "./DeckAnalytics";
 import SuggestedCards from "./SuggestedCards";
+import DeckCardActions from "./DeckCardActions"; // ← NUEVO
+import CardPreviewModal from "./CardPreviewModal"; // ← NUEVO
 
 export default function DeckArea({
   deck,
@@ -15,9 +17,52 @@ export default function DeckArea({
   showAnalytics,
   onToggleAnalytics,
   onGenerateProxies,
-  onAddToDeck, // ← AGREGAR ESTO
+  onAddToDeck,
+  onAddToSideboard,
+  freeBuildMode,
+  onToggleFreeBuild,
 }) {
   const [showLegalityModal, setShowLegalityModal] = useState(false);
+  const [previewCard, setPreviewCard] = useState(null); // ← NUEVO
+
+  // Handlers for card actions
+  const handlePreview = (card) => {
+    setPreviewCard(card);
+  };
+
+  const handleMoveToSideboard = (card) => {
+    // Remove ONE copy from mainDeck
+    onRemoveCard(card, "mainDeck");
+
+    // Add to sideboard
+    onAddToSideboard(card, 1);
+  };
+
+  const handleMoveToMainDeck = (card) => {
+    // Remove ONE copy from sideboard
+    onRemoveCard(card, "sideboard");
+
+    // Add to main deck
+    onAddToDeck(card, 1);
+  };
+
+  const handleEditQuantity = (card, newQuantity, location) => {
+    // Count current quantity
+    const currentCount = deck[location].filter((c) => c.id === card.id).length;
+    const diff = newQuantity - currentCount;
+
+    if (diff > 0) {
+      // Add more copies
+      for (let i = 0; i < diff; i++) {
+        onAddToDeck(card, 1, location);
+      }
+    } else if (diff < 0) {
+      // Remove copies
+      for (let i = 0; i < Math.abs(diff); i++) {
+        onRemoveCard(card, location);
+      }
+    }
+  };
 
   // Calculate RAM Budget
   const ramBudget = deck.legends.reduce(
@@ -115,21 +160,19 @@ export default function DeckArea({
           {deck.legends.length > 0 ? (
             <div className="grid grid-cols-3 gap-2">
               {deck.legends.map((legend, idx) => (
-                <div
-                  key={idx}
-                  className="relative group cursor-pointer"
-                  onClick={() => onRemoveCard(legend, "legends")}
-                >
+                <div key={idx} className="relative group">
                   <SmartCardImage
                     card={legend}
                     className="w-full h-auto rounded"
                   />
 
-                  <div className="absolute inset-0 bg-term-red/60 rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="text-white font-bold text-lg font-mono">
-                      [REMOVE]
-                    </span>
-                  </div>
+                  <DeckCardActions
+                    card={legend}
+                    count={1}
+                    location="legends"
+                    onPreview={handlePreview}
+                    onRemove={onRemoveCard}
+                  />
                 </div>
               ))}
             </div>
@@ -142,47 +185,72 @@ export default function DeckArea({
 
         {/* RAM BUDGET */}
         <div className="p-3 bg-black/30 rounded border border-term-amber/20">
-          <div className="flex items-center gap-2 mb-2">
-            <h3 className="text-term-green/80 font-bold font-mono text-sm">
-              RAM BUDGET
-            </h3>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <h3 className="text-term-green/80 font-bold font-mono text-sm">
+                RAM BUDGET
+              </h3>
 
-            <Tooltip
-              title="RAM BUDGET"
-              content="Your 3 Legends determine which card colors you can play. Each Legend provides RAM of a specific color. Only cards matching your Legend colors are allowed in the Main Deck."
-              position="bottom"
+              <Tooltip
+                title="RAM BUDGET"
+                content="Your 3 Legends determine which card colors you can play. Each Legend provides RAM of a specific color. Only cards matching your Legend colors are allowed in the Main Deck."
+                position="bottom"
+              >
+                <span className="text-term-amber text-xs cursor-help hover:text-amber-300 transition-colors">
+                  ⓘ
+                </span>
+              </Tooltip>
+            </div>
+
+            {/* FREE BUILD MODE TOGGLE */}
+            <button
+              onClick={onToggleFreeBuild}
+              className={`text-xs font-mono font-bold px-2 py-1 rounded transition-colors ${
+                freeBuildMode
+                  ? "bg-term-amber text-term-black"
+                  : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/20"
+              }`}
+              title="Toggle RAM validation - build decks without Legend restrictions"
             >
-              <span className="text-term-amber text-xs cursor-help hover:text-amber-300 transition-colors">
-                ⓘ
-              </span>
-            </Tooltip>
+              {freeBuildMode ? "✓ FREE BUILD" : "FREE BUILD"}
+            </button>
           </div>
-          <div className="grid grid-cols-2 gap-2">
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-term-red"></span>
-              <span className="text-term-red font-mono text-sm">
-                RED: {ramBudget.Red}
-              </span>
+
+          {!freeBuildMode && (
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-term-red"></span>
+                <span className="text-term-red font-mono text-sm">
+                  RED: {ramBudget.Red}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-term-amber"></span>
+                <span className="text-term-amber font-mono text-sm">
+                  YELLOW: {ramBudget.Yellow}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-term-green"></span>
+                <span className="text-term-green font-mono text-sm">
+                  GREEN: {ramBudget.Green}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-term-blue"></span>
+                <span className="text-term-blue font-mono text-sm">
+                  BLUE: {ramBudget.Blue}
+                </span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-term-amber"></span>
-              <span className="text-term-amber font-mono text-sm">
-                YELLOW: {ramBudget.Yellow}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-term-green"></span>
-              <span className="text-term-green font-mono text-sm">
-                GREEN: {ramBudget.Green}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-term-blue"></span>
-              <span className="text-term-blue font-mono text-sm">
-                BLUE: {ramBudget.Blue}
-              </span>
-            </div>
-          </div>
+          )}
+
+          {freeBuildMode && (
+            <p className="text-term-amber/60 text-xs font-mono italic mt-2">
+              RAM validation disabled. You can add any cards regardless of
+              Legend colors.
+            </p>
+          )}
         </div>
 
         {/* MAIN DECK SECTION */}
@@ -227,27 +295,27 @@ export default function DeckArea({
                 const uniqueCards = Object.values(cardCounts);
 
                 return uniqueCards.map(({ card, count }) => (
-                  <div
-                    key={card.id}
-                    className="relative group cursor-pointer"
-                    onClick={() => onRemoveCard(card, "mainDeck")}
-                  >
+                  <div key={card.id} className="relative group">
                     <SmartCardImage
                       card={card}
                       className="w-full h-auto rounded"
                     />
 
                     {count > 1 && (
-                      <div className="absolute bottom-1 right-1 bg-term-amber text-term-black font-mono font-bold text-xs px-1.5 py-0.5 rounded">
+                      <div className="absolute bottom-1 right-1 bg-term-amber text-term-black font-mono font-bold text-xs px-1.5 py-0.5 rounded z-10">
                         x{count}
                       </div>
                     )}
 
-                    <div className="absolute inset-0 bg-term-red/60 rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <span className="text-white font-bold text-lg font-mono">
-                        [REMOVE]
-                      </span>
-                    </div>
+                    <DeckCardActions
+                      card={card}
+                      count={count}
+                      location="mainDeck"
+                      onPreview={handlePreview}
+                      onRemove={onRemoveCard}
+                      onMoveToSideboard={handleMoveToSideboard}
+                      onEditQuantity={handleEditQuantity}
+                    />
                   </div>
                 ));
               })()}
@@ -299,27 +367,27 @@ export default function DeckArea({
                 const uniqueCards = Object.values(cardCounts);
 
                 return uniqueCards.map(({ card, count }) => (
-                  <div
-                    key={card.id}
-                    className="relative group cursor-pointer"
-                    onClick={() => onRemoveCard(card, "sideboard")}
-                  >
+                  <div key={card.id} className="relative group">
                     <SmartCardImage
                       card={card}
                       className="w-full h-auto rounded"
                     />
 
                     {count > 1 && (
-                      <div className="absolute bottom-1 right-1 bg-term-blue text-white font-mono font-bold text-xs px-1.5 py-0.5 rounded">
+                      <div className="absolute bottom-1 right-1 bg-term-blue text-white font-mono font-bold text-xs px-1.5 py-0.5 rounded z-10">
                         x{count}
                       </div>
                     )}
 
-                    <div className="absolute inset-0 bg-term-red/60 rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <span className="text-white font-bold text-lg font-mono">
-                        [REMOVE]
-                      </span>
-                    </div>
+                    <DeckCardActions
+                      card={card}
+                      count={count}
+                      location="sideboard"
+                      onPreview={handlePreview}
+                      onRemove={onRemoveCard}
+                      onMoveToMainDeck={handleMoveToMainDeck}
+                      onEditQuantity={handleEditQuantity}
+                    />
                   </div>
                 ));
               })()}
@@ -330,37 +398,37 @@ export default function DeckArea({
                 No sideboard cards
               </p>
               <p className="text-term-blue/40 text-xs font-mono">
-                Sideboard is optional for competitive play
+                Add cards here for post-game 1 adjustments
               </p>
             </div>
           )}
         </div>
       </div>
-      {/* END SCROLLABLE CONTENT */}
 
-      {/* SHARE BUTTON - OUTSIDE SCROLL */}
-      <button
-        onClick={onShareDeck}
-        disabled={deck.mainDeck.length === 0}
-        className="w-full mt-4 bg-term-blue/20 border-2 border-term-blue/40 text-term-blue py-2 px-4 rounded font-mono font-bold text-sm hover:bg-term-blue/30 hover:border-term-blue transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-      >
-        [🔗 SHARE DECK]
-      </button>
+      {/* ACTION BUTTONS */}
+      <div className="mt-4 flex flex-col gap-2">
+        <button
+          onClick={onShareDeck}
+          disabled={deck.legends.length === 0 && deck.mainDeck.length === 0}
+          className="w-full bg-term-green/20 hover:bg-term-green/40 text-term-green border border-term-green/40 rounded py-2 font-mono font-bold transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          [SHARE DECK]
+        </button>
 
-      {/* SHOW ANALYTICS TOGGLE */}
-      {deck.mainDeck.length > 0 && (
         <button
           onClick={onToggleAnalytics}
-          className="w-full mt-2 bg-term-amber/20 border-2 border-term-amber text-term-amber py-2 px-4 rounded font-mono font-bold text-sm hover:bg-term-amber/30 transition-all"
+          disabled={deck.mainDeck.length === 0}
+          className="w-full bg-term-amber/20 hover:bg-term-amber/40 text-term-amber border border-term-amber/40 rounded py-2 font-mono font-bold transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         >
-          [{showAnalytics ? "HIDE" : "SHOW"} ANALYTICS ▼]
+          {showAnalytics ? "[HIDE ANALYTICS]" : "[SHOW ANALYTICS]"}
         </button>
-      )}
+      </div>
 
-      {deck.legends.length > 0 && (
+      {/* GENERATE PROXIES BUTTON */}
+      {deck.mainDeck.length > 0 && (
         <button
           onClick={onGenerateProxies}
-          className="w-full py-2 bg-term-amber/20 text-term-amber border border-term-amber rounded font-mono hover:bg-term-amber/30 transition-colors mt-2"
+          className="w-full mt-2 bg-term-blue/20 hover:bg-term-blue/40 text-term-blue border border-term-blue/40 rounded py-2 font-mono font-bold transition-colors"
         >
           [GENERATE PROXIES]
         </button>
@@ -373,7 +441,7 @@ export default function DeckArea({
         onAddCard={(card) => onAddToDeck(card, 1)}
       />
 
-      {/* DECK ANALYTICS - NUEVO */}
+      {/* DECK ANALYTICS */}
       {showAnalytics && deck.mainDeck.length > 0 && (
         <div className="mt-4">
           <DeckAnalytics deck={deck} />
@@ -385,6 +453,17 @@ export default function DeckArea({
         <LegalityInfoModal
           onClose={() => setShowLegalityModal(false)}
           allCards={allCards}
+        />
+      )}
+
+      {/* CARD PREVIEW MODAL */}
+      {previewCard && (
+        <CardPreviewModal
+          card={previewCard}
+          onClose={() => setPreviewCard(null)}
+          onAddToDeck={onAddToDeck}
+          onAddToSideboard={onAddToSideboard}
+          isLoggedIn={false}
         />
       )}
     </div>
