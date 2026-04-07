@@ -642,7 +642,7 @@ export default function PackOpener({ allCards }) {
                   onClick={() => setRevealedCards(currentPack.map((_, i) => i))}
                   className="w-full bg-term-amber text-term-black py-2 px-4 rounded font-mono font-bold hover:bg-yellow-400 transition-colors"
                 >
-                  [👁️ REVEAL ALL ({currentPack.length - revealedCards.length}{" "}
+                  [REVEAL ALL ({currentPack.length - revealedCards.length}{" "}
                   LEFT)]
                 </button>
               </div>
@@ -678,13 +678,13 @@ export default function PackOpener({ allCards }) {
                     }}
                     className="bg-term-amber text-term-black py-3 px-6 rounded font-mono font-bold hover:bg-yellow-400 transition-colors"
                   >
-                    [📦 OPEN ANOTHER]
+                    [OPEN ANOTHER]
                   </button>
                   <button
                     onClick={() => setShowPackAnimation(false)}
                     className="bg-term-green text-term-black py-3 px-6 rounded font-mono font-bold hover:bg-green-400 transition-colors"
                   >
-                    [✅ CLOSE]
+                    [CLOSE]
                   </button>
                 </>
               )}

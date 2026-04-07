@@ -371,7 +371,7 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
               onClick={onClose}
               className="bg-term-green text-term-black py-3 px-6 rounded font-mono font-bold hover:bg-green-400 transition-colors"
             >
-              [✅ KEEP HAND]
+              [KEEP HAND]
             </button>
             <button
               onClick={handleMulligan}
@@ -386,7 +386,7 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
                 ? "[MULLIGAN USED]"
                 : isAnimating
                   ? "[SHUFFLING...]"
-                  : "[🔄 MULLIGAN (1 LEFT)]"}
+                  : "[MULLIGAN (1 LEFT)]"}
             </button>
           </div>
 

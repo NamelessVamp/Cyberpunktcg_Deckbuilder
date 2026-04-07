@@ -1627,9 +1627,9 @@ function App() {
                 CREDITS & LEGAL
               </h4>
               <div className="text-term-amber/60 text-xs font-mono space-y-1">
-                <div>Built by // NAMELESS_V4MP</div>
+                <div>Built by // V4MP</div>
                 <div className="text-term-red/60 text-xs">
-                  ⚠️ Unofficial fan project
+                  Unofficial fan project
                 </div>
                 <div className="text-term-red/60 text-xs">
                   Not affiliated with CDPR or WeirdCo

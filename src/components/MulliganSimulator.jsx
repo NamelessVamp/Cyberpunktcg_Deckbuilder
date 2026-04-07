@@ -93,7 +93,7 @@ export default function MulliganSimulator({ deck, allCards }) {
 
           {/* Info Panel */}
           <div className="bg-term-black/50 border border-term-amber/30 rounded p-3 text-xs font-mono">
-            <div className="text-term-amber mb-2">📋 MULLIGAN RULES</div>
+            <div className="text-term-amber mb-2">MULLIGAN RULES</div>
             <div className="text-term-green/70 space-y-1">
               <div>• Initial hand: 6 cards</div>
               <div>• Mulligan: All or nothing</div>

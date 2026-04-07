@@ -241,7 +241,7 @@ function LandingPage({ user, collection, allCards, savedDecks, onNavigate }) {
       {!user && (
         <div className="mt-12 bg-term-amber/10 border-2 border-term-amber/40 p-6 rounded-lg text-center">
           <h3 className="text-term-amber font-mono font-bold text-xl mb-3">
-            ⚡ NEW TO AFTERLIFE DECKS?
+            NEW TO AFTERLIFE DECKS?
           </h3>
           <p className="text-term-green font-mono text-sm mb-4">
             Login with Discord to save your decks to the cloud, track your
