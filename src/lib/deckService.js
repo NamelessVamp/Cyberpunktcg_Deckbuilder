@@ -63,7 +63,7 @@ export const saveDeck = async (userId, deckName, deck, notes = "") => {
 export const loadDecks = async (userId) => {
   const { data, error } = await supabase
     .from("decks")
-    .select("*")
+    .select("*, deck_votes(vote_type)")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
 

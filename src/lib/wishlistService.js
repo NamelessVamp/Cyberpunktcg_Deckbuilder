@@ -114,9 +114,9 @@ export const isInWishlist = async (cardId) => {
     .select("id")
     .eq("user_id", user.id)
     .eq("card_id", cardId)
-    .single();
+    .maybeSingle();
 
-  if (error && error.code !== "PGRST116") throw error; // PGRST116 = not found
+  if (error) throw error;
   return !!data;
 };
 

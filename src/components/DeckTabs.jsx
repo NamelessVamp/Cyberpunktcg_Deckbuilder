@@ -7,6 +7,7 @@ export default function DeckTabs({ activeTab, onTabChange }) {
     { id: "home", label: "HOME", icon: "🏠" },
     { id: "build", label: "BUILD", icon: "🔨" },
     { id: "collection", label: "COLLECTION", icon: "💎" },
+    { id: "blackmarket", label: "BLACK MARKET", icon: "▓" },
     { id: "mydecks", label: "MY DECKS", icon: "📚" },
     { id: "precon", label: "PRECON", icon: "📦" },
     { id: "practice", label: "PRACTICE", icon: "🎯" },

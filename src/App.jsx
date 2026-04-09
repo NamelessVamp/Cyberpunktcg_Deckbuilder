@@ -34,6 +34,9 @@ import AdminFeedbackViewer from "./components/AdminFeedbackViewer";
 import { useIsAdmin } from "./hooks/useIsAdmin";
 import SimulatorBeta from "./components/SimulatorBeta";
 import { useFeatureFlag } from "./hooks/useFeatureFlag";
+import BlackMarketView from "./components/BlackMarketView";
+import PublicDeckView from "./components/PublicDeckView";
+import * as communityService from "./lib/communityService";
 
 const isNewCard = (card, days = 7) => {
   if (!card.date_added) return false;
@@ -123,6 +126,7 @@ function App() {
   const [confirmModal, setConfirmModal] = useState(null);
   const cardsPerPage = 18;
   const [previewCard, setPreviewCard] = useState(null);
+  const [publicDeckId, setPublicDeckId] = useState(null);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
@@ -459,6 +463,46 @@ function App() {
           "success",
         );
       }
+    }
+  };
+
+  const handlePublishDeck = async (deckId) => {
+    if (!user) {
+      showToast("Login required to publish", "warning");
+      return;
+    }
+
+    const description = prompt("Add a strategy description (optional):");
+    if (description === null) return;
+    try {
+      await communityService.publishDeck(deckId, description || "");
+      setSavedDecks((prev) =>
+        prev.map((d) =>
+          d.id === deckId
+            ? { ...d, deck: { ...d.deck, visibility: "public" } }
+            : d,
+        ),
+      );
+      showToast("Deck published to the Black Market ▓", "success");
+    } catch (err) {
+      console.error("Publish error:", err);
+      showToast("Error publishing deck", "error");
+    }
+  };
+  const handleUnpublishDeck = async (deckId) => {
+    try {
+      await communityService.unpublishDeck(deckId);
+      setSavedDecks((prev) =>
+        prev.map((d) =>
+          d.id === deckId
+            ? { ...d, deck: { ...d.deck, visibility: "private" } }
+            : d,
+        ),
+      );
+      showToast("Deck removed from Black Market", "success");
+    } catch (err) {
+      console.error("Unpublish error:", err);
+      showToast("Error unpublishing deck", "error");
     }
   };
 
@@ -919,9 +963,8 @@ function App() {
       showToast("Login required to use wishlist", "warning");
       return;
     }
-    const { addToWishlist, removeFromWishlist } = await import(
-      "./lib/wishlistService"
-    );
+    const { addToWishlist, removeFromWishlist } =
+      await import("./lib/wishlistService");
     const isIn = wishlistIds.has(cardId);
     try {
       if (isIn) {
@@ -1253,11 +1296,13 @@ function App() {
                                 e.stopPropagation();
                                 handleToggleWishlist(card.id);
                               }}
-                              className={`absolute bottom-2 right-2 text-base leading-none transition-all select-none ${
-                                wishlistIds.has(card.id)
-                                  ? "opacity-100 text-term-amber drop-shadow-[0_0_6px_#ffb300]"
-                                  : "opacity-0 group-hover:opacity-60 text-term-amber"
-                              }`}
+                              className={`absolute bottom-2 right-2 text-xl leading-none transition-all select-none
+  rounded px-1 py-0.5
+  ${
+    wishlistIds.has(card.id)
+      ? "opacity-100 text-term-amber drop-shadow-[0_0_8px_#ffb300] bg-black/50"
+      : "opacity-0 group-hover:opacity-100 text-term-amber bg-black/40"
+  }`}
                               title={
                                 wishlistIds.has(card.id)
                                   ? "Quitar de wishlist"
@@ -1297,7 +1342,9 @@ function App() {
                         </div>
 
                         <div className="flex items-center gap-2 text-xs font-mono">
-                          <span className="text-term-amber/80">{card.type}</span>
+                          <span className="text-term-amber/80">
+                            {card.type}
+                          </span>
                           {card.faction && (
                             <>
                               <span className="text-term-amber/40">//</span>
@@ -1450,6 +1497,8 @@ function App() {
                 onRenameDeck={handleRenameDeck}
                 onExportAll={handleExportAllDecks}
                 onImportAll={handleImportAllDecks}
+                onPublishDeck={user ? handlePublishDeck : null}
+                onUnpublishDeck={user ? handleUnpublishDeck : null}
               />
             </div>
           )}
@@ -1482,6 +1531,19 @@ function App() {
                 wishlistIds={wishlistIds}
                 onToggleWishlist={user ? handleToggleWishlist : null}
                 isLoggedIn={!!user}
+              />
+            </div>
+          )}
+
+          {activeTab === "blackmarket" && (
+            <div key="blackmarket-tab">
+              <BlackMarketView
+                allCards={cards}
+                onLoadDeck={(clonedDeck) => {
+                  setSavedDecks((prev) => [clonedDeck, ...prev]);
+                }}
+                onShowToast={showToast}
+                onViewPublicDeck={(deck) => setPublicDeckId(deck.id)}
               />
             </div>
           )}
@@ -1571,6 +1633,19 @@ function App() {
                   return next;
                 });
               }}
+            />
+          )}
+
+          {publicDeckId && (
+            <PublicDeckView
+              deckId={publicDeckId}
+              allCards={cards}
+              onClose={() => setPublicDeckId(null)}
+              onCloneSuccess={(clonedDeck) => {
+                setSavedDecks((prev) => [clonedDeck, ...prev]);
+                showToast(`Deck cloned to your terminal ✓`, "success");
+              }}
+              onShowToast={showToast}
             />
           )}
 

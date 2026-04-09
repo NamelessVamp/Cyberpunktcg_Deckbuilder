@@ -8,6 +8,8 @@ export default function MyDecksView({
   onRenameDeck,
   onExportAll,
   onImportAll,
+  onPublishDeck,
+  onUnpublishDeck,
 }) {
   if (savedDecks.length === 0) {
     return (
@@ -171,6 +173,26 @@ export default function MyDecksView({
                     [DEL]
                   </button>
                 </div>
+
+                {/* Third Row: PUBLISH */}
+                {onPublishDeck && (
+                  <button
+                    onClick={() =>
+                      savedDeck.deck.visibility === "public"
+                        ? onUnpublishDeck(savedDeck.id)
+                        : onPublishDeck(savedDeck.id)
+                    }
+                    className={`w-full py-2 font-mono font-bold text-xs rounded transition-colors ${
+                      savedDeck.deck.visibility === "public"
+                        ? "bg-term-amber/20 border border-term-amber text-term-amber hover:bg-term-amber/30"
+                        : "bg-term-red/20 border border-term-red/40 text-term-red/70 hover:bg-term-red/10"
+                    }`}
+                  >
+                    {savedDeck.deck.visibility === "public"
+                      ? "[▓ PUBLIC — CLICK TO UNPUBLISH]"
+                      : "[↑ PUBLISH TO BLACK MARKET]"}
+                  </button>
+                )}
               </div>
             </div>
           );

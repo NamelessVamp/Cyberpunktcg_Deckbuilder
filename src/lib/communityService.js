@@ -22,7 +22,7 @@ export const getPublicDecks = async (options = {}) => {
     .select(
       `
       *,
-      profiles!decks_user_id_fkey(discord_username, discord_avatar),
+      profiles!decks_user_id_profiles_fkey(discord_username, discord_avatar),
       deck_votes(vote_type)
     `,
     )
@@ -54,13 +54,13 @@ export const getPublicDeck = async (deckId, incrementViews = true) => {
     .select(
       `
       *,
-      profiles!decks_user_id_fkey(discord_username, discord_avatar),
+     profiles!decks_user_id_profiles_fkey(discord_username, discord_avatar), 
       deck_votes(vote_type, user_id),
       deck_comments(
         id,
         comment_text,
         created_at,
-        profiles!deck_comments_user_id_fkey(discord_username, discord_avatar)
+        profiles!deck_comments_user_id_profiles_fkey(discord_username, discord_avatar)
       )
     `,
     )
@@ -134,7 +134,7 @@ export const voteDeck = async (deckId, voteType) => {
     .select("*")
     .eq("deck_id", deckId)
     .eq("user_id", user.id)
-    .single();
+    .maybeSingle();
 
   if (existingVote) {
     // Update existing vote
@@ -202,7 +202,7 @@ export const addComment = async (deckId, commentText) => {
     .select(
       `
       *,
-      profiles!deck_comments_user_id_fkey(discord_username, discord_avatar)
+      profiles!deck_comments_user_id_profiles_fkey(discord_username, discord_avatar)
     `,
     )
     .single();
@@ -232,8 +232,8 @@ export const getUserVote = async (deckId, userId) => {
     .select("vote_type")
     .eq("deck_id", deckId)
     .eq("user_id", userId)
-    .single();
+    .maybeSingle();
 
-  if (error && error.code !== "PGRST116") throw error; // Ignore "not found" error
+  if (error) throw error;
   return data?.vote_type || null;
 };
