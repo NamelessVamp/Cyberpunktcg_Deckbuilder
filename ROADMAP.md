@@ -82,6 +82,13 @@
 2. **PRÓXIMA SEMANA:** Wishlist UI | Enhanced Filters (Number + Artist)
 3. **SEMANA 3:** Black Market Hub UI | Scraper Updates
 
+## IDEAS EMERGENTES.
+
+Hola Claude, si escaneas esto es por que aqui hay ideas que tal vez aun no te e dicho pero no se como aterrizarlas bien. o simplemente cosas que se me oucrrieron, si leiste esto porfavor en el chat respondeme, vi tu idea emergente y dime tu opinion y que tan util peude ser.
+
+- Escaner de tarjetas como el de Pokemon o donde tu pones tu tarjeta en la camara y el programa lo reconoce y la guarda en tu coleccion de cartas obtenidas.
+- Implementar PWA En el proyecto de Vite, instala vite-plugin-pwa. Esto te tomará 15 minutos y permitirá que los usuarios "instalen" tu simulador/deckbuilder en sus celulares Android y iOS.
+
 ---
 
 ## 📝 CHANGELOG

@@ -50,7 +50,7 @@ const encodeDeck = (deck) => {
     const deckData = {
       legends: deck.legends.map((c) => c.id),
       mainDeck: deck.mainDeck.map((c) => c.id),
-      sideboard: deck.sideboard.map((c) => c.id), // ← NUEVO
+      sideboard: deck.sideboard.map((c) => c.id),
     };
     const jsonString = JSON.stringify(deckData);
     return btoa(jsonString);
@@ -73,11 +73,11 @@ const decodeDeck = (encodedString, allCards) => {
       .map((id) => allCards.find((c) => c.id === id))
       .filter(Boolean);
 
-    const sideboard = (deckData.sideboard || []) // ← NUEVO
+    const sideboard = (deckData.sideboard || [])
       .map((id) => allCards.find((c) => c.id === id))
       .filter(Boolean);
 
-    return { legends, mainDeck, sideboard }; // ← AGREGAR sideboard
+    return { legends, mainDeck, sideboard };
   } catch (error) {
     console.error("Error decoding deck:", error);
     return null;
@@ -110,7 +110,7 @@ function App() {
   const [deck, setDeck] = useState({
     legends: [],
     mainDeck: [],
-    sideboard: [], // ← NUEVO
+    sideboard: [],
   });
 
   const [activeTab, setActiveTab] = useState("build");
@@ -133,7 +133,10 @@ function App() {
   const [showProxyModal, setShowProxyModal] = useState(false);
   const [collection, setCollection] = useState([]);
   const [showOwnedOnly, setShowOwnedOnly] = useState(false);
-  const [showAnalytics, setShowAnalytics] = useState(false); // ← RESTAURADO
+  // ─── WISHLIST STATE ───────────────────────────────────────────────────────────
+  const [wishlistIds, setWishlistIds] = useState(new Set());
+  // ─────────────────────────────────────────────────────────────────────────────
+  const [showAnalytics, setShowAnalytics] = useState(false);
   const { isAdmin, loading: adminLoading } = useIsAdmin();
   const [showAdminFeedback, setShowAdminFeedback] = useState(false);
   const [freeBuildMode, setFreeBuildMode] = useState(true);
@@ -179,7 +182,6 @@ function App() {
       try {
         const supabaseDecks = await deckService.loadDecks(user.id);
 
-        // Convert to app format
         const appDecks = supabaseDecks.map((sd) => ({
           id: sd.id,
           name: sd.name,
@@ -220,26 +222,36 @@ function App() {
     loadUserCollection();
   }, [user]);
 
-  // Route to HOME for first-time users
+  // ─── LOAD WISHLIST IDS ────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!user) {
+      setWishlistIds(new Set());
+      return;
+    }
+    import("./lib/wishlistService").then(({ getWishlist }) => {
+      getWishlist("created_at", false)
+        .then((items) => setWishlistIds(new Set(items.map((i) => i.card_id))))
+        .catch(() => setWishlistIds(new Set()));
+    });
+  }, [user]);
+  // ─────────────────────────────────────────────────────────────────────────────
 
+  // Route to HOME for first-time users
   useEffect(() => {
     const hasVisited = localStorage.getItem("afterlife_hasVisited");
 
     if (!hasVisited) {
-      // Primera vez → HOME
       setActiveTab("home");
       localStorage.setItem("afterlife_hasVisited", "true");
     } else if (!activeTab) {
-      // Returning user → BUILD (solo si activeTab está vacío)
       setActiveTab("build");
     }
-  }, []); // ← EMPTY DEPENDENCY ARRAY (solo ejecuta al montar)
+  }, []);
 
   // Check for local decks migration on first login
   useEffect(() => {
     if (!user || cards.length === 0) return;
 
-    // Check if user has local decks
     if (migrationHelper.hasLocalDecks()) {
       const localDecksJSON = localStorage.getItem("cyberpunk_decks");
       const localDecks = JSON.parse(localDecksJSON);
@@ -247,6 +259,7 @@ function App() {
       setShowMigrationModal(true);
     }
   }, [user, cards]);
+
   // KEYBOARD SHORTCUTS
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -285,7 +298,7 @@ function App() {
         e.preventDefault();
         setShowFeedbackModal(true);
       }
-      // Admin Panel: Ctrl+Shift+F (solo para admins)
+
       if (e.ctrlKey && e.shiftKey && e.key === "F") {
         e.preventDefault();
         if (isAdmin) {
@@ -304,7 +317,7 @@ function App() {
     previewCard,
     filtersOpen,
     confirmModal,
-    showFeedbackModal, // ← AGREGAR
+    showFeedbackModal,
   ]);
 
   const filteredCards = cards.filter((card) => {
@@ -355,14 +368,13 @@ function App() {
     if (filters.ramColors && filters.ramColors.length > 0) {
       if (!filters.ramColors.includes(card.ram_color)) return false;
     }
-    // Filter by owned cards
+
     if (showOwnedOnly && user) {
       if (!collectionService.ownsCard(collection, card.id)) {
         return false;
       }
     }
 
-    // ⚡ NUEVO: Filtro "Solo Nuevas"
     if (filters.showOnlyNew && !isNewCard(card)) {
       return false;
     }
@@ -451,13 +463,11 @@ function App() {
   };
 
   const handleAddToSideboard = (card, quantity = 1) => {
-    // Check if sideboard is full
     if (deck.sideboard.length >= 15) {
       showToast("Sideboard is full (max 15 cards)", "warning");
       return;
     }
 
-    // Check max 3 copies
     const currentCount = deck.sideboard.filter(
       (c) => c.name === card.name,
     ).length;
@@ -476,7 +486,6 @@ function App() {
       return;
     }
 
-    // Add to sideboard
     setDeck((prev) => {
       const newSideboard = [...prev.sideboard];
       for (let i = 0; i < canAdd; i++) {
@@ -495,7 +504,6 @@ function App() {
         legends: prev.legends.filter((c) => c.id !== card.id),
       }));
     } else if (from === "sideboard") {
-      // ← NUEVO
       setDeck((prev) => {
         const index = prev.sideboard.findIndex((c) => c.id === card.id);
         const newSideboard = [...prev.sideboard];
@@ -519,7 +527,6 @@ function App() {
       sideboard: [],
     });
 
-    // Resetear filtros
     setFilters({
       types: [],
       factions: [],
@@ -534,12 +541,10 @@ function App() {
       set: "",
     });
 
-    // Cerrar panel de filtros
     setFiltersOpen(false);
   };
 
   const handleSaveDeck = async (deckName, deckNotes = "") => {
-    // If user is logged in, save to Supabase
     if (user) {
       try {
         const savedDeck = await deckService.saveDeck(
@@ -566,7 +571,6 @@ function App() {
         showToast("Error saving deck to cloud", "error");
       }
     } else {
-      // Offline mode: save to localStorage
       const newDeck = {
         id: Date.now().toString(),
         name: deckName,
@@ -602,11 +606,9 @@ function App() {
       onConfirm: async () => {
         try {
           if (user) {
-            // Delete from Supabase
             await deckService.deleteDeck(deckId);
           }
 
-          // Update local state
           const updated = savedDecks.filter((d) => d.id !== deckId);
           setSavedDecks(updated);
 
@@ -625,6 +627,7 @@ function App() {
       onCancel: () => setConfirmModal(null),
     });
   };
+
   const handleShareDeck = () => {
     if (deck.mainDeck.length === 0) {
       showToast("Deck is empty", "warning");
@@ -754,7 +757,6 @@ function App() {
         showToast("Error duplicating deck", "error");
       }
     } else {
-      // Offline mode
       const duplicatedDeck = {
         id: Date.now().toString(),
         name: `${deckToDuplicate.name} (Copy)`,
@@ -816,7 +818,6 @@ function App() {
         showToast("Error renaming deck", "error");
       }
     } else {
-      // Offline mode
       const updated = savedDecks.map((d) =>
         d.id === deckId
           ? { ...d, name: newName.trim(), updatedAt: new Date().toISOString() }
@@ -842,7 +843,6 @@ function App() {
       );
 
       if (results.migrated > 0) {
-        // Reload decks from Supabase
         const supabaseDecks = await deckService.loadDecks(user.id);
         const appDecks = supabaseDecks.map((sd) => ({
           id: sd.id,
@@ -881,7 +881,6 @@ function App() {
     try {
       await collectionService.addToCollection(user.id, cardId, quantity, false);
 
-      // Reload collection
       const updated = await collectionService.loadCollection(user.id);
       setCollection(updated);
 
@@ -904,7 +903,6 @@ function App() {
         false,
       );
 
-      // Reload collection
       const updated = await collectionService.loadCollection(user.id);
       setCollection(updated);
 
@@ -914,6 +912,37 @@ function App() {
       showToast("Error updating collection", "error");
     }
   };
+
+  // ─── WISHLIST TOGGLE ──────────────────────────────────────────────────────────
+  const handleToggleWishlist = async (cardId) => {
+    if (!user) {
+      showToast("Login required to use wishlist", "warning");
+      return;
+    }
+    const { addToWishlist, removeFromWishlist } = await import(
+      "./lib/wishlistService"
+    );
+    const isIn = wishlistIds.has(cardId);
+    try {
+      if (isIn) {
+        await removeFromWishlist(cardId);
+        setWishlistIds((prev) => {
+          const next = new Set(prev);
+          next.delete(cardId);
+          return next;
+        });
+        showToast("Removed from wishlist", "success");
+      } else {
+        await addToWishlist(cardId, 1, "medium", "");
+        setWishlistIds((prev) => new Set([...prev, cardId]));
+        showToast("Added to wishlist ★", "success");
+      }
+    } catch (err) {
+      console.error("Wishlist error:", err);
+      showToast("Error updating wishlist", "error");
+    }
+  };
+  // ─────────────────────────────────────────────────────────────────────────────
 
   const handleSkipMigration = () => {
     setShowMigrationModal(false);
@@ -937,11 +966,11 @@ function App() {
       if (result.success) {
         showToast("Feedback sent successfully! Thanks, Netrunner", "success");
         setIsSubmittingFeedback(false);
-        return true; // ← RETURN TRUE FOR SUCCESS
+        return true;
       } else {
         showToast(`Error: ${result.error}`, "error");
         setIsSubmittingFeedback(false);
-        return false; // ← RETURN FALSE FOR ERROR
+        return false;
       }
     } catch (error) {
       console.error("Feedback submission error:", error);
@@ -955,14 +984,12 @@ function App() {
     const legends = [];
     const mainDeck = [];
 
-    // LEGENDS BY ID
     preconDeck.legends.forEach((legendData) => {
       const card = cards.find((c) => c.id === legendData.id);
       if (card) legends.push(card);
       else console.warn(`Legend not found: ${legendData.id}`);
     });
 
-    // MAIN DECK BY NAME (mantener compatibilidad)
     Object.entries(preconDeck.mainDeck).forEach(([cardName, count]) => {
       const card = cards.find((c) => {
         const nameLower = c.name.toLowerCase();
@@ -1004,7 +1031,7 @@ function App() {
       set: "",
     });
 
-    setFiltersOpen(false); // ← Cerrar filtros
+    setFiltersOpen(false);
     setActiveTab("build");
 
     showToast(
@@ -1012,6 +1039,7 @@ function App() {
       "success",
     );
   };
+
   const showToast = (message, type = "success") => {
     setToast({ message, type });
   };
@@ -1036,12 +1064,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-term-black text-term-green relative">
-      {/* Skip to main content link (WCAG 2.4.1) */}
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
 
-      {/* Background Grid Pattern - RESTAURADO */}
+      {/* Background Grid */}
       <div className="fixed inset-0 pointer-events-none opacity-10">
         <div
           className="absolute inset-0"
@@ -1059,7 +1086,6 @@ function App() {
         {/* Header */}
         <header className="mb-8 border-b border-term-amber/20 pb-4">
           <div className="flex items-center justify-between gap-4">
-            {/* LEFT: Title + Stats */}
             <div className="flex-1">
               <div>
                 <h1 className="text-4xl font-bold text-term-amber mb-2 font-mono">
@@ -1090,12 +1116,9 @@ function App() {
               </div>
             </div>
 
-            {/* RIGHT: Language Switcher + User Menu */}
             <div className="flex items-center gap-4">
-              {/* User Profile / Login */}
               {user ? (
                 <div className="flex items-center gap-4">
-                  {/* Discord Avatar */}
                   {user.discord_avatar && (
                     <img
                       src={user.discord_avatar}
@@ -1132,12 +1155,10 @@ function App() {
           </div>
         </header>
 
-        {/* Main content area */}
         <main id="main-content" role="main">
-          {/* TABS */}
           <DeckTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-          {/* HOME TAB - LANDING PAGE */}
+          {/* HOME */}
           {activeTab === "home" && (
             <div key="home-tab">
               <LandingPage
@@ -1150,11 +1171,11 @@ function App() {
             </div>
           )}
 
-          {/* CONTENT BY TAB */}
+          {/* BUILD */}
           {activeTab === "build" && (
             <div key="build-tab">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* LEFT COLUMN: CARD BROWSER (2/3) */}
+                {/* LEFT: Card Browser */}
                 <div className="lg:col-span-2">
                   <SearchBar
                     onSearch={setSearchTerm}
@@ -1182,7 +1203,6 @@ function App() {
                         className="deck-card-container hover:border-term-green transition-all duration-300 cursor-pointer group"
                         onClick={() => setPreviewCard(card)}
                       >
-                        {/* IMAGE CONTAINER WITH BADGES */}
                         <div className="relative overflow-hidden rounded mb-3 bg-term-gray-light">
                           <SmartCardImage
                             card={card}
@@ -1225,9 +1245,31 @@ function App() {
                               }`}
                             ></div>
                           )}
+
+                          {/* ─── WISHLIST STAR en Build Grid ─────────────────── */}
+                          {user && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleToggleWishlist(card.id);
+                              }}
+                              className={`absolute bottom-2 right-2 text-base leading-none transition-all select-none ${
+                                wishlistIds.has(card.id)
+                                  ? "opacity-100 text-term-amber drop-shadow-[0_0_6px_#ffb300]"
+                                  : "opacity-0 group-hover:opacity-60 text-term-amber"
+                              }`}
+                              title={
+                                wishlistIds.has(card.id)
+                                  ? "Quitar de wishlist"
+                                  : "Agregar a wishlist"
+                              }
+                            >
+                              {wishlistIds.has(card.id) ? "★" : "☆"}
+                            </button>
+                          )}
+                          {/* ──────────────────────────────────────────────────── */}
                         </div>
 
-                        {/* CARD INFO */}
                         <h3 className="text-term-green font-bold font-mono text-lg">
                           {card.name}
                         </h3>
@@ -1255,9 +1297,7 @@ function App() {
                         </div>
 
                         <div className="flex items-center gap-2 text-xs font-mono">
-                          <span className="text-term-amber/80">
-                            {card.type}
-                          </span>
+                          <span className="text-term-amber/80">{card.type}</span>
                           {card.faction && (
                             <>
                               <span className="text-term-amber/40">//</span>
@@ -1290,7 +1330,7 @@ function App() {
                     ))}
                   </div>
 
-                  {/* PAGINATION */}
+                  {/* Pagination */}
                   {totalPages > 1 && (
                     <div className="mt-6 flex items-center justify-center gap-4">
                       <button
@@ -1332,7 +1372,7 @@ function App() {
                   )}
                 </div>
 
-                {/* RIGHT COLUMN: DECK + ANALYTICS (1/3) */}
+                {/* RIGHT: Deck Area */}
                 <div className="lg:col-span-1">
                   <div className="lg:sticky lg:top-8 space-y-6">
                     <DeckArea
@@ -1364,7 +1404,6 @@ function App() {
                       />
                     )}
 
-                    {/* SAVE + IMPORT + EXPORT BUTTONS */}
                     <div className="grid grid-cols-3 gap-2">
                       <button
                         onClick={() => setShowSaveModal(true)}
@@ -1431,6 +1470,7 @@ function App() {
             </div>
           )}
 
+          {/* ─── COLLECTION TAB — now with wishlist props ─── */}
           {activeTab === "collection" && (
             <div key="collection-tab">
               <CollectionView
@@ -1439,6 +1479,9 @@ function App() {
                 onAddToCollection={handleAddToCollection}
                 onRemoveFromCollection={handleRemoveFromCollection}
                 onViewCard={(card) => setPreviewCard(card)}
+                wishlistIds={wishlistIds}
+                onToggleWishlist={user ? handleToggleWishlist : null}
+                isLoggedIn={!!user}
               />
             </div>
           )}
@@ -1490,6 +1533,7 @@ function App() {
             />
           )}
 
+          {/* ─── CARD PREVIEW MODAL — con wishlist callback ─── */}
           {previewCard && (
             <CardPreviewModal
               card={previewCard}
@@ -1519,6 +1563,13 @@ function App() {
                 ) {
                   setPreviewCard(filteredCards[currentIdx + 1]);
                 }
+              }}
+              onWishlistChange={(cardId, added) => {
+                setWishlistIds((prev) => {
+                  const next = new Set(prev);
+                  added ? next.add(cardId) : next.delete(cardId);
+                  return next;
+                });
               }}
             />
           )}
@@ -1552,7 +1603,6 @@ function App() {
             />
           )}
 
-          {/* Admin Feedback Viewer - Solo visible para admins */}
           {showAdminFeedback && isAdmin && user && (
             <AdminFeedbackViewer
               onClose={() => setShowAdminFeedback(false)}
@@ -1560,13 +1610,10 @@ function App() {
               showToast={showToast}
             />
           )}
-
-          {/* Footer */}
         </main>
 
         <footer className="mt-12 border-t border-term-amber/20 pt-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            {/* Column 1: Keyboard Shortcuts */}
             <div className="text-center md:text-left">
               <h4 className="text-term-green font-mono font-bold text-sm mb-3">
                 KEYBOARD SHORTCUTS
@@ -1605,7 +1652,6 @@ function App() {
               </div>
             </div>
 
-            {/* Column 2: Feedback & Support */}
             <div className="text-center">
               <h4 className="text-term-green font-mono font-bold text-sm mb-3">
                 SUPPORT & FEEDBACK
@@ -1621,7 +1667,6 @@ function App() {
               </p>
             </div>
 
-            {/* Column 3: Legal & Credits */}
             <div className="text-center md:text-right">
               <h4 className="text-term-green font-mono font-bold text-sm mb-3">
                 CREDITS & LEGAL
@@ -1643,7 +1688,7 @@ function App() {
                     [Legal & Disclaimer]
                   </button>
                 </div>
-                {/* Admin Access - Solo visible para admins */}
+
                 {isAdmin && !adminLoading && (
                   <button
                     onClick={() => setShowAdminFeedback(true)}

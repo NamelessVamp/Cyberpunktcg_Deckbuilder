@@ -1,6 +1,13 @@
+// NON OMNIS MORIAR — CardPreviewModal v2: wishlist star fixed
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SmartCardImage from "./SmartCardImage";
+import { useAuth } from "../contexts/AuthContext";
+import {
+  addToWishlist,
+  removeFromWishlist,
+  isInWishlist as checkInWishlist,
+} from "../lib/wishlistService";
 
 export default function CardPreviewModal({
   card,
@@ -11,42 +18,40 @@ export default function CardPreviewModal({
   onRemoveFromCollection,
   ownedQuantity = 0,
   isLoggedIn = false,
-  // ← NUEVO: Navigation props
   allFilteredCards = null,
   currentIndex = null,
   onNavigate = null,
+  // Callback para sincronizar wishlistIds en App cuando el usuario cambia desde este modal
+  onWishlistChange = null,
 }) {
+  const { user } = useAuth();
   const [quantity, setQuantity] = useState(1);
+  const [inWishlist, setInWishlist] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
 
-  // Close with ESC key + Arrow navigation
+  // Check wishlist status cada vez que cambia la carta
+  useEffect(() => {
+    if (!card || !user) {
+      setInWishlist(false);
+      return;
+    }
+    checkInWishlist(card.id)
+      .then(setInWishlist)
+      .catch(() => setInWishlist(false));
+  }, [card, user]);
+
+  // ESC + Arrow navigation
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.key === "Escape") onClose();
-
-      // Arrow navigation (only if onNavigate is provided)
       if (onNavigate) {
-        if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          onNavigate("prev");
-        }
-        if (e.key === "ArrowRight") {
-          e.preventDefault();
-          onNavigate("next");
-        }
+        if (e.key === "ArrowLeft") { e.preventDefault(); onNavigate("prev"); }
+        if (e.key === "ArrowRight") { e.preventDefault(); onNavigate("next"); }
       }
     };
-
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [onClose, onNavigate]);
-
-  const handleIncrement = () => {
-    if (quantity < 3) setQuantity(quantity + 1);
-  };
-
-  const handleDecrement = () => {
-    if (quantity > 1) setQuantity(quantity - 1);
-  };
 
   const handleAddAndClose = () => {
     onAddToDeck(card, quantity);
@@ -54,10 +59,25 @@ export default function CardPreviewModal({
     onClose();
   };
 
-  const handleAddClick = () => {
-    onAddToDeck(card);
-    onClose();
-  };
+  async function handleWishlistToggle() {
+    if (!user) { alert("Inicia sesión para usar la wishlist"); return; }
+    setWishlistLoading(true);
+    try {
+      if (inWishlist) {
+        await removeFromWishlist(card.id);
+        setInWishlist(false);
+        onWishlistChange && onWishlistChange(card.id, false);
+      } else {
+        await addToWishlist(card.id, 1, "medium", "");
+        setInWishlist(true);
+        onWishlistChange && onWishlistChange(card.id, true);
+      }
+    } catch (err) {
+      console.error("Error toggling wishlist:", err);
+    } finally {
+      setWishlistLoading(false);
+    }
+  }
 
   return (
     <AnimatePresence>
@@ -78,56 +98,55 @@ export default function CardPreviewModal({
           transition={{ duration: 0.3, ease: "easeOut" }}
           style={{ position: "relative" }}
         >
-          {/* X Close Button */}
+          {/* X Close */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-gray-400 hover:text-[#00ff41] transition-colors text-3xl font-bold z-10"
-            aria-label="Close"
+            className="absolute top-4 right-4 text-gray-400 hover:text-term-green transition-colors text-3xl font-bold z-10"
           >
             ✕
           </button>
 
-          {/* ARROW NAVIGATION BUTTONS */}
+          {/* Wishlist Star — top-left */}
+          {isLoggedIn && (
+            <button
+              onClick={handleWishlistToggle}
+              disabled={wishlistLoading}
+              className={`absolute top-4 left-4 text-2xl leading-none transition-all z-10 select-none ${
+                inWishlist
+                  ? "text-term-amber drop-shadow-[0_0_8px_#ffb300]"
+                  : "text-term-amber/30 hover:text-term-amber/70"
+              } disabled:opacity-40`}
+              title={inWishlist ? "Quitar de wishlist" : "Agregar a wishlist"}
+            >
+              {wishlistLoading ? "…" : inWishlist ? "★" : "☆"}
+            </button>
+          )}
+
+          {/* Arrow navigation — bottom left */}
           {onNavigate && allFilteredCards && currentIndex !== null && (
-            <>
-              {/* Navigation Buttons - Bottom Left Corner */}
-              <div className="absolute bottom-3 left-4 flex gap-2 z-10">
-                {/* Left Arrow */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onNavigate("prev");
-                  }}
-                  disabled={currentIndex === 0}
-                  className="bg-term-amber/90 hover:bg-term-amber text-term-black font-mono font-bold px-3 py-1.5 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed text-xs"
-                  title="Previous card (←)"
-                >
-                  ← PREV
-                </button>
-
-                {/* Card Counter */}
-                <div className="bg-term-gray/90 border border-term-amber/40 text-term-amber font-mono text-xs px-2 py-1.5 rounded flex items-center">
-                  {currentIndex + 1} / {allFilteredCards.length}
-                </div>
-
-                {/* Right Arrow */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onNavigate("next");
-                  }}
-                  disabled={currentIndex === allFilteredCards.length - 1}
-                  className="bg-term-amber/90 hover:bg-term-amber text-term-black font-mono font-bold px-3 py-1.5 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed text-xs"
-                  title="Next card (→)"
-                >
-                  NEXT →
-                </button>
+            <div className="absolute bottom-3 left-4 flex gap-2 z-10">
+              <button
+                onClick={(e) => { e.stopPropagation(); onNavigate("prev"); }}
+                disabled={currentIndex === 0}
+                className="bg-term-amber/90 hover:bg-term-amber text-term-black font-mono font-bold px-3 py-1.5 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+              >
+                ← PREV
+              </button>
+              <div className="bg-term-gray/90 border border-term-amber/40 text-term-amber font-mono text-xs px-2 py-1.5 rounded flex items-center">
+                {currentIndex + 1} / {allFilteredCards.length}
               </div>
-            </>
+              <button
+                onClick={(e) => { e.stopPropagation(); onNavigate("next"); }}
+                disabled={currentIndex === allFilteredCards.length - 1}
+                className="bg-term-amber/90 hover:bg-term-amber text-term-black font-mono font-bold px-3 py-1.5 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+              >
+                NEXT →
+              </button>
+            </div>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-            {/* LEFT: Card Image */}
+            {/* LEFT: Image */}
             <div className="flex items-center justify-center">
               <SmartCardImage
                 card={card}
@@ -136,35 +155,27 @@ export default function CardPreviewModal({
               />
             </div>
 
-            {/* RIGHT: Card Details */}
+            {/* RIGHT: Details */}
             <div className="flex flex-col justify-between">
-              {/* Header */}
               <div>
                 <h2 className="text-term-green text-3xl font-bold font-mono mb-2">
                   {card.name}
                 </h2>
                 {card.subtitle && (
-                  <p className="text-term-amber/80 text-lg font-mono mb-4">
-                    {card.subtitle}
-                  </p>
+                  <p className="text-term-amber/80 text-lg font-mono mb-4">{card.subtitle}</p>
                 )}
 
-                {/* Stats */}
                 <div className="flex gap-4 mb-4">
                   {card.cost !== undefined && (
                     <div className="text-term-blue font-mono">
                       <span className="text-sm opacity-80">COST:</span>
-                      <span className="text-2xl ml-2 font-bold">
-                        {card.cost}
-                      </span>
+                      <span className="text-2xl ml-2 font-bold">{card.cost}</span>
                     </div>
                   )}
                   {card.power !== undefined && (
                     <div className="text-term-red font-mono">
                       <span className="text-sm opacity-80">POWER:</span>
-                      <span className="text-2xl ml-2 font-bold">
-                        {card.power}
-                      </span>
+                      <span className="text-2xl ml-2 font-bold">{card.power}</span>
                     </div>
                   )}
                   <div className="text-term-green font-mono">
@@ -173,22 +184,16 @@ export default function CardPreviewModal({
                   </div>
                 </div>
 
-                {/* Type & Faction */}
                 <div className="mb-4">
-                  <span className="text-term-amber font-mono text-lg">
-                    {card.type}
-                  </span>
+                  <span className="text-term-amber font-mono text-lg">{card.type}</span>
                   {card.faction && (
                     <>
                       <span className="text-term-amber/40 mx-2">//</span>
-                      <span className="text-term-green font-mono text-lg">
-                        {card.faction}
-                      </span>
+                      <span className="text-term-green font-mono text-lg">{card.faction}</span>
                     </>
                   )}
                 </div>
 
-                {/* Keywords */}
                 {card.keywords && card.keywords.length > 0 && (
                   <div className="mb-4 flex flex-wrap gap-2">
                     {card.keywords.map((keyword, idx) => (
@@ -202,7 +207,6 @@ export default function CardPreviewModal({
                   </div>
                 )}
 
-                {/* Card Text */}
                 {card.text && (
                   <div className="mb-6 p-4 bg-black/40 rounded border border-term-amber/20">
                     <p className="text-term-green/90 font-sans text-sm leading-relaxed whitespace-pre-wrap">
@@ -211,60 +215,53 @@ export default function CardPreviewModal({
                   </div>
                 )}
 
-                {/* Set Info */}
                 {card.set && (
-                  <div className="text-term-amber/60 font-mono text-xs">
-                    {card.set}
-                  </div>
+                  <div className="text-term-amber/60 font-mono text-xs">{card.set}</div>
                 )}
               </div>
 
               {/* Actions */}
               <div className="mt-6">
-                {/* Counter System - ONLY for non-Legend cards */}
+                {/* Copy counter — non-legends only */}
                 {card.type !== "LEGEND" && (
                   <div className="mb-4 p-4 border border-gray-700 rounded bg-black/30">
                     <div className="flex items-center justify-between">
                       <span className="text-gray-400 font-mono">COPIES:</span>
-
                       <div className="flex items-center gap-3">
                         <button
-                          onClick={handleDecrement}
+                          onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                           disabled={quantity === 1}
                           className={`w-10 h-10 border-2 rounded font-bold text-xl transition-colors ${
                             quantity === 1
                               ? "border-gray-700 text-gray-700 cursor-not-allowed"
-                              : "border-gray-600 text-gray-400 hover:border-[#00ff41] hover:text-[#00ff41]"
+                              : "border-gray-600 text-gray-400 hover:border-term-green hover:text-term-green"
                           }`}
                         >
                           −
                         </button>
-
-                        <span className="text-3xl font-bold text-[#00ff41] w-12 text-center font-mono">
+                        <span className="text-3xl font-bold text-term-green w-12 text-center font-mono">
                           {quantity}
                         </span>
-
                         <button
-                          onClick={handleIncrement}
+                          onClick={() => setQuantity((q) => Math.min(3, q + 1))}
                           disabled={quantity === 3}
                           className={`w-10 h-10 border-2 rounded font-bold text-xl transition-colors ${
                             quantity === 3
                               ? "border-gray-700 text-gray-700 cursor-not-allowed"
-                              : "border-gray-600 text-gray-400 hover:border-[#00ff41] hover:text-[#00ff41]"
+                              : "border-gray-600 text-gray-400 hover:border-term-green hover:text-term-green"
                           }`}
                         >
                           +
                         </button>
                       </div>
                     </div>
-
                     <p className="text-xs text-gray-500 mt-2 font-mono">
                       Max 3 copies per deck (except Legends)
                     </p>
                   </div>
                 )}
 
-                {/* Add to Deck Button */}
+                {/* Add to Deck */}
                 <button
                   onClick={handleAddAndClose}
                   className="w-full bg-term-green text-term-black py-3 px-6 rounded font-bold hover:bg-green-400 transition-colors mb-2"
@@ -274,14 +271,11 @@ export default function CardPreviewModal({
                     : `[+ ADD ${quantity} ${quantity === 1 ? "COPY" : "COPIES"} TO DECK]`}
                 </button>
 
-                {/* Add to Sideboard Button - NUEVO */}
+                {/* Add to Sideboard */}
                 <button
                   onClick={() => {
                     if (onAddToSideboard) {
-                      onAddToSideboard(
-                        card,
-                        card.type === "LEGEND" ? 1 : quantity,
-                      );
+                      onAddToSideboard(card, card.type === "LEGEND" ? 1 : quantity);
                     }
                     setQuantity(1);
                     onClose();
@@ -293,21 +287,19 @@ export default function CardPreviewModal({
                     : `[+ ADD ${quantity} ${quantity === 1 ? "COPY" : "COPIES"} TO SIDEBOARD]`}
                 </button>
 
-                {/* COLLECTION BUTTONS */}
+                {/* Collection controls */}
                 {isLoggedIn && (
                   <div className="mt-4 pt-4 border-t border-term-amber/20">
                     <p className="text-term-green/60 text-xs font-mono mb-2">
                       COLLECTION:{" "}
                       {ownedQuantity > 0 ? (
                         <span className="text-term-amber">
-                          Own {ownedQuantity}{" "}
-                          {ownedQuantity === 1 ? "copy" : "copies"}
+                          Own {ownedQuantity} {ownedQuantity === 1 ? "copy" : "copies"}
                         </span>
                       ) : (
                         <span className="text-term-red/60">Not owned</span>
                       )}
                     </p>
-
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         onClick={() => onAddToCollection(card.id, 1)}
@@ -315,7 +307,6 @@ export default function CardPreviewModal({
                       >
                         [+ ADD]
                       </button>
-
                       <button
                         onClick={() => onRemoveFromCollection(card.id, 1)}
                         disabled={ownedQuantity === 0}
