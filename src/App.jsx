@@ -37,6 +37,7 @@ import { useFeatureFlag } from "./hooks/useFeatureFlag";
 import BlackMarketView from "./components/BlackMarketView";
 import PublicDeckView from "./components/PublicDeckView";
 import * as communityService from "./lib/communityService";
+import PublishDeckModal from "./components/PublishDeckModal";
 
 const isNewCard = (card, days = 7) => {
   if (!card.date_added) return false;
@@ -88,6 +89,9 @@ const decodeDeck = (encodedString, allCards) => {
 };
 
 function App() {
+  const [blackMarketKey, setBlackMarketKey] = useState(0);
+  const [showPublishModal, setShowPublishModal] = useState(false);
+  const [deckToPublish, setDeckToPublish] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
   const [exportDeckName, setExportDeckName] = useState("");
   const [cards, setCards] = useState([]);
@@ -466,19 +470,30 @@ function App() {
     }
   };
 
-  const handlePublishDeck = async (deckId) => {
+  const handlePublishDeck = (deckId) => {
     if (!user) {
       showToast("Login required to publish", "warning");
       return;
     }
+    const deck = savedDecks.find((d) => d.id === deckId);
+    if (!deck) return;
+    setDeckToPublish(deck);
+    setShowPublishModal(true);
+  };
 
-    const description = prompt("Add a strategy description (optional):");
-    if (description === null) return;
+  const handleConfirmPublish = async ({ description, archetype }) => {
+    if (!deckToPublish) return;
     try {
-      await communityService.publishDeck(deckId, description || "");
+      await communityService.publishDeck(deckToPublish.id, description);
+      // Update archetype if selected
+      if (archetype) {
+        await communityService.updatePublicDeck(deckToPublish.id, {
+          archetype,
+        });
+      }
       setSavedDecks((prev) =>
         prev.map((d) =>
-          d.id === deckId
+          d.id === deckToPublish.id
             ? { ...d, deck: { ...d.deck, visibility: "public" } }
             : d,
         ),
@@ -487,6 +502,9 @@ function App() {
     } catch (err) {
       console.error("Publish error:", err);
       showToast("Error publishing deck", "error");
+    } finally {
+      setShowPublishModal(false);
+      setDeckToPublish(null);
     }
   };
   const handleUnpublishDeck = async (deckId) => {
@@ -1265,6 +1283,19 @@ function App() {
                               </div>
                             )}
 
+                          {/* Deck Count Badge */}
+                          {(() => {
+                            const deckCount = [
+                              ...deck.mainDeck,
+                              ...deck.legends,
+                            ].filter((c) => c.id === card.id).length;
+                            return deckCount > 0 ? (
+                              <div className="absolute bottom-2 left-2 bg-term-blue text-white font-mono font-bold text-xs px-2 py-0.5 rounded">
+                                x{deckCount}
+                              </div>
+                            ) : null;
+                          })()}
+
                           {/* NEW Badge */}
                           {isNewCard(card) && (
                             <div className="absolute top-2 right-2 bg-term-green text-term-black font-mono font-bold text-xs px-2 py-1 rounded animate-pulse flex items-center gap-1">
@@ -1538,6 +1569,7 @@ function App() {
           {activeTab === "blackmarket" && (
             <div key="blackmarket-tab">
               <BlackMarketView
+                key={blackMarketKey}
                 allCards={cards}
                 onLoadDeck={(clonedDeck) => {
                   setSavedDecks((prev) => [clonedDeck, ...prev]);
@@ -1646,6 +1678,12 @@ function App() {
                 showToast(`Deck cloned to your terminal ✓`, "success");
               }}
               onShowToast={showToast}
+              currentUserId={user?.id}
+              isAdmin={isAdmin}
+              onDeckDeleted={() => {
+                setPublicDeckId(null);
+                setBlackMarketKey((k) => k + 1);
+              }}
             />
           )}
 
@@ -1686,6 +1724,17 @@ function App() {
             />
           )}
         </main>
+
+        {showPublishModal && deckToPublish && (
+          <PublishDeckModal
+            deck={deckToPublish}
+            onConfirm={handleConfirmPublish}
+            onClose={() => {
+              setShowPublishModal(false);
+              setDeckToPublish(null);
+            }}
+          />
+        )}
 
         <footer className="mt-12 border-t border-term-amber/20 pt-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">

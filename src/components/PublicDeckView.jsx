@@ -27,7 +27,13 @@ export default function PublicDeckView({
   onClose,
   onCloneSuccess,
   onShowToast,
+  currentUserId = null,
+  isAdmin = false,
+  onDeckDeleted = null,
 }) {
+  const [editing, setEditing] = useState(false);
+  const [editDescription, setEditDescription] = useState("");
+  const [deleting, setDeleting] = useState(false);
   const { user } = useAuth();
   const [deck, setDeck] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -129,6 +135,38 @@ export default function PublicDeckView({
     }
   }
 
+  const isOwnerOrAdmin = deck && (deck.user_id === currentUserId || isAdmin);
+
+  async function handleDelete() {
+    if (!window.confirm(`Delete "${deck.name}" from the Black Market?`)) return;
+    setDeleting(true);
+    try {
+      await communityService.deletePublicDeck(deck.id);
+      onShowToast?.("Deck removed from Black Market", "success");
+      onDeckDeleted?.();
+      onClose();
+    } catch (err) {
+      console.error("Delete error:", err);
+      onShowToast?.("Error deleting deck", "error");
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+  async function handleSaveEdit() {
+    try {
+      await communityService.updatePublicDeck(deck.id, {
+        description: editDescription,
+      });
+      onShowToast?.("Deck updated ✓", "success");
+      setEditing(false);
+      await loadDeck();
+    } catch (err) {
+      console.error("Edit error:", err);
+      onShowToast?.("Error updating deck", "error");
+    }
+  }
+
   // Hydrate deck cards from IDs
   const hydratedDeck = deck ? deckService.supabaseToDeck(deck, allCards) : null;
 
@@ -137,13 +175,15 @@ export default function PublicDeckView({
       (deck.deck_votes?.filter((v) => v.vote_type === "down").length ?? 0)
     : 0;
 
-  // Eddies curve data
+  // Excluir leyendas del curve (no tienen Eddie cost)
   const eddieCurve = hydratedDeck
-    ? hydratedDeck.mainDeck.reduce((acc, card) => {
-        const cost = card.cost ?? 0;
-        acc[cost] = (acc[cost] || 0) + 1;
-        return acc;
-      }, {})
+    ? hydratedDeck.mainDeck
+        .filter((card) => card.type !== "LEGEND" && card.cost !== undefined)
+        .reduce((acc, card) => {
+          const cost = card.cost;
+          acc[cost] = (acc[cost] || 0) + 1;
+          return acc;
+        }, {})
     : {};
   const maxCurveCount = Math.max(...Object.values(eddieCurve), 1);
 
@@ -285,13 +325,13 @@ export default function PublicDeckView({
                   <h4 className="text-term-amber font-bold font-mono text-sm mb-2">
                     EDDIES CURVE
                   </h4>
-                  <div className="flex items-end gap-1 h-16 bg-term-gray rounded border border-term-amber/20 px-3 py-2">
+                  <div className="flex items-end gap-1 h-28 bg-term-gray rounded border border-term-amber/20 px-3 pb-2 pt-3">
                     {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((cost) => {
                       const count = eddieCurve[cost] || 0;
                       const height =
                         count > 0
-                          ? Math.max(8, (count / maxCurveCount) * 100)
-                          : 4;
+                          ? Math.max(12, (count / maxCurveCount) * 100)
+                          : 0;
                       return (
                         <div
                           key={cost}
@@ -425,6 +465,56 @@ export default function PublicDeckView({
                   <p className="text-term-amber/40 font-mono text-[10px] text-center -mt-2">
                     Login required to clone
                   </p>
+                )}
+
+                {/* Owner/Admin controls */}
+                {isOwnerOrAdmin && (
+                  <div className="mt-3 pt-3 border-t border-term-red/20 space-y-2">
+                    {!editing ? (
+                      <button
+                        onClick={() => {
+                          setEditing(true);
+                          setEditDescription(deck.description || "");
+                        }}
+                        className="w-full py-2 border border-term-amber/40 text-term-amber font-mono font-bold text-xs rounded hover:bg-term-amber/10 transition-colors"
+                      >
+                        [✎ EDIT DESCRIPTION]
+                      </button>
+                    ) : (
+                      <div className="space-y-1.5">
+                        <textarea
+                          value={editDescription}
+                          onChange={(e) => setEditDescription(e.target.value)}
+                          rows={3}
+                          className="w-full bg-term-gray border border-term-amber/40 text-term-amber font-mono text-xs px-2 py-1.5 rounded resize-none focus:outline-none focus:border-term-amber"
+                          placeholder="Strategy description..."
+                        />
+                        <div className="grid grid-cols-2 gap-1.5">
+                          <button
+                            onClick={handleSaveEdit}
+                            className="py-1.5 bg-term-green/20 border border-term-green text-term-green font-mono font-bold text-xs rounded hover:bg-term-green/30 transition-colors"
+                          >
+                            [✓ SAVE]
+                          </button>
+                          <button
+                            onClick={() => setEditing(false)}
+                            className="py-1.5 border border-term-amber/30 text-term-amber/60 font-mono font-bold text-xs rounded hover:bg-term-amber/10 transition-colors"
+                          >
+                            [✕ CANCEL]
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    <button
+                      onClick={handleDelete}
+                      disabled={deleting}
+                      className="w-full py-2 bg-term-red/10 border border-term-red/50 text-term-red font-mono font-bold text-xs rounded hover:bg-term-red/20 transition-colors disabled:opacity-40"
+                    >
+                      {deleting
+                        ? "[DELETING...]"
+                        : "[🗑 DELETE FROM BLACK MARKET]"}
+                    </button>
+                  </div>
                 )}
 
                 {/* Description */}

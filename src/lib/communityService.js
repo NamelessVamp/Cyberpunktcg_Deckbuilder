@@ -237,3 +237,25 @@ export const getUserVote = async (deckId, userId) => {
   if (error) throw error;
   return data?.vote_type || null;
 };
+
+/**
+ * Delete a public deck (owner or admin)
+ */
+export const deletePublicDeck = async (deckId) => {
+  const { error } = await supabase.from("decks").delete().eq("id", deckId);
+  if (error) throw error;
+};
+
+/**
+ * Update deck description and archetype (owner or admin)
+ */
+export const updatePublicDeck = async (deckId, updates) => {
+  const { data, error } = await supabase
+    .from("decks")
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq("id", deckId)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};

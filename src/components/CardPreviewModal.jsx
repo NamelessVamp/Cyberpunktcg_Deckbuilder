@@ -23,11 +23,20 @@ export default function CardPreviewModal({
   onNavigate = null,
   // Callback para sincronizar wishlistIds en App cuando el usuario cambia desde este modal
   onWishlistChange = null,
+  deckCount = 0,
+  deckLocation = null,
+  onRemoveFromDeck = null,
+  onMoveToSideboard = null,
+  onMoveToMainDeck = null,
 }) {
   const { user } = useAuth();
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(deckCount > 0 ? deckCount : 1);
   const [inWishlist, setInWishlist] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
+
+  useEffect(() => {
+    setQuantity(deckCount > 0 ? deckCount : 1);
+  }, [card, deckCount]);
 
   // Check wishlist status cada vez que cambia la carta
   useEffect(() => {
@@ -45,8 +54,14 @@ export default function CardPreviewModal({
     const handleKeyPress = (e) => {
       if (e.key === "Escape") onClose();
       if (onNavigate) {
-        if (e.key === "ArrowLeft") { e.preventDefault(); onNavigate("prev"); }
-        if (e.key === "ArrowRight") { e.preventDefault(); onNavigate("next"); }
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          onNavigate("prev");
+        }
+        if (e.key === "ArrowRight") {
+          e.preventDefault();
+          onNavigate("next");
+        }
       }
     };
     window.addEventListener("keydown", handleKeyPress);
@@ -54,13 +69,35 @@ export default function CardPreviewModal({
   }, [onClose, onNavigate]);
 
   const handleAddAndClose = () => {
-    onAddToDeck(card, quantity);
+    if (deckLocation && deckCount > 0) {
+      // Venimos desde DeckArea — ajustar cantidad
+      const diff = quantity - deckCount;
+      if (diff > 0) {
+        // Agregar copias
+        onAddToDeck(card, diff);
+      } else if (diff < 0) {
+        // Remover copias
+        for (let i = 0; i < Math.abs(diff); i++) {
+          onRemoveFromDeck(card);
+        }
+      } else if (quantity === 0) {
+        // Remover todas
+        for (let i = 0; i < deckCount; i++) {
+          onRemoveFromDeck(card);
+        }
+      }
+    } else {
+      onAddToDeck(card, quantity);
+    }
     setQuantity(1);
     onClose();
   };
 
   async function handleWishlistToggle() {
-    if (!user) { alert("Inicia sesión para usar la wishlist"); return; }
+    if (!user) {
+      alert("Inicia sesión para usar la wishlist");
+      return;
+    }
     setWishlistLoading(true);
     try {
       if (inWishlist) {
@@ -126,7 +163,10 @@ export default function CardPreviewModal({
           {onNavigate && allFilteredCards && currentIndex !== null && (
             <div className="absolute bottom-3 left-4 flex gap-2 z-10">
               <button
-                onClick={(e) => { e.stopPropagation(); onNavigate("prev"); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onNavigate("prev");
+                }}
                 disabled={currentIndex === 0}
                 className="bg-term-amber/90 hover:bg-term-amber text-term-black font-mono font-bold px-3 py-1.5 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed text-xs"
               >
@@ -136,7 +176,10 @@ export default function CardPreviewModal({
                 {currentIndex + 1} / {allFilteredCards.length}
               </div>
               <button
-                onClick={(e) => { e.stopPropagation(); onNavigate("next"); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onNavigate("next");
+                }}
                 disabled={currentIndex === allFilteredCards.length - 1}
                 className="bg-term-amber/90 hover:bg-term-amber text-term-black font-mono font-bold px-3 py-1.5 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed text-xs"
               >
@@ -162,20 +205,26 @@ export default function CardPreviewModal({
                   {card.name}
                 </h2>
                 {card.subtitle && (
-                  <p className="text-term-amber/80 text-lg font-mono mb-4">{card.subtitle}</p>
+                  <p className="text-term-amber/80 text-lg font-mono mb-4">
+                    {card.subtitle}
+                  </p>
                 )}
 
                 <div className="flex gap-4 mb-4">
                   {card.cost !== undefined && (
                     <div className="text-term-blue font-mono">
                       <span className="text-sm opacity-80">COST:</span>
-                      <span className="text-2xl ml-2 font-bold">{card.cost}</span>
+                      <span className="text-2xl ml-2 font-bold">
+                        {card.cost}
+                      </span>
                     </div>
                   )}
                   {card.power !== undefined && (
                     <div className="text-term-red font-mono">
                       <span className="text-sm opacity-80">POWER:</span>
-                      <span className="text-2xl ml-2 font-bold">{card.power}</span>
+                      <span className="text-2xl ml-2 font-bold">
+                        {card.power}
+                      </span>
                     </div>
                   )}
                   <div className="text-term-green font-mono">
@@ -185,11 +234,15 @@ export default function CardPreviewModal({
                 </div>
 
                 <div className="mb-4">
-                  <span className="text-term-amber font-mono text-lg">{card.type}</span>
+                  <span className="text-term-amber font-mono text-lg">
+                    {card.type}
+                  </span>
                   {card.faction && (
                     <>
                       <span className="text-term-amber/40 mx-2">//</span>
-                      <span className="text-term-green font-mono text-lg">{card.faction}</span>
+                      <span className="text-term-green font-mono text-lg">
+                        {card.faction}
+                      </span>
                     </>
                   )}
                 </div>
@@ -216,7 +269,9 @@ export default function CardPreviewModal({
                 )}
 
                 {card.set && (
-                  <div className="text-term-amber/60 font-mono text-xs">{card.set}</div>
+                  <div className="text-term-amber/60 font-mono text-xs">
+                    {card.set}
+                  </div>
                 )}
               </div>
 
@@ -229,10 +284,14 @@ export default function CardPreviewModal({
                       <span className="text-gray-400 font-mono">COPIES:</span>
                       <div className="flex items-center gap-3">
                         <button
-                          onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                          disabled={quantity === 1}
+                          onClick={() =>
+                            setQuantity((q) =>
+                              Math.max(deckLocation ? 0 : 1, q - 1),
+                            )
+                          }
+                          disabled={quantity === (deckLocation ? 0 : 1)}
                           className={`w-10 h-10 border-2 rounded font-bold text-xl transition-colors ${
-                            quantity === 1
+                            quantity === (deckLocation ? 0 : 1)
                               ? "border-gray-700 text-gray-700 cursor-not-allowed"
                               : "border-gray-600 text-gray-400 hover:border-term-green hover:text-term-green"
                           }`}
@@ -266,16 +325,23 @@ export default function CardPreviewModal({
                   onClick={handleAddAndClose}
                   className="w-full bg-term-green text-term-black py-3 px-6 rounded font-bold hover:bg-green-400 transition-colors mb-2"
                 >
-                  {card.type === "LEGEND"
-                    ? "[+ ADD TO DECK]"
-                    : `[+ ADD ${quantity} ${quantity === 1 ? "COPY" : "COPIES"} TO DECK]`}
+                  {deckLocation
+                    ? quantity === 0
+                      ? "[✕ REMOVE FROM DECK]"
+                      : `[✓ SUBMIT ${quantity} ${quantity === 1 ? "COPY" : "COPIES"}]`
+                    : card.type === "LEGEND"
+                      ? "[+ ADD TO DECK]"
+                      : `[+ ADD ${quantity} ${quantity === 1 ? "COPY" : "COPIES"} TO DECK]`}
                 </button>
 
                 {/* Add to Sideboard */}
                 <button
                   onClick={() => {
                     if (onAddToSideboard) {
-                      onAddToSideboard(card, card.type === "LEGEND" ? 1 : quantity);
+                      onAddToSideboard(
+                        card,
+                        card.type === "LEGEND" ? 1 : quantity,
+                      );
                     }
                     setQuantity(1);
                     onClose();
@@ -294,7 +360,8 @@ export default function CardPreviewModal({
                       COLLECTION:{" "}
                       {ownedQuantity > 0 ? (
                         <span className="text-term-amber">
-                          Own {ownedQuantity} {ownedQuantity === 1 ? "copy" : "copies"}
+                          Own {ownedQuantity}{" "}
+                          {ownedQuantity === 1 ? "copy" : "copies"}
                         </span>
                       ) : (
                         <span className="text-term-red/60">Not owned</span>
@@ -318,6 +385,57 @@ export default function CardPreviewModal({
                   </div>
                 )}
               </div>
+              {/* DECK CONTROLS — solo cuando se abre desde DeckArea */}
+              {deckLocation && (
+                <div className="mt-4 pt-4 border-t border-term-blue/30">
+                  <p className="text-term-blue/60 text-xs font-mono mb-2">
+                    IN DECK:{" "}
+                    <span className="text-term-blue font-bold">
+                      x{deckCount}{" "}
+                      {deckLocation === "mainDeck"
+                        ? "(MAIN)"
+                        : deckLocation === "sideboard"
+                          ? "(SIDE)"
+                          : "(LEGEND)"}
+                    </span>
+                  </p>
+                  <div className="flex flex-col gap-1.5">
+                    {onMoveToSideboard && (
+                      <button
+                        onClick={() => {
+                          onMoveToSideboard(card);
+                          onClose();
+                        }}
+                        className="w-full py-1.5 bg-term-blue/20 border border-term-blue text-term-blue font-mono font-bold text-xs rounded hover:bg-term-blue/30 transition-colors"
+                      >
+                        [→ MOVE TO SIDEBOARD]
+                      </button>
+                    )}
+                    {onMoveToMainDeck && (
+                      <button
+                        onClick={() => {
+                          onMoveToMainDeck(card);
+                          onClose();
+                        }}
+                        className="w-full py-1.5 bg-term-green/20 border border-term-green text-term-green font-mono font-bold text-xs rounded hover:bg-term-green/30 transition-colors"
+                      >
+                        [→ MOVE TO MAIN DECK]
+                      </button>
+                    )}
+                    {onRemoveFromDeck && deckLocation === "legends" && (
+                      <button
+                        onClick={() => {
+                          onRemoveFromDeck(card);
+                          onClose();
+                        }}
+                        className="w-full py-1.5 bg-term-red/20 border border-term-red text-term-red font-mono font-bold text-xs rounded hover:bg-term-red/30 transition-colors"
+                      >
+                        [✕ REMOVE LEGEND]
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>

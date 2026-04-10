@@ -23,11 +23,16 @@ export default function DeckArea({
   onToggleFreeBuild,
 }) {
   const [showLegalityModal, setShowLegalityModal] = useState(false);
-  const [previewCard, setPreviewCard] = useState(null); // ← NUEVO
+  const [previewCard, setPreviewCard] = useState(null);
+  const [previewDeckInfo, setPreviewDeckInfo] = useState({
+    count: 0,
+    location: null,
+  });
 
   // Handlers for card actions
-  const handlePreview = (card) => {
+  const handlePreview = (card, count = 1, location = null) => {
     setPreviewCard(card);
+    setPreviewDeckInfo({ count, location });
   };
 
   const handleMoveToSideboard = (card) => {
@@ -170,7 +175,7 @@ export default function DeckArea({
                     card={legend}
                     count={1}
                     location="legends"
-                    onPreview={handlePreview}
+                    onPreview={() => handlePreview(legend, 1, "legends")} // Asegúrate que esté así
                     onRemove={onRemoveCard}
                   />
                 </div>
@@ -295,27 +300,23 @@ export default function DeckArea({
                 const uniqueCards = Object.values(cardCounts);
 
                 return uniqueCards.map(({ card, count }) => (
-                  <div key={card.id} className="relative group">
+                  <div
+                    key={card.id}
+                    className="relative group cursor-pointer"
+                    onClick={() => handlePreview(card, count, "mainDeck")}
+                  >
                     <SmartCardImage
                       card={card}
                       className="w-full h-auto rounded"
                     />
-
-                    {count > 1 && (
-                      <div className="absolute bottom-1 right-1 bg-term-amber text-term-black font-mono font-bold text-xs px-1.5 py-0.5 rounded z-10">
-                        x{count}
-                      </div>
-                    )}
-
-                    <DeckCardActions
-                      card={card}
-                      count={count}
-                      location="mainDeck"
-                      onPreview={handlePreview}
-                      onRemove={onRemoveCard}
-                      onMoveToSideboard={handleMoveToSideboard}
-                      onEditQuantity={handleEditQuantity}
-                    />
+                    <div className="absolute bottom-1 right-1 bg-term-amber text-term-black font-mono font-bold text-xs px-1.5 py-0.5 rounded z-10">
+                      x{count}
+                    </div>
+                    <div className="absolute inset-0 bg-black/20 rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="text-white font-mono text-[10px] font-bold bg-black/60 px-2 py-1 rounded">
+                        CLICK TO EDIT
+                      </span>
+                    </div>
                   </div>
                 ));
               })()}
@@ -382,8 +383,8 @@ export default function DeckArea({
                     <DeckCardActions
                       card={card}
                       count={count}
-                      location="sideboard"
-                      onPreview={handlePreview}
+                      location="sideboard" // Esto ya lo tienes bien
+                      onPreview={() => handlePreview(card, count, "sideboard")} // CAMBIA ESTA LÍNEA
                       onRemove={onRemoveCard}
                       onMoveToMainDeck={handleMoveToMainDeck}
                       onEditQuantity={handleEditQuantity}
@@ -464,7 +465,27 @@ export default function DeckArea({
           onAddToDeck={onAddToDeck}
           onAddToSideboard={onAddToSideboard}
           isLoggedIn={false}
+          // Props de deck context
+          deckCount={previewDeckInfo.count}
+          deckLocation={previewDeckInfo.location}
+          onRemoveFromDeck={(card) =>
+            onRemoveCard(card, previewDeckInfo.location)
+          }
+          onMoveToSideboard={
+            previewDeckInfo.location === "mainDeck"
+              ? handleMoveToSideboard
+              : null
+          }
+          onMoveToMainDeck={
+            previewDeckInfo.location === "sideboard"
+              ? handleMoveToMainDeck
+              : null
+          }
         />
+      )}
+
+      {showLegalityModal && (
+        <LegalityInfoModal onClose={() => setShowLegalityModal(false)} />
       )}
     </div>
   );
