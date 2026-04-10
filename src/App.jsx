@@ -1145,19 +1145,40 @@ function App() {
 
       <div className="relative z-10 p-8">
         {/* Header */}
-        <header className="mb-8 border-b border-term-amber/20 pb-4">
-          <div className="flex items-center justify-between gap-4">
+        <header className="mb-4 sm:mb-8 border-b border-term-amber/20 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
             <div className="flex-1">
-              <div>
-                <h1 className="text-4xl font-bold text-term-amber mb-2 font-mono">
-                  AFTERLIFE DECKS // DECK_BUILDER.EXE
-                </h1>
-                <p className="text-xs text-term-amber/50 font-mono tracking-wider -mt-1">
-                  [UNOFFICIAL FAN PROJECT - NOT AFFILIATED WITH CDPR OR WEIRDCO]
-                </p>
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <h1 className="text-xl sm:text-4xl font-bold text-term-amber mb-1 font-mono leading-tight">
+                    AFTERLIFE DECKS // DECK_BUILDER.EXE
+                  </h1>
+                  <p className="text-xs text-term-amber/50 font-mono tracking-wider -mt-1">
+                    [UNOFFICIAL FAN PROJECT - NOT AFFILIATED WITH CDPR OR
+                    WEIRDCO]
+                  </p>
+                </div>
+                {/* Login button — mobile solo, se mueve inline con el título */}
+                <div className="sm:hidden flex-shrink-0 mt-1">
+                  {user ? (
+                    <button
+                      onClick={signOut}
+                      className="px-2 py-1 bg-term-red/20 text-term-red border border-term-red rounded font-mono text-xs hover:bg-term-red/30 transition-colors"
+                    >
+                      [OUT]
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setShowLoginModal(true)}
+                      className="px-2 py-1 bg-term-green/20 text-term-green border border-term-green rounded font-mono text-xs hover:bg-term-green/30 transition-colors"
+                    >
+                      [LOGIN]
+                    </button>
+                  )}
+                </div>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1 mt-2">
                 <p className="text-term-green font-mono">
                   [{filteredCards.length} / {cards.length} CARDS] // [ALPHA/BETA
                   KIT 2026]
@@ -1177,7 +1198,7 @@ function App() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-4">
               {user ? (
                 <div className="flex items-center gap-4">
                   {user.discord_avatar && (

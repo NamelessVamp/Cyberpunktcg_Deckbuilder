@@ -159,9 +159,36 @@ export default function CardPreviewModal({
             </button>
           )}
 
-          {/* Arrow navigation — bottom left */}
+          {/* Arrow navigation — mobile: dentro del flujo, desktop: absolute bottom */}
           {onNavigate && allFilteredCards && currentIndex !== null && (
-            <div className="absolute bottom-3 left-4 flex gap-2 z-10">
+            <div className="flex sm:hidden gap-2 px-6 pb-4 justify-center">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onNavigate("prev");
+                }}
+                disabled={currentIndex === 0}
+                className="bg-term-amber/90 hover:bg-term-amber text-term-black font-mono font-bold px-3 py-1.5 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+              >
+                ← PREV
+              </button>
+              <div className="bg-term-gray/90 border border-term-amber/40 text-term-amber font-mono text-xs px-2 py-1.5 rounded flex items-center">
+                {currentIndex + 1} / {allFilteredCards.length}
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onNavigate("next");
+                }}
+                disabled={currentIndex === allFilteredCards.length - 1}
+                className="bg-term-amber/90 hover:bg-term-amber text-term-black font-mono font-bold px-3 py-1.5 rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+              >
+                NEXT →
+              </button>
+            </div>
+          )}
+          {onNavigate && allFilteredCards && currentIndex !== null && (
+            <div className="hidden sm:flex absolute bottom-3 left-4 gap-2 z-10">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
