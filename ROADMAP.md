@@ -179,6 +179,36 @@
 
 ---
 
+## 🔮 FASE 15: CYBERSPACE AESTHETICS (0% COMPLETE)
+
+> Inspirado en "The Tech and Art of Cyberspaces in Cyberpunk 2077" (CDPR / SIGGRAPH 2021)
+> Técnicas: Point Cloud Rendering, Datamoshing, Pixel Sorting, Partículas dinámicas
+
+| #   | Feature                            | Esfuerzo | Descripción                                                                                  |
+| :-- | :--------------------------------- | :------- | :------------------------------------------------------------------------------------------- |
+| 80  | Glitch Hover en Build Grid         | 🟢 BAJO  | CSS filter + clip-path animado al hover — efecto pixel sorting sobre imagen de carta         |
+| 81  | Black Market Particle Background   | 🟢 BAJO  | Canvas con ~200 partículas en movimiento lento, estética Ciberespacio CP2077 (azul/rojo)     |
+| 82  | Point Cloud Loading Screen         | 🟡 MEDIO | Reemplaza `[LOADING...]` con canvas: puntos dispersos que convergen formando el logo         |
+| 83  | Tab Transition Braindance Dissolve | 🟡 MEDIO | Framer Motion `staggerChildren` — contenido se desintegra en puntos al cambiar de tab        |
+| 84  | Card Preview Point Cloud Reveal    | 🔴 ALTO  | Carta se materializa desde nube de puntos al abrir preview — requiere Three.js o tsParticles |
+| 85  | Simulator Cyberspace Mode          | 🔴 ALTO  | Tema visual alternativo para el playmat inspirado en el Ciberespacio de CP2077               |
+
+**Referencias técnicas:**
+
+- Paper: [The Tech and Art of Cyberspaces in Cyberpunk 2077](https://dl.acm.org/doi/fullHtml/10.1145/3450623.3464662)
+- Técnicas clave: Point Cloud rendering, datamoshing, dynamic braindance point capture
+- Librerías candidatas: `tsParticles`, `three.js` (r128 ya disponible), CSS `backdrop-filter`
+
+**Orden recomendado de implementación (Valve — fail fast):**
+
+1. `#80` Glitch Hover — puro CSS, sin dependencias, 1-2h
+2. `#81` Black Market Particles — canvas vanilla JS, 2-3h
+3. `#82` Loading Screen — canvas, 2-3h
+4. `#83` Tab Dissolve — Framer Motion, ya instalado, 1-2h
+5. `#84` y `#85` — post v1.0.0, requieren Three.js integration
+
+---
+
 ## 🎯 PRÓXIMOS PASOS
 
 1. **PWA** — `vite-plugin-pwa`, 15 min, cierra Fase 8 al 90%
