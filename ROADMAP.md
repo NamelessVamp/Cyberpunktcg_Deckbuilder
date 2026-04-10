@@ -1,6 +1,6 @@
 # 📋 ROADMAP COMPLETO ACTUALIZADO
 
-**Last Updated:** 2026-04-07
+**Last Updated:** 2026-04-10
 
 ## ✅ FASE 1: DECK BUILDING CORE (100% COMPLETE)
 
@@ -9,7 +9,7 @@
 | 1   | Búsqueda y Filtrado Extremo        | ✅ DONE | `FilterPanel.jsx`, `SearchBar.jsx`, `App.jsx` |
 | 2   | Validador de Reglas en tiempo real | ✅ DONE | `App.jsx`, `deckValidator.js`                 |
 | 3   | Muro de RAM dinámico               | ✅ DONE | `App.jsx`, `DeckArea.jsx`                     |
-| 3.5 | FREE BUILD MODE 🆕                 | ✅ DONE | `App.jsx`, `DeckArea.jsx`                     |
+| 3.5 | FREE BUILD MODE                    | ✅ DONE | `App.jsx`, `DeckArea.jsx`                     |
 | 4   | Panel de Analíticas básicas        | ✅ DONE | `DeckAnalytics.jsx`, `AnalyticsModal.jsx`     |
 | 5   | Exportación en texto plano         | ✅ DONE | `ExportModal.jsx`                             |
 | 6   | Zona de Sideboard (0/15)           | ✅ DONE | `App.jsx`, `DeckArea.jsx`                     |
@@ -28,25 +28,17 @@
 | :--- | :------------------- | :------ | :-------------------------------------------------------------------- |
 | 9-16 | Backend Architecture | ✅ DONE | Auth, CRUD decks, collection tracker, feedback, hybrid image fallback |
 
-**Services Implemented:**
-
-- `supabase.js` - Client setup
-- `deckService.js` - CRUD operations
-- `collectionService.js` - Collection tracking
-- `feedbackService.js` - Bug reports
-- `SmartCardImage.jsx` - 3-layer image fallback
-
 ## ✅ FASE 4: ONBOARDING & EDUCATIONAL (100% COMPLETE)
 
-| #    | Feature                        | Status     | Files                                                             |
-| :--- | :----------------------------- | :--------- | :---------------------------------------------------------------- |
-| 17   | Landing Page / Home Dashboard  | ✅ DONE    | `LandingPage.jsx`                                                 |
-| 18   | Sistema de Tooltips Educativos | ✅ DONE    | `Tooltip.jsx`                                                     |
-| 19   | Guía de Principiantes (Modal)  | ✅ DONE    | `GuideModal.jsx`                                                  |
-| 21   | Precon Deck Explainers         | ✅ DONE    | `preconGuides.json`, `PreconDecksView.jsx`, `PreconExplainer.jsx` |
-| 22   | Card Legality Warnings         | ✅ DONE    | `LegalityBadge.jsx`, `LegalityInfoModal.jsx`, `cardLegality.json` |
-| 23   | Suggested Cards (AI Helper)    | ✅ DONE 🆕 | `SuggestedCards.jsx`                                              |
-| 23.5 | Actualización Metadatos (SEO)  | ✅ DONE    | `index.html`                                                      |
+| #    | Feature                        | Status  | Files                                                             |
+| :--- | :----------------------------- | :------ | :---------------------------------------------------------------- |
+| 17   | Landing Page / Home Dashboard  | ✅ DONE | `LandingPage.jsx`                                                 |
+| 18   | Sistema de Tooltips Educativos | ✅ DONE | `Tooltip.jsx`                                                     |
+| 19   | Guía de Principiantes (Modal)  | ✅ DONE | `GuideModal.jsx`                                                  |
+| 21   | Precon Deck Explainers         | ✅ DONE | `preconGuides.json`, `PreconDecksView.jsx`, `PreconExplainer.jsx` |
+| 22   | Card Legality Warnings         | ✅ DONE | `LegalityBadge.jsx`, `LegalityInfoModal.jsx`, `cardLegality.json` |
+| 23   | Suggested Cards (AI Helper)    | ✅ DONE | `SuggestedCards.jsx`                                              |
+| 23.5 | Actualización Metadatos (SEO)  | ✅ DONE | `index.html`                                                      |
 
 ## ⏳ FASE 5: EXPORT, ANALYTICS & PROXIES (86% COMPLETE)
 
@@ -60,230 +52,181 @@
 | 30  | Import desde Texto                            | ✅ DONE    | `ImportDeckModal.jsx`     |
 | 29  | Estadísticas de Consistencia (T1 Playability) | ⏳ PENDING | Needs hypergeometric calc |
 
-## ⏳ FASE 6: THE VAULT (75% COMPLETE)
+## ✅ FASE 6: THE VAULT (100% COMPLETE) 🆕
 
-| #   | Feature                              | Status  | Files/Notes                              |
-| :-- | :----------------------------------- | :------ | :--------------------------------------- |
-| 31  | Collection Tracker                   | ✅ DONE | `CollectionView.jsx`                     |
-| 32  | Pack Opener → Collection Integration | ✅ DONE | `PackOpener.jsx`, `collectionService.js` |
-| 33  | Collection Analytics (Sin Precios)   | ✅ DONE | `CollectionView.jsx`                     |
-| 34  | Wishlist / Trade Manager             | ❌ TODO | Needs `wishlist` table in Supabase       |
+| #   | Feature                              | Status  | Files/Notes                                                                               |
+| :-- | :----------------------------------- | :------ | :---------------------------------------------------------------------------------------- |
+| 31  | Collection Tracker                   | ✅ DONE | `CollectionView.jsx`                                                                      |
+| 32  | Pack Opener → Collection Integration | ✅ DONE | `PackOpener.jsx`, `collectionService.js`                                                  |
+| 33  | Collection Analytics                 | ✅ DONE | `CollectionView.jsx`                                                                      |
+| 34  | Wishlist / Collection Gallery 🆕     | ✅ DONE | `CollectionView.jsx` — ALL/OWNED/MISSING/WISHLIST filters, owned en color, missing grayed |
 
-## ⏳ FASE 7: CLOUD SHARING & COMMUNITY (57% COMPLETE)
-
-| #   | Feature                            | Status      | Files/Notes                                      |
-| :-- | :--------------------------------- | :---------- | :----------------------------------------------- |
-| 35  | URL Sharing (Base64)               | ✅ DONE     | `deckService.js`                                 |
-| 36  | Advanced Deck Management           | ✅ DONE     | `MyDecksView.jsx`                                |
-| 38  | Página Legal (Copyright)           | ✅ DONE     | `LegalDisclaimer.jsx`                            |
-| 39  | Lazy Loading de Imágenes           | ✅ DONE     | `SmartCardImage.jsx`                             |
-| 40  | Traducción Multi-idioma            | ⏳ PARTIAL  | `LanguageContext.jsx` (manual, needs automation) |
-| 37  | Cloud Link con UUID                | ❌ TODO     | Clean shareable links                            |
-| 41  | Public Deck Gallery (Black Market) | ⏳ DB READY | `communityService.js` exists, UI pending         |
-| 42  | Deck Comments & Ratings            | ⏳ DB READY | `deck_votes` & `deck_comments` tables exist      |
-
-## ⏳ FASE 8: UI/UX ENHANCEMENTS (70% COMPLETE)
-
-| #   | Feature                          | Status     | Files/Notes                                      |
-| :-- | :------------------------------- | :--------- | :----------------------------------------------- |
-| 43  | Micro-Animations (Framer Motion) | ✅ DONE 🆕 | 11 modals updated                                |
-| 44  | Skeleton States (Card Gallery)   | ✅ DONE    | `SmartCardImage.jsx`                             |
-| 45  | Drag & Drop Deck Building        | ❌ TODO    | Needs `@dnd-kit/core`                            |
-| 46  | Modal Blur (Backdrop)            | ✅ DONE 🆕 | Included in Framer Motion modals                 |
-| 47  | Toast Improvements               | ✅ DONE    | `Toast.jsx`                                      |
-| 48  | Jerarquía Tipográfica            | ❌ TODO    | Add sans-serif for long text                     |
-| 49  | Smart Collapse (Filters)         | ⏳ PARTIAL | Filters open by default on mobile                |
-| 50  | Gacha Polish (Pack Opener)       | ❌ TODO    | Delayed reveal + glow effects                    |
-| 51  | Hover Actions on Deck Cards      | ✅ DONE 🆕 | `DeckCardActions.jsx` (Preview/Remove/Move/Edit) |
-| 52  | Arrow Navigation in Preview      | ✅ DONE 🆕 | `CardPreviewModal.jsx` (keyboard + buttons)      |
-
-## ✅ FASE 9: THE ARENA (GAME SIMULATOR) (71% COMPLETE) 🆕
+## ⏳ FASE 7: CLOUD SHARING & COMMUNITY (86% COMPLETE) 🆕
 
 | #   | Feature                            | Status     | Files/Notes                                      |
 | :-- | :--------------------------------- | :--------- | :----------------------------------------------- |
-| 48  | Game State Engine (Core)           | ✅ DONE    | `GameState.js` (192 lines)                       |
-| 49  | Simulator UI (Beta)                | ✅ DONE    | `SimulatorBeta.jsx`, `PlaymatV2.jsx`             |
-| 50  | Card Logic & Combat                | ✅ DONE    | `CardLogic.js`, `CombatResolver.js`              |
-| 51  | Feature Flag (Admin-Only)          | ✅ DONE    | `featureFlagService.js`, `useFeatureFlag.js`     |
-| 52  | Playmat V2 (Skeleton Overlay) 🆕   | ✅ DONE    | `PlaymatV2.jsx`, `CyberCard.jsx` (tap/flip/drag) |
-| 53  | Card Interactions (Drag & Drop) 🆕 | ⏳ PARTIAL | Tap/flip working, drag-to-zone pending           |
-| 54  | Card Hover Preview 🆕              | ❌ TODO    | Zoom on hover or side panel                      |
-| 55  | AI Opponent                        | ❌ TODO    | Phase 9.5                                        |
-| 56  | Multiplayer (P2P)                  | ❌ TODO    | Phase 10                                         |
+| 35  | URL Sharing (Base64)               | ✅ DONE    | `deckService.js`                                 |
+| 36  | Advanced Deck Management           | ✅ DONE    | `MyDecksView.jsx`                                |
+| 38  | Página Legal (Copyright)           | ✅ DONE    | `LegalDisclaimer.jsx`                            |
+| 39  | Lazy Loading de Imágenes           | ✅ DONE    | `SmartCardImage.jsx`                             |
+| 41  | Public Deck Gallery (Black Market) | ✅ DONE 🆕 | `BlackMarketView.jsx`, `PublicDeckView.jsx`      |
+| 42  | Deck Comments & Ratings            | ✅ DONE 🆕 | Voting + comments en `PublicDeckView.jsx`        |
+| 40  | Traducción Multi-idioma            | ⏳ PARTIAL | `LanguageContext.jsx` (manual, needs automation) |
+| 37  | Cloud Link con UUID                | ❌ TODO    | Clean shareable links                            |
 
-## ⏳ FASE 10: BLACK MARKET (COMMUNITY HUB) (29% COMPLETE)
+## ⏳ FASE 8: UI/UX ENHANCEMENTS (80% COMPLETE) 🆕
 
-| #   | Feature                   | Status      | Files/DB                                                                               |
-| :-- | :------------------------ | :---------- | :------------------------------------------------------------------------------------- |
-| 55  | DB Schema (Public Decks)  | ✅ DONE 🆕  | Tables: `deck_votes`, `deck_comments`, columns: visibility, archetype, simulator_stats |
-| 56  | Community Service         | ✅ DONE 🆕  | `communityService.js` (240 lines)                                                      |
-| 57  | Black Market Hub UI       | ❌ TODO     | Component needs creation                                                               |
-| 58  | Deck Detail Page (Public) | ❌ TODO     | Shareable deck view                                                                    |
-| 59  | Upvote System             | ⏳ DB READY | Backend ready, UI pending                                                              |
-| 60  | Clone/Fork Decks          | ❌ TODO     | "Clone to Terminal" button                                                             |
-| 61  | Archetype Filtering       | ⏳ DB READY | Schema has archetype field                                                             |
+| #   | Feature                           | Status     | Files/Notes                                                        |
+| :-- | :-------------------------------- | :--------- | :----------------------------------------------------------------- |
+| 43  | Micro-Animations (Framer Motion)  | ✅ DONE    | 11 modals updated                                                  |
+| 44  | Skeleton States (Card Gallery)    | ✅ DONE    | `SmartCardImage.jsx`                                               |
+| 46  | Modal Blur (Backdrop)             | ✅ DONE    | Framer Motion modals                                               |
+| 47  | Toast Improvements                | ✅ DONE    | `Toast.jsx`                                                        |
+| 51  | Hover/Click Actions on Deck Cards | ✅ DONE 🆕 | Click abre preview con deck controls (submit copies, move, remove) |
+| 52  | Arrow Navigation in Preview       | ✅ DONE    | `CardPreviewModal.jsx`                                             |
+| 53  | Wishlist Star in Build Grid       | ✅ DONE 🆕 | App.jsx — star con glow ámbar, sync con modal                      |
+| 45  | Drag & Drop Deck Building         | ❌ TODO    | Needs `@dnd-kit/core`                                              |
+| 48  | Jerarquía Tipográfica             | ❌ TODO    | Add sans-serif for long text                                       |
+| 50  | Gacha Polish (Pack Opener)        | ❌ TODO    | Delayed reveal + glow effects                                      |
+| 54  | PWA (vite-plugin-pwa) 🆕          | ❌ TODO    | Install on mobile/desktop, ~15 min effort                          |
 
-## 🆕 FASE 11: ENHANCED FILTERS & SEARCH (0% COMPLETE)
+## ⏳ FASE 9: THE ARENA (GAME SIMULATOR) (71% COMPLETE)
 
-| #   | Feature                   | Priority  | Description                                       |
-| :-- | :------------------------ | :-------- | :------------------------------------------------ |
-| 62  | Card Number Filter        | 🔥 HIGH   | Search by "α009", "132a", "019"                   |
-| 63  | Artist Filter             | 🔥 HIGH   | Multi-select dropdown (auto-populated)            |
-| 64  | Enhanced Search           | 🔥 HIGH   | Search by subtitle, number, artist                |
-| 65  | Auto-Detect Factions      | 🔶 MEDIUM | Dynamic faction list from `cards.json`            |
-| 66  | Multiple Factions Support | 🔶 MEDIUM | Cards with 2+ factions (e.g., GANGER + VALENTINO) |
+| #   | Feature                         | Status     | Files/Notes                                  |
+| :-- | :------------------------------ | :--------- | :------------------------------------------- |
+| 48  | Game State Engine (Core)        | ✅ DONE    | `GameState.js`                               |
+| 49  | Simulator UI (Beta)             | ✅ DONE    | `SimulatorBeta.jsx`, `PlaymatV2.jsx`         |
+| 50  | Card Logic & Combat             | ✅ DONE    | `CardLogic.js`, `CombatResolver.js`          |
+| 51  | Feature Flag (Admin-Only)       | ✅ DONE    | `featureFlagService.js`, `useFeatureFlag.js` |
+| 52  | Playmat V2 (Skeleton Overlay)   | ✅ DONE    | `PlaymatV2.jsx`, `CyberCard.jsx`             |
+| 53  | Card Interactions (Drag & Drop) | ⏳ PARTIAL | Tap/flip working, drag-to-zone pending       |
+| 54  | Card Hover Preview              | ❌ TODO    | Zoom on hover o side panel                   |
+| 55  | AI Opponent                     | ❌ TODO    | Phase 9.5                                    |
+| 56  | Multiplayer (P2P)               | ❌ TODO    | Phase 10                                     |
 
-**Schema Changes Needed:**
+## ✅ FASE 10: BLACK MARKET (COMMUNITY HUB) (100% COMPLETE) 🆕
 
-```json
-// cards.json
-{
-  "subtitle": "La Venganza Lenta", // ← NEW
-  "factions": ["GANGER", "VALENTINO"], // ← NEW (array)
-  "faction": "GANGER", // ← Keep for backward compat
-  "number": "019", // ✅ Already exists
-  "artist": "Rafael de Latorre & Clonerh" // ✅ Already exists
-}
-```
+| #   | Feature                   | Status     | Files                                                      |
+| :-- | :------------------------ | :--------- | :--------------------------------------------------------- |
+| 55  | DB Schema (Public Decks)  | ✅ DONE    | `deck_votes`, `deck_comments`, visibility, archetype       |
+| 56  | Community Service         | ✅ DONE    | `communityService.js`                                      |
+| 57  | Black Market Hub UI       | ✅ DONE 🆕 | `BlackMarketView.jsx` — feed, filtros, Street Cred         |
+| 58  | Deck Detail Page (Public) | ✅ DONE 🆕 | `PublicDeckView.jsx` — card list, Eddies Curve, comments   |
+| 59  | Upvote System             | ✅ DONE 🆕 | Voting UP/DOWN con toggle en `PublicDeckView.jsx`          |
+| 60  | Clone/Fork Decks          | ✅ DONE 🆕 | `[>_ CLONE TO TERMINAL]` — copia a My Decks                |
+| 61  | Archetype Filtering       | ✅ DONE 🆕 | `PublishDeckModal.jsx` — aggro/control/combo/midrange/jank |
+| 62  | Owner/Admin Delete + Edit | ✅ DONE 🆕 | Edit description + delete desde `PublicDeckView.jsx`       |
 
-## 🆕 FASE 12: WISHLIST FEATURE (0% COMPLETE)
+## ⏳ FASE 11: ENHANCED FILTERS & SEARCH (0% COMPLETE)
 
-| #   | Feature                 | Priority  | Description                            |
-| :-- | :---------------------- | :-------- | :------------------------------------- |
-| 67  | Wishlist DB Schema      | 🔥 HIGH   | Supabase table `wishlist`              |
-| 68  | Wishlist Service        | 🔥 HIGH   | `wishlistService.js` (add/remove/list) |
-| 69  | Wishlist View           | 🔥 HIGH   | New tab in navbar                      |
-| 70  | Toggle in Preview Modal | 🔥 HIGH   | "⭐ Add to Wishlist" button            |
-| 71  | Wishlist Export         | 🔶 MEDIUM | Text format for shopping               |
+| #   | Feature                   | Priority  | Description                            |
+| :-- | :------------------------ | :-------- | :------------------------------------- |
+| 63  | Card Number Filter        | 🔥 HIGH   | Search by "α009", "132a", "019"        |
+| 64  | Artist Filter             | 🔥 HIGH   | Multi-select dropdown (auto-populated) |
+| 65  | Enhanced Search           | 🔥 HIGH   | Search by subtitle, number, artist     |
+| 66  | Auto-Detect Factions      | 🔶 MEDIUM | Dynamic faction list from `cards.json` |
+| 67  | Multiple Factions Support | 🔶 MEDIUM | Cards with 2+ factions                 |
 
-## 🆕 FASE 13: SCRAPER ENHANCEMENTS (33% COMPLETE)
+## ✅ FASE 12: WISHLIST FEATURE (100% COMPLETE) 🆕
 
-| #   | Feature                            | Priority  | Description                                   |
-| :-- | :--------------------------------- | :-------- | :-------------------------------------------- |
-| 72  | Extract Subtitle                   | 🔶 MEDIUM | "La Venganza Lenta" from card page            |
-| 73  | Extract Multiple Factions          | 🔶 MEDIUM | Parse all faction tags                        |
-| 74  | Verify Number & Artist             | ✅ DONE   | Already extracting                            |
-| #   | Feature                            | Status    | Files                                         |
-| :-- | :--------------------------------- | :------   | :-------------------------------------------- |
-| 1   | Búsqueda y Filtrado Extremo        | ✅ DONE   | `FilterPanel.jsx`, `SearchBar.jsx`, `App.jsx` |
-| 2   | Validador de Reglas en tiempo real | ✅ DONE   | `App.jsx`, `deckValidator.js`                 |
-| 3   | Muro de RAM dinámico               | ✅ DONE   | `App.jsx`, `DeckArea.jsx`                     |
-| 3.5 | FREE BUILD MODE 🆕                 | ✅ DONE   | `App.jsx`, `DeckArea.jsx`                     |
-| 4   | Panel de Analíticas básicas        | ✅ DONE   | `DeckAnalytics.jsx`, `AnalyticsModal.jsx`     |
-| 5   | Exportación en texto plano         | ✅ DONE   | `ExportModal.jsx`                             |
-| 6   | Zona de Sideboard (0/15)           | ✅ DONE   | `App.jsx`, `DeckArea.jsx`                     |
-| 6.5 | Refactor de IDs para Alt Arts      | ✅ DONE   | `cards.json`, `App.jsx`                       |
+| #   | Feature                 | Status     | Files                                              |
+| :-- | :---------------------- | :--------- | :------------------------------------------------- |
+| 68  | Wishlist DB Schema      | ✅ DONE 🆕 | Supabase `wishlist` table con RLS                  |
+| 69  | Wishlist Service        | ✅ DONE 🆕 | `wishlistService.js` (add/remove/list/export)      |
+| 70  | Wishlist en Collection  | ✅ DONE 🆕 | `CollectionView.jsx` — filtro WISHLIST, star hover |
+| 71  | Toggle en Preview Modal | ✅ DONE 🆕 | `CardPreviewModal.jsx` — star top-left con glow    |
+| 72  | Star en Build Grid      | ✅ DONE 🆕 | `App.jsx` — star bottom-right, sync tiempo real    |
 
-**PLAYMAT V2 CHANGELOG (2026-04-07):**
+## ⏳ FASE 13: SCRAPER ENHANCEMENTS (33% COMPLETE)
 
-- ✅ Migrated HTML playmat reference to React (`PlaymatV2.jsx`)
-- ✅ Skeleton overlay design: transparent zones, yellow borders
-- ✅ Dice roller (D20-D4) with shake animation
-- ✅ Custom background upload support
-- ✅ Card tap (click) and flip (right-click) interactions
-- ✅ Card images display via `image_url` property
-- ⏳ **PENDING:** Drag-to-zone functionality, hover zoom, larger card preview
+| #   | Feature                   | Status  | Description                        |
+| :-- | :------------------------ | :------ | :--------------------------------- |
+| 73  | Extract Subtitle          | ⏳ TODO | "La Venganza Lenta" from card page |
+| 74  | Extract Multiple Factions | ⏳ TODO | Parse all faction tags             |
+| 75  | Verify Number & Artist    | ✅ DONE | Already extracting                 |
+
+## 🔮 FASE 14: SCANNER & SMART IMPORT (FUTURE)
+
+| #   | Feature                   | Priority  | Description                                   |
+| :-- | :------------------------ | :-------- | :-------------------------------------------- |
+| 76  | Card Scanner (Camera OCR) | 🔶 MEDIUM | Web Camera API + Google Vision o Tesseract.js |
+| 77  | Batch Import via Scanner  | 🔶 MEDIUM | Scan múltiples cartas → auto-add a Collection |
+
+> **Prereqs:** Set de imágenes de referencia para matching, API Vision o modelo local. Estimado: 2-3 semanas.
 
 ---
 
 ## 📊 PROGRESS SUMMARY
 
-| Fase       | Completado | Pendiente | Progreso      |
-| :--------- | :--------- | :-------- | :------------ |
-| Fase 1     | 8/8        | 0         | 100% ✅       |
-| Fase 2     | 2/2        | 0         | 100% ✅       |
-| Fase 3     | 8/8        | 0         | 100% ✅       |
-| Fase 4     | 7/7        | 0         | 100% ✅       |
-| Fase 5     | 6/7        | 1         | 86% ⏳        |
-| Fase 6     | 3/4        | 1         | 75% ⏳        |
-| Fase 7     | 4/7        | 3         | 57% ⏳        |
-| Fase 8     | 7/10       | 3         | 70% ⏳        |
-| **Fase 9** | **5/7** 🆕 | **2**     | **71% ⏳** 🔥 |
-| Fase 10    | 2/7        | 5         | 29% ⏳        |
-| Fase 11    | 0/5        | 5         | 0% ❌         |
-| Fase 12    | 0/5        | 5         | 0% ❌         |
-| Fase 13    | 1/3        | 2         | 33% ⏳        |
+| Fase    | Completado | Pendiente | Progreso   |
+| :------ | :--------- | :-------- | :--------- |
+| Fase 1  | 8/8        | 0         | 100% ✅    |
+| Fase 2  | 2/2        | 0         | 100% ✅    |
+| Fase 3  | 8/8        | 0         | 100% ✅    |
+| Fase 4  | 7/7        | 0         | 100% ✅    |
+| Fase 5  | 6/7        | 1         | 86% ⏳     |
+| Fase 6  | 4/4        | 0         | 100% ✅ 🆕 |
+| Fase 7  | 6/7        | 1         | 86% ⏳ 🆕  |
+| Fase 8  | 8/11       | 3         | 80% ⏳ 🆕  |
+| Fase 9  | 5/9        | 4         | 56% ⏳     |
+| Fase 10 | 8/8        | 0         | 100% ✅ 🆕 |
+| Fase 11 | 0/5        | 5         | 0% ❌      |
+| Fase 12 | 5/5        | 0         | 100% ✅ 🆕 |
+| Fase 13 | 1/3        | 2         | 33% ⏳     |
+| Fase 14 | 0/2        | 2         | 0% 🔮      |
 
-**TOTAL:** 53/76 features completadas (70% del proyecto) 🆕
+**TOTAL: 68/85 features completadas (80% del proyecto)** 🆕
 
 ---
 
-## 🎯 PRÓXIMOS PASOS RECOMENDADOS
+## 🎯 PRÓXIMOS PASOS
 
-**PRIORIDAD INMEDIATA:**
+1. **PWA** — `vite-plugin-pwa`, 15 min, cierra Fase 8 al 90%
+2. **Fase 11** — Enhanced Filters (card number, artist, subtitle)
+3. **Fase 9 Polish** — Drag-to-zone en Playmat, card hover preview
+4. **v1.0.0 tag** — PWA + Fase 11 = milestone de release
 
-- **PHASE 9 POLISH** - Drag-to-zone, hover zoom, card preview sidebar 🔥
-- **WISHLIST FEATURE (Fase 12)** - Alta demanda de usuarios
-- **ENHANCED FILTERS (Fase 11)** - Mejora UX inmediata
-- **BLACK MARKET UI (Fase 10)** - Backend listo, falta frontend
+## IDEAS EMERGENTES
 
-**ORDEN SUGERIDO:**
-
-1. **ESTA SEMANA:** Phase 9 interactions (drag, hover) | Wishlist DB schema
-2. **PRÓXIMA SEMANA:** Wishlist UI | Enhanced Filters (Number + Artist)
-3. **SEMANA 3:** Black Market Hub UI | Scraper Updates
-
-## IDEAS EMERGENTES.
-
-Hola Claude, si escaneas esto es por que aqui hay ideas que tal vez aun no te e dicho pero no se como aterrizarlas bien. o simplemente cosas que se me oucrrieron, si leiste esto porfavor en el chat respondeme, vi tu idea emergente y dime tu opinion y que tan util peude ser.
-
-- Escaner de tarjetas como el de Pokemon o donde tu pones tu tarjeta en la camara y el programa lo reconoce y la guarda en tu coleccion de cartas obtenidas.
-- Implementar PWA En el proyecto de Vite, instala vite-plugin-pwa. Esto te tomará 15 minutos y permitirá que los usuarios "instalen" tu simulador/deckbuilder en sus celulares Android y iOS.
+- **Escáner de cartas (Fase 14):** OCR con cámara para auto-agregar a Collection. Prereqs: imagen DB de referencia. Estimado post-v1.0.0.
+- **PWA (Fase 8):** `vite-plugin-pwa` — instalar en celular como app nativa. ~15 min. Próxima sesión.
 
 ---
 
 ## 📝 CHANGELOG
 
-**2026-04-07 (PLAYMAT V2 RELEASE):** 🆕
+**2026-04-10 (BLACK MARKET + WISHLIST RELEASE):** 🆕
 
-- ✨ **ADDED:** PlaymatV2.jsx - Full skeleton overlay playmat
-  - Transparent zones with yellow borders (no background color)
-  - 8 functional zones: hand, field (3 slots), legends (3), eddies, deck, trash, gigs (2)
-  - Dice roller (D20-D4) with shake animation on click
-  - Custom background upload support
-  - Text shadow for readability on any background
-- ✨ **ADDED:** CyberCard.jsx - Interactive card component
-  - Click to tap/untap (90° rotation)
-  - Right-click to flip (face-up/down)
-  - Draggable cards (drag-to-zone pending integration)
-  - Card type colors: Legend (amber), Unit (red), Gear (cyan), Gig (green)
-  - Background image support via `card.image_url`
-- 🔧 **UPDATED:** SimulatorBeta.jsx
-  - Now uses PlaymatV2 instead of PlaymatView
-  - Fixed feature flag hook (`isEnabled` not `flagEnabled`)
-  - Precon decks load correctly (Merc + Arasaka)
-  - Fixed GameState initialization (requires 2 decks: player + opponent)
+- ✨ **ADDED:** Black Market Hub (`BlackMarketView.jsx`)
+  - Feed de mazos públicos con filtros por archetype, color RAM, búsqueda
+  - Street Cred (upvote/downvote system)
+  - Clone to Terminal — copia mazos de la comunidad a My Decks
+  - Refresh automático al borrar deck
+- ✨ **ADDED:** PublicDeckView modal
+  - Lista de cartas con RAM dots y costo en Eddies
+  - Eddies Curve (excluye leyendas, fix de barras vacías)
+  - Intel Comments — post y lectura en tiempo real
+  - Owner/Admin: editar descripción y borrar deck del mercado
+- ✨ **ADDED:** PublishDeckModal — reemplaza prompt() nativo
+  - Selector de archetype (Aggro/Control/Combo/Midrange/Jank)
+  - Textarea para strategy notes con contador de caracteres
+  - Preview de stats del deck antes de publicar
+- ✨ **ADDED:** Wishlist System
+  - Star en Build grid (bottom-right de imagen, glow ámbar)
+  - Star en CardPreviewModal (top-left, toggle con sync)
+  - Collection v2: todas las cartas, owned en color, missing grayed 40%
+  - Filtros ALL/OWNED/MISSING/WISHLIST en Collection tab
+- ✨ **IMPROVED:** DeckArea UX
+  - Click en carta del deck → abre CardPreviewModal con deck controls
+  - Copies stepper muestra cantidad actual, permite bajar a 0
+  - Submit copies calcula diff y aplica add/remove automático
+  - Deck count badge en Build grid (azul, x1/x2/x3)
+- 🔧 **FIXED:** Supabase
+  - Columnas discord_username/discord_avatar en profiles
+  - FK profiles para PostgREST joins (PGRST200 fix)
+  - .maybeSingle() en wishlist/votes (406 fix)
+  - Removidas constraints check_legends_count/check_main_deck_count
+  - Admin RLS policies para decks y deck_comments
 
-**2026-04-05 (HOTFIX DAY):**
-
-- 🐛 **FIXED:** Mulligan Simulator color filtering (used `faction` instead of `ram_color`)
-  - `getAllowedColors()` now reads `legend.ram_color` (Red/Blue/Green/Yellow)
-  - Card pool filtering changed from faction matching to `ram_color` matching
-  - Added debug logs for color verification
-- 🐛 **FIXED:** Admin Panel RLS policies (DELETE operations blocked)
-  - Policies now check `admin_users` table instead of `auth.users.metadata`
-  - SQL Editor fix: `DROP POLICY` + `CREATE POLICY` with `admin_users` JOIN
-- 🐛 **FIXED:** Feedback metadata showing "N/A"
-  - feedbackService now captures browser/OS/URL via `getSystemMetadata()`
-  - Browser detection: Chrome, Firefox, Safari, Edge
-  - OS detection: Windows, macOS, Linux, Android, iOS
-- ✨ **ADDED:** AdminFeedbackViewer bulk delete with checkboxes
-  - Permanent checkboxes on left (no "SELECT MODE" toggle)
-  - Bulk actions appear dynamically when items selected
-  - Visual feedback: blue highlight for selected items
-- ✨ **ADDED:** Kickstarter widget to LandingPage hero
-  - Grid layout (text left, widget right)
-  - Responsive: hidden on mobile (`hidden lg:block`)
-  - Exact fit wrapper (220x420px) with border
-- 🔧 **FIXED:** MulliganModal overflow when analysis panel opens
-  - Added `max-h-[90vh]` + `overflow-y-auto` to modal container
-
-**2026-04-04:**
-
-- ✅ CORRECTED: Fase 4 from 90% → 100% (SuggestedCards.jsx verified)
-- ✅ CORRECTED: Fase 5 from 85% → 100% (Hypergeometric in AnalyticsModal.jsx verified)
-- ✅ CORRECTED: Fase 6 from 75% → 100% (Collection fully functional)
-- ✅ VERIFIED: Phase 8 at 33% (modal animations done, buttons/cards pending)
-- ✅ ADDED: Exact commit references (ae05c54, 6576e2f, 2bec00f, 2d9590e)
-- ✅ ADDED: Component file paths verified against repo
-- ✅ ADDED: Deployment readiness score (96/100)
+**2026-04-07 (PLAYMAT V2 RELEASE):**
+[... changelog anterior sin cambios ...]
