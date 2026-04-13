@@ -1247,6 +1247,7 @@ function App() {
                   allCards={cards}
                   savedDecks={savedDecks}
                   onNavigate={setActiveTab}
+                  onLoadPrecon={handleLoadPrecon}
                 />
               </div>
             )}

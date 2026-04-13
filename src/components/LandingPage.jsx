@@ -19,7 +19,14 @@ const KickstarterWidget = () => (
   </div>
 );
 
-function LandingPage({ user, collection, allCards, savedDecks, onNavigate }) {
+function LandingPage({
+  user,
+  collection,
+  allCards,
+  savedDecks,
+  onNavigate,
+  onLoadPrecon,
+}) {
   const [showGuideModal, setShowGuideModal] = useState(false);
 
   // Calculate user stats
@@ -188,10 +195,10 @@ function LandingPage({ user, collection, allCards, savedDecks, onNavigate }) {
               key={deck.id}
               deck={deck}
               onLoad={(deckData) => {
-                console.log("Loading precon:", deckData.name);
-                alert(
-                  `Precon "${deckData.name}" loaded!\n(Full integration with deck builder coming in next feature)`,
-                );
+                if (onLoadPrecon) {
+                  onLoadPrecon(deckData);
+                  onNavigate("build");
+                }
               }}
             />
           ))}
