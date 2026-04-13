@@ -174,8 +174,9 @@
 | Fase 12 | 5/5        | 0         | 100% ✅ 🆕 |
 | Fase 13 | 1/3        | 2         | 33% ⏳     |
 | Fase 14 | 0/2        | 2         | 0% 🔮      |
+| Fase 15 | 0/6        | 6         | 0% 🔮      |
 
-**TOTAL: 68/85 features completadas (80% del proyecto)** 🆕
+**TOTAL: 68/91 features completadas (75% del proyecto)** 🆕
 
 ---
 
