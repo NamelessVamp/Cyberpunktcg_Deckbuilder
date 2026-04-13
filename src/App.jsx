@@ -1238,524 +1238,539 @@ function App() {
           <AnimatePresence mode="sync">
             <DeckTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-            {/* HOME */}
-            {activeTab === "home" && (
-              <div key="home-tab" className="tab-enter">
-                <LandingPage
-                  user={user}
-                  collection={collection}
-                  allCards={cards}
-                  savedDecks={savedDecks}
-                  onNavigate={setActiveTab}
-                  onLoadPrecon={handleLoadPrecon}
-                />
-              </div>
-            )}
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, filter: "blur(4px)", y: 6 }}
+              animate={{
+                opacity: 1,
+                filter: "blur(0px)",
+                y: 0,
+                transitionEnd: { filter: "none", transform: "none" },
+              }}
+              exit={{ opacity: 0, filter: "blur(3px)", y: -4 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {/* HOME */}
+              {activeTab === "home" && (
+                <div key="home-tab">
+                  <LandingPage
+                    user={user}
+                    collection={collection}
+                    allCards={cards}
+                    savedDecks={savedDecks}
+                    onNavigate={setActiveTab}
+                    onLoadPrecon={handleLoadPrecon}
+                  />
+                </div>
+              )}
 
-            {/* BUILD */}
-            {activeTab === "build" && (
-              <div key="build-tab" className="tab-enter">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {/* LEFT: Card Browser */}
-                  <div className="lg:col-span-2">
-                    <SearchBar
-                      onSearch={setSearchTerm}
-                      onToggleFilters={() => setFiltersOpen(!filtersOpen)}
-                      filtersOpen={filtersOpen}
-                      onCloseFilters={() => setFiltersOpen(false)}
-                    />
+              {/* BUILD */}
+              {activeTab === "build" && (
+                <div key="build-tab">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* LEFT: Card Browser */}
+                    <div className="lg:col-span-2">
+                      <SearchBar
+                        onSearch={setSearchTerm}
+                        onToggleFilters={() => setFiltersOpen(!filtersOpen)}
+                        filtersOpen={filtersOpen}
+                        onCloseFilters={() => setFiltersOpen(false)}
+                      />
 
-                    <FilterPanel
-                      cards={cards}
-                      filters={filters}
-                      onFilterChange={setFilters}
-                      isOpen={filtersOpen}
-                      showOwnedOnly={showOwnedOnly}
-                      onToggleOwnedOnly={setShowOwnedOnly}
-                      collectionCount={collection.length}
-                      isLoggedIn={!!user}
-                    />
+                      <FilterPanel
+                        cards={cards}
+                        filters={filters}
+                        onFilterChange={setFilters}
+                        isOpen={filtersOpen}
+                        showOwnedOnly={showOwnedOnly}
+                        onToggleOwnedOnly={setShowOwnedOnly}
+                        collectionCount={collection.length}
+                        isLoggedIn={!!user}
+                      />
 
-                    {/* Card Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-0">
-                      {currentCards.map((card) => (
-                        <div
-                          key={card.id}
-                          className="deck-card-container glitch-card hover:border-term-green transition-all duration-300 cursor-pointer group"
-                          onClick={() => setPreviewCard(card)}
-                        >
-                          <div className="relative overflow-hidden rounded mb-3 bg-term-gray-light">
-                            <SmartCardImage
-                              card={card}
-                              className="w-full h-auto transition-transform duration-300 group-hover:scale-105 glitch-img"
-                              showLoadingState={true}
-                            />
+                      {/* Card Grid */}
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-0">
+                        {currentCards.map((card) => (
+                          <div
+                            key={card.id}
+                            className="deck-card-container glitch-card hover:border-term-green transition-all duration-300 cursor-pointer group"
+                            onClick={() => setPreviewCard(card)}
+                          >
+                            <div className="relative overflow-hidden rounded mb-3 bg-term-gray-light">
+                              <SmartCardImage
+                                card={card}
+                                className="w-full h-auto transition-transform duration-300 group-hover:scale-105 glitch-img"
+                                showLoadingState={true}
+                              />
 
-                            {/* Owned Badge */}
-                            {user &&
-                              collectionService.ownsCard(
-                                collection,
-                                card.id,
-                              ) && (
-                                <div className="absolute top-2 left-2 bg-term-green text-term-black font-mono font-bold text-xs px-2 py-1 rounded flex items-center gap-1">
-                                  ✓ x
-                                  {collectionService.getCardQuantity(
-                                    collection,
-                                    card.id,
-                                  )}
+                              {/* Owned Badge */}
+                              {user &&
+                                collectionService.ownsCard(
+                                  collection,
+                                  card.id,
+                                ) && (
+                                  <div className="absolute top-2 left-2 bg-term-green text-term-black font-mono font-bold text-xs px-2 py-1 rounded flex items-center gap-1">
+                                    ✓ x
+                                    {collectionService.getCardQuantity(
+                                      collection,
+                                      card.id,
+                                    )}
+                                  </div>
+                                )}
+
+                              {/* Deck Count Badge */}
+                              {(() => {
+                                const deckCount = [
+                                  ...deck.mainDeck,
+                                  ...deck.legends,
+                                ].filter((c) => c.id === card.id).length;
+                                return deckCount > 0 ? (
+                                  <div className="absolute bottom-2 left-2 bg-term-blue text-white font-mono font-bold text-xs px-2 py-0.5 rounded">
+                                    x{deckCount}
+                                  </div>
+                                ) : null;
+                              })()}
+
+                              {/* NEW Badge */}
+                              {isNewCard(card) && (
+                                <div className="absolute top-2 right-2 bg-term-green text-term-black font-mono font-bold text-xs px-2 py-1 rounded animate-pulse flex items-center gap-1">
+                                  NEW
                                 </div>
                               )}
 
-                            {/* Deck Count Badge */}
-                            {(() => {
-                              const deckCount = [
-                                ...deck.mainDeck,
-                                ...deck.legends,
-                              ].filter((c) => c.id === card.id).length;
-                              return deckCount > 0 ? (
-                                <div className="absolute bottom-2 left-2 bg-term-blue text-white font-mono font-bold text-xs px-2 py-0.5 rounded">
-                                  x{deckCount}
-                                </div>
-                              ) : null;
-                            })()}
+                              {/* RAM Color Dot */}
+                              {card.ram_color && (
+                                <div
+                                  className={`absolute top-2 right-2 w-3 h-3 rounded-full ${
+                                    card.ram_color === "Red"
+                                      ? "bg-term-red"
+                                      : card.ram_color === "Yellow"
+                                        ? "bg-term-amber"
+                                        : card.ram_color === "Green"
+                                          ? "bg-term-green"
+                                          : card.ram_color === "Blue"
+                                            ? "bg-term-blue"
+                                            : "bg-gray-500"
+                                  }`}
+                                ></div>
+                              )}
 
-                            {/* NEW Badge */}
-                            {isNewCard(card) && (
-                              <div className="absolute top-2 right-2 bg-term-green text-term-black font-mono font-bold text-xs px-2 py-1 rounded animate-pulse flex items-center gap-1">
-                                NEW
-                              </div>
-                            )}
-
-                            {/* RAM Color Dot */}
-                            {card.ram_color && (
-                              <div
-                                className={`absolute top-2 right-2 w-3 h-3 rounded-full ${
-                                  card.ram_color === "Red"
-                                    ? "bg-term-red"
-                                    : card.ram_color === "Yellow"
-                                      ? "bg-term-amber"
-                                      : card.ram_color === "Green"
-                                        ? "bg-term-green"
-                                        : card.ram_color === "Blue"
-                                          ? "bg-term-blue"
-                                          : "bg-gray-500"
-                                }`}
-                              ></div>
-                            )}
-
-                            {/* ─── WISHLIST STAR en Build Grid ─────────────────── */}
-                            {user && (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleToggleWishlist(card.id);
-                                }}
-                                className={`absolute bottom-2 right-2 text-xl leading-none transition-all select-none
+                              {/* ─── WISHLIST STAR en Build Grid ─────────────────── */}
+                              {user && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleToggleWishlist(card.id);
+                                  }}
+                                  className={`absolute bottom-2 right-2 text-xl leading-none transition-all select-none
   rounded px-1 py-0.5
   ${
     wishlistIds.has(card.id)
       ? "opacity-100 text-term-amber drop-shadow-[0_0_8px_#ffb300] bg-black/50"
       : "opacity-0 group-hover:opacity-100 text-term-amber bg-black/40"
   }`}
-                                title={
-                                  wishlistIds.has(card.id)
-                                    ? "Quitar de wishlist"
-                                    : "Agregar a wishlist"
-                                }
-                              >
-                                {wishlistIds.has(card.id) ? "★" : "☆"}
-                              </button>
-                            )}
-                            {/* ──────────────────────────────────────────────────── */}
-                          </div>
-
-                          <h3 className="text-term-green font-bold font-mono text-lg">
-                            {card.name}
-                          </h3>
-
-                          {card.subtitle && (
-                            <p className="text-term-amber/60 text-sm font-mono mb-2">
-                              {card.subtitle}
-                            </p>
-                          )}
-
-                          <div className="flex gap-3 text-xs font-mono mb-2">
-                            {card.cost !== undefined && (
-                              <span className="text-term-blue">
-                                COST: {card.cost}
-                              </span>
-                            )}
-                            {card.power !== undefined && (
-                              <span className="text-term-red">
-                                PWR: {card.power}
-                              </span>
-                            )}
-                            <span className="text-term-green">
-                              RAM: {card.ram}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center gap-2 text-xs font-mono">
-                            <span className="text-term-amber/80">
-                              {card.type}
-                            </span>
-                            {card.faction && (
-                              <>
-                                <span className="text-term-amber/40">//</span>
-                                <span className="text-term-green/80">
-                                  {card.faction}
-                                </span>
-                              </>
-                            )}
-                          </div>
-
-                          {card.keywords && card.keywords.length > 0 && (
-                            <div className="mt-2 flex flex-wrap gap-1">
-                              {card.keywords.map((keyword, idx) => (
-                                <span
-                                  key={idx}
-                                  className="text-xs px-2 py-0.5 bg-term-amber/10 text-term-amber rounded font-mono"
+                                  title={
+                                    wishlistIds.has(card.id)
+                                      ? "Quitar de wishlist"
+                                      : "Agregar a wishlist"
+                                  }
                                 >
-                                  {keyword}
-                                </span>
-                              ))}
+                                  {wishlistIds.has(card.id) ? "★" : "☆"}
+                                </button>
+                              )}
+                              {/* ──────────────────────────────────────────────────── */}
                             </div>
-                          )}
 
-                          <div className="mt-3 text-center">
-                            <span className="text-term-green text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity">
-                              [CLICK TO PREVIEW]
-                            </span>
+                            <h3 className="text-term-green font-bold font-mono text-lg">
+                              {card.name}
+                            </h3>
+
+                            {card.subtitle && (
+                              <p className="text-term-amber/60 text-sm font-mono mb-2">
+                                {card.subtitle}
+                              </p>
+                            )}
+
+                            <div className="flex gap-3 text-xs font-mono mb-2">
+                              {card.cost !== undefined && (
+                                <span className="text-term-blue">
+                                  COST: {card.cost}
+                                </span>
+                              )}
+                              {card.power !== undefined && (
+                                <span className="text-term-red">
+                                  PWR: {card.power}
+                                </span>
+                              )}
+                              <span className="text-term-green">
+                                RAM: {card.ram}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-xs font-mono">
+                              <span className="text-term-amber/80">
+                                {card.type}
+                              </span>
+                              {card.faction && (
+                                <>
+                                  <span className="text-term-amber/40">//</span>
+                                  <span className="text-term-green/80">
+                                    {card.faction}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+
+                            {card.keywords && card.keywords.length > 0 && (
+                              <div className="mt-2 flex flex-wrap gap-1">
+                                {card.keywords.map((keyword, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="text-xs px-2 py-0.5 bg-term-amber/10 text-term-amber rounded font-mono"
+                                  >
+                                    {keyword}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
+                            <div className="mt-3 text-center">
+                              <span className="text-term-green text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+                                [CLICK TO PREVIEW]
+                              </span>
+                            </div>
                           </div>
+                        ))}
+                      </div>
+
+                      {/* Pagination */}
+                      {totalPages > 1 && (
+                        <div className="mt-6 flex items-center justify-center gap-4">
+                          <button
+                            onClick={() => {
+                              setCurrentPage((prev) => Math.max(prev - 1, 1));
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                            }}
+                            disabled={currentPage === 1}
+                            className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
+                              currentPage === 1
+                                ? "bg-term-gray border border-term-amber/20 text-term-amber/40 cursor-not-allowed"
+                                : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
+                            }`}
+                          >
+                            [◄ PREV]
+                          </button>
+
+                          <span className="text-term-green font-mono">
+                            PAGE {currentPage} / {totalPages}
+                          </span>
+
+                          <button
+                            onClick={() => {
+                              setCurrentPage((prev) =>
+                                Math.min(prev + 1, totalPages),
+                              );
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                            }}
+                            disabled={currentPage === totalPages}
+                            className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
+                              currentPage === totalPages
+                                ? "bg-term-gray border border-term-amber/20 text-term-amber/40 cursor-not-allowed"
+                                : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
+                            }`}
+                          >
+                            [NEXT ►]
+                          </button>
                         </div>
-                      ))}
+                      )}
                     </div>
 
-                    {/* Pagination */}
-                    {totalPages > 1 && (
-                      <div className="mt-6 flex items-center justify-center gap-4">
-                        <button
-                          onClick={() => {
-                            setCurrentPage((prev) => Math.max(prev - 1, 1));
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                          }}
-                          disabled={currentPage === 1}
-                          className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
-                            currentPage === 1
-                              ? "bg-term-gray border border-term-amber/20 text-term-amber/40 cursor-not-allowed"
-                              : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
-                          }`}
-                        >
-                          [◄ PREV]
-                        </button>
-
-                        <span className="text-term-green font-mono">
-                          PAGE {currentPage} / {totalPages}
-                        </span>
-
-                        <button
-                          onClick={() => {
-                            setCurrentPage((prev) =>
-                              Math.min(prev + 1, totalPages),
-                            );
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                          }}
-                          disabled={currentPage === totalPages}
-                          className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
-                            currentPage === totalPages
-                              ? "bg-term-gray border border-term-amber/20 text-term-amber/40 cursor-not-allowed"
-                              : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
-                          }`}
-                        >
-                          [NEXT ►]
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* RIGHT: Deck Area */}
-                  <div className="lg:col-span-1">
-                    <div className="lg:sticky lg:top-8 space-y-6">
-                      <DeckArea
-                        deck={deck}
-                        onRemoveCard={handleRemoveCard}
-                        onClearDeck={handleClearDeck}
-                        onShareDeck={handleShareDeck}
-                        allCards={cards}
-                        showAnalytics={showAnalytics}
-                        onToggleAnalytics={() =>
-                          setShowAnalytics(!showAnalytics)
-                        }
-                        onGenerateProxies={() => setShowProxyModal(true)}
-                        onAddToDeck={handleAddToDeck}
-                        onAddToSideboard={handleAddToSideboard}
-                        freeBuildMode={freeBuildMode}
-                        onToggleFreeBuild={() =>
-                          setFreeBuildMode(!freeBuildMode)
-                        }
-                      />
-
-                      {showProxyModal && (
-                        <ProxyModal
+                    {/* RIGHT: Deck Area */}
+                    <div className="lg:col-span-1">
+                      <div className="lg:sticky lg:top-8 space-y-6">
+                        <DeckArea
                           deck={deck}
-                          onClose={() => setShowProxyModal(false)}
-                        />
-                      )}
-
-                      {showAnalytics && (
-                        <AnalyticsModal
-                          deck={deck}
-                          onClose={() => setShowAnalytics(false)}
-                        />
-                      )}
-
-                      <div className="grid grid-cols-3 gap-2">
-                        <button
-                          onClick={() => setShowSaveModal(true)}
-                          disabled={
-                            deck.mainDeck.length === 0 &&
-                            deck.legends.length === 0
+                          onRemoveCard={handleRemoveCard}
+                          onClearDeck={handleClearDeck}
+                          onShareDeck={handleShareDeck}
+                          allCards={cards}
+                          showAnalytics={showAnalytics}
+                          onToggleAnalytics={() =>
+                            setShowAnalytics(!showAnalytics)
                           }
-                          className="bg-term-green text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-green-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                        >
-                          [SAVE]
-                        </button>
+                          onGenerateProxies={() => setShowProxyModal(true)}
+                          onAddToDeck={handleAddToDeck}
+                          onAddToSideboard={handleAddToSideboard}
+                          freeBuildMode={freeBuildMode}
+                          onToggleFreeBuild={() =>
+                            setFreeBuildMode(!freeBuildMode)
+                          }
+                        />
 
-                        <button
-                          onClick={() => setShowImportModal(true)}
-                          className="bg-term-blue text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-blue-400 transition-colors"
-                        >
-                          [IMPORT]
-                        </button>
+                        {showProxyModal && (
+                          <ProxyModal
+                            deck={deck}
+                            onClose={() => setShowProxyModal(false)}
+                          />
+                        )}
 
-                        <button
-                          onClick={() => {
-                            setExportDeckName("My Deck");
-                            setShowExportModal(true);
-                          }}
-                          disabled={deck.mainDeck.length === 0}
-                          className="bg-term-amber text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-yellow-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                        >
-                          [EXPORT]
-                        </button>
+                        {showAnalytics && (
+                          <AnalyticsModal
+                            deck={deck}
+                            onClose={() => setShowAnalytics(false)}
+                          />
+                        )}
+
+                        <div className="grid grid-cols-3 gap-2">
+                          <button
+                            onClick={() => setShowSaveModal(true)}
+                            disabled={
+                              deck.mainDeck.length === 0 &&
+                              deck.legends.length === 0
+                            }
+                            className="bg-term-green text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-green-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                          >
+                            [SAVE]
+                          </button>
+
+                          <button
+                            onClick={() => setShowImportModal(true)}
+                            className="bg-term-blue text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-blue-400 transition-colors"
+                          >
+                            [IMPORT]
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              setExportDeckName("My Deck");
+                              setShowExportModal(true);
+                            }}
+                            disabled={deck.mainDeck.length === 0}
+                            className="bg-term-amber text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-yellow-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                          >
+                            [EXPORT]
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {activeTab === "mydecks" && (
-              <div key="mydecks-tab" className="tab-enter">
-                <MyDecksView
-                  savedDecks={savedDecks}
-                  onLoadDeck={handleLoadDeck}
-                  onDeleteDeck={handleDeleteDeck}
-                  onDuplicateDeck={handleDuplicateDeck}
-                  onRenameDeck={handleRenameDeck}
-                  onExportAll={handleExportAllDecks}
-                  onImportAll={handleImportAllDecks}
-                  onPublishDeck={user ? handlePublishDeck : null}
-                  onUnpublishDeck={user ? handleUnpublishDeck : null}
-                />
-              </div>
-            )}
-
-            {activeTab === "precon" && cards && cards.length > 0 && (
-              <PreconDecksView
-                onLoadPrecon={handleLoadPrecon}
-                allCards={cards}
-              />
-            )}
-
-            {activeTab === "practice" && (
-              <div key="practice-tab" className="tab-enter">
-                <MulliganSimulator deck={deck} allCards={cards} />
-              </div>
-            )}
-
-            {activeTab === "packs" && (
-              <div key="packs-tab" className="tab-enter">
-                <PackOpener allCards={cards} />
-              </div>
-            )}
-
-            {/* ─── COLLECTION TAB — now with wishlist props ─── */}
-            {activeTab === "collection" && (
-              <div key="collection-tab" className="tab-enter">
-                <CollectionView
-                  collection={collection}
-                  allCards={cards}
-                  onAddToCollection={handleAddToCollection}
-                  onRemoveFromCollection={handleRemoveFromCollection}
-                  onViewCard={(card) => setPreviewCard(card)}
-                  wishlistIds={wishlistIds}
-                  onToggleWishlist={user ? handleToggleWishlist : null}
-                  isLoggedIn={!!user}
-                />
-              </div>
-            )}
-
-            {activeTab === "blackmarket" && (
-              <div key="blackmarket-tab" className="relative min-h-[400px]">
-                <CyberspaceParticles count={150} className="rounded-lg" />
-                <div className="relative z-10">
-                  <BlackMarketView
-                    key={blackMarketKey}
-                    allCards={cards}
-                    onLoadDeck={(clonedDeck) => {
-                      setSavedDecks((prev) => [clonedDeck, ...prev]);
-                    }}
-                    onShowToast={showToast}
-                    onViewPublicDeck={(deck) => setPublicDeckId(deck.id)}
+              {activeTab === "mydecks" && (
+                <div key="mydecks-tab">
+                  <MyDecksView
+                    savedDecks={savedDecks}
+                    onLoadDeck={handleLoadDeck}
+                    onDeleteDeck={handleDeleteDeck}
+                    onDuplicateDeck={handleDuplicateDeck}
+                    onRenameDeck={handleRenameDeck}
+                    onExportAll={handleExportAllDecks}
+                    onImportAll={handleImportAllDecks}
+                    onPublishDeck={user ? handlePublishDeck : null}
+                    onUnpublishDeck={user ? handleUnpublishDeck : null}
                   />
                 </div>
-              </div>
-            )}
+              )}
 
-            {activeTab === "simulator" && (
-              <div key="simulator-tab" className="tab-enter">
-                <SimulatorBeta currentDeck={deck} />
-              </div>
-            )}
+              {activeTab === "precon" && cards && cards.length > 0 && (
+                <div key="precon-tab">
+                  <PreconDecksView
+                    onLoadPrecon={handleLoadPrecon}
+                    allCards={cards}
+                  />
+                </div>
+              )}
 
-            {activeTab === "legal" && (
-              <div key="legal-tab" className="tab-enter">
-                <LegalDisclaimer />
-              </div>
-            )}
+              {activeTab === "practice" && (
+                <div key="practice-tab">
+                  <MulliganSimulator deck={deck} allCards={cards} />
+                </div>
+              )}
 
-            {/* MODALS */}
-            {showSaveModal && (
-              <SaveDeckModal
-                deck={deck}
-                onSave={handleSaveDeck}
-                onClose={() => setShowSaveModal(false)}
-              />
-            )}
+              {activeTab === "packs" && (
+                <div key="packs-tab">
+                  <PackOpener allCards={cards} />
+                </div>
+              )}
 
-            {showExportModal && (
-              <ExportModal
-                deck={deck}
-                deckName={exportDeckName}
-                onClose={() => setShowExportModal(false)}
-              />
-            )}
+              {/* ─── COLLECTION TAB — now with wishlist props ─── */}
+              {activeTab === "collection" && (
+                <div key="collection-tab">
+                  <CollectionView
+                    collection={collection}
+                    allCards={cards}
+                    onAddToCollection={handleAddToCollection}
+                    onRemoveFromCollection={handleRemoveFromCollection}
+                    onViewCard={(card) => setPreviewCard(card)}
+                    wishlistIds={wishlistIds}
+                    onToggleWishlist={user ? handleToggleWishlist : null}
+                    isLoggedIn={!!user}
+                  />
+                </div>
+              )}
 
-            {toast && (
-              <Toast
-                message={toast.message}
-                type={toast.type}
-                onClose={() => setToast(null)}
-                duration={4000}
-              />
-            )}
+              {activeTab === "blackmarket" && (
+                <div key="blackmarket-tab" className="relative min-h-[400px]">
+                  <CyberspaceParticles count={150} className="rounded-lg" />
+                  <div className="relative z-10">
+                    <BlackMarketView
+                      key={blackMarketKey}
+                      allCards={cards}
+                      onLoadDeck={(clonedDeck) => {
+                        setSavedDecks((prev) => [clonedDeck, ...prev]);
+                      }}
+                      onShowToast={showToast}
+                      onViewPublicDeck={(deck) => setPublicDeckId(deck.id)}
+                    />
+                  </div>
+                </div>
+              )}
 
-            {confirmModal && (
-              <ConfirmModal
-                title={confirmModal.title}
-                message={confirmModal.message}
-                onConfirm={confirmModal.onConfirm}
-                onCancel={confirmModal.onCancel}
-              />
-            )}
+              {activeTab === "simulator" && (
+                <div key="simulator-tab">
+                  <SimulatorBeta currentDeck={deck} />
+                </div>
+              )}
 
-            {/* ─── CARD PREVIEW MODAL — con wishlist callback ─── */}
-            {previewCard && (
-              <CardPreviewModal
-                card={previewCard}
-                onClose={() => setPreviewCard(null)}
-                onAddToDeck={handleAddToDeck}
-                onAddToSideboard={handleAddToSideboard}
-                onAddToCollection={handleAddToCollection}
-                onRemoveFromCollection={handleRemoveFromCollection}
-                ownedQuantity={collectionService.getCardQuantity(
-                  collection,
-                  previewCard.id,
-                )}
-                isLoggedIn={!!user}
-                allFilteredCards={filteredCards}
-                currentIndex={filteredCards.findIndex(
-                  (c) => c.id === previewCard.id,
-                )}
-                onNavigate={(direction) => {
-                  const currentIdx = filteredCards.findIndex(
+              {activeTab === "legal" && (
+                <div key="legal-tab">
+                  <LegalDisclaimer />
+                </div>
+              )}
+
+              {/* MODALS */}
+              {showSaveModal && (
+                <SaveDeckModal
+                  deck={deck}
+                  onSave={handleSaveDeck}
+                  onClose={() => setShowSaveModal(false)}
+                />
+              )}
+
+              {showExportModal && (
+                <ExportModal
+                  deck={deck}
+                  deckName={exportDeckName}
+                  onClose={() => setShowExportModal(false)}
+                />
+              )}
+
+              {toast && (
+                <Toast
+                  message={toast.message}
+                  type={toast.type}
+                  onClose={() => setToast(null)}
+                  duration={4000}
+                />
+              )}
+
+              {confirmModal && (
+                <ConfirmModal
+                  title={confirmModal.title}
+                  message={confirmModal.message}
+                  onConfirm={confirmModal.onConfirm}
+                  onCancel={confirmModal.onCancel}
+                />
+              )}
+
+              {/* ─── CARD PREVIEW MODAL — con wishlist callback ─── */}
+              {previewCard && (
+                <CardPreviewModal
+                  card={previewCard}
+                  onClose={() => setPreviewCard(null)}
+                  onAddToDeck={handleAddToDeck}
+                  onAddToSideboard={handleAddToSideboard}
+                  onAddToCollection={handleAddToCollection}
+                  onRemoveFromCollection={handleRemoveFromCollection}
+                  ownedQuantity={collectionService.getCardQuantity(
+                    collection,
+                    previewCard.id,
+                  )}
+                  isLoggedIn={!!user}
+                  allFilteredCards={filteredCards}
+                  currentIndex={filteredCards.findIndex(
                     (c) => c.id === previewCard.id,
-                  );
-                  if (direction === "prev" && currentIdx > 0) {
-                    setPreviewCard(filteredCards[currentIdx - 1]);
-                  } else if (
-                    direction === "next" &&
-                    currentIdx < filteredCards.length - 1
-                  ) {
-                    setPreviewCard(filteredCards[currentIdx + 1]);
-                  }
-                }}
-                onWishlistChange={(cardId, added) => {
-                  setWishlistIds((prev) => {
-                    const next = new Set(prev);
-                    added ? next.add(cardId) : next.delete(cardId);
-                    return next;
-                  });
-                }}
-              />
-            )}
+                  )}
+                  onNavigate={(direction) => {
+                    const currentIdx = filteredCards.findIndex(
+                      (c) => c.id === previewCard.id,
+                    );
+                    if (direction === "prev" && currentIdx > 0) {
+                      setPreviewCard(filteredCards[currentIdx - 1]);
+                    } else if (
+                      direction === "next" &&
+                      currentIdx < filteredCards.length - 1
+                    ) {
+                      setPreviewCard(filteredCards[currentIdx + 1]);
+                    }
+                  }}
+                  onWishlistChange={(cardId, added) => {
+                    setWishlistIds((prev) => {
+                      const next = new Set(prev);
+                      added ? next.add(cardId) : next.delete(cardId);
+                      return next;
+                    });
+                  }}
+                />
+              )}
 
-            {publicDeckId && (
-              <PublicDeckView
-                deckId={publicDeckId}
-                allCards={cards}
-                onClose={() => setPublicDeckId(null)}
-                onCloneSuccess={(clonedDeck) => {
-                  setSavedDecks((prev) => [clonedDeck, ...prev]);
-                  showToast(`Deck cloned to your terminal ✓`, "success");
-                }}
-                onShowToast={showToast}
-                currentUserId={user?.id}
-                isAdmin={isAdmin}
-                onDeckDeleted={() => {
-                  setPublicDeckId(null);
-                  setBlackMarketKey((k) => k + 1);
-                }}
-              />
-            )}
+              {publicDeckId && (
+                <PublicDeckView
+                  deckId={publicDeckId}
+                  allCards={cards}
+                  onClose={() => setPublicDeckId(null)}
+                  onCloneSuccess={(clonedDeck) => {
+                    setSavedDecks((prev) => [clonedDeck, ...prev]);
+                    showToast(`Deck cloned to your terminal ✓`, "success");
+                  }}
+                  onShowToast={showToast}
+                  currentUserId={user?.id}
+                  isAdmin={isAdmin}
+                  onDeckDeleted={() => {
+                    setPublicDeckId(null);
+                    setBlackMarketKey((k) => k + 1);
+                  }}
+                />
+              )}
 
-            {showImportModal && (
-              <ImportDeckModal
-                allCards={cards}
-                onImport={handleImportDeck}
-                onClose={() => setShowImportModal(false)}
-              />
-            )}
+              {showImportModal && (
+                <ImportDeckModal
+                  allCards={cards}
+                  onImport={handleImportDeck}
+                  onClose={() => setShowImportModal(false)}
+                />
+              )}
 
-            {showMigrationModal && (
-              <MigrationModal
-                localDeckCount={localDeckCount}
-                onMigrate={handleMigration}
-                onSkip={handleSkipMigration}
-                onClose={handleSkipMigration}
-              />
-            )}
+              {showMigrationModal && (
+                <MigrationModal
+                  localDeckCount={localDeckCount}
+                  onMigrate={handleMigration}
+                  onSkip={handleSkipMigration}
+                  onClose={handleSkipMigration}
+                />
+              )}
 
-            {showLoginModal && (
-              <LoginModal onClose={() => setShowLoginModal(false)} />
-            )}
+              {showLoginModal && (
+                <LoginModal onClose={() => setShowLoginModal(false)} />
+              )}
 
-            {showFeedbackModal && (
-              <FeedbackModal
-                onClose={() => setShowFeedbackModal(false)}
-                onSubmit={handleSubmitFeedback}
-                isSubmitting={isSubmittingFeedback}
-              />
-            )}
+              {showFeedbackModal && (
+                <FeedbackModal
+                  onClose={() => setShowFeedbackModal(false)}
+                  onSubmit={handleSubmitFeedback}
+                  isSubmitting={isSubmittingFeedback}
+                />
+              )}
 
-            {showAdminFeedback && isAdmin && user && (
-              <AdminFeedbackViewer
-                onClose={() => setShowAdminFeedback(false)}
-                user={user}
-                showToast={showToast}
-              />
-            )}
+              {showAdminFeedback && isAdmin && user && (
+                <AdminFeedbackViewer
+                  onClose={() => setShowAdminFeedback(false)}
+                  user={user}
+                  showToast={showToast}
+                />
+              )}
+            </motion.div>
           </AnimatePresence>
         </main>
 

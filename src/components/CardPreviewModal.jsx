@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SmartCardImage from "./SmartCardImage";
+import PointCloudReveal from "./PointCloudReveal";
 import { useAuth } from "../contexts/AuthContext";
 import {
   addToWishlist,
@@ -33,6 +34,8 @@ export default function CardPreviewModal({
   const [quantity, setQuantity] = useState(deckCount > 0 ? deckCount : 1);
   const [inWishlist, setInWishlist] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
+
+  const [showReveal, setShowReveal] = useState(true); // point cloud reveal on open
 
   useEffect(() => {
     setQuantity(deckCount > 0 ? deckCount : 1);
@@ -216,13 +219,22 @@ export default function CardPreviewModal({
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-            {/* LEFT: Image */}
+            {/* LEFT: Image — Point Cloud Reveal on open */}
             <div className="flex items-center justify-center">
-              <SmartCardImage
-                card={card}
-                className="w-full h-auto rounded"
-                showLoadingState={true}
-              />
+              {showReveal ? (
+                <PointCloudReveal
+                  imageUrl={`${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/card-images/${card.id}.webp`}
+                  alt={card.name}
+                  className="w-full"
+                  onComplete={() => setShowReveal(false)}
+                />
+              ) : (
+                <SmartCardImage
+                  card={card}
+                  className="w-full h-auto rounded"
+                  showLoadingState={true}
+                />
+              )}
             </div>
 
             {/* RIGHT: Details */}

@@ -5,6 +5,7 @@ import { loadDecks } from "../lib/deckService";
 import cards from "../data/cards.json";
 import { GameState } from "../lib/game/GameState";
 import PlaymatV2 from "./PlaymatV2";
+import CyberspaceParticles from "./CyberspaceParticles";
 
 // Precon deck IDs (from Alpha Kit)
 const PRECON_DECKS = {
@@ -128,6 +129,7 @@ export default function SimulatorBeta({ currentDeck }) {
   const [selectedDeck, setSelectedDeck] = useState(null);
   const [game, setGame] = useState(null);
   const [isLoadingDecks, setIsLoadingDecks] = useState(false);
+  const [cyberspaceMode, setCyberspaceMode] = useState(false);
 
   // Load saved decks + precons + current deck
   useEffect(() => {
@@ -230,7 +232,14 @@ export default function SimulatorBeta({ currentDeck }) {
   }
 
   return (
-    <div className="min-h-screen bg-term-black p-8">
+    <div
+      className={`min-h-screen p-8 relative transition-all duration-500 ${
+        cyberspaceMode ? "bg-[#02050a]" : "bg-term-black"
+      }`}
+    >
+      {cyberspaceMode && (
+        <CyberspaceParticles count={250} className="opacity-60" />
+      )}
       <div className="max-w-7xl mx-auto">
         {/* Beta Badge */}
         <div className="mb-6 flex items-center gap-3">
@@ -240,6 +249,17 @@ export default function SimulatorBeta({ currentDeck }) {
           <span className="text-term-amber/60 text-sm font-mono">
             Phase 9 Simulator v0.2.0 - Playmat V2
           </span>
+          {/* Cyberspace Mode Toggle */}
+          <button
+            onClick={() => setCyberspaceMode((m) => !m)}
+            className={`ml-auto px-4 py-1.5 font-mono font-bold text-xs rounded border transition-all ${
+              cyberspaceMode
+                ? "bg-cyan-400/20 border-cyan-400 text-cyan-400 shadow-[0_0_12px_rgba(0,229,255,0.4)]"
+                : "bg-term-amber/10 border-term-amber/40 text-term-amber/60 hover:border-term-amber hover:text-term-amber"
+            }`}
+          >
+            {cyberspaceMode ? "[◈ CYBERSPACE: ON]" : "[◈ CYBERSPACE: OFF]"}
+          </button>
         </div>
 
         <h1 className="text-4xl font-bold text-term-amber mb-8 font-mono">
@@ -341,10 +361,27 @@ export default function SimulatorBeta({ currentDeck }) {
             )}
 
             {/* Playmat V2 */}
-            <PlaymatV2
-              game={game}
-              onGameUpdate={(updatedGame) => setGame(updatedGame)}
-            />
+            <div
+              className={`relative transition-all duration-500 ${
+                cyberspaceMode ? "brightness-110 contrast-110 saturate-150" : ""
+              }`}
+            >
+              {cyberspaceMode && (
+                <div
+                  className="absolute inset-0 pointer-events-none z-10 rounded"
+                  style={{
+                    background:
+                      "linear-gradient(rgba(0,229,255,0.04) 50%, rgba(0,0,0,0.06) 50%)",
+                    backgroundSize: "100% 3px",
+                    mixBlendMode: "screen",
+                  }}
+                />
+              )}
+              <PlaymatV2
+                game={game}
+                onGameUpdate={(updatedGame) => setGame(updatedGame)}
+              />
+            </div>
 
             {/* Actions */}
             <div className="bg-term-gray border-2 border-term-amber/30 rounded p-6">
