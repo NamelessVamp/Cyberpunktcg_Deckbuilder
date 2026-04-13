@@ -76,19 +76,21 @@
 
 ## ⏳ FASE 8: UI/UX ENHANCEMENTS (80% COMPLETE) 🆕
 
-| #   | Feature                           | Status     | Files/Notes                                                        |
-| :-- | :-------------------------------- | :--------- | :----------------------------------------------------------------- |
-| 43  | Micro-Animations (Framer Motion)  | ✅ DONE    | 11 modals updated                                                  |
-| 44  | Skeleton States (Card Gallery)    | ✅ DONE    | `SmartCardImage.jsx`                                               |
-| 46  | Modal Blur (Backdrop)             | ✅ DONE    | Framer Motion modals                                               |
-| 47  | Toast Improvements                | ✅ DONE    | `Toast.jsx`                                                        |
-| 51  | Hover/Click Actions on Deck Cards | ✅ DONE 🆕 | Click abre preview con deck controls (submit copies, move, remove) |
-| 52  | Arrow Navigation in Preview       | ✅ DONE    | `CardPreviewModal.jsx`                                             |
-| 53  | Wishlist Star in Build Grid       | ✅ DONE 🆕 | App.jsx — star con glow ámbar, sync con modal                      |
-| 45  | Drag & Drop Deck Building         | ❌ TODO    | Needs `@dnd-kit/core`                                              |
-| 48  | Jerarquía Tipográfica             | ❌ TODO    | Add sans-serif for long text                                       |
-| 50  | Gacha Polish (Pack Opener)        | ❌ TODO    | Delayed reveal + glow effects                                      |
-| 54  | PWA (vite-plugin-pwa) 🆕          | ❌ TODO    | Install on mobile/desktop, ~15 min effort                          |
+| #   | Feature                           | Status     | Files/Notes                                                                 |
+| :-- | :-------------------------------- | :--------- | :-------------------------------------------------------------------------- |
+| 43  | Micro-Animations (Framer Motion)  | ✅ DONE    | 11 modals updated                                                           |
+| 44  | Skeleton States (Card Gallery)    | ✅ DONE    | `SmartCardImage.jsx`                                                        |
+| 46  | Modal Blur (Backdrop)             | ✅ DONE    | Framer Motion modals                                                        |
+| 47  | Toast Improvements                | ✅ DONE    | `Toast.jsx`                                                                 |
+| 51  | Hover/Click Actions on Deck Cards | ✅ DONE 🆕 | Click abre preview con deck controls (submit copies, move, remove)          |
+| 52  | Arrow Navigation in Preview       | ✅ DONE    | `CardPreviewModal.jsx`                                                      |
+| 53  | Wishlist Star in Build Grid       | ✅ DONE 🆕 | App.jsx — star con glow ámbar, sync con modal                               |
+| 45  | Drag & Drop Deck Building         | ❌ TODO    | Needs `@dnd-kit/core`                                                       |
+| 48  | Jerarquía Tipográfica             | ❌ TODO    | Add sans-serif for long text                                                |
+| 50  | Gacha Polish (Pack Opener)        | ❌ TODO    | Delayed reveal + glow effects                                               |
+| 54  | PWA (vite-plugin-pwa) 🆕          | ✅ DONE 🆕 | `vite.config.js`, `index.html` — installable en Android/iOS                 |
+| 55  | Mobile Responsive Header          | ✅ DONE 🆕 | `App.jsx` — título compacto, login inline en mobile                         |
+| 56  | Deck Image Export (Share as PNG)  | ✅ DONE 🆕 | `DeckImageExport.jsx` — QR code, Leyendas, Eddies Curve, branding Afterlife |
 
 ## ⏳ FASE 9: THE ARENA (GAME SIMULATOR) (71% COMPLETE)
 
@@ -167,16 +169,15 @@
 | Fase 5  | 6/7        | 1         | 86% ⏳     |
 | Fase 6  | 4/4        | 0         | 100% ✅ 🆕 |
 | Fase 7  | 6/7        | 1         | 86% ⏳ 🆕  |
-| Fase 8  | 8/11       | 3         | 80% ⏳ 🆕  |
+| Fase 8  | 11/13      | 2         | 85% ⏳ 🆕  |
 | Fase 9  | 5/9        | 4         | 56% ⏳     |
 | Fase 10 | 8/8        | 0         | 100% ✅ 🆕 |
 | Fase 11 | 0/5        | 5         | 0% ❌      |
 | Fase 12 | 5/5        | 0         | 100% ✅ 🆕 |
 | Fase 13 | 1/3        | 2         | 33% ⏳     |
 | Fase 14 | 0/2        | 2         | 0% 🔮      |
-| Fase 15 | 0/6        | 6         | 0% 🔮      |
 
-**TOTAL: 68/91 features completadas (75% del proyecto)** 🆕
+**TOTAL: 71/88 features completadas (81% del proyecto)** 🆕
 
 ---
 
@@ -225,6 +226,26 @@
 ---
 
 ## 📝 CHANGELOG
+
+**2026-04-12 (PWA + DECK IMAGE EXPORT):** 🆕
+
+- ✨ **ADDED:** PWA con vite-plugin-pwa
+  - Installable en Android e iOS desde el browser
+  - Workbox caching para Google Fonts y Cloudfront card images
+  - theme_color ámbar, display standalone
+  - `.npmrc` legacy-peer-deps para Vite 8 compat
+- ✨ **ADDED:** Deck Image Export (`DeckImageExport.jsx`)
+  - Genera PNG descargable con layout profesional
+  - QR code con link al deck (qrcode.react)
+  - Leyendas con imagen completa, Main deck en grid 5 cols
+  - Eddies Curve con contador por costo
+  - Estética terminal cyberpunk: ámbar/verde, monospace, glow
+  - Usa Supabase Storage para evitar CORS de CloudFront
+  - Disponible desde Share Deck (Build) y My Decks
+- 🔧 **FIXED:** Mobile responsive
+  - Header compacto en mobile, login button inline con título
+  - PREV/NEXT navigation en CardPreviewModal: absolute en desktop, inline en mobile
+  - Meta tag `mobile-web-app-capable` (fix deprecation warning)
 
 **2026-04-10 (BLACK MARKET + WISHLIST RELEASE):** 🆕
 
