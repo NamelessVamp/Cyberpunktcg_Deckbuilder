@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useDeckBuilder } from "./hooks/useDeckBuilder";
 import { useFilters } from "./hooks/useFilters";
 import { useSavedDecks } from "./hooks/useSavedDecks";
+import { useCollection } from "./hooks/useCollection";
 import cardsData from "./data/cards.json";
 import preconDecks from "./data/preconDecks.json";
 import SearchBar from "./components/SearchBar";
@@ -122,10 +123,6 @@ function App() {
   const [localDeckCount, setLocalDeckCount] = useState(0);
   const { user, signOut } = useAuth();
   const [showProxyModal, setShowProxyModal] = useState(false);
-  const [collection, setCollection] = useState([]);
-  // ─── WISHLIST STATE ───────────────────────────────────────────────────────────
-  const [wishlistIds, setWishlistIds] = useState(new Set());
-  // ─────────────────────────────────────────────────────────────────────────────
   const [showAnalytics, setShowAnalytics] = useState(false);
   const { isAdmin, loading: adminLoading } = useIsAdmin();
   const [showAdminFeedback, setShowAdminFeedback] = useState(false);
@@ -134,6 +131,18 @@ function App() {
   const showToast = (message, type = "success") => {
     setToast({ message, type });
   };
+
+  // ── COLLECTION HOOK ──────────────────────────────────────────────────────────
+  const {
+    collection,
+    setCollection,
+    wishlistIds,
+    setWishlistIds,
+    handleAddToCollection,
+    handleRemoveFromCollection,
+    handleToggleWishlist,
+  } = useCollection({ user, showToast });
+  // ─────────────────────────────────────────────────────────────────────────────
 
   // ── FILTERS HOOK — debe ir ANTES de useDeckBuilder (provee resetFilters) ─────
   const {
@@ -456,77 +465,6 @@ function App() {
       showToast("Migration failed. Please try again.", "error");
     }
   };
-
-  const handleAddToCollection = async (cardId, quantity = 1) => {
-    if (!user) {
-      showToast("Login required to track collection", "warning");
-      return;
-    }
-
-    try {
-      await collectionService.addToCollection(user.id, cardId, quantity, false);
-
-      const updated = await collectionService.loadCollection(user.id);
-      setCollection(updated);
-
-      const newQty = collectionService.getCardQuantity(updated, cardId);
-      showToast(`Added to collection (now own ${newQty})`, "success");
-    } catch (error) {
-      console.error("Error adding to collection:", error);
-      showToast("Error updating collection", "error");
-    }
-  };
-
-  const handleRemoveFromCollection = async (cardId, quantity = 1) => {
-    if (!user) return;
-
-    try {
-      await collectionService.removeFromCollection(
-        user.id,
-        cardId,
-        quantity,
-        false,
-      );
-
-      const updated = await collectionService.loadCollection(user.id);
-      setCollection(updated);
-
-      showToast("Removed from collection", "success");
-    } catch (error) {
-      console.error("Error removing from collection:", error);
-      showToast("Error updating collection", "error");
-    }
-  };
-
-  // ─── WISHLIST TOGGLE ──────────────────────────────────────────────────────────
-  const handleToggleWishlist = async (cardId) => {
-    if (!user) {
-      showToast("Login required to use wishlist", "warning");
-      return;
-    }
-    const { addToWishlist, removeFromWishlist } =
-      await import("./lib/wishlistService");
-    const isIn = wishlistIds.has(cardId);
-    try {
-      if (isIn) {
-        await removeFromWishlist(cardId);
-        setWishlistIds((prev) => {
-          const next = new Set(prev);
-          next.delete(cardId);
-          return next;
-        });
-        showToast("Removed from wishlist", "success");
-      } else {
-        await addToWishlist(cardId, 1, "medium", "");
-        setWishlistIds((prev) => new Set([...prev, cardId]));
-        showToast("Added to wishlist ★", "success");
-      }
-    } catch (err) {
-      console.error("Wishlist error:", err);
-      showToast("Error updating wishlist", "error");
-    }
-  };
-  // ─────────────────────────────────────────────────────────────────────────────
 
   const handleSkipMigration = () => {
     setShowMigrationModal(false);
