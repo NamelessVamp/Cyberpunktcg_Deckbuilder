@@ -22,6 +22,9 @@ export default function FilterPanel({
   ].sort();
 
   const allSets = [...new Set(cards.map((c) => c.set).filter(Boolean))].sort();
+  const allArtists = [
+    ...new Set(cards.map((c) => c.artist).filter(Boolean)),
+  ].sort();
 
   const updateFilter = (key, value) => {
     onFilterChange({ ...filters, [key]: value });
@@ -168,6 +171,16 @@ export default function FilterPanel({
           section="set"
           label="Set"
           activeCount={filters.set ? 1 : 0}
+        />
+        <DropdownButton
+          section="artist"
+          label="Artist"
+          activeCount={filters.artists?.length || 0}
+        />
+        <DropdownButton
+          section="number"
+          label="Card #"
+          activeCount={filters.cardNumber ? 1 : 0}
         />
 
         {/* NEW CARDS CHECKBOX - A LA DERECHA */}
@@ -404,6 +417,70 @@ export default function FilterPanel({
               </option>
             ))}
           </select>
+        </div>
+      )}
+      {openSection === "artist" && (
+        <div className="mb-4 p-4 bg-term-gray-light rounded border border-term-amber/30 animate-slideDown">
+          <p className="text-term-amber/60 text-xs font-mono mb-3">
+            FILTER BY ARTIST
+          </p>
+          <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
+            {allArtists.map((artist) => (
+              <label
+                key={artist}
+                className="flex items-center gap-2 cursor-pointer group"
+              >
+                <input
+                  type="checkbox"
+                  checked={filters.artists?.includes(artist) || false}
+                  onChange={(e) => {
+                    const current = filters.artists || [];
+                    updateFilter(
+                      "artists",
+                      e.target.checked
+                        ? [...current, artist]
+                        : current.filter((a) => a !== artist),
+                    );
+                  }}
+                  className="accent-term-amber"
+                />
+                <span className="text-term-amber/80 text-xs font-mono group-hover:text-term-amber truncate max-w-[180px]">
+                  {artist}
+                </span>
+              </label>
+            ))}
+          </div>
+          {(filters.artists?.length || 0) > 0 && (
+            <button
+              onClick={() => updateFilter("artists", [])}
+              className="mt-2 text-term-red text-xs font-mono hover:text-red-400"
+            >
+              [CLEAR ARTISTS]
+            </button>
+          )}
+        </div>
+      )}
+
+      {openSection === "number" && (
+        <div className="mb-4 p-4 bg-term-gray-light rounded border border-term-amber/30 animate-slideDown">
+          <p className="text-term-amber/60 text-xs font-mono mb-3">
+            SEARCH BY CARD NUMBER
+          </p>
+          <input
+            type="text"
+            placeholder="e.g. α001, 019, 132a"
+            value={filters.cardNumber || ""}
+            onChange={(e) => updateFilter("cardNumber", e.target.value)}
+            className="w-full bg-term-gray text-term-amber border border-term-amber/30 rounded px-3 py-2 font-mono text-sm focus:border-term-amber focus:outline-none placeholder-term-amber/30"
+          />
+          {filters.cardNumber && (
+            <button
+              onClick={() => updateFilter("cardNumber", "")}
+              className="mt-2 text-term-red text-xs font-mono hover:text-red-400"
+            >
+              [CLEAR]
+            </button>
+          )}
         </div>
       )}
     </div>

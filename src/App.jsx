@@ -116,6 +116,8 @@ function App() {
     keywords: [],
     set: "",
     showOnlyNew: false,
+    artists: [],
+    cardNumber: "",
   });
 
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -356,6 +358,20 @@ function App() {
     }
 
     if (filters.set && card.set !== filters.set) return false;
+
+    // ─── FASE 11: Enhanced Filters ───────────────────────────────────────────
+    // Artist filter
+    if (filters.artists && filters.artists.length > 0) {
+      if (!filters.artists.includes(card.artist)) return false;
+    }
+
+    // Card number filter
+    if (filters.cardNumber && filters.cardNumber.trim()) {
+      const numSearch = filters.cardNumber.trim().toLowerCase();
+      const cardNum = (card.number || "").toLowerCase();
+      if (!cardNum.includes(numSearch)) return false;
+    }
+    // ─────────────────────────────────────────────────────────────────────────
 
     if (filters.keywords && filters.keywords.length > 0) {
       const cardKeywords = card.keywords || [];
@@ -607,6 +623,8 @@ function App() {
       ramColors: [],
       keywords: [],
       set: "",
+      artists: [],
+      cardNumber: "",
     });
 
     setFiltersOpen(false);
