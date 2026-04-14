@@ -181,19 +181,23 @@
 
 ---
 
-## 🔮 FASE 15: CYBERSPACE AESTHETICS (0% COMPLETE)
+## ⏳ FASE 15: CYBERSPACE AESTHETICS (71% COMPLETE) 🆕
 
 > Inspirado en "The Tech and Art of Cyberspaces in Cyberpunk 2077" (CDPR / SIGGRAPH 2021)
 > Técnicas: Point Cloud Rendering, Datamoshing, Pixel Sorting, Partículas dinámicas
 
-| #   | Feature                            | Esfuerzo | Descripción                                                                                  |
-| :-- | :--------------------------------- | :------- | :------------------------------------------------------------------------------------------- |
-| 80  | Glitch Hover en Build Grid         | 🟢 BAJO  | CSS filter + clip-path animado al hover — efecto pixel sorting sobre imagen de carta         |
-| 81  | Black Market Particle Background   | 🟢 BAJO  | Canvas con ~200 partículas en movimiento lento, estética Ciberespacio CP2077 (azul/rojo)     |
-| 82  | Point Cloud Loading Screen         | 🟡 MEDIO | Reemplaza `[LOADING...]` con canvas: puntos dispersos que convergen formando el logo         |
-| 83  | Tab Transition Braindance Dissolve | 🟡 MEDIO | Framer Motion `staggerChildren` — contenido se desintegra en puntos al cambiar de tab        |
-| 84  | Card Preview Point Cloud Reveal    | 🔴 ALTO  | Carta se materializa desde nube de puntos al abrir preview — requiere Three.js o tsParticles |
-| 85  | Simulator Cyberspace Mode          | 🔴 ALTO  | Tema visual alternativo para el playmat inspirado en el Ciberespacio de CP2077               |
+| #       | Feature                            | Esfuerzo   | Descripción                                                                                  |
+| :------ | :--------------------------------- | :--------- | :------------------------------------------------------------------------------------------- | --- |
+| 80      | Glitch Hover en Build Grid         | ✅ DONE 🆕 | CSS chromatic aberration + clip-path animation                                               |
+| 81      | Black Market Particle Background   | ✅ DONE 🆕 | CyberspaceParticles.jsx — canvas 150 puntos                                                  |
+| 82      | Point Cloud Loading Screen         | ✅ DONE 🆕 | CyberspaceLoader.jsx — logo AD + point cloud                                                 |
+| 83      | Tab Transition Braindance Dissolve | ✅ DONE 🆕 | AnimatePresence mode=sync en todos los tabs                                                  |     |
+| 84      | Card Preview Point Cloud Reveal    | 🔴 ALTO    | Carta se materializa desde nube de puntos al abrir preview — requiere Three.js o tsParticles |
+| 85      | Simulator Cyberspace Mode          | 🔴 ALTO    | Tema visual alternativo para el playmat inspirado en el Ciberespacio de CP2077               |
+| 86      | CRT Scanlines Global               | ✅ DONE 🆕 | body::after en index.css — overlay toda la app                                               |
+| Fase 15 | 5/7                                | 2          | 71% ⏳ 🆕                                                                                    |
+
+**TOTAL: 76/95 features completadas (80% del proyecto)** 🆕
 
 **Referencias técnicas:**
 
@@ -213,10 +217,11 @@
 
 ## 🎯 PRÓXIMOS PASOS
 
-1. **PWA** — `vite-plugin-pwa`, 15 min, cierra Fase 8 al 90%
-2. **Fase 11** — Enhanced Filters (card number, artist, subtitle)
-3. **Fase 9 Polish** — Drag-to-zone en Playmat, card hover preview
-4. **v1.0.0 tag** — PWA + Fase 11 = milestone de release
+1. **Fase 11** — Enhanced Filters (card number, artist, subtitle) — cierra antes del v1.0.0
+2. **v1.0.0 tag** — Fase 11 completa = milestone de release
+3. **Fase 15 pendientes** — SVG Displacement Glitch (#87 nuevo), Three.js background post v1.0.0
+4. **Fase 9 Polish** — Drag-to-zone en Playmat, card hover preview
+5. **Feedback del paper SIGGRAPH** — feDisplacementMap para datamosh real en cartas
 
 ## IDEAS EMERGENTES
 
@@ -226,6 +231,18 @@
 ---
 
 ## 📝 CHANGELOG
+
+**2026-04-13 (CYBERSPACE AESTHETICS + FIXES):** 🆕
+
+- ✨ **ADDED:** Fase 15 Cyberspace Aesthetics
+  - #80 Glitch Hover: CSS chromatic aberration en cartas del Build grid
+  - #81 CyberspaceParticles.jsx: canvas con 150 puntos cyan/rojo/verde en Black Market
+  - #82 CyberspaceLoader.jsx: loading screen con point cloud + logo AD animado
+  - #83 Tab Dissolve: AnimatePresence mode=sync en todos los tabs
+  - #86 CRT Scanlines: body::after overlay global sobre toda la app
+- 🔧 **FIXED:** AnimatePresence mode=wait → mode=sync (elimina warnings Framer Motion)
+- 🔧 **FIXED:** LandingPage precon load — ahora conecta con handleLoadPrecon + navega a Build
+- 🔧 **FIXED:** Home starter decks funcionales desde el tab Home
 
 **2026-04-12 (PWA + DECK IMAGE EXPORT):** 🆕
 

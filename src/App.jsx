@@ -35,6 +35,7 @@ import { useIsAdmin } from "./hooks/useIsAdmin";
 import SimulatorBeta from "./components/SimulatorBeta";
 import { useFeatureFlag } from "./hooks/useFeatureFlag";
 import BlackMarketView from "./components/BlackMarketView";
+import DeckImageExport from "./components/DeckImageExport";
 import CyberspaceLoader from "./components/CyberspaceLoader";
 import CyberspaceParticles from "./components/CyberspaceParticles";
 import { AnimatePresence, motion } from "framer-motion";
@@ -92,6 +93,8 @@ const decodeDeck = (encodedString, allCards) => {
 };
 
 function App() {
+  const [shareUrl, setShareUrl] = useState("");
+  const [showShareImageModal, setShowShareImageModal] = useState(false);
   const [blackMarketKey, setBlackMarketKey] = useState(0);
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [deckToPublish, setDeckToPublish] = useState(null);
@@ -694,28 +697,18 @@ function App() {
   };
 
   const handleShareDeck = () => {
-    if (deck.mainDeck.length === 0) {
+    if (deck.mainDeck.length === 0 && deck.legends.length === 0) {
       showToast("Deck is empty", "warning");
       return;
     }
-
     const encoded = encodeDeck(deck);
-
     if (!encoded) {
       showToast("Failed to generate share URL", "error");
       return;
     }
-
-    const shareUrl = `${window.location.origin}${window.location.pathname}?d=${encoded}`;
-
-    navigator.clipboard
-      .writeText(shareUrl)
-      .then(() => {
-        showToast("Deck URL copied to clipboard!", "success");
-      })
-      .catch(() => {
-        prompt("Copy this URL:", shareUrl);
-      });
+    const url = `${window.location.origin}${window.location.pathname}?d=${encoded}`;
+    setShareUrl(url);
+    setShowShareImageModal(true);
   };
 
   const handleExportAllDecks = () => {
@@ -1235,18 +1228,12 @@ function App() {
         </header>
 
         <main id="main-content" role="main">
-          <AnimatePresence mode="sync">
-            <DeckTabs activeTab={activeTab} onTabChange={setActiveTab} />
-
+          <DeckTabs activeTab={activeTab} onTabChange={setActiveTab} />
+          <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, filter: "blur(4px)", y: 6 }}
-              animate={{
-                opacity: 1,
-                filter: "blur(0px)",
-                y: 0,
-                transitionEnd: { filter: "none", transform: "none" },
-              }}
+              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
               exit={{ opacity: 0, filter: "blur(3px)", y: -4 }}
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
             >
@@ -1638,140 +1625,181 @@ function App() {
                   <LegalDisclaimer />
                 </div>
               )}
-
-              {/* MODALS */}
-              {showSaveModal && (
-                <SaveDeckModal
-                  deck={deck}
-                  onSave={handleSaveDeck}
-                  onClose={() => setShowSaveModal(false)}
-                />
-              )}
-
-              {showExportModal && (
-                <ExportModal
-                  deck={deck}
-                  deckName={exportDeckName}
-                  onClose={() => setShowExportModal(false)}
-                />
-              )}
-
-              {toast && (
-                <Toast
-                  message={toast.message}
-                  type={toast.type}
-                  onClose={() => setToast(null)}
-                  duration={4000}
-                />
-              )}
-
-              {confirmModal && (
-                <ConfirmModal
-                  title={confirmModal.title}
-                  message={confirmModal.message}
-                  onConfirm={confirmModal.onConfirm}
-                  onCancel={confirmModal.onCancel}
-                />
-              )}
-
-              {/* ─── CARD PREVIEW MODAL — con wishlist callback ─── */}
-              {previewCard && (
-                <CardPreviewModal
-                  card={previewCard}
-                  onClose={() => setPreviewCard(null)}
-                  onAddToDeck={handleAddToDeck}
-                  onAddToSideboard={handleAddToSideboard}
-                  onAddToCollection={handleAddToCollection}
-                  onRemoveFromCollection={handleRemoveFromCollection}
-                  ownedQuantity={collectionService.getCardQuantity(
-                    collection,
-                    previewCard.id,
-                  )}
-                  isLoggedIn={!!user}
-                  allFilteredCards={filteredCards}
-                  currentIndex={filteredCards.findIndex(
-                    (c) => c.id === previewCard.id,
-                  )}
-                  onNavigate={(direction) => {
-                    const currentIdx = filteredCards.findIndex(
-                      (c) => c.id === previewCard.id,
-                    );
-                    if (direction === "prev" && currentIdx > 0) {
-                      setPreviewCard(filteredCards[currentIdx - 1]);
-                    } else if (
-                      direction === "next" &&
-                      currentIdx < filteredCards.length - 1
-                    ) {
-                      setPreviewCard(filteredCards[currentIdx + 1]);
-                    }
-                  }}
-                  onWishlistChange={(cardId, added) => {
-                    setWishlistIds((prev) => {
-                      const next = new Set(prev);
-                      added ? next.add(cardId) : next.delete(cardId);
-                      return next;
-                    });
-                  }}
-                />
-              )}
-
-              {publicDeckId && (
-                <PublicDeckView
-                  deckId={publicDeckId}
-                  allCards={cards}
-                  onClose={() => setPublicDeckId(null)}
-                  onCloneSuccess={(clonedDeck) => {
-                    setSavedDecks((prev) => [clonedDeck, ...prev]);
-                    showToast(`Deck cloned to your terminal ✓`, "success");
-                  }}
-                  onShowToast={showToast}
-                  currentUserId={user?.id}
-                  isAdmin={isAdmin}
-                  onDeckDeleted={() => {
-                    setPublicDeckId(null);
-                    setBlackMarketKey((k) => k + 1);
-                  }}
-                />
-              )}
-
-              {showImportModal && (
-                <ImportDeckModal
-                  allCards={cards}
-                  onImport={handleImportDeck}
-                  onClose={() => setShowImportModal(false)}
-                />
-              )}
-
-              {showMigrationModal && (
-                <MigrationModal
-                  localDeckCount={localDeckCount}
-                  onMigrate={handleMigration}
-                  onSkip={handleSkipMigration}
-                  onClose={handleSkipMigration}
-                />
-              )}
-
-              {showLoginModal && (
-                <LoginModal onClose={() => setShowLoginModal(false)} />
-              )}
-
-              {showFeedbackModal && (
-                <FeedbackModal
-                  onClose={() => setShowFeedbackModal(false)}
-                  onSubmit={handleSubmitFeedback}
-                  isSubmitting={isSubmittingFeedback}
-                />
-              )}
-
-              {showAdminFeedback && isAdmin && user && (
-                <AdminFeedbackViewer
-                  onClose={() => setShowAdminFeedback(false)}
-                  user={user}
-                  showToast={showToast}
-                />
-              )}
             </motion.div>
           </AnimatePresence>
+
+          {/* MODALS — outside AnimatePresence */}
+          {showSaveModal && (
+            <SaveDeckModal
+              deck={deck}
+              onSave={handleSaveDeck}
+              onClose={() => setShowSaveModal(false)}
+            />
+          )}
+
+          {showExportModal && (
+            <ExportModal
+              deck={deck}
+              deckName={exportDeckName}
+              onClose={() => setShowExportModal(false)}
+            />
+          )}
+
+          {showShareImageModal && (
+            <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+              <div className="bg-term-gray border-2 border-term-amber rounded-lg p-6 max-w-sm w-full">
+                <h3 className="text-term-amber font-bold font-mono text-lg mb-1">
+                  ▓ SHARE DECK
+                </h3>
+                <p className="text-term-green/60 font-mono text-xs mb-4">
+                  &gt; Choose how to share
+                </p>
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(shareUrl);
+                      showToast("URL copied!", "success");
+                    }}
+                    className="w-full py-2 border border-term-green text-term-green font-mono font-bold text-sm rounded hover:bg-term-green/10 transition-colors"
+                  >
+                    [🔗 COPY LINK]
+                  </button>
+                  <DeckImageExport
+                    deck={deck}
+                    deckName="My Deck"
+                    authorName={
+                      user?.discord_username ||
+                      user?.email?.split("@")[0] ||
+                      "RUNNER"
+                    }
+                    shareUrl={shareUrl}
+                    className="w-full py-2 bg-term-amber/20 border border-term-amber text-term-amber rounded hover:bg-term-amber/30"
+                  />
+                  <button
+                    onClick={() => setShowShareImageModal(false)}
+                    className="w-full py-2 border border-term-amber/30 text-term-amber/60 font-mono text-xs rounded hover:bg-term-amber/10 transition-colors"
+                  >
+                    [CLOSE]
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {toast && (
+            <Toast
+              message={toast.message}
+              type={toast.type}
+              onClose={() => setToast(null)}
+              duration={4000}
+            />
+          )}
+
+          {confirmModal && (
+            <ConfirmModal
+              title={confirmModal.title}
+              message={confirmModal.message}
+              onConfirm={confirmModal.onConfirm}
+              onCancel={confirmModal.onCancel}
+            />
+          )}
+
+          {/* ─── CARD PREVIEW MODAL — con wishlist callback ─── */}
+          {previewCard && (
+            <CardPreviewModal
+              card={previewCard}
+              onClose={() => setPreviewCard(null)}
+              onAddToDeck={handleAddToDeck}
+              onAddToSideboard={handleAddToSideboard}
+              onAddToCollection={handleAddToCollection}
+              onRemoveFromCollection={handleRemoveFromCollection}
+              ownedQuantity={collectionService.getCardQuantity(
+                collection,
+                previewCard.id,
+              )}
+              isLoggedIn={!!user}
+              allFilteredCards={filteredCards}
+              currentIndex={filteredCards.findIndex(
+                (c) => c.id === previewCard.id,
+              )}
+              onNavigate={(direction) => {
+                const currentIdx = filteredCards.findIndex(
+                  (c) => c.id === previewCard.id,
+                );
+                if (direction === "prev" && currentIdx > 0) {
+                  setPreviewCard(filteredCards[currentIdx - 1]);
+                } else if (
+                  direction === "next" &&
+                  currentIdx < filteredCards.length - 1
+                ) {
+                  setPreviewCard(filteredCards[currentIdx + 1]);
+                }
+              }}
+              onWishlistChange={(cardId, added) => {
+                setWishlistIds((prev) => {
+                  const next = new Set(prev);
+                  added ? next.add(cardId) : next.delete(cardId);
+                  return next;
+                });
+              }}
+            />
+          )}
+
+          {publicDeckId && (
+            <PublicDeckView
+              deckId={publicDeckId}
+              allCards={cards}
+              onClose={() => setPublicDeckId(null)}
+              onCloneSuccess={(clonedDeck) => {
+                setSavedDecks((prev) => [clonedDeck, ...prev]);
+                showToast(`Deck cloned to your terminal ✓`, "success");
+              }}
+              onShowToast={showToast}
+              currentUserId={user?.id}
+              isAdmin={isAdmin}
+              onDeckDeleted={() => {
+                setPublicDeckId(null);
+                setBlackMarketKey((k) => k + 1);
+              }}
+            />
+          )}
+
+          {showImportModal && (
+            <ImportDeckModal
+              allCards={cards}
+              onImport={handleImportDeck}
+              onClose={() => setShowImportModal(false)}
+            />
+          )}
+
+          {showMigrationModal && (
+            <MigrationModal
+              localDeckCount={localDeckCount}
+              onMigrate={handleMigration}
+              onSkip={handleSkipMigration}
+              onClose={handleSkipMigration}
+            />
+          )}
+
+          {showLoginModal && (
+            <LoginModal onClose={() => setShowLoginModal(false)} />
+          )}
+
+          {showFeedbackModal && (
+            <FeedbackModal
+              onClose={() => setShowFeedbackModal(false)}
+              onSubmit={handleSubmitFeedback}
+              isSubmitting={isSubmittingFeedback}
+            />
+          )}
+
+          {showAdminFeedback && isAdmin && user && (
+            <AdminFeedbackViewer
+              onClose={() => setShowAdminFeedback(false)}
+              user={user}
+              showToast={showToast}
+            />
+          )}
         </main>
 
         {showPublishModal && deckToPublish && (
