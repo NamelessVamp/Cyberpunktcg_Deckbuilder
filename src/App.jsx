@@ -1,5 +1,6 @@
 import { useAuth } from "./contexts/AuthContext";
 import LoginModal from "./components/LoginModal";
+import UserProfileModal from "./components/UserProfileModal";
 import * as deckService from "./lib/deckService";
 import { useState, useEffect } from "react";
 import { useDeckBuilder } from "./hooks/useDeckBuilder";
@@ -117,6 +118,9 @@ function App() {
   const [publicDeckId, setPublicDeckId] = useState(null);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profileAvatarUrl, setProfileAvatarUrl] = useState("");
+  const [profileDisplayName, setProfileDisplayName] = useState("");
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const [showMigrationModal, setShowMigrationModal] = useState(false);
@@ -587,17 +591,36 @@ function App() {
             <div className="hidden sm:flex items-center gap-4">
               {user ? (
                 <div className="flex items-center gap-4">
-                  {user.discord_avatar && (
-                    <img
-                      src={user.discord_avatar}
-                      alt="Discord Avatar"
-                      className="w-10 h-10 rounded-full border-2 border-term-amber"
-                    />
-                  )}
+                  <button
+                    onClick={() => setShowProfileModal(true)}
+                    className="relative group focus:outline-none"
+                    title="View profile"
+                  >
+                    {profileAvatarUrl || user.discord_avatar ? (
+                      <img
+                        src={profileAvatarUrl || user.discord_avatar}
+                        alt="Avatar"
+                        className="w-10 h-10 rounded-full border-2 border-term-amber group-hover:border-term-green transition-colors object-cover"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full border-2 border-term-amber group-hover:border-term-green bg-term-black flex items-center justify-center transition-colors">
+                        <span className="text-term-amber font-mono font-bold text-sm">
+                          {(user.discord_username ||
+                            user.email)?.[0]?.toUpperCase()}
+                        </span>
+                      </div>
+                    )}
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-term-green border-2 border-term-gray"></div>
+                  </button>
 
-                  <div className="text-right">
-                    <p className="text-term-amber font-mono text-sm font-bold">
-                      {user.discord_username || user.email?.split("@")[0]}
+                  <div
+                    className="text-right cursor-pointer"
+                    onClick={() => setShowProfileModal(true)}
+                  >
+                    <p className="text-term-amber font-mono text-sm font-bold hover:text-term-green transition-colors">
+                      {profileDisplayName ||
+                        user.discord_username ||
+                        user.email?.split("@")[0]}
                     </p>
                     <p className="text-term-green/60 font-mono text-xs">
                       {savedDecks.length} saved decks
@@ -1176,6 +1199,23 @@ function App() {
               onMigrate={handleMigration}
               onSkip={handleSkipMigration}
               onClose={handleSkipMigration}
+            />
+          )}
+
+          {showProfileModal && user && (
+            <UserProfileModal
+              user={user}
+              savedDecks={savedDecks}
+              onClose={() => setShowProfileModal(false)}
+              onProfileUpdate={async () => {
+                const { supabase: sb } = await import("./lib/supabase");
+                const { data } = await sb
+                  .from("profiles")
+                  .select("avatar_url")
+                  .eq("id", user.id)
+                  .single();
+                if (data?.avatar_url) setProfileAvatarUrl(data.avatar_url);
+              }}
             />
           )}
 
