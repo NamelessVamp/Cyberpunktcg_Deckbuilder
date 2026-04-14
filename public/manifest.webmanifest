@@ -1,0 +1,21 @@
+{
+  "name": "Afterlife Decks",
+  "short_name": "Afterlife",
+  "description": "Cyberpunk 2077 TCG Deck Builder — Build, analyze & share your Night City strategies.",
+  "theme_color": "#ffb300",
+  "background_color": "#0a0a0a",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    { "src": "/icons/pwa-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/pwa-512.png", "sizes": "512x512", "type": "image/png" },
+    {
+      "src": "/icons/pwa-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

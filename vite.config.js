@@ -7,61 +7,11 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "icons.svg"],
-      manifest: {
-        name: "Afterlife Decks",
-        short_name: "Afterlife",
-        description:
-          "Cyberpunk 2077 TCG Deck Builder — Build, analyze & share your Night City strategies.",
-        theme_color: "#ffb300",
-        background_color: "#0a0a0a",
-        display: "standalone",
-        orientation: "portrait-primary",
-        scope: "/",
-        start_url: "/",
-        icons: [
-          {
-            src: "/icons/pwa-192.png",
-            sizes: "192x192",
-            type: "image/png",
-          },
-          {
-            src: "/icons/pwa-512.png",
-            sizes: "512x512",
-            type: "image/png",
-          },
-          {
-            src: "/icons/pwa-512.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "any maskable",
-          },
-        ],
-      },
+      manifest: false, // ← desactiva generación del manifest (ya lo tenemos en public/)
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,webp}"],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "google-fonts-cache",
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-            },
-          },
-          {
-            urlPattern: /^https:\/\/dstcynss47vun\.cloudfront\.net\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "card-images-cache",
-              expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 30 },
-            },
-          },
-        ],
+        globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
       },
-      devOptions: {
-        enabled: false,
-      },
+      devOptions: { enabled: false },
     }),
   ],
   build: {
