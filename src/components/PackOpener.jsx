@@ -21,37 +21,42 @@ export default function PackOpener({ allCards }) {
     novaRares: 0,
     iconicRares: 0,
     foils: 0,
+    epicRares: 0,
+    secretRares: 0,
   });
 
-  // TODO: Remove this rarity injection when WeirdCo publishes official rarity data
+  // TODO: Remove when WeirdCo publishes official Alpha/Beta rarity data
+  // Simulated distribution based on official Beta Kit pull rates
   const injectRarity = (card) => {
     const set = card.set || "";
-    const cardNumber = card.number || "";
-    const cost = card.cost || 0;
     const type = card.type || "";
 
-    if (set.includes("PROMO") || cardNumber.startsWith("N")) {
-      return "Nova Rare";
+    // Nova Rare — solo Promos/Kickstarter, nunca salen en sobres normales
+    if (set.includes("PROMO")) return "Nova Rare";
+
+    // Legends nunca van en pools de rareza (son deckbuilding, no sobre pulls)
+    if (type === "LEGEND") return "Rare";
+
+    // Para Alpha Kit y Spoilers: distribución simulada por tipo
+    // GEAR y PROGRAM tienden a ser más raros
+    if (type === "GEAR" || type === "PROGRAM") {
+      const roll = Math.random();
+      if (roll < 0.3) return "Common";
+      if (roll < 0.6) return "Uncommon";
+      if (roll < 0.8) return "Rare";
+      if (roll < 0.9) return "Epic Rare";
+      if (roll < 0.955) return "Iconic Rare";
+      return "Secret Rare";
     }
 
-    if (set.includes("ALPHA")) {
-      return "Common";
-    }
-
-    if (set.includes("SPOILER")) {
-      if (type === "LEGEND") {
-        return "Iconic Rare";
-      }
-      if (cost >= 6) {
-        return "Rare";
-      }
-      if (cost >= 4) {
-        return "Uncommon";
-      }
-      return "Common";
-    }
-
-    return "Common";
+    // UNITs: mayoría comunes y poco comunes
+    const roll = Math.random();
+    if (roll < 0.45) return "Common";
+    if (roll < 0.75) return "Uncommon";
+    if (roll < 0.9) return "Rare";
+    if (roll < 0.965) return "Epic Rare";
+    if (roll < 0.99) return "Iconic Rare";
+    return "Secret Rare";
   };
 
   const generatePack = () => {
@@ -74,8 +79,11 @@ export default function PackOpener({ allCards }) {
     const novaRares = cardsWithRarity.filter(
       (c) => c.rarity === "Nova Rare" && c.type !== "LEGEND",
     );
-    const iconicRares = cardsWithRarity.filter(
-      (c) => c.rarity === "Iconic Rare" && c.type !== "LEGEND",
+    const epicRares = cardsWithRarity.filter(
+      (c) => c.rarity === "Epic Rare" && c.type !== "LEGEND",
+    );
+    const secretRares = cardsWithRarity.filter(
+      (c) => c.rarity === "Secret Rare" && c.type !== "LEGEND",
     );
 
     const randomCard = (arr) => {
@@ -99,25 +107,22 @@ export default function PackOpener({ allCards }) {
       }
     }
 
-    // SLOT 11: Rare+
+    // SLOT 11: Rare+ — basado en pull rates oficiales Beta Kit
+    // Rare: 100% (guaranteed) — Epic: 25% — Iconic: 5.5% — Secret: 4.1%
     const rareRoll = Math.random() * 100;
     let slot11Card = null;
 
-    if (rareRoll < 85 && rares.length > 0) {
-      slot11Card = randomCard(rares);
-    } else if (rareRoll < 97 && novaRares.length > 0) {
-      slot11Card = randomCard(novaRares);
-    } else if (iconicRares.length > 0) {
-      slot11Card = randomCard(iconicRares);
-    } else if (rares.length > 0) {
-      slot11Card = randomCard(rares);
+    if (rareRoll < 4.1 && secretRares.length > 0) {
+      slot11Card = randomCard(secretRares); // 4.1% Secret Rare
+    } else if (rareRoll < 9.6 && iconicRares.length > 0) {
+      slot11Card = randomCard(iconicRares); // 5.5% Iconic Rare
+    } else if (rareRoll < 34.6 && epicRares.length > 0) {
+      slot11Card = randomCard(epicRares); // 25% Epic Rare
     } else {
-      slot11Card = randomCard(uncommons) || randomCard(commons);
+      slot11Card = randomCard(rares) || randomCard(uncommons); // ~65% Rare base
     }
 
-    if (slot11Card) {
-      pack.push({ ...slot11Card, slot: 11 });
-    }
+    if (!slot11Card) slot11Card = randomCard(rares) || randomCard(uncommons);
 
     // SLOT 12: Foil wildcard
     const foilRoll = Math.random() * 100;
@@ -214,6 +219,8 @@ export default function PackOpener({ allCards }) {
         if (card.rarity === "Rare") totalStats.rares++;
         if (card.rarity === "Nova Rare") totalStats.novaRares++;
         if (card.rarity === "Iconic Rare") totalStats.iconicRares++;
+        if (card.rarity === "Epic Rare") totalStats.epicRares++;
+        if (card.rarity === "Secret Rare") totalStats.secretRares++;
         if (card.foil) totalStats.foils++;
       });
     }
@@ -367,14 +374,10 @@ export default function PackOpener({ allCards }) {
           <div className="bg-term-black/50 border border-term-amber/30 rounded p-3 text-xs font-mono">
             <div className="text-term-amber mb-2">⚠️ PULL RATES</div>
             <div className="text-term-green/70 space-y-1">
-              <div>• Rare: ~85%</div>
-              <div>• Nova Rare: ~12%</div>
-              <div>• Iconic Rare: ~3%</div>
-              <div className="pt-2 border-t border-term-amber/20">
-                <div className="text-term-amber/80">Foil Slot:</div>
-                <div>• Any rarity possible</div>
-                <div>• ~1% Iconic Foil</div>
-              </div>
+              <div>• Rare: ~65%</div>
+              <div>• Epic Rare: ~25%</div>
+              <div>• Iconic Rare: ~5.5% (always Foil Alt-Art)</div>
+              <div>• Secret Rare: ~4.1%</div>
             </div>
           </div>
         </div>
