@@ -213,6 +213,18 @@ function App() {
     setConfirmModal,
   });
 
+  // Abre el modal de publicación — wrapper local
+  const handlePublishDeck = (deckId) => {
+    if (!user) {
+      showToast("Login required to publish", "warning");
+      return;
+    }
+    const d = savedDecks.find((sd) => sd.id === deckId);
+    if (!d) return;
+    setDeckToPublish(d);
+    setShowPublishModal(true);
+  };
+
   // Wrapper: inyecta deckToPublish + setters del estado local
   const handleConfirmPublish = ({ description, archetype }) =>
     _handleConfirmPublish({
