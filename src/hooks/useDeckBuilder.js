@@ -8,6 +8,7 @@ const EMPTY_DECK = { legends: [], mainDeck: [], sideboard: [] };
 export function useDeckBuilder({
   cards,
   showToast,
+  resetFilters,
   setFilters,
   setFiltersOpen,
   setActiveTab,
@@ -140,22 +141,7 @@ export function useDeckBuilder({
   // ── CLEAR DECK ─────────────────────────────────────────────────────────────
   const handleClearDeck = () => {
     setDeck(EMPTY_DECK);
-    setFilters({
-      types: [],
-      factions: [],
-      costMin: 0,
-      costMax: 9,
-      powerMin: 0,
-      powerMax: 15,
-      ramMin: 1,
-      ramMax: 5,
-      ramColors: [],
-      keywords: [],
-      set: "",
-      artists: [],
-      cardNumber: "",
-    });
-    setFiltersOpen(false);
+    resetFilters();
   };
 
   // ── LOAD PRECON ────────────────────────────────────────────────────────────

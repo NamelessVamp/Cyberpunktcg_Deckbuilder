@@ -13,6 +13,7 @@ export default function FilterPanel({
   const [openSection, setOpenSection] = useState(null);
 
   const types = [...new Set(cards.map((c) => c.type))].sort();
+  const rarities = [...new Set(cards.map((c) => c.rarity).filter(Boolean))];
   const factions = [
     ...new Set(cards.map((c) => c.faction).filter(Boolean)),
   ].sort();

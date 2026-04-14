@@ -3,6 +3,7 @@ import LoginModal from "./components/LoginModal";
 import * as deckService from "./lib/deckService";
 import { useState, useEffect } from "react";
 import { useDeckBuilder } from "./hooks/useDeckBuilder";
+import { useFilters } from "./hooks/useFilters";
 import cardsData from "./data/cards.json";
 import preconDecks from "./data/preconDecks.json";
 import SearchBar from "./components/SearchBar";
@@ -103,32 +104,12 @@ function App() {
   const [exportDeckName, setExportDeckName] = useState("");
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filters, setFilters] = useState({
-    types: [],
-    factions: [],
-    costMin: 0,
-    costMax: 9,
-    powerMin: 0,
-    powerMax: 15,
-    ramMin: 1,
-    ramMax: 5,
-    ramColors: [],
-    keywords: [],
-    set: "",
-    showOnlyNew: false,
-    artists: [],
-    cardNumber: "",
-  });
-
-  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const [activeTab, setActiveTab] = useState("build");
   const { isEnabled: canAccessSimulator } = useFeatureFlag("phase9_simulator");
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [savedDecks, setSavedDecks] = useState([]);
   const [isLoadingDecks, setIsLoadingDecks] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [toast, setToast] = useState(null);
   const [confirmModal, setConfirmModal] = useState(null);
   const cardsPerPage = 18;
@@ -143,7 +124,6 @@ function App() {
   const { user, signOut } = useAuth();
   const [showProxyModal, setShowProxyModal] = useState(false);
   const [collection, setCollection] = useState([]);
-  const [showOwnedOnly, setShowOwnedOnly] = useState(false);
   // ─── WISHLIST STATE ───────────────────────────────────────────────────────────
   const [wishlistIds, setWishlistIds] = useState(new Set());
   // ─────────────────────────────────────────────────────────────────────────────
@@ -156,7 +136,25 @@ function App() {
     setToast({ message, type });
   };
 
-  // ── DECK BUILDER HOOK ────────────────────────────────────────────────────────
+  // ── FILTERS HOOK — debe ir ANTES de useDeckBuilder (provee resetFilters) ─────
+  const {
+    searchTerm,
+    setSearchTerm,
+    filters,
+    setFilters,
+    filtersOpen,
+    setFiltersOpen,
+    currentPage,
+    setCurrentPage,
+    filteredCards,
+    resetFilters,
+    INITIAL_FILTERS,
+    showOwnedOnly,
+    setShowOwnedOnly,
+  } = useFilters({ cards, collection, user, isNewCard });
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  // ── DECK BUILDER HOOK — usa resetFilters de useFilters ───────────────────────
   const {
     deck,
     setDeck,
@@ -171,11 +169,14 @@ function App() {
   } = useDeckBuilder({
     cards,
     showToast,
+    resetFilters,
     setFilters,
     setFiltersOpen,
     setActiveTab,
   });
   // ─────────────────────────────────────────────────────────────────────────────
+
+  const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
 
   useEffect(() => {
     setTimeout(() => {
@@ -356,83 +357,6 @@ function App() {
     showFeedbackModal,
   ]);
 
-  const filteredCards = cards.filter((card) => {
-    if (searchTerm) {
-      const search = searchTerm.toLowerCase();
-      const matchesSearch =
-        card.name.toLowerCase().includes(search) ||
-        (card.subtitle && card.subtitle.toLowerCase().includes(search)) ||
-        (card.text && card.text.toLowerCase().includes(search)) ||
-        (card.keywords &&
-          card.keywords.some((k) => k.toLowerCase().includes(search)));
-
-      if (!matchesSearch) return false;
-    }
-
-    if (filters.types && filters.types.length > 0) {
-      if (!filters.types.includes(card.type)) return false;
-    }
-
-    if (filters.factions && filters.factions.length > 0) {
-      if (!filters.factions.includes(card.faction)) return false;
-    }
-
-    if (filters.set && card.set !== filters.set) return false;
-
-    // ─── FASE 11: Enhanced Filters ───────────────────────────────────────────
-    // Artist filter
-    if (filters.artists && filters.artists.length > 0) {
-      if (!filters.artists.includes(card.artist)) return false;
-    }
-
-    // Card number filter
-    if (filters.cardNumber && filters.cardNumber.trim()) {
-      const numSearch = filters.cardNumber.trim().toLowerCase();
-      const cardNum = (card.number || "").toLowerCase();
-      if (!cardNum.includes(numSearch)) return false;
-    }
-    // ─────────────────────────────────────────────────────────────────────────
-
-    if (filters.keywords && filters.keywords.length > 0) {
-      const cardKeywords = card.keywords || [];
-      const hasAllKeywords = filters.keywords.every((keyword) =>
-        cardKeywords.includes(keyword),
-      );
-      if (!hasAllKeywords) return false;
-    }
-
-    if (card.cost !== undefined) {
-      if (card.cost < filters.costMin || card.cost > filters.costMax)
-        return false;
-    }
-
-    if (card.power !== undefined) {
-      if (card.power < filters.powerMin || card.power > filters.powerMax)
-        return false;
-    }
-
-    if (card.ram !== undefined && card.ram !== null) {
-      if (card.ram < filters.ramMin || card.ram > filters.ramMax) return false;
-    }
-
-    if (filters.ramColors && filters.ramColors.length > 0) {
-      if (!filters.ramColors.includes(card.ram_color)) return false;
-    }
-
-    if (showOwnedOnly && user) {
-      if (!collectionService.ownsCard(collection, card.id)) {
-        return false;
-      }
-    }
-
-    if (filters.showOnlyNew && !isNewCard(card)) {
-      return false;
-    }
-
-    return true;
-  });
-
-  const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   const currentCards = filteredCards.slice(indexOfFirstCard, indexOfLastCard);
