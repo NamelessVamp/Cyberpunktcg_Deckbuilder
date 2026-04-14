@@ -54,6 +54,27 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Sign in with Discord
+  const signUpWithEmail = async (email, password) => {
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) throw error;
+  };
+
+  const signInWithEmail = async (email, password) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) throw error;
+    return data;
+  };
+
+  const resetPassword = async (email) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}`,
+    });
+    if (error) throw error;
+  };
+
   const signInWithDiscord = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "discord",
@@ -86,6 +107,9 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
+    signUpWithEmail,
+    signInWithEmail,
+    resetPassword,
     signInWithDiscord,
     signOut,
   };
