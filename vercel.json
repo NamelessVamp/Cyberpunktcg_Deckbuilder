@@ -31,6 +31,16 @@
     {
       "source": "/registerSW.js",
       "headers": [
+        { "key": "Content-Type", "value": "application/javascript" },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/workbox-(.*).js",
+      "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
@@ -52,5 +62,10 @@
       ]
     }
   ],
-  "rewrites": [{ "source": "/((?!api/.*).*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/((?!sw.js|manifest.webmanifest|registerSW.js|workbox|icons|assets|favicon).*)",
+      "destination": "/index.html"
+    }
+  ]
 }
