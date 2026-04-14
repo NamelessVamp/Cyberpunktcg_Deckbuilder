@@ -288,6 +288,30 @@ function App() {
     loadUserDecks();
   }, [user, cards]);
 
+  // Load user profile (display_name, avatar_url)
+  useEffect(() => {
+    if (!user) {
+      setProfileDisplayName("");
+      setProfileAvatarUrl("");
+      return;
+    }
+    const loadProfile = async () => {
+      try {
+        const { supabase: sb } = await import("./lib/supabase");
+        const { data } = await sb
+          .from("profiles")
+          .select("display_name, avatar_url")
+          .eq("id", user.id)
+          .single();
+        if (data?.display_name) setProfileDisplayName(data.display_name);
+        if (data?.avatar_url) setProfileAvatarUrl(data.avatar_url);
+      } catch (err) {
+        console.error("Error loading profile:", err);
+      }
+    };
+    loadProfile();
+  }, [user]);
+
   // Load user's collection
   useEffect(() => {
     const loadUserCollection = async () => {
