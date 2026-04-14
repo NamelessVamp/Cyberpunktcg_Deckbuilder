@@ -1254,7 +1254,12 @@ function App() {
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, filter: "blur(4px)", y: 6 }}
-              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              animate={{
+                opacity: 1,
+                filter: "blur(0px)",
+                y: 0,
+                transitionEnd: { filter: "none", transform: "none" },
+              }}
               exit={{ opacity: 0, filter: "blur(3px)", y: -4 }}
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
             >

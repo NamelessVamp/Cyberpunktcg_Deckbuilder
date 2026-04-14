@@ -5,6 +5,10 @@ import { useAuth } from "../contexts/AuthContext";
 import * as communityService from "../lib/communityService";
 import * as deckService from "../lib/deckService";
 import SmartCardImage from "./SmartCardImage";
+import DeckImageExport, {
+  generateDeckImage,
+  DeckExportCanvas,
+} from "./DeckImageExport";
 
 function RamDot({ color }) {
   const colorMap = {
@@ -465,6 +469,18 @@ export default function PublicDeckView({
                   <p className="text-term-amber/40 font-mono text-[10px] text-center -mt-2">
                     Login required to clone
                   </p>
+                )}
+
+                {hydratedDeck && (
+                  <DeckImageExport
+                    deck={hydratedDeck}
+                    deckName={deck?.name}
+                    authorName={
+                      deck?.profiles?.discord_username || "UNKNOWN_RUNNER"
+                    }
+                    shareUrl={`${window.location.origin}/?d=${btoa(JSON.stringify({ legends: deck?.legend_ids || [], mainDeck: deck?.main_deck_ids || [], sideboard: [] }))}`}
+                    className="w-full py-2 border border-term-amber/40 text-term-amber font-mono font-bold text-sm rounded hover:bg-term-amber/10 transition-colors"
+                  />
                 )}
 
                 {/* Owner/Admin controls */}

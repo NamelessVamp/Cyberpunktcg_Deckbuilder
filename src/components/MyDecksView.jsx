@@ -1,4 +1,5 @@
 import SmartCardImage from "./SmartCardImage";
+import DeckImageExport from "./DeckImageExport";
 
 export default function MyDecksView({
   savedDecks,
@@ -173,6 +174,14 @@ export default function MyDecksView({
                     [DEL]
                   </button>
                 </div>
+
+                <DeckImageExport
+                  deck={savedDeck.deck}
+                  deckName={savedDeck.name}
+                  authorName="RUNNER"
+                  shareUrl={`${window.location.origin}/?d=${btoa(JSON.stringify({ legends: savedDeck.deck.legends?.map((c) => c.id) || [], mainDeck: savedDeck.deck.mainDeck?.map((c) => c.id) || [], sideboard: [] }))}`}
+                  className="w-full mt-1 py-2 border border-term-amber/40 text-term-amber/80 rounded hover:bg-term-amber/10"
+                />
 
                 {/* Third Row: PUBLISH */}
                 {onPublishDeck && (
