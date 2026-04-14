@@ -1137,8 +1137,11 @@ function App() {
         Skip to main content
       </a>
 
+      {/* ── CYBERSPACE BACKGROUND GLOBAL ── */}
+      <CyberspaceParticles className="opacity-100" />
+
       {/* Background Grid */}
-      <div className="fixed inset-0 pointer-events-none opacity-10">
+      <div className="fixed inset-0 pointer-events-none opacity-5">
         <div
           className="absolute inset-0"
           style={{
@@ -1616,19 +1619,16 @@ function App() {
               )}
 
               {activeTab === "blackmarket" && (
-                <div key="blackmarket-tab" className="relative min-h-[400px]">
-                  <CyberspaceParticles count={150} className="rounded-lg" />
-                  <div className="relative z-10">
-                    <BlackMarketView
-                      key={blackMarketKey}
-                      allCards={cards}
-                      onLoadDeck={(clonedDeck) => {
-                        setSavedDecks((prev) => [clonedDeck, ...prev]);
-                      }}
-                      onShowToast={showToast}
-                      onViewPublicDeck={(deck) => setPublicDeckId(deck.id)}
-                    />
-                  </div>
+                <div key="blackmarket-tab">
+                  <BlackMarketView
+                    key={blackMarketKey}
+                    allCards={cards}
+                    onLoadDeck={(clonedDeck) => {
+                      setSavedDecks((prev) => [clonedDeck, ...prev]);
+                    }}
+                    onShowToast={showToast}
+                    onViewPublicDeck={(deck) => setPublicDeckId(deck.id)}
+                  />
                 </div>
               )}
 
