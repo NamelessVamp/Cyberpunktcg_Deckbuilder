@@ -1,19 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { VitePWA } from "vite-plugin-pwa";
 
+// NON OMNIS MORIAR — vite.config.js sin vite-plugin-pwa
+// PWA implementado manualmente via public/manifest.webmanifest + public/sw.js
 export default defineConfig({
-  plugins: [
-    react(),
-    VitePWA({
-      registerType: "autoUpdate",
-      manifest: false, // ← desactiva generación del manifest (ya lo tenemos en public/)
-      workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
-      },
-      devOptions: { enabled: false },
-    }),
-  ],
+  plugins: [react()],
   build: {
     outDir: "dist",
     rollupOptions: {
