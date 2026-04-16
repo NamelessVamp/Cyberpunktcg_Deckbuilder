@@ -8,24 +8,24 @@ export default function PackOpener({ allCards }) {
   const [showPackAnimation, setShowPackAnimation] = useState(false);
   const [currentPack, setCurrentPack] = useState([]);
   const [revealedCards, setRevealedCards] = useState([]);
+
   const RARITY_GLOW = {
-    Common: "shadow-none border-term-green/40",
+    Common: "border-term-green/40",
     Uncommon: "shadow-[0_0_8px_#34d399] border-emerald-400",
     Rare: "shadow-[0_0_12px_#60a5fa] border-blue-400",
     "Epic Rare": "shadow-[0_0_16px_#a78bfa] border-violet-400",
-    "Iconic Rare": "shadow-[0_0_20px_#fbbf24] border-yellow-400",
-    "Secret Rare": "shadow-[0_0_20px_#f87171] border-red-400",
-    "Nova Rare": "shadow-[0_0_28px_#ff1e50] border-rose-500",
+    "Iconic Rare": "shadow-[0_0_22px_#fbbf24] border-yellow-400",
+    "Secret Rare": "shadow-[0_0_22px_#f87171] border-red-400",
+    "Nova Rare": "shadow-[0_0_30px_#ff1e50] border-rose-500",
   };
-
-  const RARITY_LABEL_COLOR = {
-    Common: "bg-gray-700 text-gray-200",
-    Uncommon: "bg-emerald-900 text-emerald-300",
-    Rare: "bg-blue-900 text-blue-300",
-    "Epic Rare": "bg-violet-900 text-violet-300",
-    "Iconic Rare": "bg-yellow-900 text-yellow-300",
-    "Secret Rare": "bg-red-900 text-red-300",
-    "Nova Rare": "bg-rose-900 text-rose-300",
+  const RARITY_LABEL = {
+    Common: "bg-gray-800 text-gray-400",
+    Uncommon: "bg-emerald-950 text-emerald-300",
+    Rare: "bg-blue-950 text-blue-300",
+    "Epic Rare": "bg-violet-950 text-violet-300",
+    "Iconic Rare": "bg-yellow-950 text-yellow-300",
+    "Secret Rare": "bg-red-950 text-red-300",
+    "Nova Rare": "bg-rose-950 text-rose-300",
   };
 
   // BOX OPENER STATE
@@ -145,32 +145,31 @@ export default function PackOpener({ allCards }) {
     }
 
     if (!slot11Card) slot11Card = randomCard(rares) || randomCard(uncommons);
-
     if (slot11Card) pack.push({ ...slot11Card, slot: 11 });
 
-    // SLOT 12: Foil wildcard — cualquier rareza puede salir foil
-    // Probabilidades: Common 50% | Uncommon 30% | Rare 15% | Epic 3% | Iconic 1.5% | Secret 0.4% | Nova 0.1%
+    // SLOT 12: Foil wildcard
     const foilRoll = Math.random() * 100;
-    let foilBase = null;
+    let foilCard = null;
 
-    if (foilRoll < 0.1 && novaRares.length > 0)
-      foilBase = randomCard(novaRares);
-    else if (foilRoll < 0.5 && secretRares.length > 0)
-      foilBase = randomCard(secretRares);
-    else if (foilRoll < 2.0 && iconicRares.length > 0)
-      foilBase = randomCard(iconicRares);
-    else if (foilRoll < 5.0 && epicRares.length > 0)
-      foilBase = randomCard(epicRares);
-    else if (foilRoll < 20 && rares.length > 0) foilBase = randomCard(rares);
-    else if (foilRoll < 50 && uncommons.length > 0)
-      foilBase = randomCard(uncommons);
-    else foilBase = randomCard(commons);
-
-    // Fallback seguro — garantiza siempre 12 cartas
-    if (!foilBase)
-      foilBase =
-        randomCard(commons) || randomCard(uncommons) || randomCard(rares);
-    const foilCard = foilBase ? { ...foilBase, foil: true, slot: 12 } : null;
+    if (foilRoll < 50 && commons.length > 0) {
+      foilCard = { ...randomCard(commons), foil: true, slot: 12 };
+    } else if (foilRoll < 80 && uncommons.length > 0) {
+      foilCard = { ...randomCard(uncommons), foil: true, slot: 12 };
+    } else if (foilRoll < 95 && rares.length > 0) {
+      foilCard = { ...randomCard(rares), foil: true, slot: 12 };
+    } else if (foilRoll < 99 && novaRares.length > 0) {
+      foilCard = { ...randomCard(novaRares), foil: true, slot: 12 };
+    } else if (iconicRares.length > 0) {
+      foilCard = { ...randomCard(iconicRares), foil: true, slot: 12 };
+    } else if (rares.length > 0) {
+      foilCard = { ...randomCard(rares), foil: true, slot: 12 };
+    } else {
+      // PARCHE: Asignación segura para evitar el crash del objeto vacío { ...null }
+      const backupCard = randomCard(uncommons) || randomCard(commons);
+      if (backupCard) {
+        foilCard = { ...backupCard, foil: true, slot: 12 };
+      }
+    }
 
     if (foilCard) {
       pack.push(foilCard);
@@ -191,14 +190,9 @@ export default function PackOpener({ allCards }) {
     setRevealedCards([]);
     setTotalPacks(totalPacks + 1);
     setIsBoxMode(false);
-    // Reveal secuencial
+    // Sequential reveal: 1 carta cada 120ms
     newPack.forEach((_, i) => {
-      setTimeout(
-        () => {
-          setRevealedCards((prev) => [...prev, i]);
-        },
-        150 + i * 120,
-      );
+      setTimeout(() => setRevealedCards((prev) => [...prev, i]), 150 + i * 120);
     });
 
     // Add to collection
@@ -525,7 +519,7 @@ export default function PackOpener({ allCards }) {
 
                       {/* Front Face - RARITY GLOW */}
                       <div
-                        className={`card-face front rounded border-2 transition-shadow duration-300 ${
+                        className={`card-face front rounded border-2 transition-all duration-300 ${
                           card.foil
                             ? "foil-card border-transparent shadow-[0_0_20px_#fbbf24]"
                             : RARITY_GLOW[card.rarity] || "border-term-green/40"
@@ -547,14 +541,14 @@ export default function PackOpener({ allCards }) {
                             ✨ FOIL
                           </div>
                         )}
-                        {/* Card Name + Rarity */}
+                        {/* Card Name + Rarity badge */}
                         <div className="absolute bottom-0 left-0 right-0 bg-black/90 p-1 z-10">
                           <div className="text-term-green text-[10px] font-mono text-center truncate">
                             {card.name}
                           </div>
                           {card.rarity && card.rarity !== "Common" && (
                             <div
-                              className={`text-[9px] font-bold font-mono text-center mt-0.5 rounded px-1 ${RARITY_LABEL_COLOR[card.rarity] || ""}`}
+                              className={`text-[9px] font-bold font-mono text-center mt-0.5 rounded px-1 ${RARITY_LABEL[card.rarity] || ""}`}
                             >
                               {card.rarity.toUpperCase()}
                             </div>
@@ -684,7 +678,16 @@ export default function PackOpener({ allCards }) {
             {revealedCards.length < currentPack.length && (
               <div className="mb-4">
                 <button
-                  onClick={() => setRevealedCards(currentPack.map((_, i) => i))}
+                  onClick={() => {
+                    currentPack.forEach((_, i) => {
+                      if (!revealedCards.includes(i)) {
+                        setTimeout(
+                          () => setRevealedCards((prev) => [...prev, i]),
+                          i * 80,
+                        );
+                      }
+                    });
+                  }}
                   className="w-full bg-term-amber text-term-black py-2 px-4 rounded font-mono font-bold hover:bg-yellow-400 transition-colors"
                 >
                   [REVEAL ALL ({currentPack.length - revealedCards.length}{" "}
