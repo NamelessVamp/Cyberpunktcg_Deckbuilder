@@ -248,28 +248,55 @@ function App() {
   }, []);
 
   // AUTO-LOAD DECK FROM URL
+  // AUTO-LOAD DECK FROM URL (UUID & Base64)
   useEffect(() => {
     if (cards.length === 0) return;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const encodedDeck = urlParams.get("d");
+    const handleUrlLoading = async () => {
+      // 1. Intentar cargar por UUID (/deck/:uuid)
+      const deckUuidMatch = window.location.pathname.match(
+        /\/deck\/([a-f0-9-]{36})/,
+      );
 
-    if (encodedDeck) {
-      const decodedDeck = decodeDeck(encodedDeck, cards);
-
-      if (decodedDeck) {
-        setDeck(decodedDeck);
-        setActiveTab("build");
-        showToast(
-          `Deck loaded from URL: ${decodedDeck.legends.length} Legends, ${decodedDeck.mainDeck.length} cards`,
-          "success",
-        );
-
-        window.history.replaceState({}, "", window.location.pathname);
-      } else {
-        showToast("Invalid deck URL", "error");
+      if (deckUuidMatch) {
+        const { loadSharedDeck } = await import("./lib/shareService");
+        try {
+          const shared = await loadSharedDeck(deckUuidMatch[1]);
+          if (shared?.deck_data) {
+            setDeck(shared.deck_data);
+            showToast(
+              `Loaded: ${shared.deck_name || "Shared Deck"}`,
+              "success",
+            );
+            window.history.replaceState({}, "", "/");
+            return; // Detener aquí si cargó por UUID
+          }
+        } catch {
+          showToast("Shared deck not found", "error");
+        }
       }
-    }
+
+      // 2. Intentar cargar por Query Param (?d=...)
+      const urlParams = new URLSearchParams(window.location.search);
+      const encodedDeck = urlParams.get("d");
+
+      if (encodedDeck) {
+        const decodedDeck = decodeDeck(encodedDeck, cards);
+        if (decodedDeck) {
+          setDeck(decodedDeck);
+          setActiveTab("build");
+          showToast(
+            `Deck loaded from URL: ${decodedDeck.legends.length} Legends, ${decodedDeck.mainDeck.length} cards`,
+            "success",
+          );
+          window.history.replaceState({}, "", window.location.pathname);
+        } else {
+          showToast("Invalid deck URL", "error");
+        }
+      }
+    };
+
+    handleUrlLoading();
   }, [cards]);
 
   // Load decks from Supabase when user logs in
@@ -451,18 +478,31 @@ function App() {
     setCurrentPage(1);
   }, [searchTerm, filters]);
 
-  const handleShareDeck = () => {
+  const handleShareDeck = async () => {
     if (deck.mainDeck.length === 0 && deck.legends.length === 0) {
       showToast("Deck is empty", "warning");
       return;
     }
-    const encoded = encodeDeck(deck);
-    if (!encoded) {
-      showToast("Failed to generate share URL", "error");
-      return;
+    try {
+      const { createShareLink } = await import("./lib/shareService");
+      const authorName =
+        profileDisplayName ||
+        user?.discord_username ||
+        user?.email?.split("@")[0] ||
+        "Runner";
+      const deckName =
+        deck.legends.length > 0
+          ? deck.legends.map((l) => l.name).join(" / ")
+          : "My Deck";
+      const url = await createShareLink(deck, deckName, authorName);
+      setShareUrl(url);
+    } catch {
+      // Fallback to Base64 URL if Supabase fails
+      const encoded = encodeDeck(deck);
+      const url = `${window.location.origin}${window.location.pathname}?d=${encoded}`;
+      setShareUrl(url);
+      showToast("Using legacy share link", "warning");
     }
-    const url = `${window.location.origin}${window.location.pathname}?d=${encoded}`;
-    setShareUrl(url);
     setShowShareImageModal(true);
   };
 
