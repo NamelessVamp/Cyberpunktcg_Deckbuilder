@@ -24,6 +24,7 @@ import CardPreviewModal from "./components/CardPreviewModal";
 import ImportDeckModal from "./components/ImportDeckModal";
 import MulliganSimulator from "./components/MulliganSimulator";
 import PackOpener from "./components/PackOpener";
+import DraftSimulator from "./components/DraftSimulator";
 import MigrationModal from "./components/MigrationModal";
 import * as migrationHelper from "./lib/migrationHelper";
 import * as collectionService from "./lib/collectionService";
@@ -119,6 +120,7 @@ function App() {
   const [showImportModal, setShowImportModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [packMode, setPackMode] = useState("open"); // "open" | "draft"
   const [profileAvatarUrl, setProfileAvatarUrl] = useState("");
   const [profileDisplayName, setProfileDisplayName] = useState("");
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
@@ -1037,7 +1039,43 @@ function App() {
 
               {activeTab === "packs" && (
                 <div key="packs-tab">
-                  <PackOpener allCards={cards} />
+                  {/* Mode toggle */}
+                  <div className="flex gap-2 mb-6 border-b border-term-amber/20 pb-4">
+                    <button
+                      onClick={() => setPackMode("open")}
+                      className={`px-5 py-2 font-mono font-bold text-sm rounded transition-colors ${
+                        packMode === "open"
+                          ? "bg-term-amber text-term-black"
+                          : "border border-term-amber/40 text-term-amber/60 hover:text-term-amber"
+                      }`}
+                    >
+                      📦 PACK OPENER
+                    </button>
+                    <button
+                      onClick={() => setPackMode("draft")}
+                      className={`px-5 py-2 font-mono font-bold text-sm rounded transition-colors ${
+                        packMode === "draft"
+                          ? "bg-cyan-500 text-white"
+                          : "border border-cyan-500/40 text-cyan-400/60 hover:text-cyan-400"
+                      }`}
+                    >
+                      🃏 DRAFT SIMULATOR
+                    </button>
+                  </div>
+                  {packMode === "open" && <PackOpener allCards={cards} />}
+                  {packMode === "draft" && (
+                    <DraftSimulator
+                      allCards={cards}
+                      onLoadDraft={(draftDeck) => {
+                        setDeck(draftDeck);
+                        setActiveTab("build");
+                        showToast(
+                          `Draft loaded: ${draftDeck.mainDeck.length} cards`,
+                          "success",
+                        );
+                      }}
+                    />
+                  )}
                 </div>
               )}
 
