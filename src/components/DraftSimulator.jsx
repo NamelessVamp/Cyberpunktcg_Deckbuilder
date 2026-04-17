@@ -1,8 +1,61 @@
 // NON OMNIS MORIAR — DraftSimulator.jsx
 // EX MACHINA — Fase 14: Draft Simulator
 // Abre 4 sobres virtuales, elige 1 carta por ronda, construye un mazo de 40
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import SmartCardImage from "./SmartCardImage";
+
+function DraftHistoryPanel() {
+  const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const { supabase } = await import("../lib/supabase");
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) {
+          setLoading(false);
+          return;
+        }
+        const { data } = await supabase
+          .from("draft_history")
+          .select("id, card_count, created_at")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false })
+          .limit(5);
+        setHistory(data || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  if (loading || history.length === 0) return null;
+
+  return (
+    <div className="mt-6 bg-term-gray border border-cyan-500/20 rounded-lg p-4">
+      <p className="text-cyan-400 font-mono text-xs mb-3">📋 RECENT DRAFTS</p>
+      <div className="space-y-2">
+        {history.map((d) => (
+          <div
+            key={d.id}
+            className="flex justify-between items-center text-xs font-mono"
+          >
+            <span className="text-term-green/60">
+              {new Date(d.created_at).toLocaleDateString()}
+            </span>
+            <span className="text-term-amber">{d.card_count} cards</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const DRAFT_PACKS = 4;
 const DRAFT_PACK_SIZE = 12;
@@ -127,7 +180,7 @@ export default function DraftSimulator({ allCards, onLoadDraft }) {
     setPhase(PHASE.PICKING);
   }
 
-  function handlePick(card) {
+  async function handlePick(card) {
     const newPicked = [...pickedCards, card];
     const newPickCount = pickCount + 1;
     const remaining = currentPack.filter(
@@ -144,8 +197,22 @@ export default function DraftSimulator({ allCards, onLoadDraft }) {
         setCurrentPack(packs[nextIdx]);
         setPickCount(0);
       } else {
-        // Draft completo
+        // Draft completo — guardar en Supabase si hay usuario
         setPhase(PHASE.BUILDING);
+        try {
+          const { supabase } = await import("../lib/supabase");
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          if (user) {
+            await supabase.from("draft_history").insert({
+              user_id: user.id,
+              cards: [...pickedCards, card],
+            });
+          }
+        } catch (err) {
+          console.error("Draft save error:", err);
+        }
       }
     } else {
       setCurrentPack(remaining.length > 0 ? remaining : packs[currentPackIdx]);
@@ -437,9 +504,10 @@ export default function DraftSimulator({ allCards, onLoadDraft }) {
             onClick={handleReset}
             className="py-4 border-2 border-cyan-500 text-cyan-400 font-mono font-bold rounded-lg hover:bg-cyan-500/10 transition-colors"
           >
-            [🔄 NUEVO DRAFT]
+            [🔄 NEW DRAFT]
           </button>
         </div>
+        <DraftHistoryPanel />
       </div>
     );
   }
