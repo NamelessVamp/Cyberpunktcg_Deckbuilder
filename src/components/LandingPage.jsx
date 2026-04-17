@@ -282,6 +282,19 @@ function LandingPage({
           </div>
         </div>
       )}
+
+      {/* Footer */}
+      <div className="mt-16 pt-6 border-t border-term-amber/10 text-center">
+        <button
+          onClick={() => onNavigate("legal")}
+          className="text-term-amber/30 hover:text-term-amber/60 font-mono text-xs transition-colors"
+        >
+          [LEGAL & COPYRIGHT]
+        </button>
+        <p className="text-term-green/20 font-mono text-xs mt-2">
+          Fan-made tool • Not affiliated with CD PROJEKT RED or WeirdCo
+        </p>
+      </div>
     </div>
   );
 }

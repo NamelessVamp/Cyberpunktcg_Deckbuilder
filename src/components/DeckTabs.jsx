@@ -12,46 +12,70 @@ export default function DeckTabs({ activeTab, onTabChange }) {
     { id: "precon", label: "PRECON", icon: "📦" },
     { id: "practice", label: "PRACTICE", icon: "🎯" },
     { id: "packs", label: "PACKS", icon: "🎁" },
-    { id: "legal", label: "LEGAL", icon: "⚖️" },
+
     ...(canAccessSimulator
       ? [{ id: "simulator", label: "SIMULATOR", icon: "🎮", isBeta: true }]
       : []),
   ];
 
   return (
-    <div className="flex gap-1 sm:gap-2 mb-4 sm:mb-6 border-b border-term-amber/20 pb-2 overflow-x-auto scrollbar-hide">
-      {tabs.map((tab) => (
-        <button
-          key={tab.id}
-          onClick={() => onTabChange(tab.id)}
-          className={`
-            flex-shrink-0
-            px-2 sm:px-3
-            py-0.5 sm:py-1
-            rounded-t
-            font-mono font-bold
-            transition-colors
-            touch-optimized
-            flex items-center justify-center gap-1
-            text-[9px] sm:text-xs
-            leading-tight
-            ${
-              activeTab === tab.id
-                ? "bg-term-amber text-term-black"
-                : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10 active:bg-term-amber/20"
-            }
-          `}
-          aria-label={`${tab.label} tab`}
-          aria-current={activeTab === tab.id ? "page" : undefined}
+    <div>
+      {/* Contenedor relativo para los tabs y el efecto fade */}
+      <div className="relative mb-4 sm:mb-6 border-b border-term-amber/20 pb-2">
+        <div
+          className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide"
+          id="tabs-scroll"
         >
-          <span className="whitespace-nowrap">{tab.label}</span>
-          {tab.isBeta && (
-            <span className="px-1 sm:px-2 py-0.5 bg-term-green text-term-black text-[8px] sm:text-xs rounded font-bold whitespace-nowrap">
-              BETA
-            </span>
-          )}
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => onTabChange(tab.id)}
+              className={`
+                flex-shrink-0
+                px-2 sm:px-3
+                py-0.5 sm:py-1
+                rounded-t
+                font-mono font-bold
+                transition-colors
+                touch-optimized
+                flex items-center justify-center gap-1
+                text-[9px] sm:text-xs
+                leading-tight
+                ${
+                  activeTab === tab.id
+                    ? "bg-term-amber text-term-black"
+                    : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10 active:bg-term-amber/20"
+                }
+              `}
+              aria-label={`${tab.label} tab`}
+              aria-current={activeTab === tab.id ? "page" : undefined}
+            >
+              <span className="whitespace-nowrap">{tab.label}</span>
+              {tab.isBeta && (
+                <span className="px-1 sm:px-2 py-0.5 bg-term-green text-term-black text-[8px] sm:text-xs rounded font-bold whitespace-nowrap">
+                  BETA
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Fade indicator — hints at scrollable content on mobile */}
+        <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-term-black to-transparent pointer-events-none sm:hidden" />
+      </div>
+
+      {/* Footer (Movido fuera del scroll horizontal para que no se ponga a la derecha) */}
+      <div className="mt-16 pt-6 border-t border-term-amber/10 text-center">
+        <button
+          onClick={() => onNavigate("legal")}
+          className="text-term-amber/30 hover:text-term-amber/60 font-mono text-xs transition-colors"
+        >
+          [LEGAL & COPYRIGHT]
         </button>
-      ))}
+        <p className="text-term-green/20 font-mono text-xs mt-2">
+          Fan-made tool • Not affiliated with CD PROJEKT RED or WeirdCo
+        </p>
+      </div>
     </div>
   );
 }

@@ -690,8 +690,9 @@ function App() {
                     ) : (
                       <div className="w-10 h-10 rounded-full border-2 border-term-amber group-hover:border-term-green bg-term-black flex items-center justify-center transition-colors">
                         <span className="text-term-amber font-mono font-bold text-sm">
-                          {(user.discord_username ||
-                            user.email)?.[0]?.toUpperCase()}
+                          {profileDisplayName ||
+                            user.discord_username ||
+                            user.email?.split("@")[0].substring(0, 12)}
                         </span>
                       </div>
                     )}
@@ -705,7 +706,7 @@ function App() {
                     <p className="text-term-amber font-mono text-sm font-bold hover:text-term-green transition-colors">
                       {profileDisplayName ||
                         user.discord_username ||
-                        user.email?.split("@")[0]}
+                        user.email?.split("@")[0].substring(0, 12)}
                     </p>
                     <p className="text-term-green/60 font-mono text-xs">
                       {savedDecks.length} saved decks
