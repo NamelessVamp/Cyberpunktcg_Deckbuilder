@@ -48,6 +48,9 @@ function LandingPage({
             <p className="text-xl md:text-2xl text-term-green/80 mb-2 font-mono">
               Professional Deck Builder for Cyberpunk 2077 TCG
             </p>
+            <p className="text-sm text-term-amber/50 font-mono mb-2">
+              WeirdCo Alpha/Beta Kit 2026 — Fan-made tool, free forever
+            </p>
             <p className="text-lg md:text-xl text-term-green/60 mb-8 font-mono">
               Build. Analyze. Dominate Night City.
             </p>
@@ -81,37 +84,59 @@ function LandingPage({
           <h3 className="text-term-green font-mono font-bold text-lg mb-4">
             [NETRUNNER PROFILE]
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-term-black/40 border border-term-amber/20 rounded">
-              <div className="text-3xl font-bold text-term-amber font-mono mb-1">
-                {savedDecks.length}
-              </div>
-              <div className="text-xs text-term-green/60 font-mono">
-                DECKS BUILT
-              </div>
-            </div>
-
-            <div className="text-center p-4 bg-term-black/40 border border-term-blue/20 rounded">
-              <div className="text-3xl font-bold text-term-blue font-mono mb-1">
-                {collection.length}
-              </div>
-              <div className="text-xs text-term-green/60 font-mono">
-                UNIQUE CARDS OWNED
-              </div>
-            </div>
-
-            <div className="text-center p-4 bg-term-black/40 border border-term-green/20 rounded">
-              <div className="text-3xl font-bold text-term-green font-mono mb-1">
-                {stats ? stats.completionPercent : 0}%
-              </div>
-              <div className="text-xs text-term-green/60 font-mono">
-                COLLECTION COMPLETE
+          {savedDecks.length === 0 && collection.length === 0 ? (
+            // Empty state — new user
+            <div className="text-center py-4">
+              <p className="text-term-amber/60 font-mono text-sm mb-4">
+                Welcome to Night City, Runner. Your stats will appear here once
+                you start building.
+              </p>
+              <div className="flex justify-center gap-4 flex-wrap">
+                <button
+                  onClick={() => onNavigate("build")}
+                  className="px-4 py-2 bg-term-amber/20 border border-term-amber text-term-amber font-mono text-xs rounded hover:bg-term-amber/30 transition-colors"
+                >
+                  [BUILD YOUR FIRST DECK →]
+                </button>
+                <button
+                  onClick={() => onNavigate("packs")}
+                  className="px-4 py-2 bg-term-green/20 border border-term-green text-term-green font-mono text-xs rounded hover:bg-term-green/30 transition-colors"
+                >
+                  [OPEN YOUR FIRST PACK →]
+                </button>
               </div>
             </div>
-          </div>
+          ) : (
+            // Stats for returning users
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center p-4 bg-term-black/40 border border-term-amber/20 rounded">
+                <div className="text-3xl font-bold text-term-amber font-mono mb-1">
+                  {savedDecks.length}
+                </div>
+                <div className="text-xs text-term-green/60 font-mono">
+                  DECKS BUILT
+                </div>
+              </div>
+              <div className="text-center p-4 bg-term-black/40 border border-term-blue/20 rounded">
+                <div className="text-3xl font-bold text-term-blue font-mono mb-1">
+                  {collection.length}
+                </div>
+                <div className="text-xs text-term-green/60 font-mono">
+                  UNIQUE CARDS OWNED
+                </div>
+              </div>
+              <div className="text-center p-4 bg-term-black/40 border border-term-green/20 rounded">
+                <div className="text-3xl font-bold text-term-green font-mono mb-1">
+                  {stats ? stats.completionPercent : 0}%
+                </div>
+                <div className="text-xs text-term-green/60 font-mono">
+                  COLLECTION COMPLETE
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
-
       {/* ACTION CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {/* BUILD A DECK */}
@@ -119,9 +144,6 @@ function LandingPage({
           onClick={() => onNavigate("build")}
           className="bg-term-amber/10 border-2 border-term-amber p-8 rounded-lg hover:bg-term-amber/20 transition-all group"
         >
-          <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
-            🎴
-          </div>
           <h3 className="text-2xl font-bold text-term-amber font-mono mb-2">
             BUILD A DECK
           </h3>
@@ -139,9 +161,6 @@ function LandingPage({
           onClick={() => onNavigate("packs")}
           className="bg-term-blue/10 border-2 border-term-blue p-8 rounded-lg hover:bg-term-blue/20 transition-all group"
         >
-          <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
-            📦
-          </div>
           <h3 className="text-2xl font-bold text-term-blue font-mono mb-2">
             OPEN PACKS
           </h3>
@@ -159,9 +178,6 @@ function LandingPage({
           onClick={() => setShowGuideModal(true)}
           className="bg-term-green/10 border-2 border-term-green p-8 rounded-lg hover:bg-term-green/20 transition-all group"
         >
-          <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
-            📚
-          </div>
           <h3 className="text-2xl font-bold text-term-green font-mono mb-2">
             LEARN TO PLAY
           </h3>
