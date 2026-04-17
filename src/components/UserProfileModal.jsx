@@ -111,16 +111,14 @@ export default function UserProfileModal({
       const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/avatars/${path}?t=${Date.now()}`;
 
       // Actualizar profile en DB
-      const { error: updateError } = await supabase
-        .from("profiles")
-        .upsert(
-          {
-            id: user.id,
-            avatar_url: publicUrl,
-            updated_at: new Date().toISOString(),
-          },
-          { onConflict: "id" },
-        );
+      const { error: updateError } = await supabase.from("profiles").upsert(
+        {
+          id: user.id,
+          avatar_url: publicUrl,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "id" },
+      );
 
       if (updateError) throw updateError;
 
@@ -141,6 +139,13 @@ export default function UserProfileModal({
   const handleSave = async () => {
     setSaving(true);
     setError("");
+    const { moderateProfile } = await import("../lib/moderationService");
+    const modCheck = moderateProfile({ displayName, bio, discordHandle });
+    if (!modCheck.ok) {
+      setError(modCheck.reason);
+      setSaving(false);
+      return;
+    }
     try {
       const { error } = await supabase.from("profiles").upsert(
         {

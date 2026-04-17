@@ -94,6 +94,12 @@ export default function PublicDeckView({
 
   async function handleComment() {
     if (!user || !comment.trim()) return;
+    const { moderateText } = await import("../lib/moderationService");
+    const modCheck = moderateText(comment.trim());
+    if (!modCheck.ok) {
+      onShowToast?.(modCheck.reason, "error");
+      return;
+    }
     setSubmitting(true);
     try {
       await communityService.addComment(deck.id, comment.trim());

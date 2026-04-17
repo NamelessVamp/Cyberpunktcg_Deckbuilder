@@ -228,7 +228,13 @@ function App() {
   };
 
   // Wrapper: inyecta deckToPublish + setters del estado local
-  const handleConfirmPublish = ({ description, archetype }) =>
+  const handleConfirmPublish = async ({ description, archetype }) => {
+    const { moderateText } = await import("./lib/moderationService");
+    const modCheck = moderateText(description);
+    if (!modCheck.ok) {
+      showToast(modCheck.reason, "error");
+      return;
+    }
     _handleConfirmPublish({
       deckToPublish,
       description,
@@ -236,6 +242,7 @@ function App() {
       setShowPublishModal,
       setDeckToPublish,
     });
+  };
   // ─────────────────────────────────────────────────────────────────────────────
 
   const totalPages = Math.ceil(filteredCards.length / cardsPerPage);

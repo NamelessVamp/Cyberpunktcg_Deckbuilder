@@ -19,6 +19,12 @@ export function useSavedDecks({
 
   // ── SAVE ──────────────────────────────────────────────────────────────────
   const handleSaveDeck = async (deckName, deckNotes = "") => {
+    const { moderateDeckContent } = await import("../lib/moderationService");
+    const modCheck = moderateDeckContent({ name: deckName, notes: deckNotes });
+    if (!modCheck.ok) {
+      showToast(modCheck.reason, "error");
+      return;
+    }
     if (user) {
       try {
         const savedDeck = await deckService.saveDeck(
