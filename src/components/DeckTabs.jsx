@@ -63,19 +63,6 @@ export default function DeckTabs({ activeTab, onTabChange }) {
         {/* Fade indicator — hints at scrollable content on mobile */}
         <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-term-black to-transparent pointer-events-none sm:hidden" />
       </div>
-
-      {/* Footer (Movido fuera del scroll horizontal para que no se ponga a la derecha) */}
-      <div className="mt-16 pt-6 border-t border-term-amber/10 text-center">
-        <button
-          onClick={() => onNavigate("legal")}
-          className="text-term-amber/30 hover:text-term-amber/60 font-mono text-xs transition-colors"
-        >
-          [LEGAL & COPYRIGHT]
-        </button>
-        <p className="text-term-green/20 font-mono text-xs mt-2">
-          Fan-made tool • Not affiliated with CD PROJEKT RED or WeirdCo
-        </p>
-      </div>
     </div>
   );
 }
