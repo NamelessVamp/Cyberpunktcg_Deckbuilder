@@ -15,9 +15,12 @@ export default function FilterPanel({
   const types = [...new Set(cards.map((c) => c.type))].sort();
   const rarities = [...new Set(cards.map((c) => c.rarity).filter(Boolean))];
   const factions = [
-    ...new Set(cards.map((c) => c.faction).filter(Boolean)),
+    ...new Set(
+      cards.flatMap((c) =>
+        Array.isArray(c.faction) ? c.faction : c.faction ? [c.faction] : [],
+      ),
+    ),
   ].sort();
-
   const allKeywords = [
     ...new Set(cards.flatMap((c) => c.keywords || [])),
   ].sort();

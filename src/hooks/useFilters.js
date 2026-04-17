@@ -49,11 +49,16 @@ export function useFilters({ cards, collection, user, isNewCard }) {
 
         if (filters.types?.length > 0 && !filters.types.includes(card.type))
           return false;
-        if (
-          filters.factions?.length > 0 &&
-          !filters.factions.includes(card.faction)
-        )
-          return false;
+
+        if (filters.factions?.length > 0) {
+          const cardFactions = Array.isArray(card.faction)
+            ? card.faction
+            : card.faction
+              ? [card.faction]
+              : [];
+          if (!filters.factions.some((f) => cardFactions.includes(f)))
+            return false;
+        }
         if (filters.set && card.set !== filters.set) return false;
 
         // Fase 11 — Enhanced Filters
