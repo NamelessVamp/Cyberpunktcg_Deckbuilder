@@ -733,7 +733,13 @@ function App() {
         </header>
 
         <main id="main-content" role="main">
-          <DeckTabs activeTab={activeTab} onTabChange={setActiveTab} />
+          <DeckTabs
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            publicDeckCount={
+              savedDecks.filter((d) => d.visibility === "public").length
+            }
+          />
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}

@@ -1,17 +1,25 @@
 import { useFeatureFlag } from "../hooks/useFeatureFlag";
 
-export default function DeckTabs({ activeTab, onTabChange }) {
+export default function DeckTabs({
+  activeTab,
+  onTabChange,
+  publicDeckCount = 0,
+}) {
   const { isEnabled: canAccessSimulator } = useFeatureFlag("phase9_simulator");
 
   const tabs = [
     { id: "home", label: "HOME", icon: "🏠" },
     { id: "build", label: "BUILD", icon: "🔨" },
     { id: "collection", label: "COLLECTION", icon: "💎" },
-    { id: "blackmarket", label: "BLACK MARKET", icon: "▓" },
+    {
+      id: "blackmarket",
+      label: "BLACK MARKET",
+      icon: "▓",
+      badge: publicDeckCount > 0 ? publicDeckCount : null,
+    },
     { id: "mydecks", label: "MY DECKS", icon: "📚" },
-    { id: "precon", label: "PRECON", icon: "📦" },
-    { id: "practice", label: "PRACTICE", icon: "🎯" },
-    { id: "packs", label: "PACKS", icon: "🎁" },
+    { id: "practice", label: "SIMULATOR", icon: "🎯" },
+    { id: "packs", label: "PACKS & DRAFT", icon: "🎁" },
 
     ...(canAccessSimulator
       ? [{ id: "simulator", label: "SIMULATOR", icon: "🎮", isBeta: true }]
@@ -51,9 +59,9 @@ export default function DeckTabs({ activeTab, onTabChange }) {
               aria-current={activeTab === tab.id ? "page" : undefined}
             >
               <span className="whitespace-nowrap">{tab.label}</span>
-              {tab.isBeta && (
-                <span className="px-1 sm:px-2 py-0.5 bg-term-green text-term-black text-[8px] sm:text-xs rounded font-bold whitespace-nowrap">
-                  BETA
+              {tab.badge && (
+                <span className="ml-1 px-1 py-0.5 bg-term-green text-term-black text-[8px] rounded font-bold">
+                  {tab.badge}
                 </span>
               )}
             </button>
