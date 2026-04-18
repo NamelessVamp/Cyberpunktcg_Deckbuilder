@@ -137,59 +137,58 @@ function LandingPage({
           )}
         </div>
       )}
+
       {/* ACTION CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        {/* BUILD A DECK */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
         <button
           onClick={() => onNavigate("build")}
-          className="bg-term-amber/10 border-2 border-term-amber p-8 rounded-lg hover:bg-term-amber/20 transition-all group"
+          className="bg-term-amber/10 border-2 border-term-amber p-6 rounded-lg hover:bg-term-amber/20 transition-all text-left group"
         >
-          <h3 className="text-2xl font-bold text-term-amber font-mono mb-2">
+          <div className="text-term-amber font-mono text-3xl font-bold mb-3 group-hover:translate-x-1 transition-transform">
+            ▶
+          </div>
+          <h3 className="text-xl font-bold text-term-amber font-mono mb-2">
             BUILD A DECK
           </h3>
-          <p className="text-term-green/60 text-sm font-mono">
-            Create your custom deck with the full card gallery and advanced
-            filters
+          <p className="text-term-green/60 text-sm font-mono mb-4">
+            Card gallery, advanced filters, real-time validation
           </p>
-          <div className="mt-4 text-term-amber font-mono text-xs">
-            [CLICK TO START →]
+          <div className="text-term-amber font-mono text-xs">
+            [OPEN BUILDER →]
           </div>
         </button>
-
-        {/* OPEN PACKS */}
         <button
           onClick={() => onNavigate("packs")}
-          className="bg-term-blue/10 border-2 border-term-blue p-8 rounded-lg hover:bg-term-blue/20 transition-all group"
+          className="bg-term-green/10 border-2 border-term-green p-6 rounded-lg hover:bg-term-green/20 transition-all text-left group"
         >
-          <h3 className="text-2xl font-bold text-term-blue font-mono mb-2">
-            OPEN PACKS
+          <div className="text-term-green font-mono text-3xl font-bold mb-3 group-hover:translate-x-1 transition-transform">
+            ⊞
+          </div>
+          <h3 className="text-xl font-bold text-term-green font-mono mb-2">
+            PACKS & DRAFT
           </h3>
-          <p className="text-term-green/60 text-sm font-mono">
-            Simulate pack openings and track your physical collection
+          <p className="text-term-green/60 text-sm font-mono mb-4">
+            Open virtual packs or run a 40-card draft simulator
           </p>
-          <div className="mt-4 text-term-blue font-mono text-xs">
-            [CLICK TO OPEN →]
+          <div className="text-term-green font-mono text-xs">
+            [OPEN PACKS →]
           </div>
         </button>
-
-        {/* LEARN TO PLAY */}
-
         <button
           onClick={() => setShowGuideModal(true)}
-          className="bg-term-green/10 border-2 border-term-green p-8 rounded-lg hover:bg-term-green/20 transition-all group"
+          className="bg-term-blue/10 border-2 border-term-blue p-6 rounded-lg hover:bg-term-blue/20 transition-all text-left group"
         >
-          <h3 className="text-2xl font-bold text-term-green font-mono mb-2">
+          <div className="text-term-blue font-mono text-3xl font-bold mb-3 group-hover:translate-x-1 transition-transform">
+            ◎
+          </div>
+          <h3 className="text-xl font-bold text-term-blue font-mono mb-2">
             LEARN TO PLAY
           </h3>
-          <p className="text-term-green/60 text-sm font-mono">
-            Official rules, deck building guide, and gameplay basics
+          <p className="text-term-green/60 text-sm font-mono mb-4">
+            Rules, deck building guide, and gameplay basics
           </p>
-          <div className="mt-3 flex items-center justify-center gap-2 text-term-green/50 text-xs font-mono">
-            <span className="text-term-amber">ⓘ</span>
-            <span>Hover tooltips throughout the app for quick help</span>
-          </div>
-          <div className="mt-4 text-term-green font-mono text-xs">
-            [CLICK TO LEARN →]
+          <div className="text-term-blue font-mono text-xs">
+            [READ GUIDE →]
           </div>
         </button>
       </div>
