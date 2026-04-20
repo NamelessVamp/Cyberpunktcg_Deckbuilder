@@ -139,25 +139,19 @@ export default function PlaymatV2({
             <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
               FIELD
             </div>
-            <div className="dashed-units-area border border-dashed border-term-amber w-[120px] h-full rounded-lg flex flex-col relative z-[5]">
-              {[0, 1, 2].map((slotIdx) => (
+            <div className="dashed-units-area border border-dashed border-term-amber w-full h-full rounded-lg flex flex-row flex-wrap gap-2 p-2 relative z-[5] items-center justify-start">
+              {playerField.length === 0 && (
+                <span className="text-term-amber/30 text-xs font-mono w-full text-center">
+                  EMPTY FIELD
+                </span>
+              )}
+              {playerField.map((card, idx) => (
                 <div
-                  key={`slot-${slotIdx}`}
-                  className={`dashed-slot flex-1 ${slotIdx < 2 ? "border-b border-dashed border-term-amber" : ""} relative flex justify-center items-center`}
+                  key={`field-${idx}`}
+                  className="cursor-pointer"
+                  onClick={() => onDeclareAttacker?.(idx)}
                 >
-                  {playerField
-                    .filter((c) => c.fieldSlot === slotIdx)
-                    .map((card, idx) => (
-                      <div
-                        key={`field-${slotIdx}-${idx}`}
-                        className="cursor-pointer"
-                        onClick={() =>
-                          onDeclareAttacker?.(playerField.indexOf(card))
-                        }
-                      >
-                        <CyberCard card={card} />
-                      </div>
-                    ))}
+                  <CyberCard card={card} />
                 </div>
               ))}
             </div>
