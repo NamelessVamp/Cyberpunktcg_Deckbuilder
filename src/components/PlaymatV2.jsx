@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import CyberCard from "./simulator/CyberCard";
 
 export default function PlaymatV2({
@@ -11,30 +11,23 @@ export default function PlaymatV2({
   onResolveCombat,
 }) {
   const [backgroundImage, setBackgroundImage] = useState(null);
-  const [draggingCard, setDraggingCard] = useState(null);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [highestZ, setHighestZ] = useState(1000);
   const [selectedHandIdx, setSelectedHandIdx] = useState(null);
-  const [actionMode, setActionMode] = useState(null); // 'play' | 'sell' | 'attack'
+  const [actionMode, setActionMode] = useState(null);
   const fileInputRef = useRef(null);
 
-  // Handle background image upload
   const handleBackgroundUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => {
-        setBackgroundImage(event.target.result);
-      };
+      reader.onload = (event) => setBackgroundImage(event.target.result);
       reader.readAsDataURL(file);
     }
   };
 
-  // Dice roller with animation
   const rollDie = (sides, dieId) => {
     const dieElement = document.getElementById(dieId);
     if (!dieElement || dieElement.classList.contains("rolling")) return;
-
     dieElement.classList.add("rolling");
     setTimeout(() => {
       const result = Math.floor(Math.random() * sides) + 1;
@@ -43,7 +36,6 @@ export default function PlaymatV2({
     }, 300);
   };
 
-  // Get player zones from game state
   const playerHand = game?.players[1]?.hand || [];
   const playerField = game?.players[1]?.field || [];
   const playerLegends = game?.players[1]?.legends || [];
@@ -52,8 +44,13 @@ export default function PlaymatV2({
   const playerTrash = game?.players[1]?.trash || [];
   const playerGigs = game?.players[1]?.gigs || [];
 
+  const rivalField = game?.players[2]?.field || [];
+  const rivalLegends = game?.players[2]?.legends || [];
+  const rivalHand = game?.players[2]?.hand || [];
+  const rivalGigs = game?.players[2]?.gigs || [];
+
   return (
-    <div className="game-wrapper flex flex-col gap-4 items-center">
+    <div className="game-wrapper flex flex-col gap-4 items-center min-w-[1250px]">
       {/* Controls */}
       <div className="controls flex justify-end w-[1200px]">
         <input
@@ -71,9 +68,45 @@ export default function PlaymatV2({
         </button>
       </div>
 
+      {/* RIVAL ZONE — above playmat, rotated 180deg */}
+      <div className="w-[1200px] bg-term-black/60 border border-term-red/40 rounded-lg p-3 flex gap-4 items-center rotate-180">
+        <span className="text-term-red/70 font-mono text-xs font-bold whitespace-nowrap">
+          RIVAL
+        </span>
+        <div className="flex gap-1">
+          {rivalLegends.map((leg, idx) => (
+            <div key={`rl-${idx}`} className="opacity-80">
+              <CyberCard card={leg} />
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-1 flex-1 flex-wrap">
+          {rivalField.length === 0 ? (
+            <span className="text-term-red/30 font-mono text-xs">
+              EMPTY FIELD
+            </span>
+          ) : (
+            rivalField.map((card, idx) => (
+              <div
+                key={`rf-${idx}`}
+                className="cursor-pointer"
+                onClick={() =>
+                  onDeclareAttacker && alert(`Blocker vs ${card.name} — TODO`)
+                }
+              >
+                <CyberCard card={card} />
+              </div>
+            ))
+          )}
+        </div>
+        <span className="text-term-red/50 font-mono text-xs whitespace-nowrap">
+          HAND: {rivalHand.length}
+        </span>
+      </div>
+
       {/* Main Playmat */}
       <div
-        className="playmat w-[1200px] h-[700px] bg-transparent border-2 border-term-amber relative font-mono text-term-amber flex p-5 box-border gap-4 select-none overflow-hidden"
+        className="playmat w-[1200px] min-h-[700px] bg-transparent border-2 border-term-amber relative font-mono text-term-amber flex p-5 box-border gap-4 select-none overflow-visible"
         style={{
           backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
           backgroundSize: "cover",
@@ -81,7 +114,7 @@ export default function PlaymatV2({
           backgroundRepeat: "no-repeat",
         }}
       >
-        {/* LEFT COLUMN - Dice Box */}
+        {/* LEFT COLUMN - Dice */}
         <div className="col-left w-[90px] flex flex-col justify-end gap-4">
           <div className="dice-box border border-term-amber rounded-lg flex flex-col items-center justify-evenly h-[520px] bg-transparent">
             {[
@@ -123,6 +156,9 @@ export default function PlaymatV2({
               <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
                 RIVAL GIGS
               </div>
+              {rivalGigs.map((card, idx) => (
+                <CyberCard key={`rival-gig-${idx}`} card={card} />
+              ))}
             </div>
             <div className="gig-box flex-1 h-full border border-term-amber border-t-0 rounded-b-lg relative bg-transparent flex justify-center items-center flex-wrap gap-2.5 p-2.5 pb-6">
               <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
@@ -134,7 +170,7 @@ export default function PlaymatV2({
             </div>
           </div>
 
-          {/* Field Box */}
+          {/* Field */}
           <div className="field-box flex-grow border border-term-amber rounded-lg relative bg-transparent p-5 flex items-center mt-5">
             <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
               FIELD
@@ -226,8 +262,7 @@ export default function PlaymatV2({
               >
                 <strong>SELL FOR EDDIES</strong> Once per turn, you can add
                 another Eddie by selling a card with the [€$] symbol in the top
-                left corner. To sell a card show it to your rival and place it
-                face-down in this area.
+                left corner.
               </p>
             </div>
           </div>
@@ -316,14 +351,11 @@ export default function PlaymatV2({
         )}
       </div>
 
-      {/* CSS for dice animation */}
       <style>{`
-        .rolling {
-          animation: shake 0.3s ease-in-out;
-        }
+        .rolling { animation: shake 0.3s ease-in-out; }
         @keyframes shake {
-          0% { transform: rotate(45deg) scale(1); }
-          50% { transform: rotate(45deg) scale(1.2); background-color: #f7e018; color: #000; }
+          0%   { transform: rotate(45deg) scale(1); }
+          50%  { transform: rotate(45deg) scale(1.2); background-color: #f7e018; color: #000; }
           100% { transform: rotate(45deg) scale(1); }
         }
       `}</style>

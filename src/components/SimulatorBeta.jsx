@@ -198,7 +198,11 @@ export default function SimulatorBeta({ currentDeck }) {
   function startGame(deck) {
     const playerDeck = prepareDeckForGame(deck);
     // For now, opponent uses same deck (TODO: Add AI deck selection)
-    const opponentDeck = prepareDeckForGame(deck);
+    const opponentDeck = prepareDeckForGame(
+      deck.id === PRECON_DECKS.merc.id
+        ? PRECON_DECKS.arasaka
+        : PRECON_DECKS.merc,
+    );
 
     const newGame = new GameState(playerDeck, opponentDeck);
     newGame.startGame();
@@ -238,14 +242,14 @@ export default function SimulatorBeta({ currentDeck }) {
 
   return (
     <div
-      className={`min-h-screen p-8 relative transition-all duration-500 ${
+      className={`min-h-screen p-4 relative transition-all duration-500 ${
         cyberspaceMode ? "bg-[#02050a]" : "bg-term-black"
       }`}
     >
       {cyberspaceMode && (
         <CyberspaceParticles count={250} className="opacity-60" />
       )}
-      <div className="max-w-7xl mx-auto">
+      <div className="w-full mx-auto overflow-x-auto">
         {/* Beta Badge */}
         <div className="mb-6 flex items-center gap-3">
           <span className="px-3 py-1 bg-term-amber text-term-black font-bold text-xs rounded font-mono">
@@ -367,7 +371,7 @@ export default function SimulatorBeta({ currentDeck }) {
 
             {/* Playmat V2 */}
             <div
-              className={`relative transition-all duration-500 ${
+              className={`relative transition-all duration-500 overflow-x-auto ${
                 cyberspaceMode ? "brightness-110 contrast-110 saturate-150" : ""
               }`}
             >
