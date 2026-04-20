@@ -6,6 +6,8 @@ import cards from "../data/cards.json";
 import { GameState } from "../lib/game/GameState";
 import PlaymatV2 from "./PlaymatV2";
 import CyberspaceParticles from "./CyberspaceParticles";
+import { CardLogic } from "../lib/CardLogic";
+import { CombatResolver } from "../lib/CombatResolver";
 
 // Precon deck IDs (from Alpha Kit)
 const PRECON_DECKS = {
@@ -130,6 +132,9 @@ export default function SimulatorBeta({ currentDeck }) {
   const [game, setGame] = useState(null);
   const [isLoadingDecks, setIsLoadingDecks] = useState(false);
   const [cyberspaceMode, setCyberspaceMode] = useState(false);
+  const cardLogic = game ? new CardLogic(game) : null;
+  const combatResolver = game ? new CombatResolver(game) : null;
+  const refresh = () => setGame((g) => (g ? { ...g } : g));
 
   // Load saved decks + precons + current deck
   useEffect(() => {
@@ -380,6 +385,44 @@ export default function SimulatorBeta({ currentDeck }) {
               <PlaymatV2
                 game={game}
                 onGameUpdate={(updatedGame) => setGame(updatedGame)}
+                onPlayCard={(cardIndex, targetIndex) => {
+                  const result = cardLogic.playCard(1, cardIndex, targetIndex);
+                  if (!result.success) alert(result.error);
+                  else {
+                    game.log(`Played card`);
+                    refresh();
+                  }
+                }}
+                onSellCard={(cardIndex) => {
+                  const result = cardLogic.sellCard(1, cardIndex);
+                  if (!result.success) alert(result.error);
+                  else {
+                    game.log(`Sold card for 1 Eddie`);
+                    refresh();
+                  }
+                }}
+                onCallLegend={(legendIndex) => {
+                  const result = cardLogic.callLegend(1, legendIndex);
+                  if (!result.success) alert(result.error);
+                  else {
+                    game.log(`Called legend`);
+                    refresh();
+                  }
+                }}
+                onDeclareAttacker={(unitIndex) => {
+                  const result = combatResolver.declareAttacker(1, unitIndex);
+                  if (!result.success) alert(result.error);
+                  else {
+                    game.log(`Declared attacker`);
+                    refresh();
+                  }
+                }}
+                onResolveCombat={() => {
+                  const result = combatResolver.resolveCombat(1);
+                  game.log(`Combat resolved`);
+                  game.clearExpiredEffects();
+                  refresh();
+                }}
               />
             </div>
 
