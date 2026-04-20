@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
-  const [isTapped, setIsTapped] = useState(false);
+  const [isTapped, setIsTapped] = useState(card?.isTapped || false);
   const [isFlipped, setIsFlipped] = useState(initialFlipped);
   const [zIndex, setZIndex] = useState(100);
 
@@ -31,7 +31,7 @@ export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
 
   return (
     <div
-      className={`cyber-card ${getCardTypeClass()} ${isTapped ? "tapped" : ""} ${isFlipped ? "flipped" : ""}`}
+      className={`cyber-card ${getCardTypeClass()} ${isTapped ? "tapped" : ""} ${isFlipped ? "flipped" : ""} ${card?.isTapped && card?.type === "UNIT" ? "opacity-50 saturate-50" : ""}`}
       onClick={handleClick}
       onContextMenu={handleContextMenu}
       draggable={true}
