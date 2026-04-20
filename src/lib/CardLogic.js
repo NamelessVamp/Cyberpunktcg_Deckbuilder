@@ -79,7 +79,10 @@ export class CardLogic {
     }
 
     // Check if player can afford the card
-    const totalEddies = player.eddies.length;
+    const untappedLegends = player.legends.filter(
+      (l) => l.isFaceUp && !l.isTapped,
+    ).length;
+    const totalEddies = player.eddies.length + untappedLegends;
     if (card.cost > totalEddies) {
       return {
         success: false,
@@ -250,26 +253,34 @@ export class CardLogic {
   // =====================================================
 
   spendEddies(player, cost) {
-    // Count untapped Legends (available Eddies)
+    // Recursos disponibles: Leyendas face-up untapped + cartas en zona Eddies
     const untappedLegends = player.legends.filter(
       (l) => l.isFaceUp && !l.isTapped,
     );
+    const totalAvailable = untappedLegends.length + player.eddies.length;
 
-    if (untappedLegends.length < cost) {
+    if (totalAvailable < cost) {
       return {
         success: false,
-        error: `Not enough Eddies (need ${cost}, have ${untappedLegends.length} untapped Legends)`,
+        error: `Not enough Eddies (need ${cost}, have ${totalAvailable})`,
       };
     }
 
-    // Tap Legends equal to cost
-    for (let i = 0; i < cost; i++) {
+    // Gastar primero las cartas de la zona Eddies (se van a trash)
+    let remaining = cost;
+    const eddiesSpent = Math.min(remaining, player.eddies.length);
+    const spentCards = player.eddies.splice(0, eddiesSpent);
+    player.trash.push(...spentCards);
+    remaining -= eddiesSpent;
+
+    // Si aún falta, tapear Leyendas
+    for (let i = 0; i < remaining; i++) {
       untappedLegends[i].isTapped = true;
     }
 
     return {
       success: true,
-      message: `Spent ${cost} Eddies (tapped ${cost} Legends)`,
+      message: `Spent ${cost} Eddies (${eddiesSpent} sold cards + ${remaining} legends tapped)`,
     };
   }
 

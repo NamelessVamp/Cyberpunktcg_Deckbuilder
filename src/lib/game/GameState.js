@@ -8,6 +8,7 @@ export class GameState {
     this.isOvertime = false;
     this.consecutiveTurnsWithoutGigClaim = 0;
     this.winner = null;
+    this.combatLog = [];
 
     // Initialize both players
     this.players = {
@@ -63,12 +64,33 @@ export class GameState {
 
   startGame() {
     this.turn = 1;
-    this.phase = "ENERGIZE";
+    this.phase = "MULLIGAN";
+    this.mulliganDone = { 1: false, 2: false };
+  }
 
-    // Player 1 penalty: tap 2 Legends
-    if (this.players[1].legends.length >= 2) {
-      this.players[1].legends[0].isTapped = true;
-      this.players[1].legends[1].isTapped = true;
+  doMulligan(playerId) {
+    const player = this.players[playerId];
+    // Devolver mano al mazo y remezclar
+    player.deck.push(...player.hand);
+    player.deck = this.shuffle(player.deck);
+    player.hand = player.deck.splice(0, 6);
+    this.mulliganDone[playerId] = true;
+    this._checkMulliganComplete();
+  }
+
+  keepHand(playerId) {
+    this.mulliganDone[playerId] = true;
+    this._checkMulliganComplete();
+  }
+
+  _checkMulliganComplete() {
+    if (this.mulliganDone[1] && this.mulliganDone[2]) {
+      this.phase = "ENERGIZE";
+      // Player 1 penalty
+      if (this.players[1].legends.length >= 2) {
+        this.players[1].legends[0].isTapped = true;
+        this.players[1].legends[1].isTapped = true;
+      }
     }
   }
 
@@ -188,5 +210,13 @@ export class GameState {
     }
 
     return null;
+  }
+  log(message) {
+    this.combatLog.push({
+      text: message,
+      turn: this.turn,
+      phase: this.phase,
+      timestamp: Date.now(),
+    });
   }
 }
