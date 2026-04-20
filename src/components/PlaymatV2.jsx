@@ -1,11 +1,21 @@
 import { useState, useRef, useEffect } from "react";
 import CyberCard from "./simulator/CyberCard";
 
-export default function PlaymatV2({ game, onGameUpdate }) {
+export default function PlaymatV2({
+  game,
+  onGameUpdate,
+  onPlayCard,
+  onSellCard,
+  onCallLegend,
+  onDeclareAttacker,
+  onResolveCombat,
+}) {
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [draggingCard, setDraggingCard] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [highestZ, setHighestZ] = useState(1000);
+  const [selectedHandIdx, setSelectedHandIdx] = useState(null);
+  const [actionMode, setActionMode] = useState(null); // 'play' | 'sell' | 'attack'
   const fileInputRef = useRef(null);
 
   // Handle background image upload
@@ -138,7 +148,15 @@ export default function PlaymatV2({ game, onGameUpdate }) {
                   {playerField
                     .filter((c) => c.fieldSlot === slotIdx)
                     .map((card, idx) => (
-                      <CyberCard key={`field-${slotIdx}-${idx}`} card={card} />
+                      <div
+                        key={`field-${slotIdx}-${idx}`}
+                        className="cursor-pointer"
+                        onClick={() =>
+                          onDeclareAttacker?.(playerField.indexOf(card))
+                        }
+                      >
+                        <CyberCard card={card} />
+                      </div>
                     ))}
                 </div>
               ))}
@@ -170,7 +188,12 @@ export default function PlaymatV2({ game, onGameUpdate }) {
                     className="legend-card flex-1 border border-dashed border-term-amber/50 rounded relative"
                   >
                     {playerLegends[idx] && (
-                      <CyberCard card={playerLegends[idx]} />
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => onCallLegend?.(idx)}
+                      >
+                        <CyberCard card={playerLegends[idx]} />
+                      </div>
                     )}
                   </div>
                 ))}
@@ -259,8 +282,44 @@ export default function PlaymatV2({ game, onGameUpdate }) {
           PLAYER HAND
         </div>
         {playerHand.map((card, idx) => (
-          <CyberCard key={`hand-${idx}`} card={card} />
+          <div
+            key={`hand-${idx}`}
+            className={`cursor-pointer transition-transform ${selectedHandIdx === idx ? "ring-2 ring-term-green scale-105" : "hover:scale-105"}`}
+            onClick={() =>
+              setSelectedHandIdx(selectedHandIdx === idx ? null : idx)
+            }
+          >
+            <CyberCard card={card} />
+          </div>
         ))}
+        {selectedHandIdx !== null && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+            <button
+              onClick={() => {
+                onPlayCard?.(selectedHandIdx);
+                setSelectedHandIdx(null);
+              }}
+              className="px-3 py-1 bg-term-green text-term-black font-mono font-bold text-xs rounded hover:bg-green-400"
+            >
+              [PLAY]
+            </button>
+            <button
+              onClick={() => {
+                onSellCard?.(selectedHandIdx);
+                setSelectedHandIdx(null);
+              }}
+              className="px-3 py-1 bg-term-amber text-term-black font-mono font-bold text-xs rounded hover:bg-yellow-400"
+            >
+              [SELL €$]
+            </button>
+            <button
+              onClick={() => setSelectedHandIdx(null)}
+              className="px-3 py-1 border border-term-red text-term-red font-mono font-bold text-xs rounded"
+            >
+              [CANCEL]
+            </button>
+          </div>
+        )}
       </div>
 
       {/* CSS for dice animation */}
