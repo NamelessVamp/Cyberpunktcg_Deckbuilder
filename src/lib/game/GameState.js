@@ -8,6 +8,8 @@ export class GameState {
     this.isOvertime = false;
     this.consecutiveTurnsWithoutGigClaim = 0;
     this.winner = null;
+    this.activeEffects = [];
+    this.combatLog = [];
 
     // Initialize both players
     this.players = {
@@ -134,6 +136,8 @@ export class GameState {
     const p2ClaimedThisTurn =
       this.players[2].lastTurnClaimedGig === this.turn - 1;
 
+    this.energize();
+
     if (!p1ClaimedThisTurn && !p2ClaimedThisTurn) {
       this.consecutiveTurnsWithoutGigClaim++;
 
@@ -199,12 +203,15 @@ export class GameState {
       }
     }
 
-    // Deck out: 0 cards in deck
-    if (p1.deck.length === 0) {
-      return { player: 2, condition: "Deck Out (Opponent ran out of cards)" };
-    }
-    if (p2.deck.length === 0) {
-      return { player: 1, condition: "Deck Out (Opponent ran out of cards)" };
+    // Deck out: solo chequear en fase END
+    if (this.phase === "END") {
+      // Deck out: solo en fase END
+      if (this.phase === "END" && p1.deck.length === 0) {
+        return { player: 2, condition: "Deck Out (Opponent ran out of cards)" };
+      }
+      if (this.phase === "END" && p2.deck.length === 0) {
+        return { player: 1, condition: "Deck Out (Opponent ran out of cards)" };
+      }
     }
 
     return null;

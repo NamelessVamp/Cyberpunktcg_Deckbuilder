@@ -134,7 +134,10 @@ export default function SimulatorBeta({ currentDeck }) {
   const [cyberspaceMode, setCyberspaceMode] = useState(false);
   const cardLogic = game ? new CardLogic(game) : null;
   const combatResolver = game ? new CombatResolver(game) : null;
-  const refresh = () => setGame((g) => (g ? { ...g } : g));
+  const refresh = () =>
+    setGame((g) =>
+      g ? Object.assign(Object.create(Object.getPrototypeOf(g)), g) : g,
+    );
 
   // Load saved decks + precons + current deck
   useEffect(() => {
@@ -439,7 +442,12 @@ export default function SimulatorBeta({ currentDeck }) {
                 <button
                   onClick={() => {
                     game.advancePhase();
-                    setGame({ ...game });
+                    setGame(
+                      Object.assign(
+                        Object.create(Object.getPrototypeOf(game)),
+                        game,
+                      ),
+                    );
                   }}
                   disabled={!!game.winner}
                   className="px-6 py-3 bg-term-green text-term-black font-bold rounded font-mono hover:bg-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
