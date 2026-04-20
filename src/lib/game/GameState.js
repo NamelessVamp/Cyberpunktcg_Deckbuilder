@@ -8,7 +8,6 @@ export class GameState {
     this.isOvertime = false;
     this.consecutiveTurnsWithoutGigClaim = 0;
     this.winner = null;
-    this.combatLog = [];
 
     // Initialize both players
     this.players = {
@@ -64,33 +63,12 @@ export class GameState {
 
   startGame() {
     this.turn = 1;
-    this.phase = "MULLIGAN";
-    this.mulliganDone = { 1: false, 2: false };
-  }
+    this.phase = "ENERGIZE";
 
-  doMulligan(playerId) {
-    const player = this.players[playerId];
-    // Devolver mano al mazo y remezclar
-    player.deck.push(...player.hand);
-    player.deck = this.shuffle(player.deck);
-    player.hand = player.deck.splice(0, 6);
-    this.mulliganDone[playerId] = true;
-    this._checkMulliganComplete();
-  }
-
-  keepHand(playerId) {
-    this.mulliganDone[playerId] = true;
-    this._checkMulliganComplete();
-  }
-
-  _checkMulliganComplete() {
-    if (this.mulliganDone[1] && this.mulliganDone[2]) {
-      this.phase = "ENERGIZE";
-      // Player 1 penalty
-      if (this.players[1].legends.length >= 2) {
-        this.players[1].legends[0].isTapped = true;
-        this.players[1].legends[1].isTapped = true;
-      }
+    // Player 1 penalty: tap 2 Legends
+    if (this.players[1].legends.length >= 2) {
+      this.players[1].legends[0].isTapped = true;
+      this.players[1].legends[1].isTapped = true;
     }
   }
 
@@ -211,12 +189,39 @@ export class GameState {
 
     return null;
   }
-  log(message) {
-    this.combatLog.push({
-      text: message,
-      turn: this.turn,
-      phase: this.phase,
-      timestamp: Date.now(),
-    });
+
+  // ── ACTIVE EFFECTS SYSTEM ──────────────────────────────────────
+  // Effects registered by cards, read by CombatResolver/CardLogic
+
+  registerEffect(effect) {
+    // effect: { type, sourceCard, targetId, value, duration, condition }
+    this.activeEffects.push({ ...effect, id: Date.now() + Math.random() });
+    this.log(`Effect registered: ${effect.type} from ${effect.sourceCard}`);
+  }
+
+  getEffectsForUnit(unitId, type) {
+    return this.activeEffects.filter(
+      (e) => e.targetId === unitId && e.type === type,
+    );
+  }
+
+  getGlobalEffects(type) {
+    return this.activeEffects.filter((e) => !e.targetId && e.type === type);
+  }
+
+  clearExpiredEffects() {
+    // Remove effects with duration = 'turn' at end of turn
+    const before = this.activeEffects.length;
+    this.activeEffects = this.activeEffects.filter(
+      (e) => e.duration !== "turn",
+    );
+    if (this.activeEffects.length < before)
+      this.log(`Cleared ${before - this.activeEffects.length} expired effects`);
+  }
+
+  clearEffectsBySource(sourceCardId) {
+    this.activeEffects = this.activeEffects.filter(
+      (e) => e.sourceCardId !== sourceCardId,
+    );
   }
 }
