@@ -53,12 +53,32 @@ export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
           <div className="card-name">{card.name}</div>
           <div className="card-stats">
             {card.type === "LEGEND" && <span>RAM: {card.ram || 0}</span>}
-            {card.type === "UNIT" && (
-              <>
-                <span>ATK: {card.power || 0}</span>
-                <span>HP: {card.hp || 0}</span>
-              </>
-            )}
+            {card.type === "UNIT" &&
+              (() => {
+                const basePower = card.basePower ?? card.power ?? 0;
+                const currentPower = card.power ?? 0;
+                const buff = currentPower - basePower;
+                return (
+                  <>
+                    <span>
+                      ATK: {basePower}
+                      {buff > 0 && (
+                        <span style={{ color: "#4ade80", fontSize: "0.75em" }}>
+                          {" "}
+                          +{buff}
+                        </span>
+                      )}
+                      {buff < 0 && (
+                        <span style={{ color: "#f87171", fontSize: "0.75em" }}>
+                          {" "}
+                          {buff}
+                        </span>
+                      )}
+                    </span>
+                    <span>HP: {card.hp || 0}</span>
+                  </>
+                );
+              })()}
             {card.type === "GEAR" && <span>+{card.power || 0} PWR</span>}
             {card.type === "GIG" && <span>★ {card.streetCred || 0}</span>}
           </div>
