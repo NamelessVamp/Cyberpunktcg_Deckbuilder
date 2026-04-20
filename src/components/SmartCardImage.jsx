@@ -55,16 +55,14 @@ export default function SmartCardImage({
   return (
     <div className="relative w-full h-full">
       {/* Loading Skeleton */}
-      {showLoadingState && isLoading && (
-        <div className="absolute inset-0 bg-term-gray-light animate-pulse rounded" />
-      )}
+      {null}
 
       {/* Image */}
       <img
         ref={imgRef} // <-- CONECTAMOS EL ESCÁNER AQUÍ
         src={srcArray[currentSrc]}
         alt={card.name}
-        className={`${className} ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
+        className={className}
         onError={handleError}
         onLoad={handleLoad}
         loading={eagerLoad ? "eager" : "lazy"}
