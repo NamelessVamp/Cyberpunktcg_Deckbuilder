@@ -100,16 +100,33 @@ export class GameState {
   }
 
   endTurn() {
+    const endingPlayer = this.players[this.activePlayer];
+
+    // Destroy units marked by Reboot Optics
+    endingPlayer.field = endingPlayer.field.filter((u) => {
+      if (u._destroyAtEndOfTurn) {
+        endingPlayer.trash.push(u);
+        this.log(`${u.name} destroyed at end of turn`);
+        return false;
+      }
+      return true;
+    });
+
     // Switch active player
     this.activePlayer = this.activePlayer === 1 ? 2 : 1;
     this.turn++;
     this.phase = "ENERGIZE";
 
-    // Draw card (if deck not empty)
+    // Draw card
     const player = this.players[this.activePlayer];
     if (player.deck.length > 0) {
       player.hand.push(player.deck.shift());
+      this.log(`Player ${this.activePlayer} draws a card`);
     }
+
+    // Execute energize immediately
+    this.energize();
+    this.log(`Turn ${this.turn} — Player ${this.activePlayer}'s turn`);
 
     // Check Overtime trigger (2 turns without Gig claim)
     const p1ClaimedThisTurn =
@@ -149,6 +166,8 @@ export class GameState {
     player.field.forEach((unit) => {
       unit.isTapped = false;
     });
+
+    this.clearExpiredEffects();
   }
 
   // =====================================================
@@ -173,6 +192,7 @@ export class GameState {
     if (this.isOvertime) {
       if (p1.gigs.length >= 7) {
         return { player: 1, condition: "Overtime Win (7+ Gigs)" };
+        a;
       }
       if (p2.gigs.length >= 7) {
         return { player: 2, condition: "Overtime Win (7+ Gigs)" };
