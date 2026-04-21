@@ -55,6 +55,7 @@ export default function PlaymatV2({
   onDeclareAttacker,
   onDeclareBlocker,
   onResolveCombat,
+  onRollGig,
 }) {
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
@@ -228,8 +229,21 @@ export default function PlaymatV2({
                   key={die.id}
                   id={die.id}
                   title="Click to roll — then drag to GIGS"
-                  onClick={() => rollDie(die.sides, die.id)}
-                  className="die-slot w-[50px] h-[50px] border border-term-amber flex justify-center items-center text-[13px] font-bold rotate-45 cursor-pointer transition-colors hover:bg-term-amber/40 relative z-[100]"
+                  onClick={() => {
+                    if (
+                      game?.phase === "CORE" &&
+                      playerFixerDice.includes(die.sides)
+                    ) {
+                      rollDie(die.sides, die.id); // visual animation
+                      setTimeout(() => onRollGig?.(die.sides), 300); // call engine after animation
+                    }
+                  }}
+                  className={`die-slot w-[50px] h-[50px] border border-term-amber flex justify-center items-center text-[13px] font-bold rotate-45 relative z-[100] transition-colors
+  ${
+    game?.phase === "CORE" && playerFixerDice.includes(die.sides)
+      ? "cursor-pointer hover:bg-term-amber/40"
+      : "opacity-30 cursor-not-allowed"
+  }`}
                   style={{
                     textShadow:
                       "1px 1px 2px #000, -1px -1px 2px #000, 0 0 5px #000",
@@ -243,7 +257,6 @@ export default function PlaymatV2({
             </div>
             <div className="fixer-box h-[30px] flex justify-center items-center relative">
               <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
-                FIXER{" "}
                 {game?.phase === "CORE" && playerFixerDice.length > 0 ? (
                   <span className="text-term-green animate-pulse font-bold">
                     ▶ ROLL GIG
@@ -489,7 +502,7 @@ export default function PlaymatV2({
               key={`hand-wrapper-${idx}`}
               onMouseEnter={() => setHoveredCard(card)}
               onMouseLeave={() => setHoveredCard(null)}
-              className="transition-transform hover:-translate-y-2"
+              className="transition-transform hover:-translate-y-1"
             >
               <DraggableCard id={`hand-${idx}`}>
                 <CyberCard card={card} />
