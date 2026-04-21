@@ -28,6 +28,12 @@ export class CardLogic {
       message: `Called ${legend.name}`,
       legend,
     };
+
+    // Costs 2 Eddies
+    const spendResult = this.spendEddies(player, 2);
+    if (!spendResult.success) {
+      return { success: false, error: "Calling a Legend costs 2 Eddies" };
+    }
   }
 
   // =====================================================

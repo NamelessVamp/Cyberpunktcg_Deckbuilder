@@ -148,18 +148,8 @@ export class GameState {
     player.hand.push(player.deck.shift());
     this.log(`Player ${this.activePlayer} draws a card`);
 
-    // R - Roll a Gig (auto — takes smallest available die, d20 last)
-    if (player.fixerDice.length > 0) {
-      const dieType = player.fixerDice.shift();
-      const rollResult = Math.floor(Math.random() * dieType) + 1;
-      player.gigs.push({ type: dieType, value: rollResult });
-      this._calculateStreetCred(this.activePlayer);
-      this.log(
-        `Player ${this.activePlayer} rolled d${dieType} → ${rollResult} (Street Cred: ${player.streetCred})`,
-      );
-    } else {
-      this.log(`Player ${this.activePlayer} has no dice left in Fixer`);
-    }
+    // R - Roll a Gig (manual — player clicks a die in Fixer area)
+    this.log(`Roll a Gig: click a die in the FIXER area`);
 
     // E - Energize
     player.legends.forEach((l) => {
@@ -174,6 +164,28 @@ export class GameState {
     this.clearExpiredEffects();
 
     this.log(`C.O.R.E. complete — Player ${this.activePlayer} may now play`);
+  }
+
+  rollGig(playerId, dieType) {
+    const player = this.players[playerId];
+    const dieIdx = player.fixerDice.indexOf(dieType);
+    if (dieIdx === -1)
+      return { success: false, error: "Die not available in Fixer" };
+
+    // d20 must be last
+    if (dieType === 20 && player.fixerDice.filter((d) => d !== 20).length > 0) {
+      return { success: false, error: "El d20 debe tomarse último" };
+    }
+
+    player.fixerDice.splice(dieIdx, 1);
+    const value = Math.floor(Math.random() * dieType) + 1;
+    player.gigs.push({ type: dieType, value });
+    this._calculateStreetCred(playerId);
+
+    this.log(
+      `Player ${playerId} rolled d${dieType} → ${value} (Street Cred: ${player.streetCred})`,
+    );
+    return { success: true, value };
   }
 
   _calculateStreetCred(playerId) {
@@ -242,11 +254,12 @@ export class GameState {
 
     // Overtime win: 7+ Gigs (instant)
     if (this.isOvertime) {
-      if (p1.gigs.length !== p2.gigs.length) {
-        const winner = p1.gigs.length > p2.gigs.length ? 1 : 2;
+      if (p1.streetCred !== p2.streetCred) {
+        const winner = p1.streetCred > p2.streetCred ? 1 : 2;
+        const loser = winner === 1 ? 2 : 1;
         return {
           player: winner,
-          condition: `Overtime Win (${this.players[winner].gigs.length} vs ${this.players[winner === 1 ? 2 : 1].gigs.length} Gigs)`,
+          condition: `Overtime Win (${this.players[winner].streetCred} vs ${this.players[loser].streetCred} Street Cred)`,
         };
       }
     }
