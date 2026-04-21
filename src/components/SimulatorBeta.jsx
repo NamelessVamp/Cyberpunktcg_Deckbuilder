@@ -131,7 +131,10 @@ export default function SimulatorBeta({ currentDeck }) {
   const [isLoadingDecks, setIsLoadingDecks] = useState(false);
   const [cyberspaceMode, setCyberspaceMode] = useState(false);
   const [, forceUpdate] = useState(0);
-  const refresh = () => setGame((g) => (g ? { ...g } : g));
+  const refresh = () =>
+    setGame((g) =>
+      g ? Object.assign(Object.create(Object.getPrototypeOf(g)), g) : g,
+    );
 
   // Load saved decks + precons + current deck
   useEffect(() => {
@@ -195,15 +198,13 @@ export default function SimulatorBeta({ currentDeck }) {
   function startGame(deck) {
     const playerDeck = prepareDeckForGame(deck);
     const opponentDeck = prepareDeckForGame(
-      PRECON_DECKS.arasaka.id === deck.id
-        ? PRECON_DECKS.merc
-        : PRECON_DECKS.arasaka,
+      deck.id === PRECON_DECKS.merc.id
+        ? PRECON_DECKS.arasaka
+        : PRECON_DECKS.merc,
     );
     const newGame = new GameState(playerDeck, opponentDeck);
     newGame.startGame();
-    // Auto-keep for opponent (AI placeholder)
-    if (newGame.phase === "MULLIGAN") newGame.keepHand(2);
-    setGame({ ...newGame });
+    setGame(newGame);
     setSelectedDeck(deck);
   }
 
@@ -375,7 +376,12 @@ export default function SimulatorBeta({ currentDeck }) {
                       onClick={() => {
                         game.doMulligan(1);
                         game.keepHand(2);
-                        refresh();
+                        setGame(
+                          Object.assign(
+                            Object.create(Object.getPrototypeOf(game)),
+                            game,
+                          ),
+                        );
                       }}
                       className="flex-1 py-3 bg-term-amber text-term-black font-mono font-bold rounded hover:bg-yellow-400"
                     >
@@ -383,9 +389,14 @@ export default function SimulatorBeta({ currentDeck }) {
                     </button>
                     <button
                       onClick={() => {
-                        game.keepHand(1);
+                        game.doMulligan(1);
                         game.keepHand(2);
-                        refresh();
+                        setGame(
+                          Object.assign(
+                            Object.create(Object.getPrototypeOf(game)),
+                            game,
+                          ),
+                        );
                       }}
                       className="flex-1 py-3 border-2 border-term-green text-term-green font-mono font-bold rounded hover:bg-term-green/10"
                     >
