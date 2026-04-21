@@ -1,7 +1,9 @@
+// NON OMNIS MORIAR — Simulator Beta with Online Play menu
 import { useState, useEffect, useRef } from "react";
 import { useFeatureFlag } from "../hooks/useFeatureFlag";
 import { useAuth } from "../contexts/AuthContext";
 import { loadDecks } from "../lib/deckService";
+import { motion, AnimatePresence } from "framer-motion";
 import cards from "../data/cards.json";
 import { GameState } from "../lib/game/GameState";
 import { CardLogic } from "../lib/CardLogic";
@@ -134,7 +136,11 @@ export default function SimulatorBeta({ currentDeck }) {
   const [isLoadingDecks, setIsLoadingDecks] = useState(false);
   const [cyberspaceMode, setCyberspaceMode] = useState(false);
   const [aiMode, setAiMode] = useState(false);
+  const [gameMode, setGameMode] = useState(null); // null | "ai" | "hotseat"
   const [showPassDevice, setShowPassDevice] = useState(false);
+  const [callingLegend, setCallingLegend] = useState(false);
+  const [waitingDefense, setWaitingDefense] = useState(false);
+  const [blockingMode, setBlockingMode] = useState(false);
   const aiRef = useRef(null);
 
   const refresh = () => {
@@ -163,7 +169,7 @@ export default function SimulatorBeta({ currentDeck }) {
       if (currentDeck && currentDeck.legends.length === 3) {
         decks.push({
           id: "current-build",
-          name: "⚡ Current Build",
+          name: "Current Build",
           legend_ids: currentDeck.legends.map((c) => c.id),
           main_deck_ids: currentDeck.mainDeck.map((c) => c.id),
           sideboard_ids: currentDeck.sideboard?.map((c) => c.id) || [],
@@ -214,6 +220,17 @@ export default function SimulatorBeta({ currentDeck }) {
     setSelectedDeck(deck);
   }
 
+  function resetToMenu() {
+    gameRef.current = null;
+    setGame(null);
+    setSelectedDeck(null);
+    setGameMode(null);
+    setAiMode(false);
+    setWaitingDefense(false);
+    setBlockingMode(false);
+    setCallingLegend(false);
+  }
+
   if (featureLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-term-black">
@@ -253,7 +270,7 @@ export default function SimulatorBeta({ currentDeck }) {
 
       <div className="w-full mx-auto overflow-x-auto">
         {/* Header */}
-        <div className="mb-6 flex items-center gap-3">
+        <div className="mb-6 flex items-center gap-3 max-w-[1200px] mx-auto">
           <span className="px-3 py-1 bg-term-amber text-term-black font-bold text-xs rounded font-mono">
             ADMIN BETA
           </span>
@@ -270,90 +287,190 @@ export default function SimulatorBeta({ currentDeck }) {
           >
             {cyberspaceMode ? "[◈ CYBERSPACE: ON]" : "[◈ CYBERSPACE: OFF]"}
           </button>
-          <button
-            onClick={() => setAiMode((m) => !m)}
-            className={`px-4 py-1.5 font-mono font-bold text-xs rounded border transition-all ${
-              aiMode
-                ? "bg-term-red/20 border-term-red text-term-red"
-                : "bg-term-amber/10 border-term-amber/40 text-term-amber/60 hover:border-term-amber hover:text-term-amber"
-            }`}
-          >
-            {aiMode ? "[◈ AI: ON]" : "[◈ AI: OFF]"}
-          </button>
         </div>
 
-        <h1 className="text-4xl font-bold text-term-amber mb-8 font-mono">
+        <h1 className="text-4xl font-bold text-term-amber mb-8 font-mono max-w-[1200px] mx-auto">
           THE ARENA
         </h1>
 
+        {/* ── PRE-GAME SCREENS ── */}
         {!game ? (
-          <>
-            {!selectedDeck ? (
-              <div className="bg-term-gray border-2 border-term-amber/30 rounded p-8">
-                <h2 className="text-2xl text-term-amber mb-4 font-mono">
-                  Select a Deck
-                </h2>
-                {isLoadingDecks ? (
-                  <div className="text-term-amber/60 font-mono animate-pulse">
-                    Loading decks...
+          <div className="max-w-[1200px] mx-auto">
+            <AnimatePresence mode="wait">
+              {/* SCREEN 1 — Mode Selection */}
+              {!gameMode && (
+                <motion.div
+                  key="mode-select"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="bg-term-gray border-2 border-term-amber/30 rounded p-8 max-w-2xl mx-auto"
+                >
+                  <h2 className="text-3xl text-term-amber mb-2 font-mono font-bold text-center">
+                    ONLINE PLAY
+                  </h2>
+                  <p className="text-term-amber/50 font-mono text-sm text-center mb-8">
+                    Choose your battle mode, choom
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <motion.button
+                      whileHover={{
+                        scale: 1.02,
+                        borderColor: "rgba(239,68,68,0.8)",
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        setGameMode("ai");
+                        setAiMode(true);
+                      }}
+                      className="p-6 bg-term-gray-light border-2 border-term-red/40 rounded text-left group"
+                    >
+                      <div className="text-4xl mb-3">🤖</div>
+                      <div className="text-term-amber font-bold text-xl mb-2 font-mono">
+                        VS ARTIFICIAL INTEL
+                      </div>
+                      <div className="text-term-amber/50 text-sm font-mono mb-4">
+                        Play against the machine. AI handles its turns
+                        automatically with realistic delays.
+                      </div>
+                      <div className="text-term-red/60 text-xs font-mono">
+                        [ SOLO MODE — AI ALWAYS ON ]
+                      </div>
+                    </motion.button>
+                    <motion.button
+                      whileHover={{
+                        scale: 1.02,
+                        borderColor: "rgba(247,224,24,0.6)",
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        setGameMode("hotseat");
+                        setAiMode(false);
+                      }}
+                      className="p-6 bg-term-gray-light border-2 border-term-amber/30 rounded text-left group relative"
+                    >
+                      <div className="text-4xl mb-3">🌐</div>
+                      <div className="text-term-amber font-bold text-xl mb-2 font-mono">
+                        HOTSEAT — 2 PLAYERS
+                      </div>
+                      <div className="text-term-amber/50 text-sm font-mono mb-4">
+                        Two players, one device. Full hotseat mode with
+                        pass-device screen between turns.
+                      </div>
+                      <div className="text-term-amber/40 text-xs font-mono">
+                        [ REAL ONLINE MULTIPLAYER — v2.0.0 ]
+                      </div>
+                    </motion.button>
                   </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {savedDecks.map((deck) => (
-                      <button
-                        key={deck.id}
-                        onClick={() => setSelectedDeck(deck)}
-                        className="p-4 bg-term-gray-light border border-term-amber/40 rounded hover:bg-term-amber/10 transition-colors text-left"
+                </motion.div>
+              )}
+
+              {/* SCREEN 2 — Deck Selection */}
+              {gameMode && !selectedDeck && (
+                <motion.div
+                  key="deck-select"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="bg-term-gray border-2 border-term-amber/30 rounded p-8"
+                >
+                  <div className="flex items-center gap-4 mb-6">
+                    <button
+                      onClick={() => setGameMode(null)}
+                      className="text-term-amber/50 hover:text-term-amber font-mono text-sm transition-colors"
+                    >
+                      ← BACK
+                    </button>
+                    <h2 className="text-2xl text-term-amber font-mono">
+                      Select a Deck
+                      <span
+                        className={`ml-3 text-xs px-2 py-1 rounded font-bold ${aiMode ? "bg-term-red/20 text-term-red border border-term-red/40" : "bg-term-amber/20 text-term-amber border border-term-amber/40"}`}
                       >
-                        <div className="text-term-amber font-bold mb-2 font-mono">
-                          {deck.name}
-                        </div>
-                        <div className="text-term-green/60 text-sm font-mono">
-                          {deck.main_deck_ids?.length || 0} cards +{" "}
-                          {deck.legend_ids?.length || 0} Legends
-                        </div>
-                        {deck.notes && (
-                          <div className="text-term-amber/40 text-xs mt-2 font-mono line-clamp-2">
-                            {deck.notes}
+                        {aiMode ? "🤖 VS AI" : "🌐 HOTSEAT"}
+                      </span>
+                    </h2>
+                  </div>
+                  {isLoadingDecks ? (
+                    <div className="text-term-amber/60 font-mono animate-pulse">
+                      Loading decks...
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {savedDecks.map((deck) => (
+                        <motion.button
+                          key={deck.id}
+                          onClick={() => setSelectedDeck(deck)}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="p-4 bg-term-gray-light border border-term-amber/40 rounded hover:bg-term-amber/10 transition-colors text-left"
+                        >
+                          <div className="text-term-amber font-bold mb-2 font-mono">
+                            {deck.name}
                           </div>
-                        )}
-                      </button>
-                    ))}
+                          <div className="text-term-green/60 text-sm font-mono">
+                            {deck.main_deck_ids?.length || 0} cards +{" "}
+                            {deck.legend_ids?.length || 0} Legends
+                          </div>
+                          {deck.notes && (
+                            <div className="text-term-amber/40 text-xs mt-2 font-mono line-clamp-2">
+                              {deck.notes}
+                            </div>
+                          )}
+                        </motion.button>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {/* SCREEN 3 — Ready to Play */}
+              {gameMode && selectedDeck && (
+                <motion.div
+                  key="ready"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="bg-term-gray border-2 border-term-amber/30 rounded p-8 max-w-lg mx-auto"
+                >
+                  <h2 className="text-2xl text-term-amber mb-6 font-mono text-center">
+                    Ready to Play?
+                  </h2>
+                  <div className="bg-term-black/40 rounded-lg p-4 mb-6 text-center">
+                    <div className="text-term-green font-bold text-xl mb-1 font-mono">
+                      {selectedDeck.name}
+                    </div>
+                    <div className="text-term-amber/60 text-sm font-mono">
+                      {selectedDeck.main_deck_ids?.length || 0} cards +{" "}
+                      {selectedDeck.legend_ids?.length || 0} Legends
+                    </div>
+                    <div
+                      className={`mt-3 text-xs font-mono font-bold ${aiMode ? "text-term-red" : "text-term-amber"}`}
+                    >
+                      {aiMode ? "🤖 Playing vs AI" : "🌐 Hotseat — 2 players"}
+                    </div>
                   </div>
-                )}
-              </div>
-            ) : (
-              <div className="bg-term-gray border-2 border-term-amber/30 rounded p-8">
-                <h2 className="text-2xl text-term-amber mb-4 font-mono">
-                  Ready to Play?
-                </h2>
-                <div className="mb-6">
-                  <div className="text-term-green font-bold text-xl mb-2 font-mono">
-                    {selectedDeck.name}
+                  <div className="flex gap-4">
+                    <motion.button
+                      onClick={() => startGame(selectedDeck)}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="flex-1 px-6 py-4 bg-term-green text-term-black font-bold rounded font-mono hover:bg-green-400 transition-colors text-lg"
+                    >
+                      START GAME
+                    </motion.button>
+                    <button
+                      onClick={() => setSelectedDeck(null)}
+                      className="px-6 py-4 bg-term-gray-light text-term-amber font-bold rounded font-mono border border-term-amber/40 hover:bg-term-amber/10 transition-colors"
+                    >
+                      BACK
+                    </button>
                   </div>
-                  <div className="text-term-amber/60 text-sm font-mono">
-                    {selectedDeck.main_deck_ids?.length || 0} cards +{" "}
-                    {selectedDeck.legend_ids?.length || 0} Legends
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => startGame(selectedDeck)}
-                    className="flex-1 px-6 py-3 bg-term-green text-term-black font-bold rounded font-mono hover:bg-green-400 transition-colors"
-                  >
-                    START GAME
-                  </button>
-                  <button
-                    onClick={() => setSelectedDeck(null)}
-                    className="px-6 py-3 bg-term-gray-light text-term-amber font-bold rounded font-mono border border-term-amber/40 hover:bg-term-amber/10 transition-colors"
-                  >
-                    BACK
-                  </button>
-                </div>
-              </div>
-            )}
-          </>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         ) : (
+          // ── IN-GAME ──
           <div className="space-y-4">
             {/* PASS DEVICE SCREEN */}
             {showPassDevice && !aiMode && (
@@ -384,7 +501,12 @@ export default function SimulatorBeta({ currentDeck }) {
             {/* MULLIGAN MODAL */}
             {game.phase === "MULLIGAN" && !game.mulliganDone?.[1] && (
               <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-                <div className="bg-term-gray border-2 border-term-amber rounded-lg p-8 max-w-lg w-full mx-4">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-term-gray border-2 border-term-amber rounded-lg p-8 w-full mx-4"
+                  style={{ maxWidth: "720px" }}
+                >
                   <h2 className="text-term-amber font-mono font-bold text-2xl mb-2">
                     MULLIGAN?
                   </h2>
@@ -392,17 +514,35 @@ export default function SimulatorBeta({ currentDeck }) {
                     Shuffle your hand and draw 6 new cards. You can only do this
                     once.
                   </p>
-                  <div className="flex gap-2 mb-6 flex-wrap">
+                  <div className="flex gap-2 mb-6 flex-wrap justify-center">
                     {gameRef.current?.players[1].hand.map((card, i) => (
                       <div
                         key={i}
-                        className="bg-term-black border border-term-amber/30 rounded p-2 text-xs font-mono text-term-amber"
+                        className="bg-term-black border border-term-amber/30 rounded overflow-hidden w-[80px] flex-shrink-0"
                       >
-                        <div className="font-bold truncate max-w-[90px]">
-                          {card.name}
-                        </div>
-                        <div className="text-term-green/60">
-                          {card.cost}€ · {card.type}
+                        {card.image_url ? (
+                          <img
+                            src={card.image_url}
+                            alt={card.name}
+                            className="w-full h-[100px] object-cover"
+                            onError={(e) => {
+                              e.target.style.display = "none";
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-[100px] bg-term-gray/40 flex items-center justify-center">
+                            <span className="text-term-amber/20 text-[8px] font-mono text-center px-1">
+                              {card.name}
+                            </span>
+                          </div>
+                        )}
+                        <div className="p-1">
+                          <div className="font-bold truncate text-[9px] font-mono text-term-amber">
+                            {card.name}
+                          </div>
+                          <div className="text-term-green/60 text-[8px] font-mono">
+                            {card.cost}€ · {card.type}
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -429,35 +569,127 @@ export default function SimulatorBeta({ currentDeck }) {
                       KEEP HAND
                     </button>
                   </div>
-                </div>
+                </motion.div>
               </div>
             )}
 
-            {/* WIN SCREEN */}
-            {game.winner && (
-              <div className="bg-term-green border-2 border-term-green rounded p-6 text-center">
-                <h2 className="text-4xl font-bold text-term-black mb-2 font-mono">
-                  PLAYER {game.winner.player} WINS!
-                </h2>
-                <p className="text-term-black font-mono">
-                  {game.winner.condition}
-                </p>
-                <button
-                  onClick={() => {
-                    gameRef.current = null;
-                    setGame(null);
-                    setSelectedDeck(null);
-                  }}
-                  className="mt-4 px-6 py-3 bg-term-black text-term-green font-bold rounded font-mono hover:bg-term-gray transition-colors"
+            {/* DEFENSIVE STEP OVERLAY */}
+            {waitingDefense && (
+              <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-40 pointer-events-none">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-term-gray border-2 border-term-red rounded-lg p-6 text-center pointer-events-auto max-w-sm"
                 >
-                  BACK TO DECK SELECTION
+                  <div className="text-term-red font-mono font-bold text-lg mb-2 animate-pulse">
+                    ⚔ ATTACK DECLARED
+                  </div>
+                  <p className="text-term-amber/70 font-mono text-sm mb-4">
+                    Defender: block with a unit or take the hit
+                  </p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        const cr = new CombatResolver(gameRef.current);
+                        cr.resolveCombat(gameRef.current.activePlayer);
+                        gameRef.current.clearExpiredEffects?.();
+                        setWaitingDefense(false);
+                        refresh();
+                      }}
+                      className="flex-1 py-2 bg-term-red text-white font-mono font-bold rounded hover:bg-red-600 text-sm"
+                    >
+                      TAKE THE HIT
+                    </button>
+                    <button
+                      onClick={() => {
+                        setWaitingDefense(false);
+                        setBlockingMode(true);
+                      }}
+                      className="flex-1 py-2 border border-term-green text-term-green font-mono font-bold rounded hover:bg-term-green/10 text-sm"
+                    >
+                      USE BLOCKER
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+
+            {/* BLOCKING MODE BANNER */}
+            {blockingMode && (
+              <div className="bg-term-green/20 border border-term-green text-term-green font-mono text-sm font-bold px-4 py-2 rounded text-center animate-pulse max-w-[1200px] mx-auto">
+                &gt;&gt;&gt; CLICK A UNIT IN YOUR FIELD TO BLOCK &lt;&lt;&lt;
+                <button
+                  onClick={() => setBlockingMode(false)}
+                  className="ml-4 text-xs underline opacity-70 hover:opacity-100"
+                >
+                  CANCEL
                 </button>
               </div>
             )}
 
+            {/* WIN SCREEN */}
+            <AnimatePresence>
+              {game.winner && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="fixed inset-0 bg-black/90 flex items-center justify-center z-50"
+                >
+                  <div className="text-center p-12">
+                    <motion.div
+                      initial={{ y: -40, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.2, type: "spring" }}
+                      className="text-8xl mb-6"
+                    >
+                      {game.winner.player === 1 ? "🏆" : "💀"}
+                    </motion.div>
+                    <motion.h2
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.4 }}
+                      className="text-6xl font-bold font-mono mb-4"
+                      style={{
+                        color: game.winner.player === 1 ? "#f7e018" : "#ff2a2a",
+                      }}
+                    >
+                      PLAYER {game.winner.player} WINS
+                    </motion.h2>
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.6 }}
+                      className="text-term-amber/70 font-mono text-xl mb-8"
+                    >
+                      {game.winner.condition}
+                    </motion.p>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.8 }}
+                      className="flex gap-4 justify-center"
+                    >
+                      <button
+                        onClick={() => startGame(selectedDeck)}
+                        className="px-8 py-3 bg-term-green text-term-black font-bold rounded font-mono hover:bg-green-400 transition-colors text-lg"
+                      >
+                        REMATCH
+                      </button>
+                      <button
+                        onClick={resetToMenu}
+                        className="px-8 py-3 bg-term-gray border border-term-amber text-term-amber font-bold rounded font-mono hover:bg-term-amber/10 transition-colors text-lg"
+                      >
+                        MAIN MENU
+                      </button>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* PLAYMAT */}
             <div
-              className={`relative transition-all duration-500 ${cyberspaceMode ? "brightness-110 contrast-110 saturate-150" : ""}`}
+              className={`relative transition-all duration-500 flex justify-center ${cyberspaceMode ? "brightness-110 contrast-110 saturate-150" : ""}`}
             >
               {cyberspaceMode && (
                 <div
@@ -496,6 +728,8 @@ export default function SimulatorBeta({ currentDeck }) {
                   else refresh();
                 }}
                 onCallLegend={(legendIndex) => {
+                  if (callingLegend) return;
+                  setCallingLegend(true);
                   const cl = new CardLogic(gameRef.current);
                   const result = cl.callLegend(
                     gameRef.current.activePlayer,
@@ -503,6 +737,7 @@ export default function SimulatorBeta({ currentDeck }) {
                   );
                   if (!result.success) alert(result.error);
                   else refresh();
+                  setTimeout(() => setCallingLegend(false), 500);
                 }}
                 onDeclareAttacker={(unitIndex) => {
                   const cr = new CombatResolver(gameRef.current);
@@ -511,16 +746,23 @@ export default function SimulatorBeta({ currentDeck }) {
                     unitIndex,
                   );
                   if (!result.success) alert(result.error);
-                  else refresh();
+                  else {
+                    refresh();
+                    setWaitingDefense(true);
+                  }
                 }}
                 onDeclareBlocker={(blockerIndex) => {
+                  if (!blockingMode) {
+                    alert("Click 'USE BLOCKER' when an attack is declared.");
+                    return;
+                  }
                   const cr = new CombatResolver(gameRef.current);
                   const rivalId = gameRef.current.activePlayer === 1 ? 2 : 1;
                   const attackerIndex = gameRef.current.players[
                     gameRef.current.activePlayer
                   ].field.findIndex((u) => u.isAttacking);
                   if (attackerIndex === -1) {
-                    alert("No attacking unit");
+                    alert("No attacking unit found!");
                     return;
                   }
                   const result = cr.declareBlocker(
@@ -529,7 +771,10 @@ export default function SimulatorBeta({ currentDeck }) {
                     attackerIndex,
                   );
                   if (!result.success) alert(result.error);
-                  else refresh();
+                  else {
+                    setBlockingMode(false);
+                    refresh();
+                  }
                 }}
                 onResolveCombat={() => {
                   const cr = new CombatResolver(gameRef.current);
@@ -545,14 +790,39 @@ export default function SimulatorBeta({ currentDeck }) {
                   if (!result.success) alert(result.error);
                   else refresh();
                 }}
+                isBlockingMode={blockingMode}
+                onBlockerSelected={(blockerIndex) => {
+                  const cr = new CombatResolver(gameRef.current);
+                  const rivalId = gameRef.current.activePlayer === 1 ? 2 : 1;
+                  const attackerIndex = gameRef.current.players[
+                    gameRef.current.activePlayer
+                  ].field.findIndex((u) => u.isAttacking);
+                  if (attackerIndex === -1) {
+                    setBlockingMode(false);
+                    return;
+                  }
+                  const result = cr.declareBlocker(
+                    rivalId,
+                    blockerIndex,
+                    attackerIndex,
+                  );
+                  if (!result.success) alert(result.error);
+                  else {
+                    cr.resolveCombat(gameRef.current.activePlayer);
+                    gameRef.current.clearExpiredEffects?.();
+                    setBlockingMode(false);
+                    setWaitingDefense(false);
+                    refresh();
+                  }
+                }}
               />
             </div>
 
             {/* CONTROLS BAR */}
-            <div className="bg-term-gray border border-term-amber/30 rounded p-4 flex flex-wrap items-center gap-4">
+            <div className="bg-term-gray border border-term-amber/30 rounded p-4 flex flex-wrap items-center gap-4 max-w-[1200px] mx-auto">
               <div className="flex items-center gap-2">
                 <span className="text-term-green/60 font-mono text-xs">
-                  YOUR EDDIES
+                  EDDIES
                 </span>
                 <span className="bg-term-amber text-term-black font-mono font-bold px-3 py-1 rounded text-sm">
                   {(game.players?.[game.activePlayer]?.eddies?.filter(
@@ -574,17 +844,33 @@ export default function SimulatorBeta({ currentDeck }) {
                 </span>
               </div>
               <div className="w-px h-6 bg-term-amber/20" />
+              <div className="flex items-center gap-2">
+                <span className="text-term-amber/60 font-mono text-xs">
+                  GIGS
+                </span>
+                <span className="bg-term-amber/20 text-term-amber font-mono font-bold px-3 py-1 rounded text-sm border border-term-amber/40">
+                  {game.players?.[game.activePlayer]?.gigs?.length || 0} / 6
+                </span>
+              </div>
+              <div className="w-px h-6 bg-term-amber/20" />
               <div className="font-mono text-term-amber text-sm font-bold">
                 TURN {game.turn} —{" "}
                 <span className="text-term-green">{game.phase}</span>
               </div>
+              {aiMode && (
+                <span className="px-2 py-1 bg-term-red/20 text-term-red border border-term-red/40 font-bold rounded text-xs font-mono">
+                  🤖 AI
+                </span>
+              )}
               {game.isOvertime && (
                 <span className="px-2 py-1 bg-term-red text-white font-bold rounded text-xs animate-pulse font-mono">
                   OVERTIME
                 </span>
               )}
               <div className="ml-auto flex gap-3">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => {
                     const wasPlayer = gameRef.current.activePlayer;
                     if (gameRef.current.phase === "ATTACK") {
@@ -594,11 +880,8 @@ export default function SimulatorBeta({ currentDeck }) {
                     }
                     gameRef.current.advancePhase();
                     refresh();
-                    // Pass device screen (only in hotseat mode)
-                    if (!aiMode && gameRef.current.activePlayer !== wasPlayer) {
+                    if (!aiMode && gameRef.current.activePlayer !== wasPlayer)
                       setShowPassDevice(true);
-                    }
-                    // AI turn
                     setTimeout(() => {
                       if (
                         aiMode &&
@@ -626,13 +909,9 @@ export default function SimulatorBeta({ currentDeck }) {
                     : game.phase === "END"
                       ? "END TURN ▶"
                       : "NEXT PHASE ▶"}
-                </button>
+                </motion.button>
                 <button
-                  onClick={() => {
-                    gameRef.current = null;
-                    setGame(null);
-                    setSelectedDeck(null);
-                  }}
+                  onClick={resetToMenu}
                   className="px-5 py-2 bg-term-red/20 text-term-red border border-term-red font-bold rounded font-mono hover:bg-term-red/30 transition-colors text-sm"
                 >
                   FORFEIT
@@ -642,7 +921,7 @@ export default function SimulatorBeta({ currentDeck }) {
 
             {/* GAME LOG */}
             {game.combatLog?.length > 0 && (
-              <div className="bg-term-black border border-term-amber/20 rounded p-4 max-h-40 overflow-y-auto">
+              <div className="bg-term-black border border-term-amber/20 rounded p-4 max-h-40 overflow-y-auto max-w-[1200px] mx-auto">
                 <p className="text-term-amber/50 font-mono text-xs mb-2">
                   ▓ COMBAT LOG
                 </p>
