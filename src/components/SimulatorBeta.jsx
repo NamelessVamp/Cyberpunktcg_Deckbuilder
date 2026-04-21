@@ -137,6 +137,7 @@ export default function SimulatorBeta({ currentDeck }) {
   const [showPassDevice, setShowPassDevice] = useState(false);
   const aiRef = useRef(null);
   const [callingLegend, setCallingLegend] = useState(false);
+  const [waitingDefense, setWaitingDefense] = useState(false);
 
   const refresh = () => {
     if (gameRef.current) {
@@ -393,17 +394,35 @@ export default function SimulatorBeta({ currentDeck }) {
                     Shuffle your hand and draw 6 new cards. You can only do this
                     once.
                   </p>
-                  <div className="flex gap-2 mb-6 flex-wrap">
+                  <div className="flex gap-2 mb-6 flex-wrap justify-center">
                     {gameRef.current?.players[1].hand.map((card, i) => (
                       <div
                         key={i}
-                        className="bg-term-black border border-term-amber/30 rounded p-2 text-xs font-mono text-term-amber"
+                        className="bg-term-black border border-term-amber/30 rounded overflow-hidden w-[80px] flex-shrink-0"
                       >
-                        <div className="font-bold truncate max-w-[90px]">
-                          {card.name}
-                        </div>
-                        <div className="text-term-green/60">
-                          {card.cost}€ · {card.type}
+                        {card.image_url ? (
+                          <img
+                            src={card.image_url}
+                            alt={card.name}
+                            className="w-full h-[100px] object-cover"
+                            onError={(e) => {
+                              e.target.style.display = "none";
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-[100px] bg-term-gray/40 flex items-center justify-center">
+                            <span className="text-term-amber/20 text-[8px] font-mono text-center px-1">
+                              {card.name}
+                            </span>
+                          </div>
+                        )}
+                        <div className="p-1">
+                          <div className="font-bold truncate text-[9px] font-mono text-term-amber">
+                            {card.name}
+                          </div>
+                          <div className="text-term-green/60 text-[8px] font-mono">
+                            {card.cost}€ · {card.type}
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -428,6 +447,40 @@ export default function SimulatorBeta({ currentDeck }) {
                       className="flex-1 py-3 border-2 border-term-green text-term-green font-mono font-bold rounded hover:bg-term-green/10"
                     >
                       KEEP HAND
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* DEFENSIVE STEP OVERLAY */}
+            {waitingDefense && (
+              <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-40 pointer-events-none">
+                <div className="bg-term-gray border-2 border-term-red rounded-lg p-6 text-center pointer-events-auto max-w-sm">
+                  <div className="text-term-red font-mono font-bold text-lg mb-2 animate-pulse">
+                    ⚔ ATTACK DECLARED
+                  </div>
+                  <p className="text-term-amber/70 font-mono text-sm mb-4">
+                    Defender: block with a unit or take the hit
+                  </p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        const cr = new CombatResolver(gameRef.current);
+                        cr.resolveCombat(gameRef.current.activePlayer);
+                        gameRef.current.clearExpiredEffects?.();
+                        setWaitingDefense(false);
+                        refresh();
+                      }}
+                      className="flex-1 py-2 bg-term-red text-white font-mono font-bold rounded hover:bg-red-600 text-sm"
+                    >
+                      TAKE THE HIT
+                    </button>
+                    <button
+                      onClick={() => setWaitingDefense(false)}
+                      className="flex-1 py-2 border border-term-green text-term-green font-mono font-bold rounded hover:bg-term-green/10 text-sm"
+                    >
+                      USE BLOCKER
                     </button>
                   </div>
                 </div>
@@ -515,7 +568,10 @@ export default function SimulatorBeta({ currentDeck }) {
                     unitIndex,
                   );
                   if (!result.success) alert(result.error);
-                  else refresh();
+                  else {
+                    refresh();
+                    setWaitingDefense(true); // pause — wait for defense
+                  }
                 }}
                 onDeclareBlocker={(blockerIndex) => {
                   const cr = new CombatResolver(gameRef.current);
