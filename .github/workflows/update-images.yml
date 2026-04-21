@@ -12,8 +12,11 @@ jobs:
     permissions:
       contents: write # Permite hacer push
 
+    # 🔌 INYECCIÓN GLOBAL DE ENTORNO: El sistema entero nace con estas llaves
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.VITE_SUPABASE_SERVICE_ROLE_KEY }}
 
     steps:
       - name: Checkout repo
@@ -54,13 +57,11 @@ jobs:
         continue-on-error: true
 
       - name: Backup card images
+        # Ya no necesitas el bloque 'env' aquí, lo hereda del entorno global
         run: |
           echo "💾 Backing up images..."
           node scripts/backupImages.js
         continue-on-error: true
-        env: # 🔌 INYECCIÓN DE CROMO AQUÍ
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.VITE_SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Commit and push changes
         run: |
