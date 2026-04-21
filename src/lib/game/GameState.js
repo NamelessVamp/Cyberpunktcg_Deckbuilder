@@ -10,7 +10,6 @@ export class GameState {
     this.activeEffects = [];
     this.combatLog = [];
 
-    // Initialize both players
     this.players = {
       1: this.initializePlayer(deck1),
       2: this.initializePlayer(deck2),
@@ -18,7 +17,6 @@ export class GameState {
   }
 
   initializePlayer(deckCards) {
-    // Separate Legends from main deck
     const legends = [];
     const mainDeck = [];
 
@@ -30,10 +28,7 @@ export class GameState {
       }
     });
 
-    // Shuffle main deck
     const shuffled = this.shuffle([...mainDeck]);
-
-    // Draw opening hand (6 cards)
     const hand = shuffled.splice(0, 6);
 
     return {
@@ -48,6 +43,7 @@ export class GameState {
       streetCred: 0,
       lastTurnClaimedGig: null,
       hasSoldThisTurn: false,
+      hasRolledThisTurn: false,
     };
   }
 
@@ -107,24 +103,19 @@ export class GameState {
   // =====================================================
   // PHASE ADVANCEMENT
   // =====================================================
-
   advancePhase() {
     const phaseOrder = ["CORE", "PLAY", "ATTACK", "END"];
     const currentIndex = phaseOrder.indexOf(this.phase);
 
     if (currentIndex === phaseOrder.length - 1) {
-      // End of turn - switch players
       this.endTurn();
     } else {
       this.phase = phaseOrder[currentIndex + 1];
-
-      // Auto-execute phase actions
       if (this.phase === "CORE") {
         this._executeCore();
       }
     }
 
-    // Check win condition
     const winner = this.checkWinCondition();
     if (winner) {
       this.winner = winner;
@@ -134,8 +125,7 @@ export class GameState {
   _executeCore() {
     const player = this.players[this.activePlayer];
     player.hasSoldThisTurn = false;
-
-    // C - Check Victory (ya se hace en checkWinCondition)
+    player.hasRolledThisTurn = false;
 
     // O - Obtain Card
     if (player.deck.length === 0) {
@@ -147,7 +137,7 @@ export class GameState {
     player.hand.push(player.deck.shift());
     this.log(`Player ${this.activePlayer} draws a card`);
 
-    // R - Roll a Gig (manual — player clicks a die in Fixer area)
+    // R - Roll a Gig (manual)
     this.log(`Roll a Gig: click a die in the FIXER area`);
 
     // E - Energize
@@ -171,7 +161,6 @@ export class GameState {
     if (dieIdx === -1)
       return { success: false, error: "Die not available in Fixer" };
 
-    // d20 must be last
     if (dieType === 20 && player.fixerDice.filter((d) => d !== 20).length > 0) {
       return { success: false, error: "El d20 debe tomarse último" };
     }
@@ -179,6 +168,7 @@ export class GameState {
     player.fixerDice.splice(dieIdx, 1);
     const value = Math.floor(Math.random() * dieType) + 1;
     player.gigs.push({ type: dieType, value });
+    player.hasRolledThisTurn = true;
     this._calculateStreetCred(playerId);
 
     this.log(
@@ -198,7 +188,6 @@ export class GameState {
   endTurn() {
     const endingPlayer = this.players[this.activePlayer];
 
-    // Destroy units marked by Reboot Optics
     endingPlayer.field = endingPlayer.field.filter((u) => {
       if (u._destroyAtEndOfTurn) {
         endingPlayer.trash.push(u);
@@ -208,7 +197,6 @@ export class GameState {
       return true;
     });
 
-    // Switch active player
     this.activePlayer = this.activePlayer === 1 ? 2 : 1;
     this.turn++;
     this.phase = "CORE";
@@ -216,10 +204,8 @@ export class GameState {
     this.log(`Turn ${this.turn} — Player ${this.activePlayer}'s turn`);
     this._executeCore();
 
-    // Overtime: both players have empty fixerDice
     const p1Empty = this.players[1].fixerDice.length === 0;
     const p2Empty = this.players[2].fixerDice.length === 0;
-
     if (p1Empty && p2Empty && !this.isOvertime) {
       this.isOvertime = true;
       this.log("OVERTIME — Both players out of Fixer dice!");
@@ -229,61 +215,43 @@ export class GameState {
   // =====================================================
   // WIN CONDITIONS
   // =====================================================
-
   checkWinCondition() {
     const p1 = this.players[1];
     const p2 = this.players[2];
 
-    // Normal win: Start turn with 6+ Gigs
     if (this.phase === "CORE") {
-      if (p1.gigs.length >= 6) {
+      if (p1.gigs.length >= 6)
         return { player: 1, condition: "Normal Win (6+ Gigs)" };
-      }
-      if (p2.gigs.length >= 6) {
+      if (p2.gigs.length >= 6)
         return { player: 2, condition: "Normal Win (6+ Gigs)" };
-      }
     }
 
-    // Overtime win: 7+ Gigs or Street Cred
     if (this.isOvertime) {
-      // First: check if anyone reached 7 gigs
       if (p1.gigs.length >= 7)
         return { player: 1, condition: "Overtime Win (7 Gigs)" };
       if (p2.gigs.length >= 7)
         return { player: 2, condition: "Overtime Win (7 Gigs)" };
 
-      // End of overtime turn: majority Street Cred wins
-      if (this.phase === "END") {
-        if (p1.streetCred !== p2.streetCred) {
-          const winner = p1.streetCred > p2.streetCred ? 1 : 2;
-          const loser = winner === 1 ? 2 : 1;
-          return {
-            player: winner,
-            condition: `Overtime — Street Cred (${this.players[winner].streetCred} vs ${this.players[loser].streetCred})`,
-          };
-        }
+      if (this.phase === "END" && p1.streetCred !== p2.streetCred) {
+        const winner = p1.streetCred > p2.streetCred ? 1 : 2;
+        const loser = winner === 1 ? 2 : 1;
+        return {
+          player: winner,
+          condition: `Overtime — Street Cred (${this.players[winner].streetCred} vs ${this.players[loser].streetCred})`,
+        };
       }
     }
 
-    // Deck out: solo chequear en fase END
     if (this.phase === "END") {
-      // Deck out: solo en fase END
-      if (p1.deck.length === 0) {
-        return { player: 2, condition: "Deck Out (Opponent ran out of cards)" };
-      }
-      if (p2.deck.length === 0) {
-        return { player: 1, condition: "Deck Out (Opponent ran out of cards)" };
-      }
+      if (p1.deck.length === 0) return { player: 2, condition: "Deck Out" };
+      if (p2.deck.length === 0) return { player: 1, condition: "Deck Out" };
     }
 
     return null;
   }
 
-  // ── ACTIVE EFFECTS SYSTEM ──────────────────────────────────────
-  // Effects registered by cards, read by CombatResolver/CardLogic
-
+  // ── ACTIVE EFFECTS SYSTEM ─────────────────────────────────────
   registerEffect(effect) {
-    // effect: { type, sourceCard, targetId, value, duration, condition }
     this.activeEffects.push({ ...effect, id: Date.now() + Math.random() });
     this.log(`Effect registered: ${effect.type} from ${effect.sourceCard}`);
   }
@@ -299,7 +267,6 @@ export class GameState {
   }
 
   clearExpiredEffects() {
-    // Remove effects with duration = 'turn' at end of turn
     const before = this.activeEffects.length;
     this.activeEffects = this.activeEffects.filter(
       (e) => e.duration !== "turn",

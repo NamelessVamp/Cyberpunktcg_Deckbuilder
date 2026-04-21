@@ -124,7 +124,6 @@ const PRECON_DECKS = {
 };
 
 export default function SimulatorBeta({ currentDeck }) {
-  const [showPassDevice, setShowPassDevice] = useState(false);
   const { isEnabled, isLoading: featureLoading } =
     useFeatureFlag("phase9_simulator");
   const { user } = useAuth();
@@ -135,8 +134,9 @@ export default function SimulatorBeta({ currentDeck }) {
   const [isLoadingDecks, setIsLoadingDecks] = useState(false);
   const [cyberspaceMode, setCyberspaceMode] = useState(false);
   const [aiMode, setAiMode] = useState(false);
+  const [showPassDevice, setShowPassDevice] = useState(false);
   const aiRef = useRef(null);
-  // Always call methods on gameRef.current, use game (state) for rendering
+
   const refresh = () => {
     if (gameRef.current) {
       setGame({
@@ -356,7 +356,7 @@ export default function SimulatorBeta({ currentDeck }) {
         ) : (
           <div className="space-y-4">
             {/* PASS DEVICE SCREEN */}
-            {showPassDevice && (
+            {showPassDevice && !aiMode && (
               <div className="fixed inset-0 bg-black/95 backdrop-blur-sm flex flex-col items-center justify-center z-[100]">
                 <div className="text-center p-8">
                   <div className="text-term-amber/30 font-mono text-sm mb-4 uppercase tracking-widest">
@@ -516,7 +516,6 @@ export default function SimulatorBeta({ currentDeck }) {
                 onDeclareBlocker={(blockerIndex) => {
                   const cr = new CombatResolver(gameRef.current);
                   const rivalId = gameRef.current.activePlayer === 1 ? 2 : 1;
-                  // Find first attacking unit
                   const attackerIndex = gameRef.current.players[
                     gameRef.current.activePlayer
                   ].field.findIndex((u) => u.isAttacking);
@@ -538,6 +537,14 @@ export default function SimulatorBeta({ currentDeck }) {
                   gameRef.current.clearExpiredEffects?.();
                   refresh();
                 }}
+                onRollGig={(dieType) => {
+                  const result = gameRef.current.rollGig(
+                    gameRef.current.activePlayer,
+                    dieType,
+                  );
+                  if (!result.success) alert(result.error);
+                  else refresh();
+                }}
               />
             </div>
 
@@ -558,6 +565,15 @@ export default function SimulatorBeta({ currentDeck }) {
                 </span>
               </div>
               <div className="w-px h-6 bg-term-amber/20" />
+              <div className="flex items-center gap-2">
+                <span className="text-term-green/60 font-mono text-xs">
+                  STREET CRED
+                </span>
+                <span className="bg-term-green/20 text-term-green font-mono font-bold px-3 py-1 rounded text-sm border border-term-green/40">
+                  {game.players?.[game.activePlayer]?.streetCred || 0} ☆
+                </span>
+              </div>
+              <div className="w-px h-6 bg-term-amber/20" />
               <div className="font-mono text-term-amber text-sm font-bold">
                 TURN {game.turn} —{" "}
                 <span className="text-term-green">{game.phase}</span>
@@ -570,15 +586,19 @@ export default function SimulatorBeta({ currentDeck }) {
               <div className="ml-auto flex gap-3">
                 <button
                   onClick={() => {
-                    if (gameRef.current.phase === "COMBAT") {
+                    const wasPlayer = gameRef.current.activePlayer;
+                    if (gameRef.current.phase === "ATTACK") {
                       const cr = new CombatResolver(gameRef.current);
                       cr.resolveCombat(gameRef.current.activePlayer);
                       gameRef.current.clearExpiredEffects?.();
                     }
-                    const wasPlayer = gameRef.current.activePlayer;
                     gameRef.current.advancePhase();
                     refresh();
-                    // Si es turno del AI, que juegue
+                    // Pass device screen (only in hotseat mode)
+                    if (!aiMode && gameRef.current.activePlayer !== wasPlayer) {
+                      setShowPassDevice(true);
+                    }
+                    // AI turn
                     setTimeout(() => {
                       if (
                         aiMode &&
@@ -590,15 +610,18 @@ export default function SimulatorBeta({ currentDeck }) {
                         aiRef.current.takeTurn();
                       }
                     }, 100);
-                    // Show pass device screen when turn changes
-                    if (gameRef.current.activePlayer !== wasPlayer) {
-                      setShowPassDevice(true);
-                    }
                   }}
-                  disabled={!!game.winner || game.phase === "MULLIGAN"}
+                  disabled={
+                    !!game.winner ||
+                    game.phase === "MULLIGAN" ||
+                    (game.phase === "CORE" &&
+                      game.players?.[game.activePlayer]?.fixerDice?.length >
+                        0 &&
+                      !game.players?.[game.activePlayer]?.hasRolledThisTurn)
+                  }
                   className="px-5 py-2 bg-term-green text-term-black font-bold rounded font-mono hover:bg-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-sm"
                 >
-                  {game.phase === "COMBAT"
+                  {game.phase === "ATTACK"
                     ? "RESOLVE COMBAT ⚔"
                     : game.phase === "END"
                       ? "END TURN ▶"
