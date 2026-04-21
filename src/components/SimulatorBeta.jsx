@@ -136,7 +136,22 @@ export default function SimulatorBeta({ currentDeck }) {
 
   // Always call methods on gameRef.current, use game (state) for rendering
   const refresh = () => {
-    if (gameRef.current) setGame({ ...gameRef.current, _t: Date.now() });
+    if (gameRef.current) {
+      setGame({
+        ...gameRef.current,
+        players: {
+          1: {
+            ...gameRef.current.players[1],
+            gigs: [...gameRef.current.players[1].gigs],
+          },
+          2: {
+            ...gameRef.current.players[2],
+            gigs: [...gameRef.current.players[2].gigs],
+          },
+        },
+        _t: Date.now(),
+      });
+    }
   };
 
   useEffect(() => {
