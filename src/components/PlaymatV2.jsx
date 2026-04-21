@@ -242,7 +242,10 @@ export default function PlaymatV2({
             </div>
             <div className="fixer-box h-[30px] flex justify-center items-center relative">
               <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
-                FIXER
+                FIXER{" "}
+                {game?.phase === "CORE" && (
+                  <span className="animate-pulse">← CLICK A DIE</span>
+                )}
               </div>
             </div>
           </div>
