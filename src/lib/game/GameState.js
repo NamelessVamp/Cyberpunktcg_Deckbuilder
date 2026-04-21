@@ -66,7 +66,12 @@ export class GameState {
     this.turn = 1;
     this.phase = "MULLIGAN";
     this.mulliganDone = { 1: false, 2: false };
-    this.log("Game started — Mulligan phase");
+    this.combatLog.push({
+      text: "Game started",
+      turn: 1,
+      phase: "MULLIGAN",
+      timestamp: Date.now(),
+    });
   }
 
   doMulligan(playerId) {
@@ -274,5 +279,14 @@ export class GameState {
     this.activeEffects = this.activeEffects.filter(
       (e) => e.sourceCardId !== sourceCardId,
     );
+  }
+
+  log(message) {
+    this.combatLog.push({
+      text: message,
+      turn: this.turn,
+      phase: this.phase,
+      timestamp: Date.now(),
+    });
   }
 }
