@@ -44,6 +44,7 @@ export class GameState {
       field: [],
       eddies: [],
       gigs: [],
+      fixerDice: [4, 6, 8, 10, 12, 20],
       trash: [],
       streetCred: 0,
       lastTurnClaimedGig: null,
@@ -147,8 +148,18 @@ export class GameState {
     player.hand.push(player.deck.shift());
     this.log(`Player ${this.activePlayer} draws a card`);
 
-    // R - Roll a Gig (manual — player must click die)
-    this.log("Roll a Gig: select a die from Fixer area");
+    // R - Roll a Gig (auto — takes smallest available die, d20 last)
+    if (player.fixerDice.length > 0) {
+      const dieType = player.fixerDice.shift();
+      const rollResult = Math.floor(Math.random() * dieType) + 1;
+      player.gigs.push({ type: dieType, value: rollResult });
+      this._calculateStreetCred(this.activePlayer);
+      this.log(
+        `Player ${this.activePlayer} rolled d${dieType} → ${rollResult} (Street Cred: ${player.streetCred})`,
+      );
+    } else {
+      this.log(`Player ${this.activePlayer} has no dice left in Fixer`);
+    }
 
     // E - Energize
     player.legends.forEach((l) => {
@@ -163,6 +174,14 @@ export class GameState {
     this.clearExpiredEffects();
 
     this.log(`C.O.R.E. complete — Player ${this.activePlayer} may now play`);
+  }
+
+  _calculateStreetCred(playerId) {
+    const player = this.players[playerId];
+    player.streetCred = player.gigs.reduce(
+      (total, gig) => total + gig.value,
+      0,
+    );
   }
 
   endTurn() {

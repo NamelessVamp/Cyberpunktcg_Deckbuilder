@@ -179,7 +179,15 @@ export default function PlaymatV2({
                   key={`rf-${idx}`}
                   className={`cursor-pointer ${card.isAttacking ? "ring-2 ring-red-500 shadow-[0_0_12px_rgba(239,68,68,0.8)]" : ""}`}
                   onClick={() => {
-                    if (game?.phase === "ATTACK") onDeclareBlocker?.(idx);
+                    if (game?.phase === "ATTACK") {
+                      if (card.isTapped) {
+                        alert(
+                          "Unidad agotada — ya atacó o tiene Summoning Sickness",
+                        );
+                        return;
+                      }
+                      onDeclareAttacker?.(idx);
+                    }
                   }}
                 >
                   <CyberCard card={card} />
@@ -247,16 +255,38 @@ export default function PlaymatV2({
                 <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
                   RIVAL GIGS
                 </div>
-                {rivalGigs.map((card, idx) => (
-                  <CyberCard key={`rival-gig-${idx}`} card={card} />
+                {rivalGigs.map((gig, idx) => (
+                  <div
+                    key={`gig-${idx}`}
+                    className="w-10 h-10 border-2 border-term-amber rounded flex flex-col items-center justify-center bg-term-black cursor-default"
+                    title={`d${gig.type}`}
+                  >
+                    <div className="text-term-amber font-mono font-bold text-sm">
+                      {gig.value}
+                    </div>
+                    <div className="text-term-amber/40 font-mono text-[8px]">
+                      d{gig.type}
+                    </div>
+                  </div>
                 ))}
               </div>
               <div className="gig-box flex-1 h-full border border-term-amber border-t-0 rounded-b-lg relative bg-transparent flex justify-center items-center flex-wrap gap-2.5 p-2.5 pb-6">
                 <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
                   FRIENDLY GIGS
                 </div>
-                {playerGigs.map((card, idx) => (
-                  <CyberCard key={`gig-${idx}`} card={card} />
+                {playerGigs.map((gig, idx) => (
+                  <div
+                    key={`gig-${idx}`}
+                    className="w-10 h-10 border-2 border-term-amber rounded flex flex-col items-center justify-center bg-term-black cursor-default"
+                    title={`d${gig.type}`}
+                  >
+                    <div className="text-term-amber font-mono font-bold text-sm">
+                      {gig.value}
+                    </div>
+                    <div className="text-term-amber/40 font-mono text-[8px]">
+                      d{gig.type}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -285,7 +315,15 @@ export default function PlaymatV2({
                       onMouseEnter={() => setHoveredCard(card)}
                       onMouseLeave={() => setHoveredCard(null)}
                       onClick={() => {
-                        if (game?.phase === "ATTACK") onDeclareAttacker?.(idx);
+                        if (game?.phase === "ATTACK") {
+                          if (card.isTapped) {
+                            alert(
+                              "Unidad agotada — ya atacó o tiene Summoning Sickness",
+                            );
+                            return;
+                          }
+                          onDeclareAttacker?.(idx);
+                        }
                       }}
                       className={`cursor-pointer ${card.isTapped ? "opacity-50 saturate-50" : ""} ${card.isAttacking ? "ring-2 ring-term-green" : ""}`}
                     >

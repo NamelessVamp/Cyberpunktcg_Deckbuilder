@@ -262,38 +262,28 @@ export class CombatResolver {
   stealGigs(fromPlayerId, toPlayerId, count) {
     const fromPlayer = this.game.players[fromPlayerId];
     const toPlayer = this.game.players[toPlayerId];
-
     const stolen = [];
 
     for (let i = 0; i < count && fromPlayer.gigs.length > 0; i++) {
       const gig = fromPlayer.gigs.pop();
       toPlayer.gigs.push(gig);
       stolen.push(gig);
-
-      // Update Street Cred
-      fromPlayer.streetCred -= gig.value;
-      toPlayer.streetCred += gig.value;
     }
 
-    // Mark that attacker claimed a Gig this turn
+    this.game._calculateStreetCred(fromPlayerId);
+    this.game._calculateStreetCred(toPlayerId);
     toPlayer.lastTurnClaimedGig = this.game.turn;
 
-    // Check Overtime win condition immediately
-    if (this.game.isOvertime && toPlayer.gigs.length >= 7) {
-      return {
-        success: true,
-        stolen,
-        overtimeWin: true,
-        winner: toPlayerId,
-      };
+    this.game.log(
+      `Stole ${stolen.length} Gig(s) — P${toPlayerId} now has ${toPlayer.gigs.length}`,
+    );
+
+    if (this.game.isOvertime && toPlayer.gigs.length > fromPlayer.gigs.length) {
+      return { success: true, stolen, overtimeWin: true, winner: toPlayerId };
     }
 
-    return {
-      success: true,
-      stolen,
-    };
+    return { success: true, stolen };
   }
-
   // ── KEYWORD / EFFECT HANDLERS ──────────────────────────────────
 
   // BLOCKER: check if defender has valid blocker keyword
