@@ -93,13 +93,13 @@ export class GameState {
 
   _checkMulliganComplete() {
     if (this.mulliganDone[1] && this.mulliganDone[2]) {
-      this.phase = "ENERGIZE";
+      this.phase = "CORE";
       if (this.players[1].legends.length >= 2) {
         this.players[1].legends[0].isTapped = true;
         this.players[1].legends[1].isTapped = true;
       }
-      this.energize();
       this.log("Mulligan complete — Turn 1 begins");
+      this._executeCore();
     }
   }
 
@@ -108,7 +108,7 @@ export class GameState {
   // =====================================================
 
   advancePhase() {
-    const phaseOrder = ["ENERGIZE", "PLAY", "COMBAT", "END"];
+    const phaseOrder = ["CORE", "PLAY", "ATTACK", "END"];
     const currentIndex = phaseOrder.indexOf(this.phase);
 
     if (currentIndex === phaseOrder.length - 1) {
@@ -118,8 +118,8 @@ export class GameState {
       this.phase = phaseOrder[currentIndex + 1];
 
       // Auto-execute phase actions
-      if (this.phase === "ENERGIZE") {
-        this.energize();
+      if (this.phase === "CORE") {
+        this._executeCore();
       }
     }
 
@@ -128,6 +128,38 @@ export class GameState {
     if (winner) {
       this.winner = winner;
     }
+  }
+
+  _executeCore() {
+    const player = this.players[this.activePlayer];
+    // C - Check Victory (ya se hace en checkWinCondition)
+
+    // O - Obtain Card
+    if (player.deck.length === 0) {
+      const rivalId = this.activePlayer === 1 ? 2 : 1;
+      this.winner = { player: rivalId, condition: "Deck Out" };
+      return;
+    }
+
+    player.hand.push(player.deck.shift());
+    this.log(`Player ${this.activePlayer} draws a card`);
+
+    // R - Roll a Gig (manual — player must click die)
+    this.log("Roll a Gig: select a die from Fixer area");
+
+    // E - Energize
+    player.legends.forEach((l) => {
+      l.isTapped = false;
+    });
+    player.field.forEach((u) => {
+      u.isTapped = false;
+    });
+    player.eddies.forEach((e) => {
+      e.isTapped = false;
+    });
+    this.clearExpiredEffects();
+
+    this.log(`C.O.R.E. complete — Player ${this.activePlayer} may now play`);
   }
 
   endTurn() {
@@ -146,26 +178,16 @@ export class GameState {
     // Switch active player
     this.activePlayer = this.activePlayer === 1 ? 2 : 1;
     this.turn++;
-    this.phase = "ENERGIZE";
+    this.phase = "CORE";
 
-    // Draw card
-    const player = this.players[this.activePlayer];
-    if (player.deck.length > 0) {
-      player.hand.push(player.deck.shift());
-      this.log(`Player ${this.activePlayer} draws a card`);
-    }
-
-    // Execute energize immediately
-    this.energize();
     this.log(`Turn ${this.turn} — Player ${this.activePlayer}'s turn`);
+    this._executeCore();
 
     // Check Overtime trigger (2 turns without Gig claim)
     const p1ClaimedThisTurn =
       this.players[1].lastTurnClaimedGig === this.turn - 1;
     const p2ClaimedThisTurn =
       this.players[2].lastTurnClaimedGig === this.turn - 1;
-
-    this.energize();
 
     if (!p1ClaimedThisTurn && !p2ClaimedThisTurn) {
       this.consecutiveTurnsWithoutGigClaim++;
@@ -179,31 +201,6 @@ export class GameState {
   }
 
   // =====================================================
-  // ENERGIZE PHASE
-  // =====================================================
-
-  energize() {
-    // Skip energize on turn 1 and 2
-    if (this.turn <= 2) {
-      return;
-    }
-
-    const player = this.players[this.activePlayer];
-
-    // Ready all tapped Legends
-    player.legends.forEach((legend) => {
-      legend.isTapped = false;
-    });
-
-    // Ready all tapped Units
-    player.field.forEach((unit) => {
-      unit.isTapped = false;
-    });
-
-    this.clearExpiredEffects();
-  }
-
-  // =====================================================
   // WIN CONDITIONS
   // =====================================================
 
@@ -212,7 +209,7 @@ export class GameState {
     const p2 = this.players[2];
 
     // Normal win: Start turn with 6+ Gigs
-    if (this.phase === "ENERGIZE") {
+    if (this.phase === "CORE") {
       if (p1.gigs.length >= 6) {
         return { player: 1, condition: "Normal Win (6+ Gigs)" };
       }
@@ -225,7 +222,6 @@ export class GameState {
     if (this.isOvertime) {
       if (p1.gigs.length >= 7) {
         return { player: 1, condition: "Overtime Win (7+ Gigs)" };
-        a;
       }
       if (p2.gigs.length >= 7) {
         return { player: 2, condition: "Overtime Win (7+ Gigs)" };
@@ -235,10 +231,10 @@ export class GameState {
     // Deck out: solo chequear en fase END
     if (this.phase === "END") {
       // Deck out: solo en fase END
-      if (this.phase === "END" && p1.deck.length === 0) {
+      if (p1.deck.length === 0) {
         return { player: 2, condition: "Deck Out (Opponent ran out of cards)" };
       }
-      if (this.phase === "END" && p2.deck.length === 0) {
+      if (p2.deck.length === 0) {
         return { player: 1, condition: "Deck Out (Opponent ran out of cards)" };
       }
     }

@@ -289,7 +289,31 @@ export default function PlaymatV2({
                   EDDIES
                 </div>
                 {playerEddies.map((card, idx) => (
-                  <CyberCard key={`eddie-${idx}`} card={card} />
+                  <div
+                    key={`eddie-${idx}`}
+                    className={`cursor-pointer transition-all ${
+                      actionMode === "PAYING" && !card.isTapped
+                        ? "ring-2 ring-term-amber animate-pulse"
+                        : card.isTapped
+                          ? "opacity-40"
+                          : ""
+                    }`}
+                    onClick={() => {
+                      if (actionMode === "PAYING" && !card.isTapped) {
+                        card.isTapped = true;
+                        const newCost = costRemaining - 1;
+                        setCostRemaining(newCost);
+                        if (newCost <= 0) {
+                          onPlayCard?.(pendingCardIndex);
+                          setActionMode("IDLE");
+                          setPendingCardIndex(null);
+                          setCostRemaining(0);
+                        }
+                      }
+                    }}
+                  >
+                    <CyberCard card={card} />
+                  </div>
                 ))}
               </div>
               <p
