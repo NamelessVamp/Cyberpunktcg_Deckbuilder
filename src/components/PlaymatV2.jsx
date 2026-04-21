@@ -8,6 +8,7 @@ export default function PlaymatV2({
   onSellCard,
   onCallLegend,
   onDeclareAttacker,
+  onDeclareBlocker,
   onResolveCombat,
 }) {
   const [backgroundImage, setBackgroundImage] = useState(null);
@@ -95,10 +96,10 @@ export default function PlaymatV2({
             rivalField.map((card, idx) => (
               <div
                 key={`rf-${idx}`}
-                className="cursor-pointer"
-                onClick={() =>
-                  onDeclareAttacker && alert(`Blocker vs ${card.name} — TODO`)
-                }
+                className={`cursor-pointer ${card.isAttacking ? "ring-2 ring-red-500 shadow-[0_0_12px_rgba(239,68,68,0.8)]" : ""}`}
+                onClick={() => {
+                  if (game?.phase === "COMBAT") onDeclareBlocker?.(idx);
+                }}
               >
                 <CyberCard card={card} />
               </div>
