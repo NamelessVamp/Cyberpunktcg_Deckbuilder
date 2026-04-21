@@ -197,9 +197,18 @@ export default function PlaymatV2({
               ))
             )}
           </div>
-          <span className="text-term-red/50 font-mono text-xs whitespace-nowrap">
-            HAND: {rivalHand.length}
-          </span>
+          <div className="flex flex-col items-end gap-1 -rotate-180">
+            <span className="text-term-red/50 font-mono text-[9px]">
+              HAND: {rivalHand.length} · DECK:{" "}
+              {game?.players[rivalId]?.deck?.length || 0}
+            </span>
+            <span className="text-term-amber/60 font-mono text-[9px]">
+              FIXER: {game?.players[rivalId]?.fixerDice?.length || 0} dice left
+            </span>
+            <span className="text-term-green/60 font-mono text-[9px]">
+              ☆ {game?.players[rivalId]?.streetCred || 0}
+            </span>
+          </div>
         </div>
 
         {/* Main Playmat */}
