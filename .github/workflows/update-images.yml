@@ -56,6 +56,21 @@ jobs:
           python scripts/scraper.py
         continue-on-error: true
 
+      - name: Debug Environment Variables
+        run: |
+          echo "🔍 Escaneando la matriz por llaves..."
+          if [ -z "${VITE_SUPABASE_URL}" ]; then 
+            echo "❌ ERROR FATAL: VITE_SUPABASE_URL está VACÍO en GitHub Actions"
+          else 
+            echo "✅ VITE_SUPABASE_URL fue inyectado correctamente"
+          fi
+          
+          if [ -z "${VITE_SUPABASE_SERVICE_ROLE_KEY}" ]; then 
+            echo "❌ ERROR FATAL: SERVICE_ROLE_KEY está VACÍO en GitHub Actions"
+          else 
+            echo "✅ SERVICE_ROLE_KEY fue inyectado correctamente"
+          fi
+
       - name: Backup card images
         # Ya no necesitas el bloque 'env' aquí, lo hereda del entorno global
         run: |
