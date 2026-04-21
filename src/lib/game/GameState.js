@@ -47,6 +47,7 @@ export class GameState {
       trash: [],
       streetCred: 0,
       lastTurnClaimedGig: null,
+      hasSoldThisTurn: false,
     };
   }
 
@@ -132,6 +133,8 @@ export class GameState {
 
   _executeCore() {
     const player = this.players[this.activePlayer];
+    player.hasSoldThisTurn = false;
+
     // C - Check Victory (ya se hace en checkWinCondition)
 
     // O - Obtain Card
