@@ -1,5 +1,5 @@
 // EX MACHINA — Playmat V2 with dnd-kit + Framer Motion game feel
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -100,10 +100,23 @@ export default function PlaymatV2({
   onRollGig,
   isBlockingMode,
   onBlockerSelected,
+  onGoSolo,
 }) {
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
   const [activeCard, setActiveCard] = useState(null);
+  const [combatFlash, setCombatFlash] = useState(false);
+  const prevFieldLen = useRef(null);
+
+  // Trigger combat flash when a unit dies (field shrinks)
+  useEffect(() => {
+    const currentLen = playerField.length;
+    if (prevFieldLen.current !== null && currentLen < prevFieldLen.current) {
+      setCombatFlash(true);
+      setTimeout(() => setCombatFlash(false), 500);
+    }
+    prevFieldLen.current = currentLen;
+  }, [playerField.length]);
   const [activeDragIdx, setActiveDragIdx] = useState(null);
   const [activeDragId, setActiveDragId] = useState(null);
   const [newFieldIdx, setNewFieldIdx] = useState(null); // track newly played card for animation
@@ -402,6 +415,22 @@ export default function PlaymatV2({
                 FIELD {isPlayPhase ? "— drag unit here" : `— ${game?.phase}`}
               </div>
               <div className="dashed-units-area border border-dashed border-term-amber w-full h-full rounded-lg flex flex-row flex-wrap gap-2 p-2 relative z-[5] items-center justify-start">
+                {/* Combat flash overlay */}
+                <AnimatePresence>
+                  {combatFlash && (
+                    <motion.div
+                      className="absolute inset-0 rounded-lg z-20 pointer-events-none"
+                      initial={{ opacity: 0.8 }}
+                      animate={{ opacity: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.5 }}
+                      style={{
+                        background:
+                          "radial-gradient(circle, rgba(255,42,42,0.6) 0%, rgba(255,42,42,0) 70%)",
+                      }}
+                    />
+                  )}
+                </AnimatePresence>
                 {playerField.length === 0 && (
                   <span className="text-term-amber/30 text-xs font-mono w-full text-center">
                     EMPTY FIELD
@@ -474,19 +503,37 @@ export default function PlaymatV2({
                       className="legend-card flex-1 border border-dashed border-term-amber/50 rounded relative"
                     >
                       {playerLegends[idx] && (
-                        <motion.div
-                          className={`cursor-pointer ${playerLegends[idx].isTapped ? "opacity-50 saturate-50" : ""}`}
-                          onMouseEnter={() =>
-                            setHoveredCard(playerLegends[idx])
-                          }
-                          onMouseLeave={() => setHoveredCard(null)}
-                          onClick={() => {
-                            if (isPlayPhase) onCallLegend?.(idx);
-                          }}
-                          whileHover={isPlayPhase ? { scale: 1.05, y: -3 } : {}}
-                        >
-                          <CyberCard card={playerLegends[idx]} />
-                        </motion.div>
+                        <div className="relative h-full">
+                          <motion.div
+                            className={`cursor-pointer ${playerLegends[idx].isTapped ? "opacity-50 saturate-50" : ""}`}
+                            onMouseEnter={() =>
+                              setHoveredCard(playerLegends[idx])
+                            }
+                            onMouseLeave={() => setHoveredCard(null)}
+                            onClick={() => {
+                              if (isPlayPhase) onCallLegend?.(idx);
+                            }}
+                            whileHover={
+                              isPlayPhase ? { scale: 1.05, y: -3 } : {}
+                            }
+                          >
+                            <CyberCard card={playerLegends[idx]} />
+                          </motion.div>
+                          {/* GO SOLO button — only if legend is face up + has GO SOLO keyword */}
+                          {playerLegends[idx].isFaceUp &&
+                            playerLegends[idx].keywords?.includes("GO SOLO") &&
+                            isPlayPhase && (
+                              <motion.button
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                onClick={() => onGoSolo?.(idx)}
+                                className="absolute -bottom-5 left-1/2 -translate-x-1/2 px-1 py-0.5 bg-term-green text-term-black font-mono font-bold text-[7px] rounded whitespace-nowrap z-20 shadow-[0_0_8px_rgba(74,222,128,0.8)]"
+                                title={`Go Solo — costs ${playerLegends[idx].cost}€`}
+                              >
+                                GO SOLO
+                              </motion.button>
+                            )}
+                        </div>
                       )}
                     </div>
                   ))}

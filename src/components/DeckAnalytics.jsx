@@ -1,79 +1,38 @@
+// EX MACHINA — DeckAnalytics with animated bars
+import { motion } from "framer-motion";
+
+function AnimatedBar({
+  value,
+  max,
+  color = "bg-term-green/60",
+  label,
+  count,
+  delay = 0,
+}) {
+  const width = max > 0 ? (value / max) * 100 : 0;
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-term-green font-mono text-xs w-8 text-right">
+        {label}
+      </span>
+      <div className="flex-1 bg-term-gray-light rounded h-5 relative overflow-hidden">
+        <motion.div
+          className={`${color} h-full rounded`}
+          initial={{ width: 0 }}
+          animate={{ width: `${width}%` }}
+          transition={{ duration: 0.6, delay, ease: "easeOut" }}
+        ></motion.div>
+        <span className="absolute inset-0 flex items-center justify-center text-white font-mono text-xs font-bold drop-shadow">
+          {count}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function DeckAnalytics({ deck }) {
   const mainDeck = deck.mainDeck || [];
-
-  const eddieCurve = mainDeck.reduce((acc, card) => {
-    const cost = card.cost || 0;
-    const bucket = cost >= 4 ? "4+" : String(cost);
-    acc[bucket] = (acc[bucket] || 0) + 1;
-    return acc;
-  }, {});
-
-  const avgCost =
-    mainDeck.length > 0
-      ? (
-          mainDeck.reduce((sum, card) => sum + (card.cost || 0), 0) /
-          mainDeck.length
-        ).toFixed(2)
-      : 0;
-  const deckTooSlow = avgCost > 2.5;
-
-  const typeDistribution = mainDeck.reduce((acc, card) => {
-    const type = card.type || "UNKNOWN";
-    acc[type] = (acc[type] || 0) + 1;
-    return acc;
-  }, {});
-
-  const typePercentages = Object.entries(typeDistribution).map(
-    ([type, count]) => ({
-      type,
-      count,
-      percentage: ((count / mainDeck.length) * 100).toFixed(1),
-    }),
-  );
-
-  const factionDistribution = mainDeck.reduce((acc, card) => {
-    const faction = card.faction || "Neutral";
-    acc[faction] = (acc[faction] || 0) + 1;
-    return acc;
-  }, {});
-
-  const factionPercentages = Object.entries(factionDistribution)
-    .map(([faction, count]) => ({
-      faction,
-      count,
-      percentage: ((count / mainDeck.length) * 100).toFixed(1),
-    }))
-    .sort((a, b) => b.count - a.count);
-
-  const strongTribal =
-    factionPercentages.length > 0 &&
-    parseFloat(factionPercentages[0].percentage) > 50;
-
-  const drawSources = mainDeck.filter((card) => {
-    const text = (card.text || "").toLowerCase();
-    return text.includes("draw") || text.includes("roba");
-  });
-
-  const lowDrawSources = drawSources.length < 3;
-
-  // T1 Playability — hypergeometric probability of having ≥1 playable card in opening hand
-  // P(X≥1) = 1 - P(X=0) = 1 - C(N-K, n) / C(N, n)
-  // N=deck size, K=cards with cost≤1, n=6 (opening hand)
-  const combination = (n, k) => {
-    if (k > n) return 0;
-    if (k === 0 || k === n) return 1;
-    let result = 1;
-    for (let i = 0; i < k; i++) {
-      result = (result * (n - i)) / (i + 1);
-    }
-    return result;
-  };
-  const N = mainDeck.length;
-  const K = mainDeck.filter((c) => (c.cost ?? 0) <= 1).length;
-  const n = 6;
-  const t1Prob =
-    N >= n ? (1 - combination(N - K, n) / combination(N, n)) * 100 : 0;
-  const t1Low = t1Prob < 50;
+  const legends = deck.legends || [];
 
   if (mainDeck.length === 0) {
     return (
@@ -88,180 +47,245 @@ export default function DeckAnalytics({ deck }) {
     );
   }
 
+  // ── Eddie Curve ──────────────────────────────────────────────
+  const eddieCurve = mainDeck.reduce((acc, card) => {
+    const cost = card.cost || 0;
+    const bucket = cost >= 5 ? "5+" : String(cost);
+    acc[bucket] = (acc[bucket] || 0) + 1;
+    return acc;
+  }, {});
+  const maxCurve = Math.max(...Object.values(eddieCurve), 1);
+  const avgCost = (
+    mainDeck.reduce((s, c) => s + (c.cost || 0), 0) / mainDeck.length
+  ).toFixed(2);
+  const deckTooSlow = parseFloat(avgCost) > 2.8;
+  const deckTooFast = parseFloat(avgCost) < 1.5;
+
+  // ── Type Distribution ────────────────────────────────────────
+  const typeDist = mainDeck.reduce((acc, c) => {
+    acc[c.type || "UNKNOWN"] = (acc[c.type || "UNKNOWN"] || 0) + 1;
+    return acc;
+  }, {});
+  const maxType = Math.max(...Object.values(typeDist), 1);
+  const typeColors = {
+    UNIT: "bg-term-red/60",
+    GEAR: "bg-cyan-500/60",
+    PROGRAM: "bg-purple-500/60",
+    LEGEND: "bg-term-amber/60",
+  };
+
+  // ── Faction Tribal ───────────────────────────────────────────
+  const allCards = [...mainDeck, ...legends];
+  const factionDist = allCards.reduce((acc, c) => {
+    const f = c.faction || "Neutral";
+    acc[f] = (acc[f] || 0) + 1;
+    return acc;
+  }, {});
+  const topFaction = Object.entries(factionDist).sort((a, b) => b[1] - a[1])[0];
+  const tribalPct = topFaction
+    ? Math.round((topFaction[1] / allCards.length) * 100)
+    : 0;
+  const strongTribal = tribalPct > 60;
+
+  // ── T1 Playability ───────────────────────────────────────────
+  const t1Cards = mainDeck.filter((c) => (c.cost || 0) <= 1).length;
+  const t1Pct = Math.round((t1Cards / mainDeck.length) * 100);
+  const goodT1 = t1Pct >= 15;
+
+  // ── Sellable (€$) cards ──────────────────────────────────────
+  const sellableCount = mainDeck.filter(
+    (c) => (c.cost || 0) > 0 && c.type !== "PROGRAM",
+  ).length;
+  const sellablePct = Math.round((sellableCount / mainDeck.length) * 100);
+
+  // ── Draw sources ─────────────────────────────────────────────
+  const drawCount = mainDeck.filter((c) => {
+    const t = (c.text || "").toLowerCase();
+    return t.includes("draw") || t.includes("roba");
+  }).length;
+
+  // ── Total cards ──────────────────────────────────────────────
+  const total = mainDeck.length + legends.length;
+
   return (
     <div className="space-y-4">
+      {/* Header Stats */}
       <div className="card-container">
         <h3 className="text-term-amber font-bold mb-3 font-mono text-sm">
-          EDDIE COST CURVE
+          DECK STATS
         </h3>
-        <div className="space-y-2 mb-3">
-          {["0", "1", "2", "3", "4+"].map((cost) => {
-            const count = eddieCurve[cost] || 0;
-            const maxCount = Math.max(...Object.values(eddieCurve), 1);
-            const width = (count / maxCount) * 100;
-            return (
-              <div key={cost} className="flex items-center gap-2">
-                <span className="text-term-green font-mono text-xs w-6">
-                  {cost}€
-                </span>
-                <div className="flex-1 bg-term-gray-light rounded h-5 relative overflow-hidden">
-                  <div
-                    className="bg-term-green/60 h-full rounded transition-all"
-                    style={{ width: `${width}%` }}
-                  ></div>
-                  <span className="absolute inset-0 flex items-center justify-center text-term-green font-mono text-xs font-bold">
-                    {count}
-                  </span>
-                </div>
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            {
+              label: "TOTAL",
+              value: total,
+              sub: "/ 50 max",
+              color: total >= 40 ? "text-term-green" : "text-term-red",
+            },
+            {
+              label: "AVG COST",
+              value: `${avgCost}€`,
+              sub: deckTooSlow ? "⚠ slow" : deckTooFast ? "⚡ fast" : "✓ good",
+              color:
+                deckTooSlow || deckTooFast
+                  ? "text-term-red"
+                  : "text-term-green",
+            },
+            {
+              label: "T1 PLAYS",
+              value: `${t1Pct}%`,
+              sub: goodT1 ? "✓ solid" : "⚠ low",
+              color: goodT1 ? "text-term-green" : "text-term-amber",
+            },
+          ].map(({ label, value, sub, color }) => (
+            <div
+              key={label}
+              className="bg-term-black/40 rounded p-2 text-center border border-term-amber/20"
+            >
+              <div className="text-term-amber/60 font-mono text-[9px] mb-1">
+                {label}
               </div>
-            );
-          })}
+              <div className={`font-mono font-bold text-lg ${color}`}>
+                {value}
+              </div>
+              <div className="text-term-amber/40 font-mono text-[9px]">
+                {sub}
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="flex justify-between items-center pt-2 border-t border-term-amber/20">
-          <span className="text-term-green/80 text-xs font-mono">
-            AVG COST:
-          </span>
-          <span
-            className={`font-mono font-bold ${deckTooSlow ? "text-term-red" : "text-term-green"}`}
-          >
-            {avgCost}€
-          </span>
-        </div>
-        {deckTooSlow && (
-          <div className="mt-2 p-2 bg-term-red/10 border border-term-red/40 rounded">
-            <p className="text-term-red text-xs font-mono">
-              ⚠️ DECK TOO SLOW (avg cost &gt; 2.5)
-            </p>
-          </div>
-        )}
       </div>
 
+      {/* Eddie Cost Curve */}
       <div className="card-container">
-        <h3 className="text-term-amber font-bold mb-3 font-mono text-sm">
-          CARD TYPES
+        <h3 className="text-term-amber font-bold mb-3 font-mono text-sm flex justify-between">
+          <span>EDDIE CURVE</span>
+          <span
+            className={`text-xs font-normal ${deckTooSlow ? "text-term-red" : "text-term-green"}`}
+          >
+            {deckTooSlow
+              ? "⚠ TOO SLOW"
+              : deckTooFast
+                ? "⚡ HYPER AGGRO"
+                : "✓ BALANCED"}
+          </span>
         </h3>
         <div className="space-y-2">
-          {typePercentages.map(({ type, count, percentage }) => (
-            <div key={type} className="flex justify-between items-center">
-              <span className="text-term-green text-xs font-mono">{type}</span>
-              <div className="flex items-center gap-2">
-                <span className="text-term-amber text-xs font-mono">
-                  {count}
-                </span>
-                <span className="text-term-green/60 text-xs font-mono">
-                  ({percentage}%)
-                </span>
-              </div>
-            </div>
+          {["0", "1", "2", "3", "4", "5+"].map((cost, i) => (
+            <AnimatedBar
+              key={cost}
+              label={`${cost}€`}
+              value={eddieCurve[cost] || 0}
+              max={maxCurve}
+              count={eddieCurve[cost] || 0}
+              color={
+                cost === "0"
+                  ? "bg-term-green/40"
+                  : cost === "5+"
+                    ? "bg-term-red/60"
+                    : "bg-term-green/60"
+              }
+              delay={i * 0.08}
+            />
           ))}
         </div>
       </div>
 
+      {/* Type Distribution */}
       <div className="card-container">
         <h3 className="text-term-amber font-bold mb-3 font-mono text-sm">
-          FACTION SYNERGY
+          TYPE DISTRIBUTION
         </h3>
-        <div className="space-y-2 mb-2">
-          {factionPercentages.map(({ faction, count, percentage }) => (
-            <div key={faction} className="flex justify-between items-center">
-              <span className="text-term-green text-xs font-mono">
-                {faction}
+        <div className="space-y-2">
+          {Object.entries(typeDist)
+            .sort((a, b) => b[1] - a[1])
+            .map(([type, count], i) => (
+              <AnimatedBar
+                key={type}
+                label={type.slice(0, 4)}
+                value={count}
+                max={maxType}
+                count={count}
+                color={typeColors[type] || "bg-term-amber/50"}
+                delay={i * 0.1}
+              />
+            ))}
+        </div>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="card-container">
+        <h3 className="text-term-amber font-bold mb-3 font-mono text-sm">
+          QUICK STATS
+        </h3>
+        <div className="space-y-2">
+          {[
+            {
+              label: "TRIBAL SYNERGY",
+              value: `${tribalPct}%`,
+              sub: topFaction?.[0],
+              ok: strongTribal,
+            },
+            {
+              label: "SELLABLE (€$)",
+              value: `${sellablePct}%`,
+              sub: `${sellableCount} cards`,
+              ok: sellableCount >= 6,
+            },
+            {
+              label: "DRAW SOURCES",
+              value: drawCount,
+              sub: "cards with draw",
+              ok: drawCount >= 3,
+            },
+          ].map(({ label, value, sub, ok }) => (
+            <div
+              key={label}
+              className="flex items-center justify-between py-1 border-b border-term-amber/10"
+            >
+              <span className="text-term-amber/70 font-mono text-xs">
+                {label}
               </span>
-              <div className="flex items-center gap-2">
-                <span className="text-term-amber text-xs font-mono">
-                  {count}
+              <div className="text-right">
+                <span
+                  className={`font-mono font-bold text-sm ${ok ? "text-term-green" : "text-term-amber"}`}
+                >
+                  {value}
                 </span>
-                <span className="text-term-green/60 text-xs font-mono">
-                  ({percentage}%)
+                <span className="text-term-amber/40 font-mono text-[9px] ml-2">
+                  {sub}
                 </span>
               </div>
             </div>
           ))}
         </div>
-        {strongTribal && (
-          <div className="mt-2 p-2 bg-term-green/10 border border-term-green/40 rounded">
-            <p className="text-term-green text-xs font-mono">
-              ✅ STRONG TRIBAL FOCUS
-            </p>
-          </div>
-        )}
       </div>
 
-      <div className="card-container">
-        <h3 className="text-term-amber font-bold mb-3 font-mono text-sm">
-          ENGINE TRACKER
-        </h3>
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-term-green/80 text-xs font-mono">
-            DRAW SOURCES:
-          </span>
-          <span
-            className={`font-mono font-bold ${lowDrawSources ? "text-term-red" : "text-term-green"}`}
-          >
-            {drawSources.length}
-          </span>
-        </div>
-        {lowDrawSources && (
-          <div className="mt-2 p-2 bg-term-red/10 border border-term-red/40 rounded">
-            <p className="text-term-red text-xs font-mono">
-              ⚠️ LOW CARD DRAW (&lt; 3 sources)
-            </p>
+      {/* Warnings */}
+      {(deckTooSlow || !goodT1 || drawCount < 3) && (
+        <div className="card-container border border-term-red/30">
+          <h3 className="text-term-red font-bold mb-2 font-mono text-sm">
+            ⚠ WARNINGS
+          </h3>
+          <div className="space-y-1">
+            {deckTooSlow && (
+              <p className="text-term-red/80 text-xs font-mono">
+                • Avg cost &gt; 2.8€ — consider adding cheap units
+              </p>
+            )}
+            {!goodT1 && (
+              <p className="text-term-red/80 text-xs font-mono">
+                • Less than 15% T1 plays — slow opening hand risk
+              </p>
+            )}
+            {drawCount < 3 && (
+              <p className="text-term-amber/80 text-xs font-mono">
+                • Low draw sources — may run out of cards mid-game
+              </p>
+            )}
           </div>
-        )}
-        {drawSources.length > 0 && (
-          <div className="mt-2">
-            <p className="text-term-green/60 text-xs font-mono mb-1">
-              Sources:
-            </p>
-            <div className="space-y-1">
-              {drawSources.slice(0, 5).map((card, idx) => (
-                <p
-                  key={idx}
-                  className="text-term-amber text-xs font-mono truncate"
-                >
-                  • {card.name}
-                </p>
-              ))}
-              {drawSources.length > 5 && (
-                <p className="text-term-green/40 text-xs font-mono">
-                  + {drawSources.length - 5} more
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-      <div className="card-container">
-        <h3 className="text-term-amber font-bold mb-3 font-mono text-sm">
-          T1 PLAYABILITY
-        </h3>
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-term-green/80 text-xs font-mono">
-            P(≥1 CARD COST ≤1 IN HAND):
-          </span>
-          <span
-            className={`font-mono font-bold text-sm ${t1Low ? "text-term-red" : "text-term-green"}`}
-          >
-            {isNaN(t1Prob) ? "--" : `${t1Prob.toFixed(1)}%`}
-          </span>
         </div>
-        <div className="w-full bg-term-black/40 rounded-full h-2 mb-2">
-          <div
-            className={`h-2 rounded-full transition-all ${t1Low ? "bg-term-red" : "bg-term-green"}`}
-            style={{ width: `${Math.min(t1Prob, 100)}%` }}
-          />
-        </div>
-        <p className="text-term-green/50 text-xs font-mono">
-          {K} cards with cost ≤1 in {N}-card deck • {n}-card opening hand
-        </p>
-        {t1Low && (
-          <div className="mt-2 p-2 bg-term-red/10 border border-term-red/40 rounded">
-            <p className="text-term-red text-xs font-mono">
-              ⚠️ LOW T1 PLAYABILITY — add more cheap cards
-            </p>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }

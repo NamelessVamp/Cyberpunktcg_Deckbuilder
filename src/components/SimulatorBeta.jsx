@@ -748,7 +748,20 @@ export default function SimulatorBeta({ currentDeck }) {
                   if (!result.success) alert(result.error);
                   else {
                     refresh();
-                    setWaitingDefense(true);
+                    // In AI mode, AI auto-responds as defender
+                    if (aiMode && aiRef.current) {
+                      setTimeout(async () => {
+                        const blocked = await aiRef.current.respondToAttack();
+                        if (!blocked) {
+                          // AI takes the hit — resolve combat
+                          cr.resolveCombat(gameRef.current.activePlayer);
+                          gameRef.current.clearExpiredEffects?.();
+                        }
+                        refresh();
+                      }, 600);
+                    } else {
+                      setWaitingDefense(true);
+                    }
                   }
                 }}
                 onDeclareBlocker={(blockerIndex) => {
@@ -790,6 +803,15 @@ export default function SimulatorBeta({ currentDeck }) {
                   if (!result.success) alert(result.error);
                   else refresh();
                 }}
+                onGoSolo={(legendIndex) => {
+                  const cl = new CardLogic(gameRef.current);
+                  const result = cl.goSolo(
+                    gameRef.current.activePlayer,
+                    legendIndex,
+                  );
+                  if (!result.success) alert(result.error);
+                  else refresh();
+                }}
                 isBlockingMode={blockingMode}
                 onBlockerSelected={(blockerIndex) => {
                   const cr = new CombatResolver(gameRef.current);
@@ -820,7 +842,6 @@ export default function SimulatorBeta({ currentDeck }) {
 
             {/* CONTROLS BAR */}
             <div className="bg-term-gray border border-term-amber/30 rounded p-4 flex flex-wrap items-center gap-4 max-w-[1200px] mx-auto">
-              {/* EDDIES */}
               <div className="flex items-center gap-2">
                 <span className="text-term-green/60 font-mono text-xs">
                   EDDIES
@@ -836,7 +857,6 @@ export default function SimulatorBeta({ currentDeck }) {
                 </span>
               </div>
               <div className="w-px h-6 bg-term-amber/20" />
-              {/* STREET CRED */}
               <div className="flex items-center gap-2">
                 <span className="text-term-green/60 font-mono text-xs">
                   STREET CRED
@@ -846,32 +866,12 @@ export default function SimulatorBeta({ currentDeck }) {
                 </span>
               </div>
               <div className="w-px h-6 bg-term-amber/20" />
-              {/* MY GIGS */}
               <div className="flex items-center gap-2">
                 <span className="text-term-amber/60 font-mono text-xs">
-                  MY GIGS
+                  GIGS
                 </span>
                 <span className="bg-term-amber/20 text-term-amber font-mono font-bold px-3 py-1 rounded text-sm border border-term-amber/40">
                   {game.players?.[game.activePlayer]?.gigs?.length || 0} / 6
-                </span>
-              </div>
-              <div className="w-px h-6 bg-term-amber/20" />
-              {/* RIVAL GIGS */}
-              <div className="flex items-center gap-2">
-                <span className="text-term-red/60 font-mono text-xs">
-                  RIVAL GIGS
-                </span>
-                <span
-                  className={`font-mono font-bold px-3 py-1 rounded text-sm border transition-all ${
-                    (game.players?.[game.activePlayer === 1 ? 2 : 1]?.gigs
-                      ?.length || 0) >= 5
-                      ? "bg-term-red/30 text-term-red border-term-red/60 animate-pulse"
-                      : "bg-term-red/10 text-term-red/60 border-term-red/20"
-                  }`}
-                >
-                  {game.players?.[game.activePlayer === 1 ? 2 : 1]?.gigs
-                    ?.length || 0}{" "}
-                  / 6
                 </span>
               </div>
               <div className="w-px h-6 bg-term-amber/20" />
