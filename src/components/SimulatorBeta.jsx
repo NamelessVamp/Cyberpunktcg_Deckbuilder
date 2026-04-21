@@ -421,31 +421,44 @@ export default function SimulatorBeta({ currentDeck }) {
                 }}
                 onPlayCard={(cardIndex, targetIndex) => {
                   const cl = new CardLogic(gameRef.current);
-                  const result = cl.playCard(1, cardIndex, targetIndex);
+                  const result = cl.playCard(
+                    gameRef.current.activePlayer,
+                    cardIndex,
+                    targetIndex,
+                  );
                   if (!result.success) alert(result.error);
                   else refresh();
                 }}
                 onSellCard={(cardIndex) => {
                   const cl = new CardLogic(gameRef.current);
-                  const result = cl.sellCard(1, cardIndex);
+                  const result = cl.sellCard(
+                    gameRef.current.activePlayer,
+                    cardIndex,
+                  );
                   if (!result.success) alert(result.error);
                   else refresh();
                 }}
                 onCallLegend={(legendIndex) => {
                   const cl = new CardLogic(gameRef.current);
-                  const result = cl.callLegend(1, legendIndex);
+                  const result = cl.callLegend(
+                    gameRef.current.activePlayer,
+                    legendIndex,
+                  );
                   if (!result.success) alert(result.error);
                   else refresh();
                 }}
                 onDeclareAttacker={(unitIndex) => {
                   const cr = new CombatResolver(gameRef.current);
-                  const result = cr.declareAttacker(1, unitIndex);
+                  const result = cr.declareAttacker(
+                    gameRef.current.activePlayer,
+                    unitIndex,
+                  );
                   if (!result.success) alert(result.error);
                   else refresh();
                 }}
                 onResolveCombat={() => {
                   const cr = new CombatResolver(gameRef.current);
-                  cr.resolveCombat(1);
+                  cr.resolveCombat(gameRef.current.activePlayer);
                   gameRef.current.clearExpiredEffects?.();
                   refresh();
                 }}

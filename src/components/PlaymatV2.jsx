@@ -39,18 +39,21 @@ export default function PlaymatV2({
     }, 300);
   };
 
-  const playerHand = game?.players[1]?.hand || [];
-  const playerField = game?.players[1]?.field || [];
-  const playerLegends = game?.players[1]?.legends || [];
-  const playerEddies = game?.players[1]?.eddies || [];
-  const playerDeck = game?.players[1]?.deck || [];
-  const playerTrash = game?.players[1]?.trash || [];
-  const playerGigs = game?.players[1]?.gigs || [];
+  const activeId = game?.activePlayer || 1;
+  const rivalId = activeId === 1 ? 2 : 1;
 
-  const rivalField = game?.players[2]?.field || [];
-  const rivalLegends = game?.players[2]?.legends || [];
-  const rivalHand = game?.players[2]?.hand || [];
-  const rivalGigs = game?.players[2]?.gigs || [];
+  const playerHand = game?.players[activeId]?.hand || [];
+  const playerField = game?.players[activeId]?.field || [];
+  const playerLegends = game?.players[activeId]?.legends || [];
+  const playerEddies = game?.players[activeId]?.eddies || [];
+  const playerDeck = game?.players[activeId]?.deck || [];
+  const playerTrash = game?.players[activeId]?.trash || [];
+  const playerGigs = game?.players[activeId]?.gigs || [];
+
+  const rivalField = game?.players[rivalId]?.field || [];
+  const rivalLegends = game?.players[rivalId]?.legends || [];
+  const rivalHand = game?.players[rivalId]?.hand || [];
+  const rivalGigs = game?.players[rivalId]?.gigs || [];
 
   return (
     <div className="game-wrapper flex flex-col gap-4 items-center">
