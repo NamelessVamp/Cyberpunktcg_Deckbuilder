@@ -518,9 +518,11 @@ export default function SimulatorBeta({ currentDeck }) {
                   YOUR EDDIES
                 </span>
                 <span className="bg-term-amber text-term-black font-mono font-bold px-3 py-1 rounded text-sm">
-                  {(game.players?.[1]?.eddies?.length || 0) +
-                    (game.players?.[1]?.legends?.filter(
-                      (l) => l.isFaceUp && !l.isTapped,
+                  {(game.players?.[game.activePlayer]?.eddies?.filter(
+                    (e) => !e.isTapped,
+                  ).length || 0) +
+                    (game.players?.[game.activePlayer]?.legends?.filter(
+                      (l) => !l.isTapped,
                     ).length || 0)}{" "}
                   €$
                 </span>

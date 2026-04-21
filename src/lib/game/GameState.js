@@ -223,11 +223,12 @@ export class GameState {
 
     // Overtime win: 7+ Gigs (instant)
     if (this.isOvertime) {
-      if (p1.gigs.length >= 7) {
-        return { player: 1, condition: "Overtime Win (7+ Gigs)" };
-      }
-      if (p2.gigs.length >= 7) {
-        return { player: 2, condition: "Overtime Win (7+ Gigs)" };
+      if (p1.gigs.length !== p2.gigs.length) {
+        const winner = p1.gigs.length > p2.gigs.length ? 1 : 2;
+        return {
+          player: winner,
+          condition: `Overtime Win (${this.players[winner].gigs.length} vs ${this.players[winner === 1 ? 2 : 1].gigs.length} Gigs)`,
+        };
       }
     }
 
