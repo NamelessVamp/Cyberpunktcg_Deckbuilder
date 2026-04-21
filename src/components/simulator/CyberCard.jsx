@@ -1,12 +1,19 @@
+// NON OMNIS MORIAR — CyberCard with Framer Motion game feel
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
+export default function CyberCard({
+  card,
+  isFlipped: initialFlipped = false,
+  isNew = false,
+}) {
   const [isTapped, setIsTapped] = useState(false);
-  if (!card) return null;
   const [isFlipped, setIsFlipped] = useState(initialFlipped);
   const [zIndex, setZIndex] = useState(100);
 
-  // Determine card type color
+  // Guard — must be AFTER all hooks
+  if (!card) return null;
+
   const getCardTypeClass = () => {
     if (card.type === "LEGEND") return "type-legend";
     if (card.type === "UNIT") return "type-unit";
@@ -15,14 +22,12 @@ export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
     return "";
   };
 
-  // Handle click: Tap/Untap
   const handleClick = (e) => {
     e.stopPropagation();
     setZIndex((prev) => prev + 1);
     setIsTapped(!isTapped);
   };
 
-  // Handle right-click: Flip
   const handleContextMenu = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -31,12 +36,18 @@ export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
   };
 
   return (
-    <div
-      className={`cyber-card ${getCardTypeClass()} ${isTapped ? "tapped" : ""} ${isFlipped ? "flipped" : ""} ${card?.isTapped && card?.type === "UNIT" ? "opacity-50 saturate-50" : ""}`}
+    <motion.div
+      className={`cyber-card ${getCardTypeClass()} ${isTapped ? "tapped" : ""} ${isFlipped ? "flipped" : ""}`}
       onClick={handleClick}
       onContextMenu={handleContextMenu}
       draggable={true}
       style={{ zIndex }}
+      // Entry animation when card is new (played to field)
+      initial={isNew ? { scale: 0.5, opacity: 0, y: -30 } : false}
+      animate={isNew ? { scale: 1, opacity: 1, y: 0 } : {}}
+      transition={{ type: "spring", stiffness: 400, damping: 20 }}
+      // Hover lift effect
+      whileHover={{ y: -6, scale: 1.06, zIndex: 999 }}
     >
       <div className="card-inner">
         {/* Card Front */}
@@ -48,41 +59,21 @@ export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
             backgroundPosition: "center",
           }}
         >
-          <div className="card-header bg-black/60 px-1 rounded flex justify-between items-center">
+          <div className="card-header bg-black/60 px-1 rounded flex justify-between items-center w-full">
             <span>[{card.type}]</span>
             {card.cost > 0 && card.type !== "PROGRAM" && (
-              <span className="text-term-amber text-[8px] font-bold">€$</span>
+              <span className="text-[7px] font-bold opacity-80">€$</span>
             )}
           </div>
           <div className="card-name">{card.name}</div>
           <div className="card-stats">
             {card.type === "LEGEND" && <span>RAM: {card.ram || 0}</span>}
-            {card.type === "UNIT" &&
-              (() => {
-                const basePower = card.basePower ?? card.power ?? 0;
-                const currentPower = card.power ?? 0;
-                const buff = currentPower - basePower;
-                return (
-                  <>
-                    <span>
-                      ATK: {basePower}
-                      {buff > 0 && (
-                        <span style={{ color: "#4ade80", fontSize: "0.75em" }}>
-                          {" "}
-                          +{buff}
-                        </span>
-                      )}
-                      {buff < 0 && (
-                        <span style={{ color: "#f87171", fontSize: "0.75em" }}>
-                          {" "}
-                          {buff}
-                        </span>
-                      )}
-                    </span>
-                    <span>HP: {card.hp || 0}</span>
-                  </>
-                );
-              })()}
+            {card.type === "UNIT" && (
+              <>
+                <span>ATK: {card.power || 0}</span>
+                <span>HP: {card.hp || 0}</span>
+              </>
+            )}
             {card.type === "GEAR" && <span>+{card.power || 0} PWR</span>}
             {card.type === "GIG" && <span>★ {card.streetCred || 0}</span>}
           </div>
@@ -94,7 +85,6 @@ export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
         </div>
       </div>
 
-      {/* Inline Styles */}
       <style>{`
         .cyber-card {
           width: 70px;
@@ -103,32 +93,22 @@ export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
           cursor: grab;
           perspective: 1000px;
           position: relative;
-          transition: transform 0.3s ease;
           z-index: 100;
         }
-        .cyber-card:active {
-          cursor: grabbing;
-        }
+        .cyber-card:active { cursor: grabbing; }
         .card-inner {
           position: relative;
           width: 100%;
           height: 100%;
           text-align: center;
-          transition: transform 0.6s;
+          transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
           transform-style: preserve-3d;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.8);
         }
-        .cyber-card.flipped .card-inner {
-          transform: rotateY(180deg);
-        }
-        .cyber-card.tapped {
-          transform: rotate(90deg);
-        }
-        .cyber-card.tapped.flipped {
-          transform: rotate(90deg) rotateY(180deg);
-        }
-        .card-front,
-        .card-back {
+        .cyber-card.flipped .card-inner { transform: rotateY(180deg); }
+        .cyber-card.tapped { transform: rotate(90deg); }
+        .cyber-card.tapped.flipped { transform: rotate(90deg) rotateY(180deg); }
+        .card-front, .card-back {
           position: absolute;
           width: 100%;
           height: 100%;
@@ -143,33 +123,17 @@ export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
           box-sizing: border-box;
           background-color: #1a1a1a;
         }
-        .type-legend .card-front {
-          border-color: #f7e018;
-          color: #f7e018;
-        }
-        .type-unit .card-front {
-          border-color: #ff2a2a;
-          color: #ff2a2a;
-        }
-        .type-gear .card-front {
-          border-color: #00d2ff;
-          color: #00d2ff;
-        }
-        .type-gig .card-front {
-          border-color: #39ff14;
-          color: #39ff14;
-        }
+        .type-legend .card-front { border-color: #f7e018; color: #f7e018; }
+        .type-unit .card-front { border-color: #ff2a2a; color: #ff2a2a; }
+        .type-gear .card-front { border-color: #00d2ff; color: #00d2ff; }
+        .type-gig .card-front { border-color: #39ff14; color: #39ff14; }
         .card-header {
           font-size: 8px;
           width: 100%;
           text-align: left;
           opacity: 0.8;
         }
-        .card-name {
-          font-weight: bold;
-          font-size: 11px;
-          line-height: 1;
-        }
+        .card-name { font-weight: bold; font-size: 11px; line-height: 1; }
         .card-stats {
           font-size: 10px;
           width: 100%;
@@ -182,22 +146,9 @@ export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
           background-color: #333;
           color: #111;
           transform: rotateY(180deg);
-          background-image: repeating-linear-gradient(
-              45deg,
-              #222 25%,
-              transparent 25%,
-              transparent 75%,
-              #222 75%,
-              #222
-            ),
-            repeating-linear-gradient(
-              45deg,
-              #222 25%,
-              #333 25%,
-              #333 75%,
-              #222 75%,
-              #222
-            );
+          background-image:
+            repeating-linear-gradient(45deg, #222 25%, transparent 25%, transparent 75%, #222 75%, #222),
+            repeating-linear-gradient(45deg, #222 25%, #333 25%, #333 75%, #222 75%, #222);
           background-position: 0 0, 10px 10px;
           background-size: 20px 20px;
           border-color: #555;
@@ -210,6 +161,6 @@ export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
           font-size: 10px;
         }
       `}</style>
-    </div>
+    </motion.div>
   );
 }

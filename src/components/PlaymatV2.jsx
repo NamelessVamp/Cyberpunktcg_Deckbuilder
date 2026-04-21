@@ -1,4 +1,4 @@
-// EX MACHINA — Playmat V2 with dnd-kit drag & drop
+// EX MACHINA — Playmat V2 with dnd-kit + Framer Motion game feel
 import { useState, useRef } from "react";
 import {
   DndContext,
@@ -9,11 +9,13 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import { motion, AnimatePresence } from "framer-motion";
 import CyberCard from "./simulator/CyberCard";
 
-function DraggableCard({ id, children }) {
+// ── Draggable card ────────────────────────────────────────────────
+function DraggableCard({ id, children, disabled }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({ id });
+    useDraggable({ id, disabled });
   const style = transform
     ? {
         transform: `translate(${transform.x}px, ${transform.y}px)`,
@@ -27,25 +29,65 @@ function DraggableCard({ id, children }) {
       style={style}
       {...listeners}
       {...attributes}
-      className={isDragging ? "cursor-grabbing" : "cursor-grab"}
+      className={
+        isDragging
+          ? "cursor-grabbing"
+          : disabled
+            ? "cursor-not-allowed"
+            : "cursor-grab"
+      }
     >
       {children}
     </div>
   );
 }
 
-function DroppableZone({ id, children, className }) {
+// ── Droppable zone ────────────────────────────────────────────────
+function DroppableZone({ id, children, className, activeId, legalZones = [] }) {
   const { setNodeRef, isOver } = useDroppable({ id });
+  const isLegal = activeId && legalZones.includes(id);
+  const highlight = isOver && isLegal;
+
   return (
     <div
       ref={setNodeRef}
-      className={`${className} transition-all ${isOver ? "ring-2 ring-term-green shadow-[0_0_16px_rgba(74,222,128,0.5)]" : ""}`}
+      className={`${className} transition-all duration-200 ${
+        isLegal
+          ? "ring-2 ring-term-green/60 shadow-[0_0_12px_rgba(74,222,128,0.3)]"
+          : ""
+      } ${highlight ? "ring-term-green shadow-[0_0_24px_rgba(74,222,128,0.7)] scale-[1.01]" : ""}`}
     >
       {children}
     </div>
   );
 }
 
+// ── Animated Gig Die ──────────────────────────────────────────────
+function GigDie({ gig, idx, isNew }) {
+  return (
+    <motion.div
+      key={`gig-${idx}`}
+      initial={isNew ? { scale: 0, rotate: -180, opacity: 0 } : false}
+      animate={{ scale: 1, rotate: 0, opacity: 1 }}
+      transition={{
+        type: "spring",
+        stiffness: 500,
+        damping: 25,
+        delay: idx * 0.05,
+      }}
+      className="w-10 h-10 border-2 border-term-amber rounded flex flex-col items-center justify-center bg-term-black cursor-default shadow-[0_0_8px_rgba(247,224,24,0.4)]"
+      title={`d${gig.type}`}
+      whileHover={{ scale: 1.15, boxShadow: "0 0 16px rgba(247,224,24,0.8)" }}
+    >
+      <div className="text-term-amber font-mono font-bold text-sm leading-none">
+        {gig.value}
+      </div>
+      <div className="text-term-amber/40 font-mono text-[7px]">d{gig.type}</div>
+    </motion.div>
+  );
+}
+
+// ── Main Component ────────────────────────────────────────────────
 export default function PlaymatV2({
   game,
   onGameUpdate,
@@ -63,6 +105,9 @@ export default function PlaymatV2({
   const [hoveredCard, setHoveredCard] = useState(null);
   const [activeCard, setActiveCard] = useState(null);
   const [activeDragIdx, setActiveDragIdx] = useState(null);
+  const [activeDragId, setActiveDragId] = useState(null);
+  const [newFieldIdx, setNewFieldIdx] = useState(null); // track newly played card for animation
+  const [lastGigCount, setLastGigCount] = useState({ 1: 0, 2: 0 });
   const fileInputRef = useRef(null);
 
   const sensors = useSensors(
@@ -78,17 +123,6 @@ export default function PlaymatV2({
     }
   };
 
-  const rollDie = (sides, dieId) => {
-    const el = document.getElementById(dieId);
-    if (!el || el.classList.contains("rolling")) return;
-    el.classList.add("rolling");
-    setTimeout(() => {
-      el.querySelector("span").textContent =
-        Math.floor(Math.random() * sides) + 1;
-      el.classList.remove("rolling");
-    }, 300);
-  };
-
   const activeId = game?.activePlayer || 1;
   const rivalId = activeId === 1 ? 2 : 1;
 
@@ -100,14 +134,34 @@ export default function PlaymatV2({
   const playerTrash = game?.players[activeId]?.trash || [];
   const playerGigs = game?.players[activeId]?.gigs || [];
   const playerFixerDice = game?.players[activeId]?.fixerDice || [];
+
   const rivalField = game?.players[rivalId]?.field || [];
   const rivalLegends = game?.players[rivalId]?.legends || [];
   const rivalHand = game?.players[rivalId]?.hand || [];
   const rivalGigs = game?.players[rivalId]?.gigs || [];
 
+  // Legal drop zones based on card type being dragged
+  const getLegalZones = (card) => {
+    if (!card) return [];
+    if (card.type === "UNIT") return ["drop-field"];
+    if (card.type === "GEAR")
+      return [...playerField.map((_, i) => `drop-unit-${i}`)];
+    return ["drop-eddies"]; // PROGRAM or sellable
+  };
+  const legalZones = activeCard ? getLegalZones(activeCard) : [];
+  // Always include eddies for any card with cost > 0
+  if (
+    activeCard &&
+    activeCard.cost > 0 &&
+    !legalZones.includes("drop-eddies")
+  ) {
+    legalZones.push("drop-eddies");
+  }
+
   function handleDragStart(event) {
     const idx = parseInt(event.active.id.replace("hand-", ""));
     setActiveDragIdx(idx);
+    setActiveDragId(event.active.id);
     setActiveCard(playerHand[idx]);
   }
 
@@ -115,14 +169,17 @@ export default function PlaymatV2({
     const { over } = event;
     setActiveCard(null);
     setActiveDragIdx(null);
+    setActiveDragId(null);
     if (!over || activeDragIdx === null) return;
 
     const card = playerHand[activeDragIdx];
     if (!card) return;
 
-    if (over.id === "drop-field") {
-      if (card.type === "UNIT") onPlayCard?.(activeDragIdx);
-      else alert("Drop Gear/Program on a specific unit");
+    if (over.id === "drop-field" && card.type === "UNIT") {
+      const prevLen = playerField.length;
+      onPlayCard?.(activeDragIdx);
+      setNewFieldIdx(prevLen); // animate the new card
+      setTimeout(() => setNewFieldIdx(null), 600);
       return;
     }
     if (over.id === "drop-eddies") {
@@ -136,6 +193,10 @@ export default function PlaymatV2({
     }
   }
 
+  const isAttackPhase = game?.phase === "ATTACK";
+  const isPlayPhase = game?.phase === "PLAY";
+  const isCorePhase = game?.phase === "CORE";
+
   return (
     <DndContext
       sensors={sensors}
@@ -143,7 +204,7 @@ export default function PlaymatV2({
       onDragEnd={handleDragEnd}
     >
       <div className="game-wrapper flex flex-col gap-4 items-center min-w-[1250px]">
-        {/* Controls */}
+        {/* Custom Playmat Upload */}
         <div className="controls flex justify-end w-[1200px]">
           <input
             ref={fileInputRef}
@@ -154,7 +215,7 @@ export default function PlaymatV2({
           />
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="border border-term-amber px-4 py-1.5 cursor-pointer bg-term-amber/10 font-bold font-mono text-term-amber hover:bg-term-amber hover:text-black transition-all"
+            className="border border-term-amber px-4 py-1.5 cursor-pointer bg-term-amber/10 font-bold font-mono text-term-amber hover:bg-term-amber hover:text-black transition-all text-xs"
           >
             [+] UPLOAD CUSTOM PLAYMAT
           </button>
@@ -179,25 +240,16 @@ export default function PlaymatV2({
               </span>
             ) : (
               rivalField.map((card, idx) => (
-                <div
+                <motion.div
                   key={`rf-${idx}`}
-                  className={`cursor-pointer ${card.isAttacking ? "ring-2 ring-red-500 shadow-[0_0_12px_rgba(239,68,68,0.8)]" : ""} ${isBlockingMode ? "ring-2 ring-term-green animate-pulse" : ""}`}
+                  className={`cursor-pointer ${card.isAttacking ? "ring-2 ring-red-500 shadow-[0_0_12px_rgba(239,68,68,0.8)]" : ""}`}
                   onClick={() => {
-                    if (isBlockingMode) {
-                      onBlockerSelected?.(idx);
-                      return;
-                    }
-                    if (game?.phase === "ATTACK") {
-                      if (card.isTapped) {
-                        alert("Unidad agotada");
-                        return;
-                      }
-                      onDeclareAttacker?.(idx);
-                    }
+                    if (isAttackPhase) onDeclareBlocker?.(idx);
                   }}
+                  whileHover={{ scale: 1.05 }}
                 >
                   <CyberCard card={card} />
-                </div>
+                </motion.div>
               ))
             )}
           </div>
@@ -207,7 +259,7 @@ export default function PlaymatV2({
               {game?.players[rivalId]?.deck?.length || 0}
             </span>
             <span className="text-term-amber/60 font-mono text-[9px]">
-              FIXER: {game?.players[rivalId]?.fixerDice?.length || 0} dice left
+              FIXER: {game?.players[rivalId]?.fixerDice?.length || 0} dice
             </span>
             <span className="text-term-green/60 font-mono text-[9px]">
               ☆ {game?.players[rivalId]?.streetCred || 0}
@@ -227,7 +279,7 @@ export default function PlaymatV2({
             backgroundRepeat: "no-repeat",
           }}
         >
-          {/* LEFT — Dice / Fixer */}
+          {/* LEFT — Fixer Dice */}
           <div className="col-left w-[90px] flex flex-col justify-end gap-4">
             <div className="dice-box border border-term-amber rounded-lg flex flex-col items-center justify-evenly h-[520px] bg-transparent">
               {[
@@ -237,109 +289,117 @@ export default function PlaymatV2({
                 { sides: 8, id: "die8" },
                 { sides: 6, id: "die6" },
                 { sides: 4, id: "die4" },
-              ].map((die) => (
-                <div
-                  key={die.id}
-                  id={die.id}
-                  title="Click to roll — then drag to GIGS"
-                  onClick={() => {
-                    if (
-                      game?.phase === "CORE" &&
-                      playerFixerDice.includes(die.sides)
-                    ) {
-                      rollDie(die.sides, die.id); // visual animation
-                      setTimeout(() => onRollGig?.(die.sides), 300); // call engine after animation
+              ].map((die) => {
+                const available = playerFixerDice.includes(die.sides);
+                const clickable = isCorePhase && available;
+                return (
+                  <motion.div
+                    key={die.id}
+                    id={die.id}
+                    title={
+                      clickable
+                        ? `Click to roll d${die.sides}`
+                        : available
+                          ? "Available in CORE phase"
+                          : "Already used"
                     }
-                  }}
-                  className={`die-slot w-[50px] h-[50px] border border-term-amber flex justify-center items-center text-[13px] font-bold rotate-45 relative z-[100] transition-colors
-  ${
-    game?.phase === "CORE" && playerFixerDice.includes(die.sides)
-      ? "cursor-pointer hover:bg-term-amber/40"
-      : "opacity-30 cursor-not-allowed"
-  }`}
-                  style={{
-                    textShadow:
-                      "1px 1px 2px #000, -1px -1px 2px #000, 0 0 5px #000",
-                  }}
-                >
-                  <span className="-rotate-45 pointer-events-none block">
-                    D{die.sides}
-                  </span>
-                </div>
-              ))}
+                    className={`die-slot w-[50px] h-[50px] border border-term-amber flex justify-center items-center text-[13px] font-bold rotate-45 relative z-[100] transition-colors ${
+                      clickable
+                        ? "cursor-pointer"
+                        : available
+                          ? "cursor-not-allowed opacity-50"
+                          : "opacity-20 cursor-not-allowed"
+                    }`}
+                    style={{
+                      textShadow:
+                        "1px 1px 2px #000, -1px -1px 2px #000, 0 0 5px #000",
+                    }}
+                    whileHover={
+                      clickable
+                        ? {
+                            scale: 1.2,
+                            backgroundColor: "rgba(247,224,24,0.3)",
+                          }
+                        : {}
+                    }
+                    whileTap={clickable ? { scale: 0.9 } : {}}
+                    onClick={() => {
+                      if (clickable) onRollGig?.(die.sides);
+                    }}
+                  >
+                    <span className="-rotate-45 pointer-events-none block">
+                      D{die.sides}
+                    </span>
+                  </motion.div>
+                );
+              })}
             </div>
             <div className="fixer-box h-[30px] flex justify-center items-center relative">
-              <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
-                {game?.phase === "CORE" && playerFixerDice.length > 0 ? (
-                  <span className="text-term-green animate-pulse font-bold">
-                    ▶ ROLL GIG
-                  </span>
-                ) : (
-                  "FIXER"
-                )}
-              </div>
+              <motion.div
+                className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10"
+                animate={{
+                  backgroundColor:
+                    isCorePhase && playerFixerDice.length > 0
+                      ? "#4ade80"
+                      : "#f7e018",
+                  boxShadow:
+                    isCorePhase && playerFixerDice.length > 0
+                      ? "0 0 12px rgba(74,222,128,0.8)"
+                      : "none",
+                }}
+              >
+                {isCorePhase && playerFixerDice.length > 0
+                  ? "▶ ROLL GIG"
+                  : "FIXER"}
+              </motion.div>
             </div>
           </div>
 
           {/* CENTER */}
           <div className="col-center flex-grow flex flex-col gap-4">
-            {/* Gigs */}
+            {/* Gigs Row */}
             <div className="gigs-row flex gap-5 h-[100px] items-start -mt-5">
-              <div className="gig-box flex-1 h-full border border-term-amber border-t-0 rounded-b-lg relative bg-transparent flex justify-center items-center flex-wrap gap-2.5 p-2.5 pb-6">
-                <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
-                  RIVAL GIGS
+              <div className="gig-box flex-1 h-full border border-term-amber border-t-0 rounded-b-lg relative bg-transparent flex justify-center items-center flex-wrap gap-2 p-2 pb-6">
+                <div className="label absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+                  RIVAL GIGS ({rivalGigs.length})
                 </div>
-                {rivalGigs.map((gig, idx) => (
-                  <div
-                    key={`gig-${idx}`}
-                    className="w-10 h-10 border-2 border-term-amber rounded flex flex-col items-center justify-center bg-term-black cursor-default animate-bounce"
-                    style={{
-                      animationDuration: "0.4s",
-                      animationIterationCount: 3,
-                    }}
-                    title={`d${gig.type}`}
-                  >
-                    <div className="text-term-amber font-mono font-bold text-sm">
-                      {gig.value}
-                    </div>
-                    <div className="text-term-amber/40 font-mono text-[8px]">
-                      d{gig.type}
-                    </div>
-                  </div>
-                ))}
+                <AnimatePresence>
+                  {rivalGigs.map((gig, idx) => (
+                    <GigDie
+                      key={`rival-gig-${idx}-${gig.value}`}
+                      gig={gig}
+                      idx={idx}
+                      isNew={idx === rivalGigs.length - 1}
+                    />
+                  ))}
+                </AnimatePresence>
               </div>
-              <div className="gig-box flex-1 h-full border border-term-amber border-t-0 rounded-b-lg relative bg-transparent flex justify-center items-center flex-wrap gap-2.5 p-2.5 pb-6">
-                <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
-                  FRIENDLY GIGS
+              <div className="gig-box flex-1 h-full border border-term-amber border-t-0 rounded-b-lg relative bg-transparent flex justify-center items-center flex-wrap gap-2 p-2 pb-6">
+                <div className="label absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+                  FRIENDLY GIGS ({playerGigs.length})
                 </div>
-                {playerGigs.map((gig, idx) => (
-                  <div
-                    key={`gig-${idx}`}
-                    className="w-10 h-10 border-2 border-term-amber rounded flex flex-col items-center justify-center bg-term-black cursor-default animate-bounce"
-                    style={{
-                      animationDuration: "0.4s",
-                      animationIterationCount: 3,
-                    }}
-                    title={`d${gig.type}`}
-                  >
-                    <div className="text-term-amber font-mono font-bold text-sm">
-                      {gig.value}
-                    </div>
-                    <div className="text-term-amber/40 font-mono text-[8px]">
-                      d{gig.type}
-                    </div>
-                  </div>
-                ))}
+                <AnimatePresence>
+                  {playerGigs.map((gig, idx) => (
+                    <GigDie
+                      key={`gig-${idx}-${gig.value}`}
+                      gig={gig}
+                      idx={idx}
+                      isNew={idx === playerGigs.length - 1}
+                    />
+                  ))}
+                </AnimatePresence>
               </div>
             </div>
 
             {/* Field — droppable */}
             <DroppableZone
               id="drop-field"
+              activeId={activeDragId}
+              legalZones={legalZones}
               className="field-box flex-grow border border-term-amber rounded-lg relative bg-transparent p-5 flex items-center mt-5"
             >
               <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
-                FIELD — drag unit here
+                FIELD {isPlayPhase ? "— drag unit here" : `— ${game?.phase}`}
               </div>
               <div className="dashed-units-area border border-dashed border-term-amber w-full h-full rounded-lg flex flex-row flex-wrap gap-2 p-2 relative z-[5] items-center justify-start">
                 {playerField.length === 0 && (
@@ -347,36 +407,46 @@ export default function PlaymatV2({
                     EMPTY FIELD
                   </span>
                 )}
-                {playerField.map((card, idx) => (
-                  <DroppableZone
-                    key={`unit-${idx}`}
-                    id={`drop-unit-${idx}`}
-                    className=""
-                  >
-                    <div
-                      onMouseEnter={() => setHoveredCard(card)}
-                      onMouseLeave={() => setHoveredCard(null)}
-                      onClick={() => {
-                        if (isBlockingMode) {
-                          onBlockerSelected?.(idx);
-                          return;
-                        }
-                        if (game?.phase === "ATTACK") {
-                          if (card.isTapped) {
-                            alert(
-                              "Unidad agotada — ya atacó o tiene Summoning Sickness",
-                            );
+                <AnimatePresence>
+                  {playerField.map((card, idx) => (
+                    <DroppableZone
+                      key={`unit-${idx}`}
+                      id={`drop-unit-${idx}`}
+                      activeId={activeDragId}
+                      legalZones={legalZones}
+                      className=""
+                    >
+                      <div
+                        onMouseEnter={() => setHoveredCard(card)}
+                        onMouseLeave={() => setHoveredCard(null)}
+                        onClick={() => {
+                          if (isBlockingMode) {
+                            onBlockerSelected?.(idx);
                             return;
                           }
-                          onDeclareAttacker?.(idx);
-                        }
-                      }}
-                      className={`cursor-pointer ${card.isTapped ? "opacity-50 saturate-50" : ""} ${card.isAttacking ? "ring-2 ring-term-green" : ""}`}
-                    >
-                      <CyberCard card={card} />
-                    </div>
-                  </DroppableZone>
-                ))}
+                          if (isAttackPhase) {
+                            if (card.isTapped) {
+                              alert(
+                                "Unit exhausted — Summoning Sickness or already attacked",
+                              );
+                              return;
+                            }
+                            onDeclareAttacker?.(idx);
+                          }
+                        }}
+                        className={`cursor-pointer transition-all ${
+                          card.isTapped ? "opacity-50 saturate-50" : ""
+                        } ${
+                          card.isAttacking
+                            ? "ring-2 ring-term-green shadow-[0_0_12px_rgba(74,222,128,0.6)]"
+                            : ""
+                        } ${isBlockingMode ? "ring-2 ring-term-green/50 animate-pulse cursor-crosshair" : ""}`}
+                      >
+                        <CyberCard card={card} isNew={idx === newFieldIdx} />
+                      </div>
+                    </DroppableZone>
+                  ))}
+                </AnimatePresence>
               </div>
               <p
                 className="units-text absolute left-[140px] top-1/2 -translate-y-1/2 w-[400px] text-[10px] text-term-amber/70 m-0 leading-tight pointer-events-none"
@@ -390,11 +460,12 @@ export default function PlaymatV2({
               </p>
             </DroppableZone>
 
-            {/* Bottom — Legends + Eddies */}
+            {/* Bottom Row — Legends + Eddies */}
             <div className="bottom-row h-[180px] flex gap-5">
+              {/* Legends */}
               <div className="legends-container flex-1 flex flex-col gap-4">
                 <div className="legends-box h-[110px] border border-term-amber rounded-lg relative bg-transparent flex p-2 gap-2">
-                  <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+                  <div className="label absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
                     LEGENDS
                   </div>
                   {[0, 1, 2].map((idx) => (
@@ -403,18 +474,19 @@ export default function PlaymatV2({
                       className="legend-card flex-1 border border-dashed border-term-amber/50 rounded relative"
                     >
                       {playerLegends[idx] && (
-                        <div
+                        <motion.div
                           className={`cursor-pointer ${playerLegends[idx].isTapped ? "opacity-50 saturate-50" : ""}`}
                           onMouseEnter={() =>
                             setHoveredCard(playerLegends[idx])
                           }
                           onMouseLeave={() => setHoveredCard(null)}
                           onClick={() => {
-                            if (game?.phase === "PLAY") onCallLegend?.(idx);
+                            if (isPlayPhase) onCallLegend?.(idx);
                           }}
+                          whileHover={isPlayPhase ? { scale: 1.05, y: -3 } : {}}
                         >
                           <CyberCard card={playerLegends[idx]} />
-                        </div>
+                        </motion.div>
                       )}
                     </div>
                   ))}
@@ -435,28 +507,35 @@ export default function PlaymatV2({
               <div className="eddies-container flex-1 flex flex-col gap-4">
                 <DroppableZone
                   id="drop-eddies"
+                  activeId={activeDragId}
+                  legalZones={legalZones}
                   className="eddies-box h-[110px] border border-term-amber rounded-lg relative bg-transparent flex p-2.5 flex-wrap gap-1.5"
                 >
-                  <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
-                    EDDIES — drag €$ card here
+                  <div className="label absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+                    EDDIES {isPlayPhase ? "— drag €$ card here" : ""}
                   </div>
-                  {playerEddies.map((card, idx) => (
-                    <div
-                      key={`eddie-${idx}`}
-                      title={
-                        card.isTapped ? "Spent" : "Click to spend as Eddie"
-                      }
-                      className={`transition-all ${card.isTapped ? "opacity-40 rotate-90 cursor-not-allowed" : "cursor-pointer hover:ring-1 hover:ring-term-amber"}`}
-                      onClick={() => {
-                        if (!card.isTapped) {
-                          card.isTapped = true;
-                          onGameUpdate?.(game);
+                  <AnimatePresence>
+                    {playerEddies.map((card, idx) => (
+                      <motion.div
+                        key={`eddie-${idx}`}
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: card.isTapped ? 0.4 : 1 }}
+                        exit={{ scale: 0, opacity: 0 }}
+                        title={
+                          card.isTapped ? "Spent" : "Click to spend as Eddie"
                         }
-                      }}
-                    >
-                      <CyberCard card={card} />
-                    </div>
-                  ))}
+                        className={`transition-all ${card.isTapped ? "rotate-90 cursor-not-allowed" : "cursor-pointer hover:ring-1 hover:ring-term-amber"}`}
+                        onClick={() => {
+                          if (!card.isTapped) {
+                            card.isTapped = true;
+                            onGameUpdate?.(game);
+                          }
+                        }}
+                      >
+                        <CyberCard card={card} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 </DroppableZone>
                 <p
                   className="rules-text text-[9px] text-term-amber/70 m-0 leading-tight pt-1 pointer-events-none"
@@ -487,21 +566,37 @@ export default function PlaymatV2({
               </span>
             </div>
             <div className="spacer flex-grow"></div>
-            <div className="deck-trash-box w-[100px] h-[140px] border border-term-amber rounded-lg relative bg-transparent flex justify-center items-center">
+            <motion.div
+              className="deck-trash-box w-[100px] h-[140px] border border-term-amber rounded-lg relative bg-transparent flex justify-center items-center"
+              whileHover={{
+                borderColor: "rgba(247,224,24,0.8)",
+                boxShadow: "0 0 12px rgba(247,224,24,0.3)",
+              }}
+            >
               <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
                 DECK ({playerDeck.length})
               </div>
               {playerDeck.length > 0 && (
                 <CyberCard card={playerDeck[0]} isFlipped={true} />
               )}
-            </div>
+            </motion.div>
             <div className="deck-trash-box w-[100px] h-[140px] border border-term-amber rounded-lg relative bg-transparent flex justify-center items-center">
-              <div className="label absolute top-auto bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
+              <div className="label absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
                 TRASH
               </div>
-              {playerTrash.length > 0 && (
-                <CyberCard card={playerTrash[playerTrash.length - 1]} />
-              )}
+              <AnimatePresence mode="wait">
+                {playerTrash.length > 0 && (
+                  <motion.div
+                    key={playerTrash.length}
+                    initial={{ scale: 0.5, opacity: 0, rotate: -15 }}
+                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                    exit={{ scale: 0.5, opacity: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  >
+                    <CyberCard card={playerTrash[playerTrash.length - 1]} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
@@ -510,84 +605,97 @@ export default function PlaymatV2({
         <div className="hand-zone w-[1200px] min-h-[140px] border-2 border-dashed border-term-amber rounded-xl bg-transparent flex justify-center items-center gap-3 p-4 relative box-border">
           <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
             PLAYER HAND —{" "}
-            {game?.phase === "PLAY"
-              ? "drag to FIELD (unit) or EDDIES (sell)"
-              : game?.phase}
+            {isAttackPhase
+              ? "🔒 HAND LOCKED"
+              : isPlayPhase
+                ? "drag to FIELD (unit) or EDDIES (sell €$)"
+                : game?.phase}
           </div>
+
           {playerHand.map((card, idx) => (
-            <div
+            <motion.div
               key={`hand-wrapper-${idx}`}
               onMouseEnter={() => setHoveredCard(card)}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`transition-transform ${game?.phase === "ATTACK" ? "opacity-40 cursor-not-allowed" : "hover:-translate-y-1"}`}
+              className={isAttackPhase ? "opacity-40 pointer-events-none" : ""}
             >
-              {game?.phase === "ATTACK" ? (
-                <div title="Hand locked — Attack Phase declared">
-                  <CyberCard card={card} />
-                </div>
+              {isAttackPhase ? (
+                <CyberCard card={card} />
               ) : (
-                <DraggableCard id={`hand-${idx}`}>
+                <DraggableCard
+                  id={`hand-${idx}`}
+                  disabled={!isPlayPhase && game?.phase !== "CORE"}
+                >
                   <CyberCard card={card} />
                 </DraggableCard>
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* HOVER PREVIEW */}
-        {hoveredCard && (
-          <div className="fixed top-4 right-4 z-50 w-52 bg-term-black border-2 border-term-amber rounded-lg p-2 shadow-[0_0_20px_rgba(255,191,0,0.3)] pointer-events-none">
-            {hoveredCard.image_url ? (
-              <img
-                src={hoveredCard.image_url}
-                alt={hoveredCard.name}
-                className="w-full rounded mb-2"
-              />
-            ) : (
-              <div className="w-full h-32 bg-term-gray rounded mb-2 flex items-center justify-center text-term-amber/30 text-xs font-mono">
-                NO IMAGE
-              </div>
-            )}
-            <div className="font-mono text-term-amber text-xs font-bold">
-              {hoveredCard.name}
-            </div>
-            {hoveredCard.subtitle && (
-              <div className="font-mono text-term-amber/50 text-[10px]">
-                {hoveredCard.subtitle}
-              </div>
-            )}
-            <div className="font-mono text-term-green/70 text-[10px] mt-1">
-              {hoveredCard.type} · {hoveredCard.faction} · {hoveredCard.cost}€
-              {hoveredCard.cost > 0 && hoveredCard.type !== "PROGRAM" && (
-                <span className="text-term-amber ml-1">€$</span>
+        {/* Hover Preview */}
+        <AnimatePresence>
+          {hoveredCard && (
+            <motion.div
+              className="fixed top-4 right-4 z-50 w-56 bg-term-black border-2 border-term-amber rounded-lg p-3 shadow-[0_0_24px_rgba(255,191,0,0.4)] pointer-events-none"
+              initial={{ opacity: 0, x: 20, scale: 0.9 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 20, scale: 0.9 }}
+              transition={{ duration: 0.15 }}
+            >
+              {hoveredCard.image_url ? (
+                <img
+                  src={hoveredCard.image_url}
+                  alt={hoveredCard.name}
+                  className="w-full rounded mb-2 shadow-lg"
+                />
+              ) : (
+                <div className="w-full h-32 bg-term-gray rounded mb-2 flex items-center justify-center text-term-amber/30 text-xs font-mono">
+                  NO IMAGE
+                </div>
               )}
-            </div>
-            {hoveredCard.text && (
-              <div className="font-mono text-term-amber/60 text-[10px] mt-1 leading-tight">
-                {hoveredCard.text}
+              <div className="font-mono text-term-amber text-xs font-bold">
+                {hoveredCard.name}
               </div>
-            )}
-          </div>
-        )}
+              {hoveredCard.subtitle && (
+                <div className="font-mono text-term-amber/50 text-[10px]">
+                  {hoveredCard.subtitle}
+                </div>
+              )}
+              <div className="font-mono text-term-green/70 text-[10px] mt-1">
+                {hoveredCard.type} · {hoveredCard.faction} · Cost:{" "}
+                {hoveredCard.cost}€
+                {hoveredCard.cost > 0 && hoveredCard.type !== "PROGRAM" && (
+                  <span className="text-term-amber ml-1">€$</span>
+                )}
+              </div>
+              {hoveredCard.keywords?.length > 0 && (
+                <div className="font-mono text-cyan-400/70 text-[9px] mt-1">
+                  {hoveredCard.keywords.join(" · ")}
+                </div>
+              )}
+              {hoveredCard.text && (
+                <div className="font-mono text-term-amber/60 text-[9px] mt-1 leading-tight border-t border-term-amber/20 pt-1">
+                  {hoveredCard.text}
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Drag Overlay */}
         <DragOverlay>
           {activeCard && (
-            <div className="opacity-90 scale-110 rotate-3 shadow-2xl pointer-events-none">
+            <motion.div
+              className="pointer-events-none"
+              animate={{ rotate: 5, scale: 1.15 }}
+              transition={{ duration: 0.1 }}
+            >
               <CyberCard card={activeCard} />
-            </div>
+            </motion.div>
           )}
         </DragOverlay>
       </div>
-
-      <style>{`
-        .rolling { animation: shake 0.3s ease-in-out; }
-        @keyframes shake {
-          0%   { transform: rotate(45deg) scale(1); }
-          50%  { transform: rotate(45deg) scale(1.2); background-color: #f7e018; color: #000; }
-          100% { transform: rotate(45deg) scale(1); }
-        }
-      `}</style>
     </DndContext>
   );
 }
