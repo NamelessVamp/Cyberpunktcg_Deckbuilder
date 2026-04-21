@@ -19,9 +19,6 @@ export class AIPlayer {
     // CORE already executed by endTurn/_checkMulliganComplete
     // Just need to Roll a Gig manually
     await this._wait();
-    await this._rollGig();
-
-    await this._wait();
     await this._phasePlay();
 
     await this._wait();
@@ -47,9 +44,6 @@ export class AIPlayer {
     if (dieToRoll) {
       const result = this.game.rollGig(this.playerId, dieToRoll);
       if (result.success) {
-        this.game.log(
-          `AI rolled d${dieToRoll} → ${result.value} (Street Cred: ${this.game.players[this.playerId].streetCred})`,
-        );
         this.onUpdate?.();
       }
     }

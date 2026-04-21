@@ -182,7 +182,7 @@ export class GameState {
     this._calculateStreetCred(playerId);
 
     this.log(
-      `Player ${playerId} rolled d${dieType} → ${value} (Street Cred: ${player.streetCred})`,
+      `Player ${playerId} rolled d${dieType} → ${value} ☆${player.streetCred}`,
     );
     return { success: true, value };
   }

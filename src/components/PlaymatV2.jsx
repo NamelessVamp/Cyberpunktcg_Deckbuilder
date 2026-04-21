@@ -243,8 +243,12 @@ export default function PlaymatV2({
             <div className="fixer-box h-[30px] flex justify-center items-center relative">
               <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
                 FIXER{" "}
-                {game?.phase === "CORE" && (
-                  <span className="animate-pulse">← CLICK A DIE</span>
+                {game?.phase === "CORE" && playerFixerDice.length > 0 ? (
+                  <span className="text-term-green animate-pulse font-bold">
+                    ▶ ROLL GIG
+                  </span>
+                ) : (
+                  "FIXER"
                 )}
               </div>
             </div>
@@ -261,7 +265,11 @@ export default function PlaymatV2({
                 {rivalGigs.map((gig, idx) => (
                   <div
                     key={`gig-${idx}`}
-                    className="w-10 h-10 border-2 border-term-amber rounded flex flex-col items-center justify-center bg-term-black cursor-default"
+                    className="w-10 h-10 border-2 border-term-amber rounded flex flex-col items-center justify-center bg-term-black cursor-default animate-bounce"
+                    style={{
+                      animationDuration: "0.4s",
+                      animationIterationCount: 3,
+                    }}
                     title={`d${gig.type}`}
                   >
                     <div className="text-term-amber font-mono font-bold text-sm">
@@ -280,7 +288,11 @@ export default function PlaymatV2({
                 {playerGigs.map((gig, idx) => (
                   <div
                     key={`gig-${idx}`}
-                    className="w-10 h-10 border-2 border-term-amber rounded flex flex-col items-center justify-center bg-term-black cursor-default"
+                    className="w-10 h-10 border-2 border-term-amber rounded flex flex-col items-center justify-center bg-term-black cursor-default animate-bounce"
+                    style={{
+                      animationDuration: "0.4s",
+                      animationIterationCount: 3,
+                    }}
                     title={`d${gig.type}`}
                   >
                     <div className="text-term-amber font-mono font-bold text-sm">
