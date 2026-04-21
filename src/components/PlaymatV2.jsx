@@ -56,6 +56,8 @@ export default function PlaymatV2({
   onDeclareBlocker,
   onResolveCombat,
   onRollGig,
+  isBlockingMode,
+  onBlockerSelected,
 }) {
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
@@ -179,13 +181,15 @@ export default function PlaymatV2({
               rivalField.map((card, idx) => (
                 <div
                   key={`rf-${idx}`}
-                  className={`cursor-pointer ${card.isAttacking ? "ring-2 ring-red-500 shadow-[0_0_12px_rgba(239,68,68,0.8)]" : ""}`}
+                  className={`cursor-pointer ${card.isAttacking ? "ring-2 ring-red-500 shadow-[0_0_12px_rgba(239,68,68,0.8)]" : ""} ${isBlockingMode ? "ring-2 ring-term-green animate-pulse" : ""}`}
                   onClick={() => {
+                    if (isBlockingMode) {
+                      onBlockerSelected?.(idx);
+                      return;
+                    }
                     if (game?.phase === "ATTACK") {
                       if (card.isTapped) {
-                        alert(
-                          "Unidad agotada — ya atacó o tiene Summoning Sickness",
-                        );
+                        alert("Unidad agotada");
                         return;
                       }
                       onDeclareAttacker?.(idx);
@@ -353,6 +357,10 @@ export default function PlaymatV2({
                       onMouseEnter={() => setHoveredCard(card)}
                       onMouseLeave={() => setHoveredCard(null)}
                       onClick={() => {
+                        if (isBlockingMode) {
+                          onBlockerSelected?.(idx);
+                          return;
+                        }
                         if (game?.phase === "ATTACK") {
                           if (card.isTapped) {
                             alert(

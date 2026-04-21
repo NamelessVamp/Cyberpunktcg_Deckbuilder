@@ -138,6 +138,7 @@ export default function SimulatorBeta({ currentDeck }) {
   const aiRef = useRef(null);
   const [callingLegend, setCallingLegend] = useState(false);
   const [waitingDefense, setWaitingDefense] = useState(false);
+  const [blockingMode, setBlockingMode] = useState(false);
 
   const refresh = () => {
     if (gameRef.current) {
@@ -386,7 +387,10 @@ export default function SimulatorBeta({ currentDeck }) {
             {/* MULLIGAN MODAL */}
             {game.phase === "MULLIGAN" && !game.mulliganDone?.[1] && (
               <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-                <div className="bg-term-gray border-2 border-term-amber rounded-lg p-8 max-w-lg w-full mx-4">
+                <div
+                  className="bg-term-gray border-2 border-term-amber rounded-lg p-8 w-full mx-4"
+                  style={{ maxWidth: "720px" }}
+                >
                   <h2 className="text-term-amber font-mono font-bold text-2xl mb-2">
                     MULLIGAN?
                   </h2>
@@ -477,13 +481,29 @@ export default function SimulatorBeta({ currentDeck }) {
                       TAKE THE HIT
                     </button>
                     <button
-                      onClick={() => setWaitingDefense(false)}
+                      onClick={() => {
+                        setWaitingDefense(false);
+                        setBlockingMode(true);
+                      }}
                       className="flex-1 py-2 border border-term-green text-term-green font-mono font-bold rounded hover:bg-term-green/10 text-sm"
                     >
                       USE BLOCKER
                     </button>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {/* BLOCKING MODE BANNER */}
+            {blockingMode && (
+              <div className="bg-term-green/20 border border-term-green text-term-green font-mono text-sm font-bold px-4 py-2 rounded text-center animate-pulse max-w-[1200px] mx-auto">
+                &gt;&gt;&gt; CLICK A UNIT IN RIVAL FIELD TO BLOCK &lt;&lt;&lt;
+                <button
+                  onClick={() => setBlockingMode(false)}
+                  className="ml-4 text-xs underline opacity-70 hover:opacity-100"
+                >
+                  CANCEL
+                </button>
               </div>
             )}
 
@@ -511,7 +531,7 @@ export default function SimulatorBeta({ currentDeck }) {
 
             {/* PLAYMAT */}
             <div
-              className={`relative transition-all duration-500 ${cyberspaceMode ? "brightness-110 contrast-110 saturate-150" : ""}`}
+              className={`relative transition-all duration-500 flex justify-center ${cyberspaceMode ? "brightness-110 contrast-110 saturate-150" : ""}`}
             >
               {cyberspaceMode && (
                 <div
@@ -574,13 +594,19 @@ export default function SimulatorBeta({ currentDeck }) {
                   }
                 }}
                 onDeclareBlocker={(blockerIndex) => {
+                  if (!blockingMode) {
+                    alert(
+                      "Click 'USE BLOCKER' when an attack is declared to pick a blocker.",
+                    );
+                    return;
+                  }
                   const cr = new CombatResolver(gameRef.current);
                   const rivalId = gameRef.current.activePlayer === 1 ? 2 : 1;
                   const attackerIndex = gameRef.current.players[
                     gameRef.current.activePlayer
                   ].field.findIndex((u) => u.isAttacking);
                   if (attackerIndex === -1) {
-                    alert("No attacking unit");
+                    alert("No attacking unit found!");
                     return;
                   }
                   const result = cr.declareBlocker(
@@ -589,7 +615,10 @@ export default function SimulatorBeta({ currentDeck }) {
                     attackerIndex,
                   );
                   if (!result.success) alert(result.error);
-                  else refresh();
+                  else {
+                    setBlockingMode(false);
+                    refresh();
+                  }
                 }}
                 onResolveCombat={() => {
                   const cr = new CombatResolver(gameRef.current);
@@ -605,11 +634,36 @@ export default function SimulatorBeta({ currentDeck }) {
                   if (!result.success) alert(result.error);
                   else refresh();
                 }}
+                isBlockingMode={blockingMode}
+                onBlockerSelected={(blockerIndex) => {
+                  const cr = new CombatResolver(gameRef.current);
+                  const rivalId = gameRef.current.activePlayer === 1 ? 2 : 1;
+                  const attackerIndex = gameRef.current.players[
+                    gameRef.current.activePlayer
+                  ].field.findIndex((u) => u.isAttacking);
+                  if (attackerIndex === -1) {
+                    setBlockingMode(false);
+                    return;
+                  }
+                  const result = cr.declareBlocker(
+                    rivalId,
+                    blockerIndex,
+                    attackerIndex,
+                  );
+                  if (!result.success) alert(result.error);
+                  else {
+                    cr.resolveCombat(gameRef.current.activePlayer);
+                    gameRef.current.clearExpiredEffects?.();
+                    setBlockingMode(false);
+                    setWaitingDefense(false);
+                    refresh();
+                  }
+                }}
               />
             </div>
 
             {/* CONTROLS BAR */}
-            <div className="bg-term-gray border border-term-amber/30 rounded p-4 flex flex-wrap items-center gap-4">
+            <div className="bg-term-gray border border-term-amber/30 rounded p-4 flex flex-wrap items-center gap-4 max-w-[1200px] mx-auto">
               <div className="flex items-center gap-2">
                 <span className="text-term-green/60 font-mono text-xs">
                   YOUR EDDIES
@@ -702,7 +756,7 @@ export default function SimulatorBeta({ currentDeck }) {
 
             {/* GAME LOG */}
             {game.combatLog?.length > 0 && (
-              <div className="bg-term-black border border-term-amber/20 rounded p-4 max-h-40 overflow-y-auto">
+              <div className="bg-term-black border border-term-amber/20 rounded p-4 max-h-40 overflow-y-auto max-w-[1200px] mx-auto mt-4">
                 <p className="text-term-amber/50 font-mono text-xs mb-2">
                   ▓ COMBAT LOG
                 </p>
