@@ -3,7 +3,6 @@ import { useState } from "react";
 export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
   const [isTapped, setIsTapped] = useState(false);
   if (!card) return null;
-  const [isTapped, setIsTapped] = useState(card?.isTapped || false);
   const [isFlipped, setIsFlipped] = useState(initialFlipped);
   const [zIndex, setZIndex] = useState(100);
 
