@@ -106,21 +106,11 @@ export default function PlaymatV2({
   const [hoveredCard, setHoveredCard] = useState(null);
   const [activeCard, setActiveCard] = useState(null);
   const [combatFlash, setCombatFlash] = useState(false);
-  const prevFieldLen = useRef(null);
-
-  // Trigger combat flash when a unit dies (field shrinks)
-  useEffect(() => {
-    const currentLen = playerField.length;
-    if (prevFieldLen.current !== null && currentLen < prevFieldLen.current) {
-      setCombatFlash(true);
-      setTimeout(() => setCombatFlash(false), 500);
-    }
-    prevFieldLen.current = currentLen;
-  }, [playerField.length]);
   const [activeDragIdx, setActiveDragIdx] = useState(null);
   const [activeDragId, setActiveDragId] = useState(null);
-  const [newFieldIdx, setNewFieldIdx] = useState(null); // track newly played card for animation
+  const [newFieldIdx, setNewFieldIdx] = useState(null);
   const [lastGigCount, setLastGigCount] = useState({ 1: 0, 2: 0 });
+  const prevFieldLen = useRef(null);
   const fileInputRef = useRef(null);
 
   const sensors = useSensors(
@@ -152,6 +142,16 @@ export default function PlaymatV2({
   const rivalLegends = game?.players[rivalId]?.legends || [];
   const rivalHand = game?.players[rivalId]?.hand || [];
   const rivalGigs = game?.players[rivalId]?.gigs || [];
+
+  // Trigger combat flash when a unit dies (field shrinks) — AFTER playerField is declared
+  useEffect(() => {
+    const currentLen = playerField.length;
+    if (prevFieldLen.current !== null && currentLen < prevFieldLen.current) {
+      setCombatFlash(true);
+      setTimeout(() => setCombatFlash(false), 500);
+    }
+    prevFieldLen.current = currentLen;
+  }, [playerField.length]);
 
   // Legal drop zones based on card type being dragged
   const getLegalZones = (card) => {
