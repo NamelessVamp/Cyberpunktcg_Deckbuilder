@@ -58,6 +58,9 @@ jobs:
           echo "💾 Backing up images..."
           node scripts/backupImages.js
         continue-on-error: true
+        env: # 🔌 INYECCIÓN DE CROMO AQUÍ
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.VITE_SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Commit and push changes
         run: |
