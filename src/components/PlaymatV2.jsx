@@ -378,6 +378,8 @@ export default function PlaymatV2({
             onClick={() =>
               setSelectedHandIdx(selectedHandIdx === idx ? null : idx)
             }
+            onMouseEnter={() => setHoveredCard(card)}
+            onMouseLeave={() => setHoveredCard(null)}
           >
             <CyberCard card={card} />
           </div>
@@ -426,6 +428,37 @@ export default function PlaymatV2({
           </div>
         )}
       </div>
+
+      {/* CARD HOVER PREVIEW */}
+      {hoveredCard && (
+        <div className="fixed top-4 right-4 z-50 w-48 bg-term-black border-2 border-term-amber rounded-lg p-2 shadow-[0_0_20px_rgba(255,191,0,0.3)] pointer-events-none">
+          {hoveredCard.image_url ? (
+            <img
+              src={hoveredCard.image_url}
+              alt={hoveredCard.name}
+              className="w-full rounded mb-2"
+            />
+          ) : (
+            <div className="w-full h-32 bg-term-gray rounded mb-2 flex items-center justify-center text-term-amber/30 text-xs font-mono">
+              NO IMAGE
+            </div>
+          )}
+          <div className="font-mono text-term-amber text-xs font-bold">
+            {hoveredCard.name}
+          </div>
+          {hoveredCard.subtitle && (
+            <div className="font-mono text-term-amber/50 text-[10px]">
+              {hoveredCard.subtitle}
+            </div>
+          )}
+          <div className="font-mono text-term-green/70 text-[10px] mt-1">
+            {hoveredCard.type} · {hoveredCard.faction}
+          </div>
+          <div className="font-mono text-term-amber/60 text-[10px] mt-1 leading-tight">
+            {hoveredCard.text}
+          </div>
+        </div>
+      )}
 
       <style>{`
         .rolling { animation: shake 0.3s ease-in-out; }
