@@ -96,6 +96,7 @@ export default function PlaymatV2({
   const playerDeck = game?.players[activeId]?.deck || [];
   const playerTrash = game?.players[activeId]?.trash || [];
   const playerGigs = game?.players[activeId]?.gigs || [];
+  const playerFixerDice = game?.players[activeId]?.fixerDice || [];
   const rivalField = game?.players[rivalId]?.field || [];
   const rivalLegends = game?.players[rivalId]?.legends || [];
   const rivalHand = game?.players[rivalId]?.hand || [];
