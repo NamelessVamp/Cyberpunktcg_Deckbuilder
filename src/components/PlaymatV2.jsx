@@ -236,6 +236,8 @@ export default function PlaymatV2({
                     {playerLegends[idx] && (
                       <div
                         className={`cursor-pointer transition-all ${actionMode === "PAYING" && !playerLegends[idx]?.isTapped ? "ring-2 ring-term-amber animate-pulse" : ""}`}
+                        onMouseEnter={() => setHoveredCard(playerLegends[idx])}
+                        onMouseLeave={() => setHoveredCard(null)}
                         onClick={() => {
                           if (
                             actionMode === "PAYING" &&
