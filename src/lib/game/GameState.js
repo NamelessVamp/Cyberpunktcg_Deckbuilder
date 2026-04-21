@@ -175,6 +175,9 @@ export class GameState {
       `Player ${playerId} rolled d${dieType} → ${value} ☆${player.streetCred}`,
     );
     return { success: true, value };
+    // Check overtime win immediately after any gig change
+    const winner = this.checkWinCondition();
+    if (winner) this.winner = winner;
   }
 
   _calculateStreetCred(playerId) {

@@ -159,30 +159,20 @@ export class CombatResolver {
     // Compare power
     if (attackerPower > blockerPower) {
       // Attacker wins - blocker destroyed
-      const blockerIdx = defenderPlayer.field.indexOf(blocker);
-      defenderPlayer.field.splice(blockerIdx, 1);
-      defenderPlayer.trash.push(blocker);
+      this._destroyUnit(blocker, defenderPlayer);
       result.destroyed.push(blocker.name);
       result.winner = attacker.name;
       this._fireDefeated(blocker, defenderPlayer, attackerPlayer);
     } else if (blockerPower > attackerPower) {
       // Blocker wins - attacker destroyed
-      const attackerIdx = attackerPlayer.field.indexOf(attacker);
-      attackerPlayer.field.splice(attackerIdx, 1);
-      attackerPlayer.trash.push(attacker);
+      this._destroyUnit(attacker, attackerPlayer);
       result.destroyed.push(attacker.name);
       result.winner = blocker.name;
       this._fireDefeated(attacker, attackerPlayer, defenderPlayer);
     } else {
       // Tie - both destroyed
-      const blockerIdx = defenderPlayer.field.indexOf(blocker);
-      const attackerIdx = attackerPlayer.field.indexOf(attacker);
-
-      defenderPlayer.field.splice(blockerIdx, 1);
-      attackerPlayer.field.splice(attackerIdx, 1);
-
-      defenderPlayer.trash.push(blocker);
-      attackerPlayer.trash.push(attacker);
+      this._destroyUnit(blocker, defenderPlayer);
+      this._destroyUnit(attacker, attackerPlayer);
 
       result.destroyed.push(blocker.name, attacker.name);
       result.winner = "TIE";
@@ -283,6 +273,12 @@ export class CombatResolver {
     }
 
     return { success: true, stolen };
+
+    // Instant overtime win check
+    if (this.game.isOvertime) {
+      const winner = this.game.checkWinCondition();
+      if (winner) this.game.winner = winner;
+    }
   }
   // ── KEYWORD / EFFECT HANDLERS ──────────────────────────────────
 
@@ -301,6 +297,21 @@ export class CombatResolver {
     if (text.includes("can't attack") || text.includes("cannot attack"))
       return false;
     return true;
+  }
+
+  _destroyUnit(unit, ownerPlayer) {
+    // Remove from field
+    const idx = ownerPlayer.field.indexOf(unit);
+    if (idx !== -1) ownerPlayer.field.splice(idx, 1);
+    // Move unit + all attached gear to trash
+    if (unit.attachedGear?.length > 0) {
+      unit.attachedGear.forEach((gear) => ownerPlayer.trash.push(gear));
+      unit.attachedGear = [];
+    }
+    ownerPlayer.trash.push(unit);
+    this.game?.log(
+      `${unit.name} → TRASH (+ ${unit.attachedGear?.length || 0} gear)`,
+    );
   }
 
   // DEFEATED trigger handler

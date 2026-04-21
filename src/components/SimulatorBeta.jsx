@@ -136,6 +136,7 @@ export default function SimulatorBeta({ currentDeck }) {
   const [aiMode, setAiMode] = useState(false);
   const [showPassDevice, setShowPassDevice] = useState(false);
   const aiRef = useRef(null);
+  const [callingLegend, setCallingLegend] = useState(false);
 
   const refresh = () => {
     if (gameRef.current) {
@@ -496,6 +497,8 @@ export default function SimulatorBeta({ currentDeck }) {
                   else refresh();
                 }}
                 onCallLegend={(legendIndex) => {
+                  if (callingLegend) return; // lock
+                  setCallingLegend(true);
                   const cl = new CardLogic(gameRef.current);
                   const result = cl.callLegend(
                     gameRef.current.activePlayer,
@@ -503,6 +506,7 @@ export default function SimulatorBeta({ currentDeck }) {
                   );
                   if (!result.success) alert(result.error);
                   else refresh();
+                  setTimeout(() => setCallingLegend(false), 500);
                 }}
                 onDeclareAttacker={(unitIndex) => {
                   const cr = new CombatResolver(gameRef.current);
