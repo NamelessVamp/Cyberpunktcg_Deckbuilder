@@ -6,7 +6,6 @@ export class GameState {
     this.phase = "SETUP";
     this.activePlayer = 1;
     this.isOvertime = false;
-    this.consecutiveTurnsWithoutGigClaim = 0;
     this.winner = null;
     this.activeEffects = [];
     this.combatLog = [];
@@ -217,20 +216,13 @@ export class GameState {
     this.log(`Turn ${this.turn} — Player ${this.activePlayer}'s turn`);
     this._executeCore();
 
-    // Check Overtime trigger (2 turns without Gig claim)
-    const p1ClaimedThisTurn =
-      this.players[1].lastTurnClaimedGig === this.turn - 1;
-    const p2ClaimedThisTurn =
-      this.players[2].lastTurnClaimedGig === this.turn - 1;
+    // Overtime: both players have empty fixerDice
+    const p1Empty = this.players[1].fixerDice.length === 0;
+    const p2Empty = this.players[2].fixerDice.length === 0;
 
-    if (!p1ClaimedThisTurn && !p2ClaimedThisTurn) {
-      this.consecutiveTurnsWithoutGigClaim++;
-
-      if (this.consecutiveTurnsWithoutGigClaim >= 2) {
-        this.isOvertime = true;
-      }
-    } else {
-      this.consecutiveTurnsWithoutGigClaim = 0;
+    if (p1Empty && p2Empty && !this.isOvertime) {
+      this.isOvertime = true;
+      this.log("OVERTIME — Both players out of Fixer dice!");
     }
   }
 
@@ -252,15 +244,24 @@ export class GameState {
       }
     }
 
-    // Overtime win: 7+ Gigs (instant)
+    // Overtime win: 7+ Gigs or Street Cred
     if (this.isOvertime) {
-      if (p1.streetCred !== p2.streetCred) {
-        const winner = p1.streetCred > p2.streetCred ? 1 : 2;
-        const loser = winner === 1 ? 2 : 1;
-        return {
-          player: winner,
-          condition: `Overtime Win (${this.players[winner].streetCred} vs ${this.players[loser].streetCred} Street Cred)`,
-        };
+      // First: check if anyone reached 7 gigs
+      if (p1.gigs.length >= 7)
+        return { player: 1, condition: "Overtime Win (7 Gigs)" };
+      if (p2.gigs.length >= 7)
+        return { player: 2, condition: "Overtime Win (7 Gigs)" };
+
+      // End of overtime turn: majority Street Cred wins
+      if (this.phase === "END") {
+        if (p1.streetCred !== p2.streetCred) {
+          const winner = p1.streetCred > p2.streetCred ? 1 : 2;
+          const loser = winner === 1 ? 2 : 1;
+          return {
+            player: winner,
+            condition: `Overtime — Street Cred (${this.players[winner].streetCred} vs ${this.players[loser].streetCred})`,
+          };
+        }
       }
     }
 
