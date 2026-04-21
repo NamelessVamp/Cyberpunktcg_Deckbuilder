@@ -127,11 +127,17 @@ export class GameState {
     player.hasSoldThisTurn = false;
     player.hasRolledThisTurn = false;
 
-    // O - Obtain Card
-    if (player.deck.length === 0) {
+    // O - Obtain Card (skip on turn 1 — hand already drawn in initializePlayer)
+    if (this.turn > 1 && player.deck.length === 0) {
       const rivalId = this.activePlayer === 1 ? 2 : 1;
       this.winner = { player: rivalId, condition: "Deck Out" };
       return;
+    }
+    if (this.turn > 1) {
+      player.hand.push(player.deck.shift());
+      this.log(`Player ${this.activePlayer} draws a card`);
+    } else {
+      this.log(`Player ${this.activePlayer} — opening hand ready`);
     }
 
     player.hand.push(player.deck.shift());
