@@ -8,6 +8,7 @@ import { CardLogic } from "../lib/CardLogic";
 import { CombatResolver } from "../lib/CombatResolver";
 import PlaymatV2 from "./PlaymatV2";
 import CyberspaceParticles from "./CyberspaceParticles";
+import { AIPlayer } from "../lib/game/AIPlayer";
 
 const PRECON_DECKS = {
   merc: {
@@ -133,7 +134,8 @@ export default function SimulatorBeta({ currentDeck }) {
   const gameRef = useRef(null);
   const [isLoadingDecks, setIsLoadingDecks] = useState(false);
   const [cyberspaceMode, setCyberspaceMode] = useState(false);
-
+  const [aiMode, setAiMode] = useState(false);
+  const aiRef = useRef(null);
   // Always call methods on gameRef.current, use game (state) for rendering
   const refresh = () => {
     if (gameRef.current) {
@@ -206,6 +208,9 @@ export default function SimulatorBeta({ currentDeck }) {
     newGame.startGame();
     gameRef.current = newGame;
     setGame(newGame);
+    if (aiMode) {
+      aiRef.current = new AIPlayer(newGame, 2, refresh, 700);
+    }
     setSelectedDeck(deck);
   }
 
@@ -264,6 +269,16 @@ export default function SimulatorBeta({ currentDeck }) {
             }`}
           >
             {cyberspaceMode ? "[◈ CYBERSPACE: ON]" : "[◈ CYBERSPACE: OFF]"}
+          </button>
+          <button
+            onClick={() => setAiMode((m) => !m)}
+            className={`px-4 py-1.5 font-mono font-bold text-xs rounded border transition-all ${
+              aiMode
+                ? "bg-term-red/20 border-term-red text-term-red"
+                : "bg-term-amber/10 border-term-amber/40 text-term-amber/60 hover:border-term-amber hover:text-term-amber"
+            }`}
+          >
+            {aiMode ? "[◈ AI: ON]" : "[◈ AI: OFF]"}
           </button>
         </div>
 
@@ -563,6 +578,18 @@ export default function SimulatorBeta({ currentDeck }) {
                     const wasPlayer = gameRef.current.activePlayer;
                     gameRef.current.advancePhase();
                     refresh();
+                    // Si es turno del AI, que juegue
+                    setTimeout(() => {
+                      if (
+                        aiMode &&
+                        aiRef.current &&
+                        gameRef.current?.activePlayer === 2
+                      ) {
+                        aiRef.current.game = gameRef.current;
+                        aiRef.current.onUpdate = refresh;
+                        aiRef.current.takeTurn();
+                      }
+                    }, 100);
                     // Show pass device screen when turn changes
                     if (gameRef.current.activePlayer !== wasPlayer) {
                       setShowPassDevice(true);
