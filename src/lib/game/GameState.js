@@ -62,15 +62,39 @@ export class GameState {
   // =====================================================
   // GAME START
   // =====================================================
-
   startGame() {
     this.turn = 1;
-    this.phase = "ENERGIZE";
+    this.phase = "MULLIGAN";
+    this.mulliganDone = { 1: false, 2: false };
+    this.log("Game started — Mulligan phase");
+  }
 
-    // Player 1 penalty: tap 2 Legends
-    if (this.players[1].legends.length >= 2) {
-      this.players[1].legends[0].isTapped = true;
-      this.players[1].legends[1].isTapped = true;
+  doMulligan(playerId) {
+    const player = this.players[playerId];
+    player.deck.push(...player.hand);
+    player.hand = [];
+    player.deck = this.shuffle(player.deck);
+    player.hand = player.deck.splice(0, 6);
+    this.mulliganDone[playerId] = true;
+    this.log(`Player ${playerId} took a mulligan`);
+    this._checkMulliganComplete();
+  }
+
+  keepHand(playerId) {
+    this.mulliganDone[playerId] = true;
+    this.log(`Player ${playerId} kept their hand`);
+    this._checkMulliganComplete();
+  }
+
+  _checkMulliganComplete() {
+    if (this.mulliganDone[1] && this.mulliganDone[2]) {
+      this.phase = "ENERGIZE";
+      if (this.players[1].legends.length >= 2) {
+        this.players[1].legends[0].isTapped = true;
+        this.players[1].legends[1].isTapped = true;
+      }
+      this.energize();
+      this.log("Mulligan complete — Turn 1 begins");
     }
   }
 

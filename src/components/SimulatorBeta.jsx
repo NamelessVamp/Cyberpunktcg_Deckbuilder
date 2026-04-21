@@ -6,73 +6,67 @@ import cards from "../data/cards.json";
 import { GameState } from "../lib/game/GameState";
 import PlaymatV2 from "./PlaymatV2";
 import CyberspaceParticles from "./CyberspaceParticles";
-import { CardLogic } from "../lib/CardLogic";
-import { CombatResolver } from "../lib/CombatResolver";
 
 // Precon deck IDs (from Alpha Kit)
 const PRECON_DECKS = {
   merc: {
     id: "precon-merc",
-    name: "📦 Alpha Kit - Merc Deck",
+    name: "Alpha Kit — Merc Deck",
     legend_ids: [
       "v-streetkid",
-      "jackie-welles-the-good-friend",
-      "panam-palmer-nomad-queen",
-    ],
-    legend_ids: [
-      "saburo-arasaka-stubborn-patriach",
-      "yorinobu-arasaka-embracing-destruction",
-      "goro-takemura-hands-unclean",
+      "jackie-welles-pour-one-out-for-me",
+      "panam-palmer-nomad-cavalry",
     ],
     main_deck_ids: [
-      "satori-sword-of-saburo",
-      "satori-sword-of-saburo",
-      "satori-sword-of-saburo",
-      "adam-smasher-metal-over-meat",
-      "adam-smasher-metal-over-meat",
-      "corpo-security",
-      "corpo-security",
-      "corpo-security",
-      "armored-minotaur",
-      "armored-minotaur",
-      "armored-minotaur",
-      "hanako-arasaka-in-a-gilded-cage",
-      "hanako-arasaka-in-a-gilded-cage",
-      "goro-takemura-losing-his-way",
-      "goro-takemura-losing-his-way",
-      "goro-takemura-losing-his-way",
-      "mt0d12-flathead",
-      "mt0d12-flathead",
-      "mt0d12-flathead",
-      "meredith-stout-stone-cold-corpo",
-      "meredith-stout-stone-cold-corpo",
-      "evelyn-parker-scheming-siren",
-      "evelyn-parker-scheming-siren",
-      "placide-voodoo-sentinel",
-      "placide-voodoo-sentinel",
-      "emergency-atlus",
-      "emergency-atlus",
-      "emergency-atlus",
-      "swordwise-huscle",
-      "swordwise-huscle",
-      "swordwise-huscle",
-      "kiroshi-optics",
-      "kiroshi-optics",
-      "corporate-surveillance",
-      "corporate-surveillance",
-      "reboot-optics",
-      "reboot-optics",
-      "industrial-assembly",
-      "industrial-assembly",
-      "cyberpsychosis",
-      "cyberpsychosis",
-      "floor-it",
+      "dying-night-v-s-pistol",
+      "dying-night-v-s-pistol",
+      "dying-night-v-s-pistol",
+      "skippy",
+      "skippy",
+      "skippy",
+      "mantis-blades",
+      "mantis-blades",
+      "guts",
+      "guts",
+      "guts",
+      "nom-nom",
+      "nom-nom",
+      "dr-chrome",
+      "dr-chrome",
+      "militech-agent",
+      "militech-agent",
+      "militech-agent",
+      "maxtac-officer",
+      "maxtac-officer",
+      "edgerunner",
+      "edgerunner",
+      "edgerunner",
+      "street-merc",
+      "street-merc",
+      "street-merc",
+      "combat-stims",
+      "combat-stims",
+      "ambush",
+      "ambush",
+      "betrayal",
+      "betrayal",
+      "rally",
+      "rally",
+      "second-wind",
+      "second-wind",
+      "tactical-retreat",
+      "tactical-retreat",
+      "hired-gun",
+      "hired-gun",
+      "hired-gun",
+      "trauma-team",
+      "trauma-team",
     ],
     notes: "Official Alpha Kit preconstructed Merc deck",
   },
   arasaka: {
     id: "precon-arasaka",
-    name: "📦 Alpha Kit - Arasaka Deck",
+    name: "Alpha Kit — Arasaka Deck",
     legend_ids: [
       "saburo-arasaka-stubborn-patriach",
       "yorinobu-arasaka-embracing-destruction",
@@ -82,45 +76,46 @@ const PRECON_DECKS = {
       "satori-sword-of-saburo",
       "satori-sword-of-saburo",
       "satori-sword-of-saburo",
+      "smart-rifle",
+      "smart-rifle",
+      "smart-rifle",
+      "arasaka-armor",
+      "arasaka-armor",
+      "boardroom-exec",
+      "boardroom-exec",
+      "boardroom-exec",
+      "corpo-security",
+      "corpo-security",
+      "corpo-security",
       "adam-smasher-metal-over-meat",
       "adam-smasher-metal-over-meat",
-      "corpo-security",
-      "corpo-security",
-      "corpo-security",
-      "armored-minotaur",
-      "armored-minotaur",
-      "armored-minotaur",
-      "hanako-arasaka-in-a-gilded-cage",
-      "hanako-arasaka-in-a-gilded-cage",
-      "goro-takemura-losing-his-way",
-      "goro-takemura-losing-his-way",
-      "goro-takemura-losing-his-way",
+      "netwatch-agent",
+      "netwatch-agent",
+      "corporate-espionage",
+      "corporate-espionage",
+      "hostile-takeover",
+      "hostile-takeover",
+      "calculated-risk",
+      "calculated-risk",
+      "superior-firepower",
+      "superior-firepower",
       "mt0d12-flathead",
       "mt0d12-flathead",
       "mt0d12-flathead",
-      "meredith-stout-stone-cold-corpo",
-      "meredith-stout-stone-cold-corpo",
-      "evelyn-parker-scheming-siren",
-      "evelyn-parker-scheming-siren",
-      "placide-voodoo-sentinel",
-      "placide-voodoo-sentinel",
-      "emergency-atlus",
-      "emergency-atlus",
-      "emergency-atlus",
-      "swordwise-huscle",
-      "swordwise-huscle",
-      "swordwise-huscle",
-      "kiroshi-optics",
-      "kiroshi-optics",
-      "corporate-surveillance",
-      "corporate-surveillance",
-      "reboot-optics",
-      "reboot-optics",
-      "industrial-assembly",
-      "industrial-assembly",
-      "cyberpsychosis",
-      "cyberpsychosis",
-      "floor-it",
+      "arasaka-enforcer",
+      "arasaka-enforcer",
+      "arasaka-enforcer",
+      "counter-intelligence",
+      "counter-intelligence",
+      "secured-perimeter",
+      "secured-perimeter",
+      "executive-order",
+      "executive-order",
+      "corpo-rat",
+      "corpo-rat",
+      "corpo-rat",
+      "bodyguard",
+      "bodyguard",
     ],
     notes: "Official Alpha Kit preconstructed Arasaka deck",
   },
@@ -135,12 +130,8 @@ export default function SimulatorBeta({ currentDeck }) {
   const [game, setGame] = useState(null);
   const [isLoadingDecks, setIsLoadingDecks] = useState(false);
   const [cyberspaceMode, setCyberspaceMode] = useState(false);
-  const cardLogic = game ? new CardLogic(game) : null;
-  const combatResolver = game ? new CombatResolver(game) : null;
-  const refresh = () =>
-    setGame((g) =>
-      g ? Object.assign(Object.create(Object.getPrototypeOf(g)), g) : g,
-    );
+  const [, forceUpdate] = useState(0);
+  const refresh = () => setGame((g) => (g ? { ...g } : g));
 
   // Load saved decks + precons + current deck
   useEffect(() => {
@@ -203,17 +194,16 @@ export default function SimulatorBeta({ currentDeck }) {
   // Start game with selected deck
   function startGame(deck) {
     const playerDeck = prepareDeckForGame(deck);
-    // For now, opponent uses same deck (TODO: Add AI deck selection)
     const opponentDeck = prepareDeckForGame(
-      deck.id === PRECON_DECKS.merc.id
-        ? PRECON_DECKS.arasaka
-        : PRECON_DECKS.merc,
+      PRECON_DECKS.arasaka.id === deck.id
+        ? PRECON_DECKS.merc
+        : PRECON_DECKS.arasaka,
     );
-
     const newGame = new GameState(playerDeck, opponentDeck);
     newGame.startGame();
-
-    setGame(newGame);
+    // Auto-keep for opponent (AI placeholder)
+    if (newGame.phase === "MULLIGAN") newGame.keepHand(2);
+    setGame({ ...newGame });
     setSelectedDeck(deck);
   }
 
@@ -248,14 +238,14 @@ export default function SimulatorBeta({ currentDeck }) {
 
   return (
     <div
-      className={`min-h-screen p-4 relative transition-all duration-500 ${
+      className={`min-h-screen p-8 relative transition-all duration-500 ${
         cyberspaceMode ? "bg-[#02050a]" : "bg-term-black"
       }`}
     >
       {cyberspaceMode && (
         <CyberspaceParticles count={250} className="opacity-60" />
       )}
-      <div className="w-full mx-auto overflow-x-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Beta Badge */}
         <div className="mb-6 flex items-center gap-3">
           <span className="px-3 py-1 bg-term-amber text-term-black font-bold text-xs rounded font-mono">
@@ -354,6 +344,57 @@ export default function SimulatorBeta({ currentDeck }) {
         ) : (
           /* Game UI with PlaymatV2 */
           <div className="space-y-6">
+            {/* MULLIGAN MODAL */}
+            {game.phase === "MULLIGAN" && !game.mulliganDone?.[1] && (
+              <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+                <div className="bg-term-gray border-2 border-term-amber rounded-lg p-8 max-w-lg w-full mx-4">
+                  <h2 className="text-term-amber font-mono font-bold text-2xl mb-2">
+                    MULLIGAN?
+                  </h2>
+                  <p className="text-term-green/70 font-mono text-sm mb-4">
+                    Shuffle your hand and draw 6 new cards. You can only do this
+                    once.
+                  </p>
+                  <div className="flex gap-2 mb-6 flex-wrap">
+                    {game.players[1].hand.map((card, i) => (
+                      <div
+                        key={i}
+                        className="bg-term-black border border-term-amber/30 rounded p-2 text-xs font-mono text-term-amber"
+                      >
+                        <div className="font-bold truncate max-w-[90px]">
+                          {card.name}
+                        </div>
+                        <div className="text-term-green/60">
+                          {card.cost}€ · {card.type}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex gap-4">
+                    <button
+                      onClick={() => {
+                        game.doMulligan(1);
+                        game.keepHand(2);
+                        refresh();
+                      }}
+                      className="flex-1 py-3 bg-term-amber text-term-black font-mono font-bold rounded hover:bg-yellow-400"
+                    >
+                      MULLIGAN
+                    </button>
+                    <button
+                      onClick={() => {
+                        game.keepHand(1);
+                        game.keepHand(2);
+                        refresh();
+                      }}
+                      className="flex-1 py-3 border-2 border-term-green text-term-green font-mono font-bold rounded hover:bg-term-green/10"
+                    >
+                      KEEP HAND
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
             {/* Win Condition Check */}
             {game.winner && (
               <div className="bg-term-green border-2 border-term-green rounded p-6 text-center">
@@ -377,7 +418,7 @@ export default function SimulatorBeta({ currentDeck }) {
 
             {/* Playmat V2 */}
             <div
-              className={`relative transition-all duration-500 overflow-x-auto ${
+              className={`relative transition-all duration-500 ${
                 cyberspaceMode ? "brightness-110 contrast-110 saturate-150" : ""
               }`}
             >
@@ -395,89 +436,80 @@ export default function SimulatorBeta({ currentDeck }) {
               <PlaymatV2
                 game={game}
                 onGameUpdate={(updatedGame) => setGame(updatedGame)}
-                onPlayCard={(cardIndex, targetIndex) => {
-                  const result = cardLogic.playCard(1, cardIndex, targetIndex);
-                  if (!result.success) alert(result.error);
-                  else {
-                    game.log(`Played card`);
-                    refresh();
-                  }
-                }}
-                onSellCard={(cardIndex) => {
-                  const result = cardLogic.sellCard(1, cardIndex);
-                  if (!result.success) alert(result.error);
-                  else {
-                    game.log(`Sold card for 1 Eddie`);
-                    refresh();
-                  }
-                }}
-                onCallLegend={(legendIndex) => {
-                  const result = cardLogic.callLegend(1, legendIndex);
-                  if (!result.success) alert(result.error);
-                  else {
-                    game.log(`Called legend`);
-                    refresh();
-                  }
-                }}
-                onDeclareAttacker={(unitIndex) => {
-                  const result = combatResolver.declareAttacker(1, unitIndex);
-                  if (!result.success) alert(result.error);
-                  else {
-                    game.log(`Declared attacker`);
-                    refresh();
-                  }
-                }}
-                onResolveCombat={() => {
-                  const result = combatResolver.resolveCombat(1);
-                  game.log(`Combat resolved`);
-                  game.clearExpiredEffects();
-                  refresh();
-                }}
               />
             </div>
 
-            {/* Actions */}
-            <div className="bg-term-gray border-2 border-term-amber/30 rounded p-6">
-              <h3 className="text-term-amber font-bold mb-4 font-mono">
-                ACTIONS
-              </h3>
-              <div className="flex gap-4 flex-wrap">
+            {/* EDDIE COUNTER + PHASE BAR */}
+            <div className="bg-term-gray border border-term-amber/30 rounded p-4 flex flex-wrap items-center gap-4">
+              {/* Eddie badge P1 */}
+              <div className="flex items-center gap-2">
+                <span className="text-term-green/60 font-mono text-xs">
+                  YOUR EDDIES
+                </span>
+                <span className="bg-term-amber text-term-black font-mono font-bold px-3 py-1 rounded text-sm">
+                  {game.players[1].eddies.length +
+                    game.players[1].legends.filter(
+                      (l) => l.isFaceUp && !l.isTapped,
+                    ).length}{" "}
+                  €$
+                </span>
+              </div>
+              <div className="w-px h-6 bg-term-amber/20" />
+              {/* Phase + turn */}
+              <div className="font-mono text-term-amber text-sm font-bold">
+                TURN {game.turn} —{" "}
+                <span className="text-term-green">{game.phase}</span>
+              </div>
+              {game.isOvertime && (
+                <span className="px-2 py-1 bg-term-red text-white font-bold rounded text-xs animate-pulse font-mono">
+                  OVERTIME
+                </span>
+              )}
+              {/* Controls */}
+              <div className="ml-auto flex gap-3">
                 <button
                   onClick={() => {
                     game.advancePhase();
-                    setGame(
-                      Object.assign(
-                        Object.create(Object.getPrototypeOf(game)),
-                        game,
-                      ),
-                    );
+                    refresh();
                   }}
-                  disabled={!!game.winner}
-                  className="px-6 py-3 bg-term-green text-term-black font-bold rounded font-mono hover:bg-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!!game.winner || game.phase === "MULLIGAN"}
+                  className="px-5 py-2 bg-term-green text-term-black font-bold rounded font-mono hover:bg-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-sm"
                 >
-                  {game.phase === "END" ? "END TURN ▶" : `NEXT PHASE ▶`}
+                  {game.phase === "END" ? "END TURN ▶" : "NEXT PHASE ▶"}
                 </button>
                 <button
                   onClick={() => {
                     setGame(null);
                     setSelectedDeck(null);
                   }}
-                  className="px-6 py-3 bg-term-red text-white font-bold rounded font-mono hover:bg-red-600 transition-colors"
+                  className="px-5 py-2 bg-term-red/20 text-term-red border border-term-red font-bold rounded font-mono hover:bg-term-red/30 transition-colors text-sm"
                 >
-                  FORFEIT GAME
+                  FORFEIT
                 </button>
-                <div className="flex-1 flex items-center justify-end gap-4 text-sm font-mono">
-                  <div className="text-term-amber/60">
-                    TURN {game.turn} • {game.phase}
-                  </div>
-                  {game.isOvertime && (
-                    <div className="px-3 py-1 bg-term-red text-white font-bold rounded animate-pulse">
-                      OVERTIME
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
+
+            {/* GAME LOG */}
+            {game.combatLog?.length > 0 && (
+              <div className="bg-term-black border border-term-amber/20 rounded p-4 max-h-40 overflow-y-auto">
+                <p className="text-term-amber/50 font-mono text-xs mb-2">
+                  ▓ COMBAT LOG
+                </p>
+                <div className="space-y-1">
+                  {[...game.combatLog].reverse().map((entry, i) => (
+                    <div
+                      key={i}
+                      className="font-mono text-xs text-term-green/70"
+                    >
+                      <span className="text-term-amber/40">
+                        T{entry.turn} [{entry.phase}]
+                      </span>{" "}
+                      {entry.text}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
