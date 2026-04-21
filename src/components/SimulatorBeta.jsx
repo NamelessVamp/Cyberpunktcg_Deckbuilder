@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useFeatureFlag } from "../hooks/useFeatureFlag";
 import { useAuth } from "../contexts/AuthContext";
 import { loadDecks } from "../lib/deckService";
 import cards from "../data/cards.json";
 import { GameState } from "../lib/game/GameState";
+import { CardLogic } from "../lib/CardLogic";
+import { CombatResolver } from "../lib/CombatResolver";
 import PlaymatV2 from "./PlaymatV2";
 import CyberspaceParticles from "./CyberspaceParticles";
 
-// Precon deck IDs (from Alpha Kit)
 const PRECON_DECKS = {
   merc: {
     id: "precon-merc",
@@ -128,25 +129,19 @@ export default function SimulatorBeta({ currentDeck }) {
   const [savedDecks, setSavedDecks] = useState([]);
   const [selectedDeck, setSelectedDeck] = useState(null);
   const [game, setGame] = useState(null);
+  const gameRef = useRef(null);
   const [isLoadingDecks, setIsLoadingDecks] = useState(false);
   const [cyberspaceMode, setCyberspaceMode] = useState(false);
-  const [, forceUpdate] = useState(0);
-  const refresh = () =>
-    setGame((g) =>
-      g ? Object.assign(Object.create(Object.getPrototypeOf(g)), g) : g,
-    );
 
-  // Load saved decks + precons + current deck
+  // Always call methods on gameRef.current, use game (state) for rendering
+  const refresh = () => {
+    if (gameRef.current) setGame({ ...gameRef.current, _t: Date.now() });
+  };
+
   useEffect(() => {
     async function loadAllDecks() {
       setIsLoadingDecks(true);
-      let decks = [];
-
-      // Add precon decks (always available)
-      decks.push(PRECON_DECKS.merc);
-      decks.push(PRECON_DECKS.arasaka);
-
-      // Add current deck from builder (if exists)
+      let decks = [PRECON_DECKS.merc, PRECON_DECKS.arasaka];
       if (currentDeck && currentDeck.legends.length === 3) {
         decks.push({
           id: "current-build",
@@ -157,44 +152,33 @@ export default function SimulatorBeta({ currentDeck }) {
           notes: "Your current deck from the builder",
         });
       }
-
-      // Add saved decks (if logged in)
       if (user) {
         try {
           const userDecks = await loadDecks(user.id);
           decks = [...decks, ...userDecks];
-        } catch (error) {
-          console.error("Error loading user decks:", error);
+        } catch (e) {
+          console.error(e);
         }
       }
-
       setSavedDecks(decks);
       setIsLoadingDecks(false);
     }
-
     loadAllDecks();
   }, [user, currentDeck]);
 
-  // Convert deck to game format
   function prepareDeckForGame(deck) {
     const deckCards = [];
-
-    // Add Legends
     deck.legend_ids.forEach((id) => {
       const card = cards.find((c) => c.id === id);
       if (card) deckCards.push({ ...card });
     });
-
-    // Add Main Deck
     deck.main_deck_ids.forEach((id) => {
       const card = cards.find((c) => c.id === id);
       if (card) deckCards.push({ ...card });
     });
-
     return deckCards;
   }
 
-  // Start game with selected deck
   function startGame(deck) {
     const playerDeck = prepareDeckForGame(deck);
     const opponentDeck = prepareDeckForGame(
@@ -204,6 +188,7 @@ export default function SimulatorBeta({ currentDeck }) {
     );
     const newGame = new GameState(playerDeck, opponentDeck);
     newGame.startGame();
+    gameRef.current = newGame;
     setGame(newGame);
     setSelectedDeck(deck);
   }
@@ -211,8 +196,8 @@ export default function SimulatorBeta({ currentDeck }) {
   if (featureLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-term-black">
-        <div className="text-term-amber font-mono">
-          <div className="animate-pulse">LOADING SIMULATOR...</div>
+        <div className="text-term-amber font-mono animate-pulse">
+          LOADING SIMULATOR...
         </div>
       </div>
     );
@@ -239,23 +224,21 @@ export default function SimulatorBeta({ currentDeck }) {
 
   return (
     <div
-      className={`min-h-screen p-8 relative transition-all duration-500 ${
-        cyberspaceMode ? "bg-[#02050a]" : "bg-term-black"
-      }`}
+      className={`min-h-screen p-4 relative transition-all duration-500 ${cyberspaceMode ? "bg-[#02050a]" : "bg-term-black"}`}
     >
       {cyberspaceMode && (
         <CyberspaceParticles count={250} className="opacity-60" />
       )}
-      <div className="max-w-7xl mx-auto">
-        {/* Beta Badge */}
+
+      <div className="w-full mx-auto overflow-x-auto">
+        {/* Header */}
         <div className="mb-6 flex items-center gap-3">
           <span className="px-3 py-1 bg-term-amber text-term-black font-bold text-xs rounded font-mono">
             ADMIN BETA
           </span>
           <span className="text-term-amber/60 text-sm font-mono">
-            Phase 9 Simulator v0.2.0 - Playmat V2
+            Phase 9 Simulator v0.2.0 — Playmat V2
           </span>
-          {/* Cyberspace Mode Toggle */}
           <button
             onClick={() => setCyberspaceMode((m) => !m)}
             className={`ml-auto px-4 py-1.5 font-mono font-bold text-xs rounded border transition-all ${
@@ -274,13 +257,11 @@ export default function SimulatorBeta({ currentDeck }) {
 
         {!game ? (
           <>
-            {/* Deck Selection */}
             {!selectedDeck ? (
               <div className="bg-term-gray border-2 border-term-amber/30 rounded p-8">
                 <h2 className="text-2xl text-term-amber mb-4 font-mono">
                   Select a Deck
                 </h2>
-
                 {isLoadingDecks ? (
                   <div className="text-term-amber/60 font-mono animate-pulse">
                     Loading decks...
@@ -311,7 +292,6 @@ export default function SimulatorBeta({ currentDeck }) {
                 )}
               </div>
             ) : (
-              /* Deck Confirmation */
               <div className="bg-term-gray border-2 border-term-amber/30 rounded p-8">
                 <h2 className="text-2xl text-term-amber mb-4 font-mono">
                   Ready to Play?
@@ -343,8 +323,7 @@ export default function SimulatorBeta({ currentDeck }) {
             )}
           </>
         ) : (
-          /* Game UI with PlaymatV2 */
-          <div className="space-y-6">
+          <div className="space-y-4">
             {/* MULLIGAN MODAL */}
             {game.phase === "MULLIGAN" && !game.mulliganDone?.[1] && (
               <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
@@ -357,7 +336,7 @@ export default function SimulatorBeta({ currentDeck }) {
                     once.
                   </p>
                   <div className="flex gap-2 mb-6 flex-wrap">
-                    {game.players[1].hand.map((card, i) => (
+                    {gameRef.current?.players[1].hand.map((card, i) => (
                       <div
                         key={i}
                         className="bg-term-black border border-term-amber/30 rounded p-2 text-xs font-mono text-term-amber"
@@ -374,14 +353,9 @@ export default function SimulatorBeta({ currentDeck }) {
                   <div className="flex gap-4">
                     <button
                       onClick={() => {
-                        game.doMulligan(1);
-                        game.keepHand(2);
-                        setGame(
-                          Object.assign(
-                            Object.create(Object.getPrototypeOf(game)),
-                            game,
-                          ),
-                        );
+                        gameRef.current.doMulligan(1);
+                        gameRef.current.keepHand(2);
+                        refresh();
                       }}
                       className="flex-1 py-3 bg-term-amber text-term-black font-mono font-bold rounded hover:bg-yellow-400"
                     >
@@ -389,14 +363,9 @@ export default function SimulatorBeta({ currentDeck }) {
                     </button>
                     <button
                       onClick={() => {
-                        game.doMulligan(1);
-                        game.keepHand(2);
-                        setGame(
-                          Object.assign(
-                            Object.create(Object.getPrototypeOf(game)),
-                            game,
-                          ),
-                        );
+                        gameRef.current.keepHand(1);
+                        gameRef.current.keepHand(2);
+                        refresh();
                       }}
                       className="flex-1 py-3 border-2 border-term-green text-term-green font-mono font-bold rounded hover:bg-term-green/10"
                     >
@@ -406,7 +375,8 @@ export default function SimulatorBeta({ currentDeck }) {
                 </div>
               </div>
             )}
-            {/* Win Condition Check */}
+
+            {/* WIN SCREEN */}
             {game.winner && (
               <div className="bg-term-green border-2 border-term-green rounded p-6 text-center">
                 <h2 className="text-4xl font-bold text-term-black mb-2 font-mono">
@@ -417,6 +387,7 @@ export default function SimulatorBeta({ currentDeck }) {
                 </p>
                 <button
                   onClick={() => {
+                    gameRef.current = null;
                     setGame(null);
                     setSelectedDeck(null);
                   }}
@@ -427,11 +398,9 @@ export default function SimulatorBeta({ currentDeck }) {
               </div>
             )}
 
-            {/* Playmat V2 */}
+            {/* PLAYMAT */}
             <div
-              className={`relative transition-all duration-500 ${
-                cyberspaceMode ? "brightness-110 contrast-110 saturate-150" : ""
-              }`}
+              className={`relative transition-all duration-500 ${cyberspaceMode ? "brightness-110 contrast-110 saturate-150" : ""}`}
             >
               {cyberspaceMode && (
                 <div
@@ -446,27 +415,58 @@ export default function SimulatorBeta({ currentDeck }) {
               )}
               <PlaymatV2
                 game={game}
-                onGameUpdate={(updatedGame) => setGame(updatedGame)}
+                onGameUpdate={(g) => {
+                  gameRef.current = g;
+                  setGame(g);
+                }}
+                onPlayCard={(cardIndex, targetIndex) => {
+                  const cl = new CardLogic(gameRef.current);
+                  const result = cl.playCard(1, cardIndex, targetIndex);
+                  if (!result.success) alert(result.error);
+                  else refresh();
+                }}
+                onSellCard={(cardIndex) => {
+                  const cl = new CardLogic(gameRef.current);
+                  const result = cl.sellCard(1, cardIndex);
+                  if (!result.success) alert(result.error);
+                  else refresh();
+                }}
+                onCallLegend={(legendIndex) => {
+                  const cl = new CardLogic(gameRef.current);
+                  const result = cl.callLegend(1, legendIndex);
+                  if (!result.success) alert(result.error);
+                  else refresh();
+                }}
+                onDeclareAttacker={(unitIndex) => {
+                  const cr = new CombatResolver(gameRef.current);
+                  const result = cr.declareAttacker(1, unitIndex);
+                  if (!result.success) alert(result.error);
+                  else refresh();
+                }}
+                onResolveCombat={() => {
+                  const cr = new CombatResolver(gameRef.current);
+                  cr.resolveCombat(1);
+                  gameRef.current.clearExpiredEffects?.();
+                  refresh();
+                }}
               />
             </div>
 
-            {/* EDDIE COUNTER + PHASE BAR */}
+            {/* CONTROLS BAR */}
             <div className="bg-term-gray border border-term-amber/30 rounded p-4 flex flex-wrap items-center gap-4">
-              {/* Eddie badge P1 */}
               <div className="flex items-center gap-2">
                 <span className="text-term-green/60 font-mono text-xs">
                   YOUR EDDIES
                 </span>
                 <span className="bg-term-amber text-term-black font-mono font-bold px-3 py-1 rounded text-sm">
-                  {game.players[1].eddies.length +
-                    game.players[1].legends.filter(
+                  {(game.players?.[1]?.eddies?.length || 0) +
+                    (game.players?.[1]?.legends?.filter(
                       (l) => l.isFaceUp && !l.isTapped,
-                    ).length}{" "}
+                    ).length || 0)}{" "}
                   €$
                 </span>
               </div>
               <div className="w-px h-6 bg-term-amber/20" />
-              {/* Phase + turn */}
               <div className="font-mono text-term-amber text-sm font-bold">
                 TURN {game.turn} —{" "}
                 <span className="text-term-green">{game.phase}</span>
@@ -476,11 +476,10 @@ export default function SimulatorBeta({ currentDeck }) {
                   OVERTIME
                 </span>
               )}
-              {/* Controls */}
               <div className="ml-auto flex gap-3">
                 <button
                   onClick={() => {
-                    game.advancePhase();
+                    gameRef.current.advancePhase();
                     refresh();
                   }}
                   disabled={!!game.winner || game.phase === "MULLIGAN"}
@@ -490,6 +489,7 @@ export default function SimulatorBeta({ currentDeck }) {
                 </button>
                 <button
                   onClick={() => {
+                    gameRef.current = null;
                     setGame(null);
                     setSelectedDeck(null);
                   }}
