@@ -853,6 +853,24 @@ export default function SimulatorBeta({ currentDeck }) {
                 </span>
               </div>
               <div className="w-px h-6 bg-term-amber/20" />
+              <div className="flex items-center gap-2">
+                <span className="text-term-red/60 font-mono text-xs">
+                  RIVAL GIGS
+                </span>
+                <span
+                  className={`font-mono font-bold px-3 py-1 rounded text-sm border ${
+                    (game.players?.[game.activePlayer === 1 ? 2 : 1]?.gigs
+                      ?.length || 0) >= 5
+                      ? "bg-term-red/30 text-term-red border-term-red/60 animate-pulse"
+                      : "bg-term-red/10 text-term-red/70 border-term-red/30"
+                  }`}
+                >
+                  {game.players?.[game.activePlayer === 1 ? 2 : 1]?.gigs
+                    ?.length || 0}{" "}
+                  / 6
+                </span>
+              </div>
+              <div className="w-px h-6 bg-term-amber/20" />
               <div className="font-mono text-term-amber text-sm font-bold">
                 TURN {game.turn} —{" "}
                 <span className="text-term-green">{game.phase}</span>
