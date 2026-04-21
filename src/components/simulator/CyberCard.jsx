@@ -47,8 +47,11 @@ export default function CyberCard({ card, isFlipped: initialFlipped = false }) {
             backgroundPosition: "center",
           }}
         >
-          <div className="card-header bg-black/60 px-1 rounded">
-            [{card.type}]
+          <div className="card-header bg-black/60 px-1 rounded flex justify-between items-center">
+            <span>[{card.type}]</span>
+            {card.cost > 0 && card.type !== "PROGRAM" && (
+              <span className="text-term-amber text-[8px] font-bold">€$</span>
+            )}
           </div>
           <div className="card-name">{card.name}</div>
           <div className="card-stats">

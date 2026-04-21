@@ -123,6 +123,7 @@ const PRECON_DECKS = {
 };
 
 export default function SimulatorBeta({ currentDeck }) {
+  const [showPassDevice, setShowPassDevice] = useState(false);
   const { isEnabled, isLoading: featureLoading } =
     useFeatureFlag("phase9_simulator");
   const { user } = useAuth();
@@ -324,6 +325,32 @@ export default function SimulatorBeta({ currentDeck }) {
           </>
         ) : (
           <div className="space-y-4">
+            {/* PASS DEVICE SCREEN */}
+            {showPassDevice && (
+              <div className="fixed inset-0 bg-black/95 backdrop-blur-sm flex flex-col items-center justify-center z-[100]">
+                <div className="text-center p-8">
+                  <div className="text-term-amber/30 font-mono text-sm mb-4 uppercase tracking-widest">
+                    — Turn Complete —
+                  </div>
+                  <h2 className="text-5xl font-bold text-term-amber font-mono mb-2">
+                    PLAYER {game.activePlayer}
+                  </h2>
+                  <p className="text-term-green font-mono text-xl mb-8">
+                    YOUR TURN
+                  </p>
+                  <div className="text-term-amber/50 font-mono text-sm mb-8">
+                    Pass the device to Player {game.activePlayer}
+                  </div>
+                  <button
+                    onClick={() => setShowPassDevice(false)}
+                    className="px-8 py-4 bg-term-amber text-term-black font-mono font-bold text-lg rounded hover:bg-yellow-400 transition-colors"
+                  >
+                    [ I'M READY — START TURN ]
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* MULLIGAN MODAL */}
             {game.phase === "MULLIGAN" && !game.mulliganDone?.[1] && (
               <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
@@ -456,6 +483,25 @@ export default function SimulatorBeta({ currentDeck }) {
                   if (!result.success) alert(result.error);
                   else refresh();
                 }}
+                onDeclareBlocker={(blockerIndex) => {
+                  const cr = new CombatResolver(gameRef.current);
+                  const rivalId = gameRef.current.activePlayer === 1 ? 2 : 1;
+                  // Find first attacking unit
+                  const attackerIndex = gameRef.current.players[
+                    gameRef.current.activePlayer
+                  ].field.findIndex((u) => u.isAttacking);
+                  if (attackerIndex === -1) {
+                    alert("No attacking unit");
+                    return;
+                  }
+                  const result = cr.declareBlocker(
+                    rivalId,
+                    blockerIndex,
+                    attackerIndex,
+                  );
+                  if (!result.success) alert(result.error);
+                  else refresh();
+                }}
                 onResolveCombat={() => {
                   const cr = new CombatResolver(gameRef.current);
                   cr.resolveCombat(gameRef.current.activePlayer);
@@ -492,13 +538,27 @@ export default function SimulatorBeta({ currentDeck }) {
               <div className="ml-auto flex gap-3">
                 <button
                   onClick={() => {
+                    if (gameRef.current.phase === "COMBAT") {
+                      const cr = new CombatResolver(gameRef.current);
+                      cr.resolveCombat(gameRef.current.activePlayer);
+                      gameRef.current.clearExpiredEffects?.();
+                    }
+                    const wasPlayer = gameRef.current.activePlayer;
                     gameRef.current.advancePhase();
                     refresh();
+                    // Show pass device screen when turn changes
+                    if (gameRef.current.activePlayer !== wasPlayer) {
+                      setShowPassDevice(true);
+                    }
                   }}
                   disabled={!!game.winner || game.phase === "MULLIGAN"}
                   className="px-5 py-2 bg-term-green text-term-black font-bold rounded font-mono hover:bg-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-sm"
                 >
-                  {game.phase === "END" ? "END TURN ▶" : "NEXT PHASE ▶"}
+                  {game.phase === "COMBAT"
+                    ? "RESOLVE COMBAT ⚔"
+                    : game.phase === "END"
+                      ? "END TURN ▶"
+                      : "NEXT PHASE ▶"}
                 </button>
                 <button
                   onClick={() => {
