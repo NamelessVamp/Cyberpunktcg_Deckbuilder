@@ -13,7 +13,10 @@ export default function PlaymatV2({
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [highestZ, setHighestZ] = useState(1000);
   const [selectedHandIdx, setSelectedHandIdx] = useState(null);
-  const [actionMode, setActionMode] = useState(null);
+  const [actionMode, setActionMode] = useState("IDLE"); // IDLE | PAYING | TARGETING
+  const [pendingCardIndex, setPendingCardIndex] = useState(null);
+  const [costRemaining, setCostRemaining] = useState(0);
+  const [hoveredCard, setHoveredCard] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleBackgroundUpload = (e) => {
@@ -50,7 +53,7 @@ export default function PlaymatV2({
   const rivalGigs = game?.players[2]?.gigs || [];
 
   return (
-    <div className="game-wrapper flex flex-col gap-4 items-center min-w-[1250px]">
+    <div className="game-wrapper flex flex-col gap-4 items-center">
       {/* Controls */}
       <div className="controls flex justify-end w-[1200px]">
         <input
@@ -106,7 +109,7 @@ export default function PlaymatV2({
 
       {/* Main Playmat */}
       <div
-        className="playmat w-[1200px] min-h-[700px] bg-transparent border-2 border-term-amber relative font-mono text-term-amber flex p-5 box-border gap-4 select-none overflow-visible"
+        className="playmat w-[1200px] h-[700px] bg-transparent border-2 border-term-amber relative font-mono text-term-amber flex p-5 box-border gap-4 select-none overflow-hidden"
         style={{
           backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
           backgroundSize: "cover",
@@ -184,8 +187,18 @@ export default function PlaymatV2({
               {playerField.map((card, idx) => (
                 <div
                   key={`field-${idx}`}
-                  className="cursor-pointer"
-                  onClick={() => onDeclareAttacker?.(idx)}
+                  className={`cursor-pointer transition-all ${actionMode === "TARGETING" ? "ring-2 ring-red-500 shadow-[0_0_12px_rgba(239,68,68,0.6)]" : ""}`}
+                  onMouseEnter={() => setHoveredCard(card)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                  onClick={() => {
+                    if (actionMode === "TARGETING") {
+                      onPlayCard?.(pendingCardIndex, idx);
+                      setActionMode("IDLE");
+                      setPendingCardIndex(null);
+                    } else if (game?.phase === "COMBAT") {
+                      onDeclareAttacker?.(idx);
+                    }
+                  }}
                 >
                   <CyberCard card={card} />
                 </div>
@@ -219,8 +232,28 @@ export default function PlaymatV2({
                   >
                     {playerLegends[idx] && (
                       <div
-                        className="cursor-pointer"
-                        onClick={() => onCallLegend?.(idx)}
+                        className={`cursor-pointer transition-all ${actionMode === "PAYING" && !playerLegends[idx]?.isTapped ? "ring-2 ring-term-amber animate-pulse" : ""}`}
+                        onClick={() => {
+                          if (
+                            actionMode === "PAYING" &&
+                            !playerLegends[idx]?.isTapped
+                          ) {
+                            playerLegends[idx].isTapped = true;
+                            const newCost = costRemaining - 1;
+                            setCostRemaining(newCost);
+                            if (newCost <= 0) {
+                              onPlayCard?.(pendingCardIndex);
+                              setActionMode("IDLE");
+                              setPendingCardIndex(null);
+                              setCostRemaining(0);
+                            }
+                          } else if (
+                            actionMode === "IDLE" &&
+                            game?.phase === "PLAY"
+                          ) {
+                            onCallLegend?.(idx);
+                          }
+                        }}
                       >
                         <CyberCard card={playerLegends[idx]} />
                       </div>
@@ -308,8 +341,33 @@ export default function PlaymatV2({
       {/* Player Hand */}
       <div className="hand-zone w-[1000px] min-h-[140px] border-2 border-dashed border-term-amber rounded-xl bg-transparent flex justify-center items-center gap-4 p-4 relative box-border">
         <div className="label absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-term-amber text-black px-3 py-0.5 text-[11px] font-bold rounded-xl whitespace-nowrap z-10">
-          PLAYER HAND
+          PLAYER HAND{" "}
+          {game?.phase !== "PLAY" && (
+            <span className="text-red-800 ml-1">({game?.phase})</span>
+          )}
         </div>
+        {/* HUD Banner */}
+        {actionMode !== "IDLE" && (
+          <div
+            className={`absolute top-[-2rem] left-0 right-0 py-1 text-center text-xs font-bold font-mono uppercase tracking-widest z-30
+            ${actionMode === "TARGETING" ? "bg-red-900/90 text-red-300" : "bg-term-amber/20 text-term-amber border border-term-amber"}`}
+          >
+            {actionMode === "TARGETING" &&
+              ">>> SELECT TARGET UNIT IN FIELD <<<"}
+            {actionMode === "PAYING" &&
+              `>>> SELECT ${costRemaining} EDDIES OR LEGENDS TO PAY <<<`}
+            <button
+              onClick={() => {
+                setActionMode("IDLE");
+                setPendingCardIndex(null);
+                setCostRemaining(0);
+              }}
+              className="ml-4 underline opacity-70 hover:opacity-100"
+            >
+              [ ABORT ]
+            </button>
+          </div>
+        )}
         {playerHand.map((card, idx) => (
           <div
             key={`hand-${idx}`}
@@ -324,8 +382,22 @@ export default function PlaymatV2({
         {selectedHandIdx !== null && (
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-20">
             <button
+              disabled={game?.phase !== "PLAY"}
               onClick={() => {
-                onPlayCard?.(selectedHandIdx);
+                const card = playerHand[selectedHandIdx];
+                if (!card) return;
+                if (card.type === "GEAR" || card.type === "PROGRAM") {
+                  setActionMode("TARGETING");
+                  setPendingCardIndex(selectedHandIdx);
+                } else {
+                  if (card.cost === 0) {
+                    onPlayCard?.(selectedHandIdx);
+                  } else {
+                    setActionMode("PAYING");
+                    setPendingCardIndex(selectedHandIdx);
+                    setCostRemaining(card.cost);
+                  }
+                }
                 setSelectedHandIdx(null);
               }}
               className="px-3 py-1 bg-term-green text-term-black font-mono font-bold text-xs rounded hover:bg-green-400"
@@ -333,6 +405,7 @@ export default function PlaymatV2({
               [PLAY]
             </button>
             <button
+              disabled={game?.phase !== "PLAY"}
               onClick={() => {
                 onSellCard?.(selectedHandIdx);
                 setSelectedHandIdx(null);
