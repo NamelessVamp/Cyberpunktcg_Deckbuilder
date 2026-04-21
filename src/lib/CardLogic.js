@@ -66,7 +66,13 @@ export class CardLogic {
     player.hand.splice(cardIndex, 1);
 
     // Add to Fixer (Eddies zone)
-    player.eddies.push(card);
+    // Strip card to bare Eddie — no abilities, no triggers
+    player.eddies.push({
+      id: card.id,
+      name: card.name,
+      isTapped: false,
+      _isEddie: true,
+    });
 
     return {
       success: true,

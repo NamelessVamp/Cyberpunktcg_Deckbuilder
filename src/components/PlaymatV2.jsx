@@ -519,11 +519,17 @@ export default function PlaymatV2({
               key={`hand-wrapper-${idx}`}
               onMouseEnter={() => setHoveredCard(card)}
               onMouseLeave={() => setHoveredCard(null)}
-              className="transition-transform hover:-translate-y-1"
+              className={`transition-transform ${game?.phase === "ATTACK" ? "opacity-40 cursor-not-allowed" : "hover:-translate-y-1"}`}
             >
-              <DraggableCard id={`hand-${idx}`}>
-                <CyberCard card={card} />
-              </DraggableCard>
+              {game?.phase === "ATTACK" ? (
+                <div title="Hand locked — Attack Phase declared">
+                  <CyberCard card={card} />
+                </div>
+              ) : (
+                <DraggableCard id={`hand-${idx}`}>
+                  <CyberCard card={card} />
+                </DraggableCard>
+              )}
             </div>
           ))}
         </div>
