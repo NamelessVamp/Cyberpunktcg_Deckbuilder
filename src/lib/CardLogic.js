@@ -51,6 +51,11 @@ export class CardLogic {
       return { success: false, error: "Card cannot be sold (cost 0)" };
     }
 
+    if (player.hasSoldThisTurn) {
+      return { success: false, error: "Ya vendiste una carta este turno" };
+    }
+    player.hasSoldThisTurn = true;
+
     // Remove from hand
     player.hand.splice(cardIndex, 1);
 
@@ -78,7 +83,9 @@ export class CardLogic {
     }
 
     // Check if player can afford the card
-    const totalEddies = player.eddies.length;
+    const availableEddies = player.eddies.filter((e) => !e.isTapped).length;
+    const untappedLegends = player.legends.filter((l) => !l.isTapped).length;
+    const totalEddies = availableEddies + untappedLegends;
     if (card.cost > totalEddies) {
       return {
         success: false,
@@ -86,11 +93,7 @@ export class CardLogic {
       };
     }
 
-    // Check RAM requirement
-    const ramCheck = this.checkRAMRequirement(player, card);
-    if (!ramCheck.valid) {
-      return { success: false, error: ramCheck.error };
-    }
+    // RAM is a deckbuilding rule only — not validated during gameplay
 
     // Spend Eddies (tap Legends equal to cost)
     const spendResult = this.spendEddies(player, card.cost);
@@ -241,27 +244,22 @@ export class CardLogic {
   // =====================================================
 
   spendEddies(player, cost) {
-    // Count untapped Legends (available Eddies)
-    const untappedLegends = player.legends.filter(
-      (l) => l.isFaceUp && !l.isTapped,
-    );
-
-    if (untappedLegends.length < cost) {
-      return {
-        success: false,
-        error: `Not enough Eddies (need ${cost}, have ${untappedLegends.length} untapped Legends)`,
-      };
+    let remaining = cost;
+    const eddiesPool = player.eddies.filter((e) => !e.isTapped);
+    for (let i = 0; i < eddiesPool.length && remaining > 0; i++) {
+      eddiesPool[i].isTapped = true;
+      remaining--;
     }
-
-    // Tap Legends equal to cost
-    for (let i = 0; i < cost; i++) {
-      untappedLegends[i].isTapped = true;
+    if (remaining > 0) {
+      const legendsPool = player.legends.filter((l) => !l.isTapped);
+      for (let i = 0; i < legendsPool.length && remaining > 0; i++) {
+        legendsPool[i].isTapped = true;
+        remaining--;
+      }
     }
-
-    return {
-      success: true,
-      message: `Spent ${cost} Eddies (tapped ${cost} Legends)`,
-    };
+    if (remaining > 0)
+      return { success: false, error: `Not enough Eddies (need ${cost})` };
+    return { success: true, message: `Spent ${cost} Eddies` };
   }
 
   // =====================================================
