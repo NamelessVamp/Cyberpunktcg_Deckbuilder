@@ -9,9 +9,7 @@
     "ram": 2,
     "type": "LEGEND",
     "faction": "MERC",
-    "keywords": [
-      "GO SOLO"
-    ],
+    "keywords": ["GO SOLO"],
     "text": "GO SOLO DEFEATED Discard the top 3 cards of your deck. Then, choose 1 Braindance Program from your trash and add it to your hand.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b132a.webp?Expires=1776880642&Key-Pair-Id=K3SGRHESIHQPEW&Signature=tKf7Dxfb2zlYChf8l-PGXh4wr8jfoDyUsAJJlmpaeqzRy9Fg93n96XOJvX6N2bHkHjzafjKHdiIh5Lm5UfMWMgFnxjHHJWK16hOsBHWWEM~YL3GDdI1xpxQDxpIchzyucO9OYoxeCi0md-C7iKepGfniAvRheOjTyHsR94d1HgbMnhV1MpX6v316XnMEyKRqTWFkYJ6AiEnGQ~jsPD4kGIUyZdTvTwGkXPCzoW1mglei0tu-17~g9YoFW1fKeWKawWMdJk5F3Euq-B5JHIwCvtyWRFaVfhYlvUFEjMsSuH1a-ZIqLdSnlEqQpjH7tzD0mhC7prlR6T6kWSBir~fGOQ__",
     "set": "Spoiler Set (SPOILER)",
@@ -30,9 +28,7 @@
     "ram": 2,
     "type": "LEGEND",
     "faction": "GANGER",
-    "keywords": [
-      "GO SOLO"
-    ],
+    "keywords": ["GO SOLO"],
     "text": "GO SOLO During your turn, this Legend has +2 power for each equipped Gear.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b131.webp?Expires=1776880645&Key-Pair-Id=K3SGRHESIHQPEW&Signature=CvySegVTYOQn7rUI7WCjYyfS6OxGb9fzaCN1ucVtAFcEO~uvrbhsn-XfZ21NSZ1pgDNBm3ES3EANPOegvML1nKZKAfh9OvkEOxK-KyrLy~7I8QojhOnOvGwPgmYckNe4tZypSPerBTKbfckrKASrkkQHLXaSuwu5o3zRO7os0OWCPISZA2R023UTsXekxq6SwFb08ckGoqjNhCpXYo7ZFgNMOJCZJNCOzlti6tmHeQDb7l8IfwA3X8yV5iXa1N0DI7kT1LITakeYWhmLGYjhHq7D0AHCBBonbXqAzX1Dmi2JRBZ~dUATsrSaOBZKuJta0gNaASJnuIeAkw2Vl~pjEQ__",
     "set": "Spoiler Set (SPOILER)",
@@ -107,9 +103,7 @@
     "ram": 4,
     "type": "UNIT",
     "faction": "GANGER",
-    "keywords": [
-      "ATTACK"
-    ],
+    "keywords": ["ATTACK"],
     "text": "ATTACK While fighting a rival Unit, double this Unit's power.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b019.webp?Expires=1776880658&Key-Pair-Id=K3SGRHESIHQPEW&Signature=GH7DXwUA63ZcbwQEksVS33dFcbOBD9x~FEa3ih0yanvnYBgcqAnd4Lbs47pSyMboq1LKXrqvXXMWPxB-S-orVHyIxt4QBQc88deDrdgHLQbb1NACfilrJWBSTu~3ay3AUz5RO3iPIBwqGldFPwTeNYz7NwXBioSPJmbWRIUl2Lohj5SldYZkZVgz-rAfe~djDW3c5ZxPaafXAGdTZbmq~Hs8vJR8GvSpdMMqX~5TS41gHzy-uLDyNY~Hxx4AjPP9uIxqq-5h0N4MfLZDYpwAxy1jF2Ac3imj5Rnq6DfgoeiMQPTTpOUe~6ls3DM9k7RVfjZD0M9d-vnfUzDWBbXoEA__",
     "set": "Spoiler Set (SPOILER)",
@@ -166,9 +160,7 @@
     "ram": 4,
     "type": "UNIT",
     "faction": "ARASAKA",
-    "keywords": [
-      "PLAY"
-    ],
+    "keywords": ["PLAY"],
     "text": "PLAY If you have 12+ * (Street Cred), defeat a rival unit with power 5 or less.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/a007.webp?Expires=1776880668&Key-Pair-Id=K3SGRHESIHQPEW&Signature=PzQrHbEqJch1UCy3JTM0~toWSun0V64kCkT76zeGiwSbj2tSorfiCN6iaGEW-TkexWcwBJ2SvJs2ZjkDBn0Wz2tVxQkWHo2bcHJdDyWezMxcouQslAVXaS9EYoTvZOWWDrQKvsJ9mySQ-lG6ISAm2yz3dmBuEGINQNvp27ddyX8yAaLftQlrgjjmPBgWoZ5dyb9n7dSrTE6T0IMK99XfH90ifgv9-ApZ1EcYSc5g4GJJ-vLseQO0m~DMfp1wYMZjCUtDqzboG1KwXPAO3FKxaN6BAoU3AErnTGIETALqY5LFKZN5t80j402OfQXHreOFC9dT82LCAaGXSAwQKTZ-LQ__",
     "set": "Alpha Kit Set (ALPHA)",
@@ -206,9 +198,7 @@
     "ram": 2,
     "type": "GEAR",
     "faction": "WEAPON",
-    "keywords": [
-      "ATTACK"
-    ],
+    "keywords": ["ATTACK"],
     "text": "(Equip to a unit or face-up legend.) ATTACK If this unit wins a fight against a rival unit, draw a card.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/a020.webp?Expires=1776880674&Key-Pair-Id=K3SGRHESIHQPEW&Signature=oAeKrijKI26Mf~t1U9Nc8XxQ5HkNQkcc4AEviSkFAUWdFJJnzLxqKFSxmlKlO17Yj~5DxPOo~vk2zBkwvi-ifo1wwaUqJ-VbpuwyOxHEtXYI47HIO2lUx6cC2sdc6fcFQ4o~aK6gj~afOfb11X1BKitAWfCjmmM7Ji3aeTKBlYzcrSaAPiL8SrAEozyYSTXPO6YCw5VzVKSLCojKjd-bbPk6oalw-j0E-XBPbF9YLdduRabNUHEsFzXk87Yy2NmRmuOgFmG7XYUxPEJbk0wheJ452YVlyDHReVHgoD~HhsIvOys0bDrDrhSbVEDmJ9jUdDMS5J-ZM43NLTbpyi7d4g__",
     "set": "Alpha Kit Set (ALPHA)",
@@ -243,9 +233,7 @@
     "ram": 2,
     "type": "LEGEND",
     "faction": "GANGER",
-    "keywords": [
-      "CALL"
-    ],
+    "keywords": ["CALL"],
     "text": "CALL You may defeat a friendly Gear. If you do, draw 4 cards. Otherwise, draw 1 card.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b133.webp?Expires=1776880681&Key-Pair-Id=K3SGRHESIHQPEW&Signature=hnE9fgrGBZp9ozzFt6a4lnaLLuRkENeJMZ6RqmJiV14DnigfPmidDmzJhEhk7v-9tA5jiBbhDeVKym7HDLZqf3eVb6vvxBV2R0qK2P2cHyHVyimtkSaUqi5OQrmiTGUPo-JloWx3E-v0BYN-CgKMC-ifbUfGCOntgbOneTpvA-EDEtoQ2g-9VrNU~G52g47Yo2rlBZnqojw0F3pyzsnmix0PikvAyYfrDyY9CIimycw-ccUB78BDJDE5csG82pzm-QZgHM7YujlSr66DMlDMGNssmx7jrSOtJ8DPtXTM86WcqXkDZq9tHH9gls0te3Cm~XnGjnOqn6URqXiQX24N~A__",
     "set": "Spoiler Set (SPOILER)",
@@ -262,9 +250,7 @@
     "ram": 2,
     "type": "LEGEND",
     "faction": "NCPD",
-    "keywords": [
-      "CALL"
-    ],
+    "keywords": ["CALL"],
     "text": "CALL Draw a card. When a Unit attacks, [Spend Icon]: Choose a Gear from your hand with cost 2 or less. Equip it for free to a friendly Yellow Unit with no equipped Gears.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b135.webp?Expires=1776880684&Key-Pair-Id=K3SGRHESIHQPEW&Signature=mHxjPywLfz0hhbRuE2YqC-TlDqPoPEa1IgppBoem63F9SDmMCw03pkcfISlh9QJNHhNKEFrp66B2hstUsUbARXEeA-upZ7dc9yX2MLiJ4F-PwokgTx1llosHUKmM2FAcUm3JVnDV4D3AZixCDxwp1WbY2iDAyPRpYbE8UBzYVLZLFMsENTHeU6s9IyOIO8tyAHdKvtR5zrR6s2q45OlWjemx4vO5kqWs59mya4xsq2O~wke9VcRmmM93ksSjOK9U1WzcON3qjq6dn9v1tfBcLfjl0X08UNUUHiP94aXYHts3u53oBOHRvGa7EbnSNe9u0UE3AxuP1tbURH8zKR5q1A__",
     "set": "Spoiler Set (SPOILER)",
@@ -282,9 +268,7 @@
     "ram": 2,
     "type": "LEGEND",
     "faction": "RIPPERDOC",
-    "keywords": [
-      "FLIP"
-    ],
+    "keywords": ["FLIP"],
     "text": "FLIP Search the top 5 cards of your deck for up yo 2 gear that costs 2 or less each. Reveal them and add them to your hand. (Place the other cards on the bottom of your deck in a random order.)",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/a006.webp?Expires=1776880687&Key-Pair-Id=K3SGRHESIHQPEW&Signature=JQ7UNdK0hU45KRFU3NywO4top6NWgS9Oou20TSv43HrNookQInhO7i-YBja1B1IJurJfIzVR1-lkZBkHfB1bHyL~TzHAZSGgx3r62XPgxpvmX1Gl~czCGqlnce3O3AwavIkrsr7oWRrQenMCZOPI60JXZwEEYXS5QD4xY~v8nkyaSQ-HyyjrTMA-MgAIOiHl5yg2LFDFFBQAfsoQ1aJYBOhnHFDFJ7qGZ1l5Tnj5NNwIVVCcXwbeUElC36K9X~hVaexUQfS4vWVATxN3fYg5iDh~7lA5NYYdFUhfhlyc4JmQkaf0ZqumyohObD~CTi7o7MLH7aJQpkscy2mqkA5Rtg__",
     "set": "Alpha Kit Set (ALPHA)",
@@ -303,9 +287,7 @@
     "ram": 1,
     "type": "UNIT",
     "faction": "ZETATECH",
-    "keywords": [
-      "BLOCKER"
-    ],
+    "keywords": ["BLOCKER"],
     "text": "This unit can't attack. BLOCKER (When a rival unit attacks, you may spend this unit to redirect the attack to it.)",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/a014.webp?Expires=1776880690&Key-Pair-Id=K3SGRHESIHQPEW&Signature=dhAnbKcohtVkFFGVLsbUX3KgcCXAlB1sNFl3u5Ded1B329AQv~QKe7fBYIDeF3r2kLf9xyHOMv78gKMxQUly0Hidxi8D9EJUU0Ztui-PPtLDg~pbJ-B2-D90U0gPmiOkGj9tFI~dQhl8ffMCXbK01kt~XE-j8ydU9bNbfBh7fYfj8225Z03jYnKS8J62oyvtaZQYOFe4AWV7h~IrvbHS03pEcVWtcx-eFPh2nYxdOOBfP8Fo223Vrog7GxItR0xT8iu2wwCmjavcGJkdlhmTFaDzyno2vQsNLMX6hnpmK3iuKZ~6zqD44XYiCPLng2O~MllHI0eUXcKAnZ3Z0XIgQw__",
     "set": "Alpha Kit Set (ALPHA)",
@@ -324,9 +306,7 @@
     "ram": 2,
     "type": "UNIT",
     "faction": "ARASAKA",
-    "keywords": [
-      "PLAY"
-    ],
+    "keywords": ["PLAY"],
     "text": "PLAY Reveal the top 4 cards of your deck. Then choose a friendly Gig. Add all cards with cost equal to that Gig's value to your hand. Trash the rest.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b126.webp?Expires=1776880694&Key-Pair-Id=K3SGRHESIHQPEW&Signature=BqXe4i3~yC2x92Ud8IykrxJxS2VbPmH5tpdsAkaUryraZ7L3~HQsH47JXMvNM0LKdbYJEPlUoy5AQQREZxNxliL1WLHktJ4GHAjVbgTzEpWuGus0himW031D5xD1MVZ3Vo85lLo5ZxhP9qL8fEUe5YbTVu7L7IVqYrLNusjQx4iOTNwx2sKzCm4ZF5y8MsddUVYY8HhKmEEGvqyAff~1RK53eXuxKg5A6dgytzIpVrZpiTuJeBHapipdhAYePBy3jEnzYjGw6fDvSRyslPTDRMODNlntEUF90QIkRS4TCgEctFC4yYQJULQoG52jBELB8slANAK9MM6K33gBNkoq5w__",
     "set": "Spoiler Set (SPOILER)",
@@ -364,9 +344,7 @@
     "ram": 4,
     "type": "UNIT",
     "faction": "GANGER",
-    "keywords": [
-      "DEFEATED"
-    ],
+    "keywords": ["DEFEATED"],
     "text": "DEFEATED A rival discards 1. If the card's cost is equal to the value of a friendly Gig, that rival discards 1 more.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b036.webp?Expires=1776880700&Key-Pair-Id=K3SGRHESIHQPEW&Signature=Vrh3laAEH4wgBpsKH2SYwRKqXg6ujWpRY1ZeuM-jihAf5R2RfYWOSAPHqeJT9dsg5iFilUvuN5QDXKe77H77Ns9Mv~~C9k91-oqsXpKrBO3Qe2N-sOZu5ZBJW40gQydDKdntwLlqNmcI2bTPFl0ciFqMZZG7J5FE8QHlV8FpWNqmNcbH7e7GthcAd8-hgYY9cMwJQiXFvCaieECE-cAz1pjHcjA7IOKVhviTV8orqr3tuPDPjC07BOBM2L9WPnp-AtDmve-f9ISepO1ru43QzKvLnFahOCtKOnnRVQ0CVae3enjf0jk8c5NpmlUtwGPOhrrbBnrFoJcwtBgRD3Hj3Q__",
     "set": "Spoiler Set (SPOILER)",
@@ -404,9 +382,7 @@
     "ram": 5,
     "type": "UNIT",
     "faction": "ARASAKA",
-    "keywords": [
-      "PLAY"
-    ],
+    "keywords": ["PLAY"],
     "text": "PLAY Defeat all other Units.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b137.webp?Expires=1776880707&Key-Pair-Id=K3SGRHESIHQPEW&Signature=Nw1VT738XI4-szEsJ~2Qxt6bi2YA~19NbPhoUcmK8850Nscql4eiOmqAeVkt8-BukM17BTtEa8jbrSes6D8pnE~h7SoUYapHP9UZhtSedoA187OMbDpSYO4wwMV~DcXCKIx6xzC29ykumOt~Q3oS~ld9bspeHRPcHZ1p3CizfDPlfGmu5Tu1Xb-1ufwrgoX9AAtCdBC~czqrTI2oufgYrTjsVrHmQ5jT7w9ynl9TKU2ZWis4JTgltdQT56VjUgtmIaz-sud-f16iGsfJkh1oN4RCbPLfA6FVIZip6F02p8bGymonsFqqK6koZ0fp8WG4vv-djk98KORkEbDHHoRFUw__",
     "set": "Spoiler Set (SPOILER)",
@@ -425,9 +401,7 @@
     "ram": 1,
     "type": "GEAR",
     "faction": "CYBERWARE",
-    "keywords": [
-      "ATTACK"
-    ],
+    "keywords": ["ATTACK"],
     "text": "(Equip to a unit or face-up legend.) ATTACK Look at a friendly face-down legend without revealing it.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/a026.webp?Expires=1776880710&Key-Pair-Id=K3SGRHESIHQPEW&Signature=sx3R9MxykqBrFgweOL421RE8mTLcgwP2orG6Jl51kaz62b4Y0Ou7R6080ITMezuROQ0utfaQcVXtY0G3dusoRP6OySXL9xd0pdUFaDimYtFmN3HRAF5N2KORPcnEyI29PypUeBuUsxydWw4jEIhgywC9xSky79s00f6kuLIG3gWm2khJpgBY~E6Vls2gtu5M5DDenbbaRfMroK~ylSK3melvwBiTZh3RBY8uNjnPVhw8EtPGYodjjTChuQqy3xhMgp9tNtOvzKtGAtrwqLQGka2bg30tgoTZ2ACDWnUYrGa1CH0EatzrpRnTfzfnglvAtcez5KetAgfRl3aC5EdTsg__",
     "set": "Alpha Kit Set (ALPHA)",
@@ -446,9 +420,7 @@
     "ram": 2,
     "type": "GEAR",
     "faction": "CYBERWARE",
-    "keywords": [
-      "BLOCKER"
-    ],
+    "keywords": ["BLOCKER"],
     "text": "(Equip to a unit or face-up legend.) BLOCKER (When a rival unit attacks, you may spend this unit to redirect the attack to it.)",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/a027.webp?Expires=1776880713&Key-Pair-Id=K3SGRHESIHQPEW&Signature=Qsn2J2BoZfqkSFSfzJDnxABFJx4DNFeicwNhGsrgna7EtfO0ckywfOL1vl6SADLKX~cptNDR6rD9xLARZ~oOc-1W8HPihPcQeAJ3~LseF2owU8TExpMY-y~P3yPG35GfwG2cqTQOSdkuHlL0HJ~NzT1JGA17Vx6hBLRBeziMARZbScuHX0QDAb5lFqMjS0Z3swxV1k8sTJisUYYOG6gadETwg9jvxthiy2T8Hg7LqUy3hSomQOZA3rfNoRz3PYXqGQuYEHpo38wmAbmmdhugBb2ynKSRGiF7bfyYAwvOl7l~pmyAT6a4CdmFVH8dmxRiFjS31wJfqr0hhE94DUdgtg__",
     "set": "Alpha Kit Set (ALPHA)",
@@ -540,10 +512,7 @@
     "ram": 2,
     "type": "LEGEND",
     "faction": "ARASAKA",
-    "keywords": [
-      "GO SOLO",
-      "BLOCKER"
-    ],
+    "keywords": ["GO SOLO", "BLOCKER"],
     "text": "GO SOLO (Pay this card's cost to play it as a ready unit. It can attack this turn.) BLOCKER (When a rival units attacks, you may spend this unit to redirect the attack to this unit.)",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/a004.webp?Expires=1776880730&Key-Pair-Id=K3SGRHESIHQPEW&Signature=clWg-yy19tiQZH0bTE70SDeMEl6Ar-58sLjqwB-5A0TET~H6XLsbgntg7y47bSIYD8uOvFt~gD50BMMiNkbHWGkirG3JsdudgC7dY4FM-5SUmQC7hDqno5wWYMaxWn8~5VdYVBWy1s-fGJYt-Z1DMbgRJjOfUjx3eoMwE8M4lXOnnSI6ydeJlxDYjgbQyWNrJVVUe66BenQghyNDrCH5h8SVaJ06B2Yn1H96gfVe1oznjzBqqFq-PIlTtpMWLOrIQWWb4QS3xyg~DL9hNiEMtClRGiu~OdIegjtEgFyQX-ebhOKdr1jWLV1MAqG~fZG1iLR3fUaki9GEo--rq7kLng__",
     "set": "Alpha Kit Set (ALPHA)",
@@ -560,10 +529,7 @@
     "ram": 2,
     "type": "LEGEND",
     "faction": "ARASAKA",
-    "keywords": [
-      "CALL",
-      "BLOCKER"
-    ],
+    "keywords": ["CALL", "BLOCKER"],
     "text": "CALL Ready this Legend. When a rival Unit attacks, [Spend Icon]: If you have a sided-pair of Gigs, give a friendly Unit with cost 4 or less +1 power and BLOCKER this turn.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b125.webp?Expires=1776880733&Key-Pair-Id=K3SGRHESIHQPEW&Signature=WeqWztcuQ17Cc7Ue-mGPpmwPFhIKagz4yr~YmRwBKVhsJpOuMrXYf2OzB0XF2RIv-zJMI1ZKxKESOns~nCa5PYNDMhTEOOhbvi3pMonse7jI0DetZFaUz6MwtQ4AXma5zPj5tgG522cjwCIkf14K6iWY~4r1fPvlJzMg9O7tO1mQkBsJji6bvbrdWOxFo9GjyrwTa7gofY5hZgQnbTBlk-X7f5yb-6AxYcPWdSQfM0Hfv55zMF3Om~wM1ybvKCdwHgbsVKvRmgQN~Gmn4iaexYQVRvZBjloQ~rkrzfPwhEvi625MgdMEolYGTf4XJUXIu1lEmvdLwxsiMfSUSLoVng__",
     "set": "Spoiler Set (SPOILER)",
@@ -580,9 +546,7 @@
     "ram": 2,
     "type": "LEGEND",
     "faction": "ALDECADO",
-    "keywords": [
-      "CALL"
-    ],
+    "keywords": ["CALL"],
     "text": "CALL Ready this Legend. When a friendly Unit attacks, [Spend Icon]: Choose a Gear from this Legend and equip it to that Unit. If you do, ready that Unit.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b032.webp?Expires=1776880736&Key-Pair-Id=K3SGRHESIHQPEW&Signature=gY~LSQ0KM5Thx7P9twVW7dGx3NqTxn9UDpR-A8phKjaktA6kW5dIhAqnXH7wVCphNMvgs6nsI7AS9VDDZEte2oyuIVBtp1z9F34atL6R5MoO5GoQeF8HxLbH9wc~w-zwNJ1m3WgrjpD5aQ-gKsnJdsU0mJIuQtRjPTz2~khD3od~7nOREoH8keJEepkSAK0hmVLtlKXYGVl9CKQGoLzxeWjcjiJ1lYfzoe-elDmZex5F2Xs58wptWpl8GUT0th4fI4O0VfLTSGKJd3muhnBEFMTSqnIUepninovNeDU4G1UQ2d--4CBHGE6ZeUxfiQ4ZPMAu0jAVx6MXD678lBN6iw__",
     "set": "Spoiler Set (SPOILER)",
@@ -695,9 +659,7 @@
     "ram": 4,
     "type": "GEAR",
     "faction": "CYBERWARE",
-    "keywords": [
-      "PLAY"
-    ],
+    "keywords": ["PLAY"],
     "text": "(Equip to a unit or face-up legend.) PLAY This unit can attack spent units this turn.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/a024.webp?Expires=1776880756&Key-Pair-Id=K3SGRHESIHQPEW&Signature=Fouo20i00yy8y3Ro5vL0ywaDBcHpRA9uusYM~yHb7yz1AXUEySwG0E61bzCASs4Jgm5HwQzbB2TeGmKiCAEAXa~Q~Z6U4RCj5fekf0g7OQO~0K7QruK-c0KQdbLPhhREErAwNaMSyAGHCR2EhOQv3OAWggiFsikgSW7JB3fGprk2kVZd3nKBGZq~rOEaA3ryRPOzCUFq~I6ST7sazOBI2mxBlW0ibWdgP7EK68A9fXcUtkFYKfOXopR9-sO4HhKQEQJ7b8yWOoe8BEXdQ5Hd-8CoYNda7vUKJTF7-JgkjF433SRPMhmsKjxAgnQuYPv8VkqRB62MblKrE5Axx~XJ3A__",
     "set": "Alpha Kit Set (ALPHA)",
@@ -734,9 +696,7 @@
     "ram": 2,
     "type": "LEGEND",
     "faction": "MERC",
-    "keywords": [
-      "GO SOLO"
-    ],
+    "keywords": ["GO SOLO"],
     "text": "GO SOLO (Pay this card's cost to play it as a ready unit. It can attack this turn.)",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/a003.webp?Expires=1776880762&Key-Pair-Id=K3SGRHESIHQPEW&Signature=Gf1lO~Fysa9Xak3eaiP0KhcRwS46DUdgPrj5~MDO9Q~~bba44fvzLjbDjaOkfH1lmj4-wac0lVcopIhffzvnITfAXVQWGOdLkIpS5CuKL7wDFHhuzddXrznv7AFmfXc9w0QvuJmc~F61itZGlE5W0Ts7bH7p8c-4LaAy-Y2qZrNf~2pi1ptdZNMiiGCIBDSJUqSL7M2iE6J~cuZuqAU-~nX2aZM5jyCgVWeGnoWm9O6uaINaUI5zJaXGQR4G4yOrcAPLqxQJM4gZQKTx9r8RgQmDe4KNrUTXoKN~4F~wZqMWGB9DHIK9YyGdvkzmHOhnwimLl4sG9AfxYG-WyCLOFA__",
     "set": "Alpha Kit Set (ALPHA)",
@@ -755,9 +715,7 @@
     "ram": 2,
     "type": "LEGEND",
     "faction": "MERC",
-    "keywords": [
-      "GO SOLO"
-    ],
+    "keywords": ["GO SOLO"],
     "text": "GO SOLO When this Legend steals a Gig, you may remove this Legend from the game. If you do, choose a Program from your trash. Play it for free.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b121.webp?Expires=1776880766&Key-Pair-Id=K3SGRHESIHQPEW&Signature=RD9TEPy396lUxgHiRLch~ApWAYFXrZoWNCJJ03evB6sExnbX8Y9I82kEegGvvG0bqEKCYgNIeS6pSaYGkOhaiE9VDVFkJfVug4VpQXTYIeFz4YpjrIP98ed9Czdvn~0fw5jdNklz8cA61gXsuXpSt5RbaczO4LvA6pamr-ZLQDZH1zG2c6LHQwpoDLatm96TDCCkac6NKTNuQd1aGqViKJBaqz4vEHJiEWLXjEJFtt8yAwcxchkqc8vyroSAyarAJTtCM8t3Vuqnd6pQWY4VN2DNXK656~ggaD3fwtngJfwOzdLOl5oQ7QjflCP1C3n9Up02rY-C5t~miWrq-dX9TA__",
     "set": "Spoiler Set (SPOILER)",
@@ -774,9 +732,7 @@
     "ram": 2,
     "type": "LEGEND",
     "faction": "DOLL",
-    "keywords": [
-      "CALL"
-    ],
+    "keywords": ["CALL"],
     "text": "CALL Decrease a rival Gig's value by 3. [Spend Icon]: Search the top 3 cards of your deck for up to 1 Braindance Program. Add it to your hand. Bottom-deck the rest.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b122.webp?Expires=1776880769&Key-Pair-Id=K3SGRHESIHQPEW&Signature=eYk4CL~Hk-WD8ytgd~LGKs9~x9SYJSTKCohqL4O64aYt~XgVCgr4Akpc~7zCniMne1rLreQJzQ7iGjIzGMcKJMY7-TfyHFT2xiNf~oFtCnavVx-S-tk7QX-F~GPJ2fZrDgjce2~M9DZ2s2at4NuinikU8APfbQKFht7kH0cLOIpMJp~u19tdEO0Kq9rU6gfaaKgkJEzz-Vt-NqBwZkSc0~hlZgz50DLsoO7x62WUfIJYBnDhY3ruf9hmV815bCTOepN4dC1cOTqhXCyHDG4UEIEK~vfVY2W8R~eHkxqHrfLUdcPctrVshbLC1Y6R7XFEUoEM5J9Ue3XLcx1HjCur4g__",
     "set": "Spoiler Set (SPOILER)",
@@ -888,10 +844,7 @@
     "ram": 2,
     "type": "UNIT",
     "faction": "GANGER",
-    "keywords": [
-      "PLAY",
-      "ATTACK"
-    ],
+    "keywords": ["PLAY", "ATTACK"],
     "text": "PLAY ATTACK You may discard a Program from your hand. If you do, bottom-deck a rival Unit.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/b073.webp?Expires=1776880789&Key-Pair-Id=K3SGRHESIHQPEW&Signature=Fy68baZeG2REl0YzGSiWB585M4oa2CxN8RmOTO5yTof7Ti41w6CsNmUWjfPTl0XoDpCUe8mw~pLWa1bYLULJjE3Yq28auQrf-V9YiCkQ-E1XAs8M9QOQltVoDJ0D43p4X107tlAL65QmnA45j4xfjB8EduH2Ow~CHqoVHTHOPn~go4AapAogSLy6S-lWG0nwyrvJeLh3UMP5IK0A5qx3CwHtnjAyEh~tz3xfDHmqs-P-W5IaMJ0FUZLajd1ZHt9STOXBb6zLGpMYfjBFGKfu9Itcx94XMwUjUKSCvAm7XZ2EWW~lduK7MijE-XXt3fzWGOuihHECHBcXeaWP4cWSqw__",
     "set": "Spoiler Set (SPOILER)",
@@ -910,9 +863,7 @@
     "ram": 3,
     "type": "GEAR",
     "faction": "WEAPON",
-    "keywords": [
-      "ATTACK"
-    ],
+    "keywords": ["ATTACK"],
     "text": "(Equip to a unit or face-up legend.) ATTACK If you have 7+ * (Street Cred), defeat a rival gear card that costs 2 or less.",
     "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/a022.webp?Expires=1776880792&Key-Pair-Id=K3SGRHESIHQPEW&Signature=bLHR2qqMPJQcVKo7Zl1-Tvfj9kUv73d0lJ~q~kXo-3fhVykbpLWZ~rrGP7~WoxGOBRXgNwZfnMDnjnnusiXVLHSratdzu2ef4o4NxgCDUt7TsF0p0ILcz6eb-rK97vePv1Tqd0sadmGTmX054mBxvqqeud8G2e~HJp80vxn8DkorTlcVDXo77hzpkvI~z-PqeIZJxwGkff3vJLtHZpGuFvQnuS9LgKIqJ-6WvJjbFrPg8BlDR~jQa4QhoWoWxh3nYFg7Hazsn-ofcnUTU2NgC0YtkdhSX1E5C-d9JDsyUahZHfAf6NJg8fJHVdWS8YYVTzAKCnp3~xuFcgJma4WPmQ__",
     "set": "Alpha Kit Set (ALPHA)",
