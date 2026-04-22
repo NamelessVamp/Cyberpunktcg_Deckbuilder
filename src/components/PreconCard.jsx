@@ -167,7 +167,7 @@ function PreconCard({ deck, onLoad }) {
                     <span className="text-term-green ml-2 font-bold">
                       {deck.mainDeck.length > 0
                         ? `${deck.mainDeck.reduce((sum, card) => sum + card.count, 0)} cards`
-                        : "40-50 cards (placeholder)"}
+                        : "27 cards"}
                     </span>
                   </div>
                 </div>
