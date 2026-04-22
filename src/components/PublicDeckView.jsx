@@ -148,16 +148,22 @@ export default function PublicDeckView({
   const isOwnerOrAdmin = deck && (deck.user_id === currentUserId || isAdmin);
 
   async function handleDelete() {
-    if (!window.confirm(`Delete "${deck.name}" from the Black Market?`)) return;
+    if (
+      !window.confirm(
+        `Remove "${deck.name}" from the Black Market? (It will stay in [MY DECKS])`,
+      )
+    )
+      return;
     setDeleting(true);
     try {
-      await communityService.deletePublicDeck(deck.id);
+      // 🔧 INYECCIÓN: Cambiamos la función de borrado duro por "unpublish"
+      await communityService.unpublishDeck(deck.id);
       onShowToast?.("Deck removed from Black Market", "success");
-      onDeckDeleted?.();
+      onDeckDeleted?.(); // Esto refresca el feed del Black Market para que desaparezca
       onClose();
     } catch (err) {
-      console.error("Delete error:", err);
-      onShowToast?.("Error deleting deck", "error");
+      console.error("Remove error:", err);
+      onShowToast?.("Error removing deck", "error");
     } finally {
       setDeleting(false);
     }
@@ -533,8 +539,8 @@ export default function PublicDeckView({
                       className="w-full py-2 bg-term-red/10 border border-term-red/50 text-term-red font-mono font-bold text-xs rounded hover:bg-term-red/20 transition-colors disabled:opacity-40"
                     >
                       {deleting
-                        ? "[DELETING...]"
-                        : "[🗑 DELETE FROM BLACK MARKET]"}
+                        ? "[REMOVING...]"
+                        : "[✕ REMOVE FROM BLACK MARKET]"}
                     </button>
                   </div>
                 )}

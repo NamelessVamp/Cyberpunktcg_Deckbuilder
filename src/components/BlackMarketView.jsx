@@ -43,8 +43,14 @@ function DeckCard({ deck, onClone, onViewDetail, user, cloningId }) {
 
   // Extract RAM colors from legend_ids metadata (best effort from archetype field)
   const ramColors = deck.ram_colors || [];
-  const authorName = deck.profiles?.discord_username || "UNKNOWN_RUNNER";
-  const authorAvatar = deck.profiles?.discord_avatar;
+
+  // 🔌 INYECCIÓN DE IDENTIDAD: Jerarquía de nombres y avatares
+  const p = deck.profiles || {};
+
+  // Aquí la magia: Si tienes display_name o username, se sobreescribe el pasado.
+  const authorName =
+    p.display_name || p.username || p.discord_username || "UNKNOWN_RUNNER";
+  const authorAvatar = p.avatar_url || p.discord_avatar;
 
   return (
     <div className="bg-term-gray border border-term-amber/20 rounded-lg p-4 hover:border-term-amber/50 transition-all group flex flex-col gap-3">
@@ -228,7 +234,10 @@ export default function BlackMarketView({
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       const inName = d.name?.toLowerCase().includes(q);
-      const inAuthor = d.profiles?.discord_username?.toLowerCase().includes(q);
+      const inAuthor =
+        d.profiles?.display_name?.toLowerCase().includes(q) ||
+        d.profiles?.username?.toLowerCase().includes(q) ||
+        d.profiles?.discord_username?.toLowerCase().includes(q);
       const inDesc = d.description?.toLowerCase().includes(q);
       if (!inName && !inAuthor && !inDesc) return false;
     }

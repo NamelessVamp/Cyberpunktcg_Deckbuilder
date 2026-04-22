@@ -22,7 +22,7 @@ export const getPublicDecks = async (options = {}) => {
     .select(
       `
       *,
-      profiles!decks_user_id_profiles_fkey(discord_username, discord_avatar),
+      profiles!decks_user_id_profiles_fkey(display_name, username, avatar_url, discord_username, discord_avatar),
       deck_votes(vote_type)
     `,
     )
@@ -54,14 +54,8 @@ export const getPublicDeck = async (deckId, incrementViews = true) => {
     .select(
       `
       *,
-     profiles!decks_user_id_profiles_fkey(discord_username, discord_avatar), 
-      deck_votes(vote_type, user_id),
-      deck_comments(
-        id,
-        comment_text,
-        created_at,
-        profiles!deck_comments_user_id_profiles_fkey(discord_username, discord_avatar)
-      )
+      profiles!decks_user_id_profiles_fkey(display_name, username, avatar_url, discord_username, discord_avatar),
+      deck_votes(vote_type)
     `,
     )
     .eq("id", deckId)

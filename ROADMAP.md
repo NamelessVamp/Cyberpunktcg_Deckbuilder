@@ -16,26 +16,26 @@
 
 ### 9.1 — Motor (GameState / CardLogic / CombatResolver)
 
-| #    | Feature                                          | Status |
-| :--- | :----------------------------------------------- | :----- |
-| 9A   | Eddie payment fix — sold cards spendable         | ✅      |
-| 9B   | Eddie counter badge                              | ✅      |
-| 9C   | Game log terminal                                | ✅      |
-| 9D   | Mulligan phase — modal UI                        | ✅      |
-| 9E   | Unit dimming (summoning sickness)                | ✅      |
-| 9F   | Hand AnimatePresence                             | ✅      |
-| 9G   | Stat buff display (base + modifier)              | ✅      |
-| 9H   | Cyberpsychosis fix                               | ✅      |
-| 9I   | activeEffects system                             | ✅      |
-| 9J   | Precon deck IDs fixed to match cards.json        | ✅      |
-| 9K   | advancePhase prototype preserved (Object.assign) | ✅      |
-| 9L   | Deck-out only triggers on END phase              | ✅      |
-| 9M   | endTurn calls energize() + Reboot Optics cleanup | ✅      |
+| #   | Feature                                          | Status |
+| :-- | :----------------------------------------------- | :----- |
+| 9A  | Eddie payment fix — sold cards spendable         | ✅     |
+| 9B  | Eddie counter badge                              | ✅     |
+| 9C  | Game log terminal                                | ✅     |
+| 9D  | Mulligan phase — modal UI                        | ✅     |
+| 9E  | Unit dimming (summoning sickness)                | ✅     |
+| 9F  | Hand AnimatePresence                             | ✅     |
+| 9G  | Stat buff display (base + modifier)              | ✅     |
+| 9H  | Cyberpsychosis fix                               | ✅     |
+| 9I  | activeEffects system                             | ✅     |
+| 9J  | Precon deck IDs fixed to match cards.json        | ✅     |
+| 9K  | advancePhase prototype preserved (Object.assign) | ✅     |
+| 9L  | Deck-out only triggers on END phase              | ✅     |
+| 9M  | endTurn calls energize() + Reboot Optics cleanup | ✅     |
 
 ### 9.2 — UI / Playmat
 
-| #      | Feature                                         | Status |
-| :----- | :---------------------------------------------- | :----- |
+| #      | Feature                                         | Status  |
+| :----- | :---------------------------------------------- | :------ |
 | —      | Rival zone visible + rotated 180°               | ✅      |
 | —      | Hand card selection + PLAY/SELL/CANCEL buttons  | ✅      |
 | —      | Field units clickable (declare attacker)        | ✅      |
@@ -45,31 +45,31 @@
 
 ### 9.3 — Pendientes críticos para que sea jugable
 
-| #    | Feature                                                     | Status      |
-| :--- | :---------------------------------------------------------- | :---------- |
-| —    | actionMode (IDLE/TARGETING/PAYING) para Gear/Program        | ❌ TODO      |
-| —    | Phase locks — solo PLAY en fase PLAY, solo ATTACK en COMBAT | ❌ TODO      |
-| —    | Mulligan modal aparece correctamente al iniciar             | ❌ TODO      |
-| —    | Hotseat mode — turno P2 muestra su mano/field               | ❌ TODO      |
-| —    | Blocker declaration UI                                      | ❌ TODO      |
-| —    | Card hover preview en el simulator                          | ❌ TODO      |
-| —    | Viktor Vektor FLIP effect (search top 5 for gear)           | ❌ TODO      |
-| —    | Alt Cunningham GO SOLO effect                               | ❌ TODO      |
-| —    | Kiroshi Optics ATTACK effect                                | ❌ TODO      |
-| —    | Gorilla Arms ATTACK effect                                  | ❌ TODO      |
-| —    | Placide PLAY/ATTACK effect                                  | ❌ TODO      |
-| 53   | Drag to Zone (dnd-kit)                                      | ❌ TODO      |
-| 55   | AI Opponent (State Machine)                                 | ❌ Phase 9.5 |
-| 56   | P2P Multiplayer (WebSockets)                                | ❌ Phase 10  |
+| #   | Feature                                                     | Status       |
+| :-- | :---------------------------------------------------------- | :----------- |
+| —   | actionMode (IDLE/TARGETING/PAYING) para Gear/Program        | ❌ TODO      |
+| —   | Phase locks — solo PLAY en fase PLAY, solo ATTACK en COMBAT | ❌ TODO      |
+| —   | Mulligan modal aparece correctamente al iniciar             | ❌ TODO      |
+| —   | Hotseat mode — turno P2 muestra su mano/field               | ❌ TODO      |
+| —   | Blocker declaration UI                                      | ❌ TODO      |
+| —   | Card hover preview en el simulator                          | ❌ TODO      |
+| —   | Viktor Vektor FLIP effect (search top 5 for gear)           | ❌ TODO      |
+| —   | Alt Cunningham GO SOLO effect                               | ❌ TODO      |
+| —   | Kiroshi Optics ATTACK effect                                | ❌ TODO      |
+| —   | Gorilla Arms ATTACK effect                                  | ❌ TODO      |
+| —   | Placide PLAY/ATTACK effect                                  | ❌ TODO      |
+| 53  | Drag to Zone (dnd-kit)                                      | ❌ TODO      |
+| 55  | AI Opponent (State Machine)                                 | ❌ Phase 9.5 |
+| 56  | P2P Multiplayer (WebSockets)                                | ❌ Phase 10  |
 
 ### 9.4 — UX improvements (post-jugabilidad)
 
-| #    | Feature                                                   | Status |
-| :--- | :-------------------------------------------------------- | :----- |
-| —    | Inspector flotante (card hover en field → preview grande) | ❌ TODO |
-| —    | Cursor crosshair en targeting mode                        | ❌ TODO |
-| —    | Undo button (snapshot del GameState)                      | ❌ TODO |
-| —    | S/M/L card size toggle                                    | ❌ TODO |
+| #   | Feature                                                   | Status  |
+| :-- | :-------------------------------------------------------- | :------ |
+| —   | Inspector flotante (card hover en field → preview grande) | ❌ TODO |
+| —   | Cursor crosshair en targeting mode                        | ❌ TODO |
+| —   | Undo button (snapshot del GameState)                      | ❌ TODO |
+| —   | S/M/L card size toggle                                    | ❌ TODO |
 
 ## ✅ FASE 10-12: COMMUNITY & VAULT (100%)
 
@@ -93,32 +93,35 @@ Subtitle + multiple factions ❌
 
 | Phase   | Description                  | Progress |
 | :------ | :--------------------------- | :------- |
-| 1-7     | Core → Cloud Sharing         | ✅ 100%   |
-| 8       | UI/UX                        | ✅ 97%    |
-| 9       | Game Simulator               | ⏳ 65%    |
-| 10-12   | Community, Filters, Wishlist | ✅ 100%   |
-| 13      | Scraper                      | ⏳ 33%    |
-| 14      | Draft Simulator              | ✅ 100%   |
-| 15-17.5 | Aesthetics → Security        | ✅ 100%   |
-| 18-19   | Meta Analytics, Scanner      | 🔮 0%     |
+| 1-7     | Core → Cloud Sharing         | ✅ 100%  |
+| 8       | UI/UX                        | ✅ 97%   |
+| 9       | Game Simulator               | ⏳ 65%   |
+| 10-12   | Community, Filters, Wishlist | ✅ 100%  |
+| 13      | Scraper                      | ⏳ 33%   |
+| 14      | Draft Simulator              | ✅ 100%  |
+| 15-17.5 | Aesthetics → Security        | ✅ 100%  |
+| 18-19   | Meta Analytics, Scanner      | 🔮 0%    |
 
 **TOTAL: ~118/140 features (~84%) — v1.2.0-dev**
 
 ---
+
 lista pendiente:
+
+Agregar nomrbe dinamico al current_deck.dat, En la parte de Current Deck, me gustaría que se cambiara el nombre del mazo que se cargó. En caso de que no haya un nombre cargado, que se ponga el de Current Deck.
 
 🟢 [SECTOR 1: CROMO INSTALADO] (Lo que ya está completo)
 Esto ya está operando en la rama principal. La interfaz ya no es un prototipo barato, es cromo de grado militar.
 
-[COMPLETADO] Arquitectura de Espejo (Mirror Board): * Log: Ya implementamos el contenedor doble con rotación de 180° usando un solo componente modular.
+[COMPLETADO] Arquitectura de Espejo (Mirror Board): \* Log: Ya implementamos el contenedor doble con rotación de 180° usando un solo componente modular.
 
-[COMPLETADO] Secuestro de Viewport (100dvh): * Log: El simulador ya bloquea el scroll. La mano del jugador flota como un Overlay dinámico (z-50) anclado abajo.
+[COMPLETADO] Secuestro de Viewport (100dvh): \* Log: El simulador ya bloquea el scroll. La mano del jugador flota como un Overlay dinámico (z-50) anclado abajo.
 
-[COMPLETADO] Diseño Visual de Cartas (1:1.4 Ratio): * Log: Limpiamos el texto de la carta. Ya no hay asfixia tipográfica, eliminamos los Puntos de Vida (HP) falsos, y aplicamos el degradado negro para proteger las estadísticas.
+[COMPLETADO] Diseño Visual de Cartas (1:1.4 Ratio): \* Log: Limpiamos el texto de la carta. Ya no hay asfixia tipográfica, eliminamos los Puntos de Vida (HP) falsos, y aplicamos el degradado negro para proteger las estadísticas.
 
-[COMPLETADO] Centrifugado de Gigs (Zona Compartida): * Log: Los dados ahora se lanzan a una zona central compartida, replicando la experiencia táctil de la mesa física.
+[COMPLETADO] Centrifugado de Gigs (Zona Compartida): \* Log: Los dados ahora se lanzan a una zona central compartida, replicando la experiencia táctil de la mesa física.
 
-[COMPLETADO] Niebla de Guerra Visual (Fog of War): * Log: El componente CyberCard ya soporta isFlipped, asegurando que la mano y el mazo del rival se vean como dorsos.
+[COMPLETADO] Niebla de Guerra Visual (Fog of War): \* Log: El componente CyberCard ya soporta isFlipped, asegurando que la mano y el mazo del rival se vean como dorsos.
 
 🔴 [SECTOR 2: VULNERABILIDADES DEL NÚCLEO] (Lo que hace falta - Lógica JS)
 Alerta de sistema. Nuestra UI es hermosa, pero el cerebro de JavaScript (GameState.js y CombatResolver.js) tiene fugas. Tenemos que codificar esto en el próximo parche.
@@ -167,8 +170,8 @@ Explicación para IA: Actualmente el jugador arrastra una carta al campo y el mo
 
 [PENDIENTE] Muro de RAM y Deck Builder:
 
-Explicación para IA: El useDeckBuilder.js necesita matemáticas en tiempo real. Un gran contador rojo que grite si hay más de 50 cartas, o si el jugador intenta meter 4 copias del mismo cromo. Lo más crítico: sumar el coste de RAM de las cartas y prohibir guardarlo si excede el RAM máximo que otorgan las 3 Leyendas.
----
+## Explicación para IA: El useDeckBuilder.js necesita matemáticas en tiempo real. Un gran contador rojo que grite si hay más de 50 cartas, o si el jugador intenta meter 4 copias del mismo cromo. Lo más crítico: sumar el coste de RAM de las cartas y prohibir guardarlo si excede el RAM máximo que otorgan las 3 Leyendas.
+
 ## 🎯 NEXT PRIORITIES
 
 ### 🔴 v1.2.0 — Simulator jugable

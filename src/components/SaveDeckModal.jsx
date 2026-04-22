@@ -4,13 +4,24 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function SaveDeckModal({ deck, onSave, onClose }) {
   const [deckName, setDeckName] = useState("");
   const [deckNotes, setDeckNotes] = useState("");
+  const [isSaving, setIsSaving] = useState(false); // Estado para evitar doble click
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (deckName.trim() === "") {
       alert("Please enter a deck name");
       return;
     }
-    onSave(deckName.trim(), deckNotes.trim());
+
+    setIsSaving(true);
+    try {
+      // Si onSave devuelve una promesa, la esperamos. Si no, se ejecuta igual.
+      await onSave(deckName.trim(), deckNotes.trim());
+      onClose(); // <--- AQUÍ SE CIERRA EL MODAL AL TERMINAR
+    } catch (error) {
+      console.error("Save error:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -55,6 +66,7 @@ export default function SaveDeckModal({ deck, onSave, onClose }) {
             className="input-terminal w-full mb-4"
             autoFocus
             maxLength={50}
+            disabled={isSaving}
           />
 
           {/* Deck Notes */}
@@ -68,6 +80,7 @@ export default function SaveDeckModal({ deck, onSave, onClose }) {
               placeholder="Strategy, combos, sideboard notes..."
               className="input-terminal w-full h-32 resize-none"
               maxLength={500}
+              disabled={isSaving}
             />
             <p className="text-term-amber/40 text-xs mt-1 font-mono">
               {deckNotes.length}/500 characters
@@ -78,13 +91,15 @@ export default function SaveDeckModal({ deck, onSave, onClose }) {
           <div className="flex gap-3">
             <button
               onClick={handleSave}
-              className="flex-1 bg-term-green text-term-black px-4 py-2 rounded font-mono font-bold hover:bg-green-400 transition-colors"
+              disabled={isSaving}
+              className="flex-1 bg-term-green text-term-black px-4 py-2 rounded font-mono font-bold hover:bg-green-400 transition-colors disabled:opacity-50"
             >
-              [SAVE]
+              {isSaving ? "[SAVING...]" : "[SAVE]"}
             </button>
             <button
               onClick={onClose}
-              className="flex-1 bg-term-gray border border-term-amber/40 text-term-amber px-4 py-2 rounded font-mono font-bold hover:bg-term-amber/10 transition-colors"
+              disabled={isSaving}
+              className="flex-1 bg-term-gray border border-term-amber/40 text-term-amber px-4 py-2 rounded font-mono font-bold hover:bg-term-amber/10 transition-colors disabled:opacity-50"
             >
               [CANCEL]
             </button>
