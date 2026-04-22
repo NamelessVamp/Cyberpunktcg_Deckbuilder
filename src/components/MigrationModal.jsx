@@ -27,10 +27,10 @@ export default function MigrationModal({
         {/* Message */}
         <div className="mb-6 p-3 bg-black/30 border border-term-green/20 rounded">
           <p className="text-term-green text-sm font-mono mb-2">
-            ⚡ These decks are currently saved on this device only.
+            ⎙ These decks are currently saved on this device only.
           </p>
           <p className="text-term-green text-sm font-mono">
-            ☁️ Migrate them to the cloud to access from anywhere!
+            Migrate them to the cloud to access from anywhere!
           </p>
         </div>
 
@@ -40,7 +40,7 @@ export default function MigrationModal({
             onClick={onMigrate}
             className="w-full bg-term-green text-term-black px-4 py-3 rounded font-mono font-bold hover:bg-green-400 transition-colors"
           >
-            [MIGRATE TO CLOUD ☁️]
+            [MIGRATE TO CLOUD]
           </button>
 
           <button

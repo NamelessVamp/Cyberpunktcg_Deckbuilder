@@ -43,7 +43,7 @@ export default function ExportModal({ deck, deckName, onClose }) {
         setTimeout(() => setCopied(false), 2000);
       })
       .catch(() => {
-        alert("❌ Failed to copy to clipboard");
+        alert("✖ Failed to copy to clipboard");
       });
   };
 

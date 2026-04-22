@@ -37,13 +37,13 @@ export default function MyDecksView({
             onClick={onImportAll}
             className="bg-term-blue text-term-black px-4 py-2 rounded font-mono font-bold text-sm hover:bg-blue-400 transition-colors"
           >
-            [📥 IMPORT ALL]
+            [▼ IMPORT ALL]
           </button>
           <button
             onClick={onExportAll}
             className="bg-term-green text-term-black px-4 py-2 rounded font-mono font-bold text-sm hover:bg-green-400 transition-colors"
           >
-            [📤 EXPORT ALL]
+            [▲ EXPORT ALL]
           </button>
         </div>
       </div>
@@ -81,16 +81,16 @@ export default function MyDecksView({
               {/* Stats */}
               <div className="mb-3 text-sm font-mono flex items-center gap-4">
                 <span className="text-term-green">
-                  ⚡ {savedDeck.deck.legends.length}/3 Legends
+                  ⚡︎ {savedDeck.deck.legends.length}/3 Legends
                 </span>
                 <span className="text-term-green">
-                  📇 {savedDeck.deck.mainDeck.length} cards
+                  🀢 {savedDeck.deck.mainDeck.length} cards
                 </span>
               </div>
 
               {/* Saved Date */}
               <p className="text-term-amber/60 text-xs font-mono mb-3">
-                💾 {new Date(savedDeck.createdAt).toLocaleDateString()}
+                🗁 {new Date(savedDeck.createdAt).toLocaleDateString()}
               </p>
 
               {/* Card Preview Grid */}

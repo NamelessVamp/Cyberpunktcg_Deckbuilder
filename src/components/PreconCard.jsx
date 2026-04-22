@@ -10,9 +10,9 @@ function PreconCard({ deck, onLoad }) {
   };
 
   const difficultyIcons = {
-    Beginner: "⭐",
-    Intermediate: "⭐⭐",
-    Advanced: "⭐⭐⭐",
+    Beginner: "✮",
+    Intermediate: "✮✮",
+    Advanced: "✮✮✮",
   };
 
   return (
@@ -117,7 +117,7 @@ function PreconCard({ deck, onLoad }) {
             {/* Strategy */}
             <section className="mb-6">
               <h3 className="text-term-amber font-mono font-bold text-lg mb-2 flex items-center gap-2">
-                <span>🎯</span>
+                <span>𖦏</span>
                 <span>STRATEGY</span>
               </h3>
               <div className="bg-term-black/40 border border-term-amber/30 rounded p-4">
@@ -130,7 +130,7 @@ function PreconCard({ deck, onLoad }) {
             {/* Key Cards */}
             <section className="mb-6">
               <h3 className="text-term-blue font-mono font-bold text-lg mb-2 flex items-center gap-2">
-                <span>🃏</span>
+                <span>🀢</span>
                 <span>KEY CARDS</span>
               </h3>
               <ul className="space-y-2">
@@ -151,7 +151,7 @@ function PreconCard({ deck, onLoad }) {
             {/* Deck Composition */}
             <section className="mb-6">
               <h3 className="text-term-green font-mono font-bold text-lg mb-2 flex items-center gap-2">
-                <span>📊</span>
+                <span>▀▄▀▄▀▄</span>
                 <span>DECK COMPOSITION</span>
               </h3>
               <div className="bg-term-black/40 border border-term-green/30 rounded p-4">

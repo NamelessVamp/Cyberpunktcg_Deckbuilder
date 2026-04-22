@@ -14,7 +14,7 @@ export default function MulliganSimulator({ deck, allCards }) {
         <div className="absolute inset-0 bg-term-amber/5 animate-pulse"></div>
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-3">
-            <span className="text-4xl">🎲</span>
+            <span className="text-4xl">⚀⚁⚂⚃⚄⚅</span>
             <h2 className="text-term-amber font-bold text-3xl font-mono tracking-wider">
               OPENING HAND SIMULATOR
             </h2>
@@ -55,7 +55,7 @@ export default function MulliganSimulator({ deck, allCards }) {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="text-2xl">
-                {deck.mainDeck.length > 0 ? "✅" : "⚠️"}
+                {deck.mainDeck.length > 0 ? "✓" : "｡°⚠︎°｡"}
               </span>
               <h3 className="text-term-amber font-bold font-mono text-xl">
                 {deck.mainDeck.length > 0 ? "DECK LOADED" : "NO DECK LOADED"}

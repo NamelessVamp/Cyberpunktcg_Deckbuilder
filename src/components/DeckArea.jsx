@@ -111,7 +111,7 @@ export default function DeckArea({
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <h3 className="text-term-red font-mono font-bold text-lg mb-2 flex items-center gap-2">
-                  <span>🚫</span>
+                  <span>⊘</span>
                   <span>DECK LEGALITY ISSUES</span>
                 </h3>
                 <div className="space-y-1 mb-3">

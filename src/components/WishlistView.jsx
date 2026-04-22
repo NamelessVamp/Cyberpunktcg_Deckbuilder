@@ -99,7 +99,7 @@ export default function WishlistView() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold text-term-amber mb-2">
-            ⭐ MY WISHLIST
+            ˗ˏˋ ♡ ˎˊ˗ MY WISHLIST
           </h1>
           {stats && (
             <div className="text-term-green text-sm">

@@ -49,7 +49,7 @@ export default function FeedbackModal({ onClose, onSubmit, isSubmitting }) {
           <div className="bg-term-amber/10 border-b border-term-amber/40 p-4">
             <div className="flex items-center justify-between">
               <h2 className="text-term-amber font-bold text-lg font-mono">
-                📡 FEEDBACK_TERMINAL
+                ➤ FEEDBACK_TERMINAL_
               </h2>
               <button
                 onClick={onClose}
@@ -93,10 +93,10 @@ export default function FeedbackModal({ onClose, onSubmit, isSubmitting }) {
                       } disabled:opacity-50`}
                     >
                       {cat === "bug"
-                        ? "🐛 BUG"
+                        ? "𖢥 BUG"
                         : cat === "feature"
-                          ? "💡 FEATURE"
-                          : "💬 GENERAL"}
+                          ? "✶⋆.˚ FEATURE"
+                          : "ᯤ GENERAL"}
                     </button>
                   ))}
                 </div>
@@ -124,7 +124,7 @@ export default function FeedbackModal({ onClose, onSubmit, isSubmitting }) {
               {/* Tips */}
               <details className="bg-term-amber/5 border border-term-amber/20 rounded group">
                 <summary className="cursor-pointer p-2 text-term-amber/80 text-[10px] font-mono font-bold hover:bg-term-amber/10">
-                  💡 TIPS FOR GOOD FEEDBACK [+]
+                  ▀▄▀▄▀▄ TIPS FOR GOOD FEEDBACK [+]
                 </summary>
                 <ul className="text-term-green/70 text-[10px] font-mono space-y-1 p-2 ml-4">
                   <li>• Be specific and detailed</li>

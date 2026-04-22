@@ -19,14 +19,14 @@ function LegalityBadge({ cardId, size = "sm" }) {
       bgClass: "bg-term-red/90",
       borderClass: "border-term-red",
       textClass: "text-white",
-      icon: "🚫",
+      icon: "🛇",
     },
     restricted: {
       text: "RESTRICTED",
       bgClass: "bg-term-amber/90",
       borderClass: "border-term-amber",
       textClass: "text-term-black",
-      icon: "⚠️",
+      icon: "⚠︎",
     },
   };
 

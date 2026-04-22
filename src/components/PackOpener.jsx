@@ -302,14 +302,14 @@ export default function PackOpener({ allCards }) {
               position="right"
               content={
                 <div className="space-y-2">
-                  <p className="font-bold">🎮 SIMULATOR MODE (Current):</p>
+                  <p className="font-bold">[+..••] SIMULATOR MODE (Current):</p>
                   <ul className="list-disc list-inside space-y-1 ml-2">
                     <li>Open virtual packs for fun</li>
                     <li>Does NOT affect your collection</li>
                     <li>Practice pack opening probabilities</li>
                   </ul>
                   <p className="mt-2 font-bold text-red-600">
-                    ⚠️ REAL PACKS MODE (Future):
+                    ⚠︎ REAL PACKS MODE (Future):
                   </p>
                   <p className="text-term-black/70">
                     When enabled, opened cards will be added to your physical
@@ -399,7 +399,7 @@ export default function PackOpener({ allCards }) {
           </div>
 
           <div className="bg-term-black/50 border border-term-amber/30 rounded p-3 text-xs font-mono">
-            <div className="text-term-amber mb-2">⚠️ PULL RATES</div>
+            <div className="text-term-amber mb-2">⚠︎ PULL RATES</div>
             <div className="text-term-green/70 space-y-1">
               <div>• Rare: ~65%</div>
               <div>• Epic Rare: ~25%</div>
@@ -418,7 +418,7 @@ export default function PackOpener({ allCards }) {
         >
           <div className="absolute inset-0 bg-term-amber/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <div className="relative z-10">
-            <div className="text-3xl mb-2">📦</div>
+            <div className="text-3xl mb-2">🗳</div>
             <div className="text-2xl mb-2">OPEN 1 PACK</div>
             <div className="text-xs opacity-80 font-normal">
               12 cards • Click to reveal
@@ -432,7 +432,7 @@ export default function PackOpener({ allCards }) {
         >
           <div className="absolute inset-0 bg-purple-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <div className="relative z-10">
-            <div className="text-3xl mb-2">📦📦📦</div>
+            <div className="text-3xl mb-2">🗳🗳🗳</div>
             <div className="text-2xl mb-2">OPEN BOX</div>
             <div className="text-xs opacity-80 font-normal">
               24 packs • Pack-by-pack
@@ -602,7 +602,7 @@ export default function PackOpener({ allCards }) {
                         currentPack.filter((c) => c.rarity === "Nova Rare")
                           .length
                       }{" "}
-                      ⭐
+                      ⋆
                     </span>
                   </div>
                   <div>
@@ -612,13 +612,13 @@ export default function PackOpener({ allCards }) {
                         currentPack.filter((c) => c.rarity === "Iconic Rare")
                           .length
                       }{" "}
-                      🔥
+                      ✮
                     </span>
                   </div>
                   <div className="col-span-2 border-t border-term-amber/20 pt-2 mt-2">
                     Foils:{" "}
                     <span className="text-yellow-400">
-                      {currentPack.filter((c) => c.foil).length} ✨
+                      {currentPack.filter((c) => c.foil).length} ⋆✴︎˚｡⋆
                     </span>
                   </div>
                 </div>
@@ -654,19 +654,19 @@ export default function PackOpener({ allCards }) {
                     <div>
                       Nova:{" "}
                       <span className="text-purple-300">
-                        {boxStats.novaRares} ⭐
+                        {boxStats.novaRares} ⋆
                       </span>
                     </div>
                     <div>
                       Iconic:{" "}
                       <span className="text-red-300">
-                        {boxStats.iconicRares} 🔥
+                        {boxStats.iconicRares} ✮
                       </span>
                     </div>
                     <div className="col-span-3">
                       Foils:{" "}
                       <span className="text-yellow-300">
-                        {boxStats.foils} ✨
+                        {boxStats.foils} ⋆✴︎˚｡⋆
                       </span>
                     </div>
                   </div>

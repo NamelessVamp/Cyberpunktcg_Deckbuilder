@@ -55,7 +55,7 @@ function LegalityInfoModal({ onClose, allCards }) {
           {/* Explanation */}
           <div className="bg-term-amber/10 border-l-4 border-term-amber p-4 rounded mb-6">
             <h3 className="text-term-amber font-mono font-bold text-sm mb-2">
-              💡 WHAT IS THIS?
+              𖡊 WHAT IS THIS?
             </h3>
             <p className="text-term-green/80 text-xs font-mono leading-relaxed">
               WeirdCo maintains an official banlist for competitive play.{" "}
@@ -69,7 +69,7 @@ function LegalityInfoModal({ onClose, allCards }) {
           {/* Banned Cards */}
           <section className="mb-6">
             <h3 className="text-term-red font-mono font-bold text-xl mb-3 flex items-center gap-2">
-              <span>🚫</span>
+              <span>🛇</span>
               <span>BANNED CARDS ({bannedCards.length})</span>
             </h3>
 
@@ -86,7 +86,7 @@ function LegalityInfoModal({ onClose, allCards }) {
                     key={card.id}
                     className="bg-term-red/10 border border-term-red/30 rounded p-3 flex items-center gap-3"
                   >
-                    <span className="text-2xl">🚫</span>
+                    <span className="text-2xl">🛇</span>
                     <div>
                       <div className="text-term-red font-mono font-bold text-sm">
                         {card.name}

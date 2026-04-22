@@ -16,7 +16,7 @@ export default function LegalDisclaimer() {
         {/* Section 1: Unofficial Fan Project */}
         <section className="bg-term-red/10 border-2 border-term-red rounded-lg p-6">
           <h2 className="text-term-red font-bold text-xl mb-3 flex items-center gap-2">
-            <span>⚠️</span>
+            <span>⚠</span>
             <span>UNOFFICIAL FAN PROJECT</span>
           </h2>
           <p className="text-term-green/90 leading-relaxed mb-3">
@@ -34,7 +34,7 @@ export default function LegalDisclaimer() {
         {/* Section 2: Copyright & Trademarks */}
         <section>
           <h2 className="text-term-amber font-bold text-xl mb-3">
-            📋 COPYRIGHT & TRADEMARKS
+            ☰ COPYRIGHT & TRADEMARKS
           </h2>
           <div className="bg-term-gray/50 rounded p-4 space-y-2 text-sm">
             <p>
@@ -60,7 +60,7 @@ export default function LegalDisclaimer() {
         {/* Section 3: Fan Content Policy Compliance */}
         <section>
           <h2 className="text-term-amber font-bold text-xl mb-3">
-            ✅ FAN CONTENT POLICY COMPLIANCE
+            ✓ FAN CONTENT POLICY COMPLIANCE
           </h2>
           <p className="text-term-green/90 leading-relaxed mb-3">
             This project complies with{" "}
@@ -89,7 +89,7 @@ export default function LegalDisclaimer() {
         {/* Section 4: No Warranty */}
         <section>
           <h2 className="text-term-amber font-bold text-xl mb-3">
-            🛡️ NO WARRANTY & DISCLAIMER
+            ⛨ NO WARRANTY & DISCLAIMER
           </h2>
           <div className="bg-term-gray/50 rounded p-4 text-sm space-y-2">
             <p>
@@ -112,7 +112,7 @@ export default function LegalDisclaimer() {
         {/* Section 5: Data & Privacy */}
         <section>
           <h2 className="text-term-amber font-bold text-xl mb-3">
-            🔒 DATA & PRIVACY
+            🔒︎ DATA & PRIVACY
           </h2>
           <div className="bg-term-gray/50 rounded p-4 text-sm space-y-2">
             <p>
@@ -136,7 +136,7 @@ export default function LegalDisclaimer() {
         {/* Section 6: DMCA Contact */}
         <section>
           <h2 className="text-term-amber font-bold text-xl mb-3">
-            📧 DMCA & TAKEDOWN REQUESTS
+            © DMCA & TAKEDOWN REQUESTS
           </h2>
           <div className="bg-term-gray/50 rounded p-4 text-sm">
             <p className="mb-2">
@@ -162,7 +162,7 @@ export default function LegalDisclaimer() {
         {/* Section 7: Support Official Releases */}
         <section className="bg-term-green/10 border-2 border-term-green rounded-lg p-6">
           <h2 className="text-term-green font-bold text-xl mb-3 flex items-center gap-2">
-            <span>💚</span>
+            <span>❤︎</span>
             <span>SUPPORT THE OFFICIAL GAME</span>
           </h2>
           <p className="text-term-green/90 leading-relaxed mb-4">

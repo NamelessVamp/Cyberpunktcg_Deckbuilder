@@ -39,7 +39,7 @@ function DraftHistoryPanel() {
 
   return (
     <div className="mt-6 bg-term-gray border border-cyan-500/20 rounded-lg p-4">
-      <p className="text-cyan-400 font-mono text-xs mb-3">📋 RECENT DRAFTS</p>
+      <p className="text-cyan-400 font-mono text-xs mb-3">▀▄ RECENT DRAFTS</p>
       <div className="space-y-2">
         {history.map((d) => (
           <div

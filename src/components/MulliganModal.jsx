@@ -34,7 +34,7 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
     });
 
     console.log(
-      "🎨 [MULLIGAN] Legend RAM colors:",
+      "[MULLIGAN] Legend RAM colors:",
       legends.map((l) => `${l.name} (${l.ram_color})`),
     );
     return Array.from(colors);
@@ -58,9 +58,9 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
     const allowedColors = getAllowedColors(legends);
 
     // ✅ AGREGAR: Debug log para verificar colores permitidos
-    console.log("🎨 [MULLIGAN] Allowed colors:", allowedColors);
+    console.log("[MULLIGAN] Allowed colors:", allowedColors);
     console.log(
-      "🃏 [MULLIGAN] Legends:",
+      "[MULLIGAN] Legends:",
       legends.map((l) => l.name),
     );
 
@@ -75,7 +75,7 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
 
     if (eligibleCards.length === 0) {
       console.warn(
-        "⚠️ [MULLIGAN] No hay cartas de los colores permitidos. Usando fallback.",
+        "⚠️ [MULLIGAN] There are no cards of the allowed colors. Using fallback.",
       );
       // Fallback: usar cartas sin ram_color (neutrales)
       eligibleCards = allCards.filter((c) => {
@@ -85,7 +85,7 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
 
       if (eligibleCards.length === 0) {
         console.warn(
-          "⚠️ [MULLIGAN] No hay neutrales. Usando todas las cartas.",
+          "⚠️ [MULLIGAN] There are no neutral cards. Using all cards.",
         );
         eligibleCards = allCards.filter((c) => c.type !== "LEGEND");
       }
@@ -99,7 +99,7 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
       }
     });
 
-    console.log("📦 [MULLIGAN] Pool size:", pool.length);
+    console.log("[MULLIGAN] Pool size:", pool.length);
     return pool;
   };
 
@@ -109,7 +109,7 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
 
     // ✅ FIX: Si el pool está vacío, no intentar robar
     if (source.length === 0) {
-      console.warn("⚠️ [MULLIGAN] Pool vacío, esperando randomLegends...");
+      console.warn("[MULLIGAN] Empty deck, waiting for randomLegends...");
       return;
     }
 
@@ -141,16 +141,16 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
     let advice = "";
     if (curveScore.status === "BRICKED")
       advice =
-        "⚠️ BRICKED HAND: All cards are high-cost. You will have no early plays. HIGHLY RECOMMEND MULLIGAN.";
+        "｡°⚠︎°｡ BRICKED HAND: All cards are high-cost. You will have no early plays. HIGHLY RECOMMEND MULLIGAN.";
     else if (defenseScore.status === "NO BLOCKERS")
       advice =
-        "⚠️ NO DEFENSE: You have no Units to block attacks. Consider Mulligan unless you plan hyper-aggressive.";
+        "｡°⚠︎°｡ NO DEFENSE: You have no Units to block attacks. Consider Mulligan unless you plan hyper-aggressive.";
     else if (curveScore.status === "SOLID" && defenseScore.status === "GOOD")
       advice =
-        "✅ KEEP THIS HAND. Solid curve and defense. Don't waste your Mulligan on a playable opening.";
+        "✔ KEEP THIS HAND. Solid curve and defense. Don't waste your Mulligan on a playable opening.";
     else
       advice =
-        "⚠️ PLAYABLE BUT RISKY: This hand can work but has weaknesses. Mulligan if uncomfortable.";
+        "｡°⚠︎°｡ PLAYABLE BUT RISKY: This hand can work but has weaknesses. Mulligan if uncomfortable.";
 
     setAnalysis({ curveScore, defenseScore, advice });
   };
@@ -206,7 +206,7 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-term-amber font-bold text-2xl font-mono">
-              🎲 OPENING HAND SIMULATOR
+              ⚀⚁⚂⚃⚄⚅ OPENING HAND SIMULATOR
             </h2>
             <button
               onClick={onClose}
@@ -328,14 +328,14 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
           {analysis && revealedCards.length === 6 && (
             <div className="mb-6 p-4 bg-black/40 rounded border border-term-amber/30">
               <h3 className="text-term-green font-bold font-mono mb-3 flex items-center gap-2">
-                🧠 NETRUNNER ANALYSIS
+                𖡎𖡎 NETRUNNER ANALYSIS
               </h3>
               <div className="space-y-3 text-sm font-mono">
                 <div className="flex items-center gap-3">
                   <span className={analysis.curveScore.color}>
                     {analysis.curveScore.emoji}
                   </span>
-                  <span className="text-term-amber">📊 CURVE:</span>
+                  <span className="text-term-amber">▓▒░ CURVE:</span>
                   <span className={analysis.curveScore.color}>
                     {analysis.curveScore.status}
                   </span>
@@ -347,7 +347,7 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
                   <span className={analysis.defenseScore.color}>
                     {analysis.defenseScore.emoji}
                   </span>
-                  <span className="text-term-amber">🛡️ DEFENSE:</span>
+                  <span className="text-term-amber">⛊ DEFENSE:</span>
                   <span className={analysis.defenseScore.color}>
                     {analysis.defenseScore.status}
                   </span>
@@ -356,7 +356,7 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
                   </span>
                 </div>
                 <div className="pt-3 border-t border-term-amber/20">
-                  <div className="text-term-amber mb-1">💡 FIXER'S ADVICE:</div>
+                  <div className="text-term-amber mb-1">⋆✴︎ FIXER'S ADVICE:</div>
                   <div className="text-term-green/90 text-xs leading-relaxed">
                     {analysis.advice}
                   </div>
@@ -392,7 +392,7 @@ export default function MulliganModal({ deck, allCards, goingFirst, onClose }) {
 
           {goingFirst && (
             <div className="text-center text-term-amber/80 text-xs font-mono">
-              ⚠️ Going First: 2 Legends start tapped (shown above)
+              ｡°⚠︎°｡ Going First: 2 Legends start tapped (shown above)
             </div>
           )}
         </motion.div>

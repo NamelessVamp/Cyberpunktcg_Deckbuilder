@@ -125,7 +125,7 @@ export default function DeckAnalytics({ deck }) {
             {
               label: "AVG COST",
               value: `${avgCost}€`,
-              sub: deckTooSlow ? "⚠ slow" : deckTooFast ? "⚡ fast" : "✓ good",
+              sub: deckTooSlow ? "⚠ slow" : deckTooFast ? "⚡︎ fast" : "✓ good",
               color:
                 deckTooSlow || deckTooFast
                   ? "text-term-red"
@@ -166,7 +166,7 @@ export default function DeckAnalytics({ deck }) {
             {deckTooSlow
               ? "⚠ TOO SLOW"
               : deckTooFast
-                ? "⚡ HYPER AGGRO"
+                ? "⚡︎ HYPER AGGRO"
                 : "✓ BALANCED"}
           </span>
         </h3>

@@ -468,7 +468,7 @@ export default function DeckImageExport({
         disabled={generating || !hasCards}
         className={`font-mono font-bold text-sm transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${className}`}
       >
-        {generating ? "[GENERATING...]" : "[📸 SHARE AS IMAGE]"}
+        {generating ? "[GENERATING...]" : "[[ ◉¯] SHARE AS IMAGE]"}
       </button>
     </>
   );

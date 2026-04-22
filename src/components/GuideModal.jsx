@@ -4,9 +4,9 @@ function GuideModal({ onClose }) {
   const [activeTab, setActiveTab] = useState("basics");
 
   const tabs = [
-    { id: "basics", label: "BASICS", icon: "🎯" },
-    { id: "deckbuilding", label: "DECK BUILDING", icon: "🎴" },
-    { id: "gameplay", label: "GAMEPLAY", icon: "⚔️" },
+    { id: "basics", label: "BASICS", icon: "𒌐" },
+    { id: "deckbuilding", label: "DECK BUILDING", icon: "🀢" },
+    { id: "gameplay", label: "GAMEPLAY", icon: "≫" },
     { id: "keywords", label: "KEYWORDS", icon: "📖" },
   ];
 
@@ -65,9 +65,7 @@ function BasicsTab() {
   return (
     <div className="space-y-6 text-term-green font-mono">
       <section>
-        <h3 className="text-2xl font-bold text-term-amber mb-4">
-          🎯 OBJECTIVE
-        </h3>
+        <h3 className="text-2xl font-bold text-term-amber mb-4">𖦏 OBJECTIVE</h3>
         <div className="bg-term-black/40 border border-term-green/30 p-4 rounded">
           <p className="text-lg mb-3">
             You are a <span className="text-term-amber font-bold">Fixer</span>{" "}
@@ -83,12 +81,12 @@ function BasicsTab() {
 
       <section>
         <h3 className="text-2xl font-bold text-term-amber mb-4">
-          🏆 HOW TO WIN
+          ˗ˏˋ ★ ˎˊ˗ HOW TO WIN
         </h3>
         <div className="space-y-3">
           <div className="bg-term-green/10 border-l-4 border-term-green p-4 rounded">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-3xl">🎲</span>
+              <span className="text-3xl">⚀⚁⚂⚃⚄⚅</span>
               <h4 className="text-term-green font-bold text-lg">
                 PRIMARY: 6 GIGS
               </h4>
@@ -103,7 +101,7 @@ function BasicsTab() {
 
           <div className="bg-term-amber/10 border-l-4 border-term-amber p-4 rounded">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-3xl">⏱️</span>
+              <span className="text-3xl">⏱</span>
               <h4 className="text-term-amber font-bold text-lg">OVERTIME</h4>
             </div>
             <p className="text-sm text-term-green/80">
@@ -114,7 +112,7 @@ function BasicsTab() {
 
           <div className="bg-term-red/10 border-l-4 border-term-red p-4 rounded">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-3xl">💀</span>
+              <span className="text-3xl">✖𐃷✖</span>
               <h4 className="text-term-red font-bold text-lg">DECK OUT</h4>
             </div>
             <p className="text-sm text-term-green/80">
@@ -127,11 +125,13 @@ function BasicsTab() {
 
       <section>
         <h3 className="text-2xl font-bold text-term-amber mb-4">
-          📊 STREET CRED vs GIGS
+          ▓▒░ STREET CRED vs GIGS
         </h3>
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-term-black/40 border border-term-blue/30 p-4 rounded">
-            <h4 className="text-term-blue font-bold mb-2">🎲 GIGS (DICE)</h4>
+            <h4 className="text-term-blue font-bold mb-2">
+              ⚀⚁⚂⚃⚄⚅ GIGS (DICE)
+            </h4>
             <ul className="text-xs space-y-1 text-term-green/80">
               <li>• 6 physical dice (d4, d6, d8, d10, d12, d20)</li>
               <li>• Stolen by attacking opponent directly</li>
@@ -167,12 +167,12 @@ function DeckBuildingTab() {
     <div className="space-y-6 text-term-green font-mono">
       <section>
         <h3 className="text-2xl font-bold text-term-amber mb-4">
-          🎴 DECK CONSTRUCTION RULES
+          🀢 DECK CONSTRUCTION RULES
         </h3>
         <div className="space-y-3">
           <div className="bg-term-black/40 border border-term-red/30 p-4 rounded">
             <h4 className="text-term-red font-bold mb-2">
-              📌 LEGENDS (3 Required)
+              𓆩✧𓆪 LEGENDS (3 Required)
             </h4>
             <ul className="text-sm space-y-1 text-term-green/80 list-disc list-inside ml-2">
               <li>
@@ -194,7 +194,7 @@ function DeckBuildingTab() {
 
           <div className="bg-term-black/40 border border-term-green/30 p-4 rounded">
             <h4 className="text-term-green font-bold mb-2">
-              📦 MAIN DECK (40-50 Cards)
+              ☐ MAIN DECK (40-50 Cards)
             </h4>
             <ul className="text-sm space-y-1 text-term-green/80 list-disc list-inside ml-2">
               <li>
@@ -217,7 +217,7 @@ function DeckBuildingTab() {
 
       <section>
         <h3 className="text-2xl font-bold text-term-amber mb-4">
-          🌈 RAM COLOR SYSTEM
+          ⌬ RAM COLOR SYSTEM
         </h3>
         <div className="bg-term-black/40 border border-term-amber/30 p-4 rounded">
           <p className="text-sm mb-4 text-term-green/80">
@@ -256,11 +256,11 @@ function DeckBuildingTab() {
 
       <section>
         <h3 className="text-2xl font-bold text-term-amber mb-4">
-          ⚙️ USING THIS TOOL
+          ⚙ USING THIS TOOL
         </h3>
         <div className="bg-term-blue/10 border-l-4 border-term-blue p-4 rounded mb-4">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">💡</span>
+            <span className="text-3xl"> 𖡊 </span>
             <div>
               <h4 className="text-term-blue font-bold text-sm mb-1">
                 TOOLTIPS AVAILABLE
@@ -276,25 +276,25 @@ function DeckBuildingTab() {
         </div>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div className="bg-term-black/40 border border-term-blue/30 p-3 rounded">
-            <span className="text-term-blue font-bold">🔍 Search & Filter</span>
+            <span className="text-term-blue font-bold">🔍︎ Search & Filter</span>
             <p className="text-xs text-term-green/60 mt-1">
               Find cards by name, type, faction, cost, or keywords
             </p>
           </div>
           <div className="bg-term-black/40 border border-term-blue/30 p-3 rounded">
-            <span className="text-term-blue font-bold">🎯 Click to Add</span>
+            <span className="text-term-blue font-bold">✚ Click to Add</span>
             <p className="text-xs text-term-green/60 mt-1">
               Preview card details and add to your deck
             </p>
           </div>
           <div className="bg-term-black/40 border border-term-blue/30 p-3 rounded">
-            <span className="text-term-blue font-bold">💾 Save to Cloud</span>
+            <span className="text-term-blue font-bold">🗁 Save to Cloud</span>
             <p className="text-xs text-term-green/60 mt-1">
               Login to sync decks across devices
             </p>
           </div>
           <div className="bg-term-black/40 border border-term-blue/30 p-3 rounded">
-            <span className="text-term-blue font-bold">📤 Export Text</span>
+            <span className="text-term-blue font-bold">⌯⌲ Export Text</span>
             <p className="text-xs text-term-green/60 mt-1">
               Share decks on Discord easily
             </p>
@@ -311,11 +311,11 @@ function GameplayTab() {
     <div className="space-y-6 text-term-green font-mono">
       <section>
         <h3 className="text-2xl font-bold text-term-amber mb-4">
-          🔄 TURN PHASES
+          ⟳ TURN PHASES
         </h3>
         <div className="space-y-3">
           <div className="bg-cyan-900/20 border-l-4 border-cyan-400 p-4 rounded">
-            <h4 className="text-cyan-400 font-bold mb-2">1️⃣ READY PHASE</h4>
+            <h4 className="text-cyan-400 font-bold mb-2">𝐈 READY PHASE</h4>
             <ul className="text-sm space-y-1 text-term-green/80 list-disc list-inside ml-2">
               <li>Draw 1 card</li>
               <li>Gain 1 Gig (roll die, place in Gig Area)</li>
@@ -324,7 +324,7 @@ function GameplayTab() {
           </div>
 
           <div className="bg-purple-900/20 border-l-4 border-purple-400 p-4 rounded">
-            <h4 className="text-purple-400 font-bold mb-2">2️⃣ PLAY PHASE</h4>
+            <h4 className="text-purple-400 font-bold mb-2">𝐈𝐈 PLAY PHASE</h4>
             <ul className="text-sm space-y-1 text-term-green/80 list-disc list-inside ml-2">
               <li>
                 <span className="text-term-amber font-bold">Sell</span> (1x per
@@ -340,12 +340,12 @@ function GameplayTab() {
               </li>
             </ul>
             <p className="text-xs text-term-red/80 mt-2">
-              ⚠️ Units enter with summoning sickness (can't attack same turn)
+              ⚠ Units enter with summoning sickness (can't attack same turn)
             </p>
           </div>
 
           <div className="bg-red-900/20 border-l-4 border-red-400 p-4 rounded">
-            <h4 className="text-red-400 font-bold mb-2">3️⃣ ATTACK PHASE</h4>
+            <h4 className="text-red-400 font-bold mb-2">𝐈𝐈𝐈 ATTACK PHASE</h4>
             <ul className="text-sm space-y-1 text-term-green/80 list-disc list-inside ml-2">
               <li>Ready Units can attack (one at a time)</li>
               <li>Attacking Unit becomes Spent (rotates sideways)</li>
@@ -357,7 +357,7 @@ function GameplayTab() {
 
       <section>
         <h3 className="text-2xl font-bold text-term-amber mb-4">
-          ⚔️ COMBAT RULES
+          ⚔︎ COMBAT RULES
         </h3>
         <div className="space-y-3">
           <div className="bg-term-black/40 border border-term-red/30 p-4 rounded">
@@ -398,7 +398,7 @@ function GameplayTab() {
 
           <div className="bg-term-black/40 border border-term-amber/30 p-4 rounded">
             <h4 className="text-term-amber font-bold mb-2">
-              🛡️ BLOCKER KEYWORD
+              ⛨ BLOCKER KEYWORD
             </h4>
             <p className="text-sm text-term-green/80">
               If defender has a Ready Unit with{" "}
@@ -419,7 +419,7 @@ function KeywordsTab() {
     <div className="space-y-4 text-term-green font-mono">
       <section>
         <h3 className="text-2xl font-bold text-term-amber mb-4">
-          📖 KEYWORD GLOSSARY
+          📎 KEYWORD GLOSSARY
         </h3>
         <div className="grid grid-cols-1 gap-3 max-h-[500px] overflow-y-auto pr-2">
           {keywords.map((kw, idx) => (
@@ -451,77 +451,77 @@ function KeywordsTab() {
 
 const keywords = [
   {
-    icon: "🛡️",
+    icon: "⛨",
     name: "BLOCKER",
     description:
       "You can Spend this Ready Unit to intercept an attack targeting another Unit or the player.",
     example: "Corpo Security can block attacks aimed at your face",
   },
   {
-    icon: "🚀",
+    icon: "જ⁀➴",
     name: "GO SOLO",
     description:
       "Pay this Legend's cost to play it as a Unit. It enters Ready (can attack immediately, ignores summoning sickness).",
     example: "Johnny Silverhand can jump into combat",
   },
   {
-    icon: "⚡",
+    icon: "⚡︎",
     name: "PLAY",
     description:
       "Effect triggers the moment you pay the card's cost and play it.",
     example: "Draw 2 cards immediately when this enters play",
   },
   {
-    icon: "⚔️",
+    icon: "⚔︎",
     name: "ATTACK",
     description:
       "Effect triggers when you declare this Unit as attacker (before damage).",
     example: "Get +2 Power until end of turn when attacking",
   },
   {
-    icon: "🔄",
+    icon: "↻",
     name: "FLIP",
     description:
       "Effect triggers when you flip this Legend face-up (pay 2 Eddies in Play Phase).",
     example: "Search your deck for a Gear card when revealed",
   },
   {
-    icon: "💀",
+    icon: "(×_×)",
     name: "TRASH",
     description:
       "Your discard pile. Cards destroyed, discarded, or used go here.",
     example: "Retrieve a card from your Trash",
   },
   {
-    icon: "🔧",
+    icon: "⚙",
     name: "GEAR",
     description:
       "Equipment attached to a Unit or Legend. If carrier is destroyed, Gear is also destroyed.",
     example: "Mantis Blades give +3 Power to equipped Unit",
   },
   {
-    icon: "💻",
+    icon: "</>",
     name: "PROGRAM",
     description:
       "One-time effect cards. Play from hand, resolve effect, then go to Trash.",
     example: "Reboot Optics: Ready target Unit",
   },
   {
-    icon: "🎯",
+    icon: "➼",
     name: "GIG",
     description:
       "Physical dice representing jobs. Steal by attacking player directly. Need 6 to win.",
     example: "Attack with 10 Power Unit → Steal 2 Gigs",
   },
   {
-    icon: "⭐",
+    icon: "✮",
     name: "STREET CRED",
     description:
       "Sum of all your Gig dice faces. Used as trigger condition for powerful effects.",
     example: "If you have 12+ Street Cred, destroy target Unit",
   },
   {
-    icon: "💰",
+    icon: "˗ˋˏ€$ˎˊ˗",
     name: "EDDIES",
     description:
       "Currency. Cards with €$ can be Sold face-down (1x per turn) to generate permanent Eddies.",
