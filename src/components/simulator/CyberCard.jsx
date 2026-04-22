@@ -59,6 +59,17 @@ export default function CyberCard({
             backgroundPosition: "center",
           }}
         >
+          {/* Gradient overlay for text readability */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 40%, rgba(0,0,0,0.8) 100%)",
+              borderRadius: "3px",
+            }}
+          />
+
           <div className="card-header bg-black/60 px-1 rounded flex justify-between items-center w-full">
             <span>[{card.type}]</span>
             {card.cost > 0 && card.type !== "PROGRAM" && (
@@ -68,12 +79,7 @@ export default function CyberCard({
           <div className="card-name">{card.name}</div>
           <div className="card-stats">
             {card.type === "LEGEND" && <span>RAM: {card.ram || 0}</span>}
-            {card.type === "UNIT" && (
-              <>
-                <span>ATK: {card.power || 0}</span>
-                <span>HP: {card.hp || 0}</span>
-              </>
-            )}
+            {card.type === "UNIT" && <span>PWR: {card.power || 0}</span>}
             {card.type === "GEAR" && <span>+{card.power || 0} PWR</span>}
             {card.type === "GIG" && <span>★ {card.streetCred || 0}</span>}
           </div>
@@ -87,8 +93,8 @@ export default function CyberCard({
 
       <style>{`
         .cyber-card {
-          width: 70px;
-          height: 90px;
+          width: 60px;
+          height: 84px;
           background-color: transparent;
           cursor: grab;
           perspective: 1000px;
@@ -132,8 +138,16 @@ export default function CyberCard({
           width: 100%;
           text-align: left;
           opacity: 0.8;
+          position: relative;
+          z-index: 1;
         }
-        .card-name { font-weight: bold; font-size: 11px; line-height: 1; }
+        .card-name {
+          font-weight: bold; font-size: 10px; line-height: 1.1;
+          overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+          width: 100%;
+          position: relative;
+          z-index: 1;
+        }
         .card-stats {
           font-size: 10px;
           width: 100%;
@@ -141,6 +155,8 @@ export default function CyberCard({
           padding-top: 3px;
           display: flex;
           justify-content: space-between;
+          position: relative;
+          z-index: 1;
         }
         .card-back {
           background-color: #333;

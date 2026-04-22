@@ -132,9 +132,15 @@ export class AIPlayer {
       // Decide: attack direct (steal gigs) or attack spent rival unit
       const rivalSpentUnits = rival.field.filter((u) => u.isTapped);
       const shouldAttackDirect =
-        rival.gigs.length > 0 && rivalSpentUnits.length === 0;
+        rival.gigs.length > 0 || rivalSpentUnits.length === 0;
 
-      // Resolve without blocker (AI doesn't have blocker UI for rival yet)
+      if (!shouldAttackDirect && rivalSpentUnits.length > 0) {
+        // Attack weakest spent rival unit
+        const targetIdx = rival.field.indexOf(rivalSpentUnits[0]);
+        combatResolver.setAttackTarget?.(this.playerId, targetIdx);
+      }
+      // else: direct attack (no target needed, CombatResolver handles it)
+
       combatResolver.resolveCombat(this.playerId);
       this.game.clearExpiredEffects?.();
       this.onUpdate?.();
