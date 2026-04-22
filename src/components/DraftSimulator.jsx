@@ -319,13 +319,13 @@ export default function DraftSimulator({ allCards, onLoadDraft }) {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-cyan-400 font-mono font-bold text-xl">
-              SOBRE {currentPackIdx + 1}/{DRAFT_PACKS}
+              CARDS {currentPackIdx + 1}/{DRAFT_PACKS}
               <span className="text-term-green/60 text-sm ml-3">
-                Pick {pickCount + 1}/{PICKS_PER_PACK} de este sobre
+                Pick {pickCount + 1}/{PICKS_PER_PACK} from this card pool
               </span>
             </h2>
             <div className="text-term-amber/70 font-mono text-xs mt-1">
-              {totalPicked}/{DRAFT_PICKS_NEEDED} cartas elegidas
+              {totalPicked}/{DRAFT_PICKS_NEEDED} Selected Cards
             </div>
           </div>
           <button
@@ -348,7 +348,7 @@ export default function DraftSimulator({ allCards, onLoadDraft }) {
           {/* Card grid — cartas del sobre actual */}
           <div className="flex-1">
             <p className="text-term-green/60 font-mono text-xs mb-3">
-              ▶ ELIGE UNA CARTA
+              ▶ CHOOSE A CARD
             </p>
             <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
               {currentPack.map((card, idx) => (
@@ -384,7 +384,7 @@ export default function DraftSimulator({ allCards, onLoadDraft }) {
           {/* Sidebar — cartas elegidas */}
           <div className="w-52 flex-shrink-0">
             <p className="text-term-amber/70 font-mono text-xs mb-3">
-              🃏 TU POOL ({totalPicked})
+              YOUR POOL ({totalPicked})
             </p>
             <div className="space-y-1 max-h-[600px] overflow-y-auto">
               {uniquePicked.map((card, i) => (
@@ -445,10 +445,10 @@ export default function DraftSimulator({ allCards, onLoadDraft }) {
       <div className="max-w-4xl mx-auto">
         <div className="mb-6 p-5 bg-term-gray border-2 border-cyan-500/60 rounded-lg">
           <h2 className="text-cyan-400 font-mono font-bold text-2xl mb-1">
-            ✅ DRAFT COMPLETADO
+            DRAFT COMPLETED
           </h2>
           <p className="text-term-green/70 font-mono text-sm">
-            {pickedCards.length} cartas en tu pool de draft
+            {pickedCards.length} cards in your draft pool
           </p>
         </div>
 
@@ -483,7 +483,7 @@ export default function DraftSimulator({ allCards, onLoadDraft }) {
                 <span
                   className={`ml-auto text-[10px] ${RARITY_COLOR[card.rarity] || ""}`}
                 >
-                  {card.cost !== undefined ? `${card.cost}💰` : ""}
+                  {card.cost !== undefined ? `${card.cost}€$` : ""}
                 </span>
               </div>
             ))}
@@ -504,7 +504,7 @@ export default function DraftSimulator({ allCards, onLoadDraft }) {
             onClick={handleReset}
             className="py-4 border-2 border-cyan-500 text-cyan-400 font-mono font-bold rounded-lg hover:bg-cyan-500/10 transition-colors"
           >
-            [🔄 NEW DRAFT]
+            [ NEW DRAFT]
           </button>
         </div>
         <DraftHistoryPanel />

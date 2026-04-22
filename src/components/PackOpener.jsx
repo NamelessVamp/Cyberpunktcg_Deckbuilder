@@ -291,7 +291,7 @@ export default function PackOpener({ allCards }) {
         <div className="absolute inset-0 bg-term-amber/5 animate-pulse"></div>
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-3">
-            <span className="text-4xl">📦</span>
+            <span className="text-4xl"></span>
             <h2 className="text-term-amber font-bold text-3xl font-mono tracking-wider">
               PACK OPENER SIMULATOR
             </h2>
@@ -376,7 +376,7 @@ export default function PackOpener({ allCards }) {
         <div className="flex items-start justify-between">
           <div>
             <h3 className="text-term-amber font-bold font-mono text-xl mb-3">
-              📋 PACK CONTENTS
+              PACK CONTENTS
             </h3>
             <div className="space-y-2 font-mono text-sm">
               <div className="text-term-green">
@@ -455,8 +455,8 @@ export default function PackOpener({ allCards }) {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-term-amber font-bold text-2xl font-mono">
                 {isBoxMode
-                  ? `📦 PACK ${currentBoxPackIndex + 1}/24`
-                  : "📦 YOUR PULLS"}
+                  ? `PACK ${currentBoxPackIndex + 1}/24`
+                  : "YOUR PULLS"}
               </h2>
               <button
                 onClick={() => setShowPackAnimation(false)}
@@ -565,7 +565,7 @@ export default function PackOpener({ allCards }) {
             <div className="bg-black/40 rounded border border-term-amber/30 p-4 mb-4">
               <div className="font-mono text-sm">
                 <div className="text-term-amber font-bold mb-2">
-                  📊 {isBoxMode ? "PACK" : "PULL"} STATISTICS
+                  {isBoxMode ? "PACK" : "PULL"} STATISTICS
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-term-green">
                   <div>
@@ -630,7 +630,7 @@ export default function PackOpener({ allCards }) {
               <div className="bg-purple-900/30 rounded border border-purple-400/30 p-4 mb-4">
                 <div className="font-mono text-sm">
                   <div className="text-purple-400 font-bold mb-2">
-                    📦 BOX TOTALS (ALL 24 PACKS)
+                    BOX TOTALS (ALL 24 PACKS)
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-purple-200 text-xs">
                     <div>
@@ -713,7 +713,7 @@ export default function PackOpener({ allCards }) {
                     className="bg-purple-600 text-white py-3 px-6 rounded font-mono font-bold hover:bg-purple-500 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     {currentBoxPackIndex === boxPacks.length - 1
-                      ? "[✅ FINISH BOX]"
+                      ? "[FINISH BOX]"
                       : "[NEXT PACK ▶]"}
                   </button>
                 </>
