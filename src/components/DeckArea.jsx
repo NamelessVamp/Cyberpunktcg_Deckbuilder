@@ -80,6 +80,17 @@ export default function DeckArea({
     { Red: 0, Yellow: 0, Green: 0, Blue: 0 },
   );
 
+  // Calculate RAM Used by main deck
+  const ramUsed = deck.mainDeck.reduce(
+    (acc, card) => {
+      if (card.ram_color && card.ram) {
+        acc[card.ram_color] = (acc[card.ram_color] || 0) + card.ram;
+      }
+      return acc;
+    },
+    { Red: 0, Yellow: 0, Green: 0, Blue: 0 },
+  );
+
   // Legality validation
   const legalityValidation = validateDeckLegality(deck);
 
@@ -222,31 +233,67 @@ export default function DeckArea({
           </div>
 
           {!freeBuildMode && (
-            <div className="grid grid-cols-2 gap-2">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-term-red"></span>
-                <span className="text-term-red font-mono text-sm">
-                  RED: {ramBudget.Red}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-term-amber"></span>
-                <span className="text-term-amber font-mono text-sm">
-                  YELLOW: {ramBudget.Yellow}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-term-green"></span>
-                <span className="text-term-green font-mono text-sm">
-                  GREEN: {ramBudget.Green}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-term-blue"></span>
-                <span className="text-term-blue font-mono text-sm">
-                  BLUE: {ramBudget.Blue}
-                </span>
-              </div>
+            <div className="space-y-2">
+              {[
+                {
+                  color: "Red",
+                  bg: "bg-red-500",
+                  text: "text-red-400",
+                  border: "border-red-500/40",
+                },
+                {
+                  color: "Yellow",
+                  bg: "bg-yellow-400",
+                  text: "text-yellow-400",
+                  border: "border-yellow-400/40",
+                },
+                {
+                  color: "Green",
+                  bg: "bg-green-500",
+                  text: "text-green-400",
+                  border: "border-green-500/40",
+                },
+                {
+                  color: "Blue",
+                  bg: "bg-blue-500",
+                  text: "text-blue-400",
+                  border: "border-blue-500/40",
+                },
+              ].map(({ color, bg, text, border }) => {
+                const budget = ramBudget[color] || 0;
+                const used = ramUsed[color] || 0;
+                const pct =
+                  budget > 0 ? Math.min((used / budget) * 100, 100) : 0;
+                const over = used > budget;
+                if (budget === 0 && used === 0) return null;
+                return (
+                  <div key={color}>
+                    <div className="flex justify-between items-center mb-0.5">
+                      <span className={`font-mono text-xs font-bold ${text}`}>
+                        {color.toUpperCase()}
+                      </span>
+                      <span
+                        className={`font-mono text-xs font-bold ${over ? "text-red-400 animate-pulse" : text}`}
+                      >
+                        {used} / {budget} RAM {over ? "⚠ OVER LIMIT!" : ""}
+                      </span>
+                    </div>
+                    <div
+                      className={`w-full h-2 bg-black/50 rounded-full border ${border}`}
+                    >
+                      <div
+                        className={`h-full rounded-full transition-all duration-300 ${over ? "bg-red-500" : bg}`}
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+              {deck.legends.length === 0 && (
+                <p className="text-term-amber/40 text-xs font-mono italic">
+                  Add Legends to see RAM budget
+                </p>
+              )}
             </div>
           )}
 
