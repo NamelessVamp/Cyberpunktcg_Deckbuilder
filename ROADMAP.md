@@ -85,6 +85,8 @@ Subtitle + multiple factions ❌
 
 ## 🔮 FASE 18: META ANALYTICS (0%) — esperar volumen Black Market
 
+(ya hay dos decks publicados)
+
 ## 🔮 FASE 19: SCANNER & SMART IMPORT (0%)
 
 ---

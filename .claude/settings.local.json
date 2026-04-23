@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude plugin *)",
+      "Bash(where bash *)",
+      "Bash(find /c /d -name \"bash.exe\" -path \"*/Git/*\")",
+      "Bash(CLAUDE_CODE_GIT_BASH_PATH=\"C:\\\\\\\\Users\\\\\\\\E1556778\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Programs\\\\\\\\Git\\\\\\\\bin\\\\\\\\bash.exe\" claude plugin *)"
+    ]
+  }
+}
