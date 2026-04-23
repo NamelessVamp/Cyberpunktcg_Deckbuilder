@@ -44,6 +44,7 @@ export class GameState {
       lastTurnClaimedGig: null,
       hasSoldThisTurn: false,
       hasRolledThisTurn: false,
+      handLocked: false,
     };
   }
 
@@ -97,6 +98,7 @@ export class GameState {
       }
       this.log("Mulligan complete — Turn 1 begins");
       this._executeCore();
+      player.handLocked = false;
     }
   }
 
@@ -152,8 +154,9 @@ export class GameState {
     });
     player.field.forEach((u) => {
       u.isTapped = false;
+      u.summonedThisTurn = false;
     });
-    player.eddies.forEach((e) => {
+    er.eddies.forEach((e) => {
       e.isTapped = false;
     });
     this.clearExpiredEffects();

@@ -278,12 +278,16 @@ function PlayerBoard({
                       }
                       if (isAttackPhase && !isRival) {
                         if (card.isTapped) {
-                          alert("Unit exhausted");
+                          alert("Unit exhausted — already attacked this turn");
+                          return;
+                        }
+                        if (card.summonedThisTurn) {
+                          alert(
+                            "Summoning Sickness — this unit just entered the field",
+                          );
                           return;
                         }
                         onDeclareAttacker?.(idx);
-                      } else if (isAttackPhase && isRival) {
-                        onDeclareBlocker?.(idx);
                       }
                     }}
                     className={`h-full cursor-pointer transition-all ${card.isTapped ? "opacity-50 saturate-50" : ""} 

@@ -169,7 +169,7 @@ export default function SimulatorBeta({ currentDeck }) {
       if (currentDeck && currentDeck.legends.length === 3) {
         decks.push({
           id: "current-build",
-          name: "Current Build",
+          name: currentDeck.name || currentDeck.deckName || "Current Build",
           legend_ids: currentDeck.legends.map((c) => c.id),
           main_deck_ids: currentDeck.mainDeck.map((c) => c.id),
           sideboard_ids: currentDeck.sideboard?.map((c) => c.id) || [],

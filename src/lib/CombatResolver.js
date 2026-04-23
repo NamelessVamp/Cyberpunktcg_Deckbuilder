@@ -11,6 +11,7 @@ export class CombatResolver {
 
   declareAttacker(playerId, unitIndex) {
     const player = this.game.players[playerId];
+    player.handLocked = true;
     const unit = player.field[unitIndex];
 
     if (!unit) {

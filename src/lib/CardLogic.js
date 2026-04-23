@@ -118,7 +118,12 @@ export class CardLogic {
 
     // Play based on type
     if (card.type === "UNIT") {
-      const unitInPlay = { ...card, isTapped: true, basePower: card.power };
+      const unitInPlay = {
+        ...card,
+        isTapped: true,
+        basePower: card.power,
+        summonedThisTurn: true,
+      };
       player.field.push(unitInPlay);
       this._fireTrigger("PLAY", playerId, unitInPlay);
       return {
