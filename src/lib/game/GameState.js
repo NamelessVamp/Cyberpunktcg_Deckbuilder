@@ -9,7 +9,6 @@ export class GameState {
     this.winner = null;
     this.activeEffects = [];
     this.combatLog = [];
-
     this.players = {
       1: this.initializePlayer(deck1),
       2: this.initializePlayer(deck2),
@@ -19,7 +18,6 @@ export class GameState {
   initializePlayer(deckCards) {
     const legends = [];
     const mainDeck = [];
-
     deckCards.forEach((card) => {
       if (card.type === "LEGEND") {
         legends.push({ ...card, isFaceUp: false, isTapped: false });
@@ -27,10 +25,8 @@ export class GameState {
         mainDeck.push({ ...card });
       }
     });
-
     const shuffled = this.shuffle([...mainDeck]);
     const hand = shuffled.splice(0, 6);
-
     return {
       legends,
       deck: shuffled,
@@ -57,9 +53,6 @@ export class GameState {
     return shuffled;
   }
 
-  // =====================================================
-  // GAME START
-  // =====================================================
   startGame() {
     this.turn = 1;
     this.phase = "MULLIGAN";
@@ -92,58 +85,47 @@ export class GameState {
   _checkMulliganComplete() {
     if (this.mulliganDone[1] && this.mulliganDone[2]) {
       this.phase = "CORE";
+      // P1 penalty: first 2 legends start tapped
       if (this.players[1].legends.length >= 2) {
         this.players[1].legends[0].isTapped = true;
         this.players[1].legends[1].isTapped = true;
       }
       this.log("Mulligan complete — Turn 1 begins");
       this._executeCore();
-      player.handLocked = false;
     }
   }
 
-  // =====================================================
-  // PHASE ADVANCEMENT
-  // =====================================================
   advancePhase() {
     const phaseOrder = ["CORE", "PLAY", "ATTACK", "END"];
     const currentIndex = phaseOrder.indexOf(this.phase);
-
     if (currentIndex === phaseOrder.length - 1) {
       this.endTurn();
     } else {
       this.phase = phaseOrder[currentIndex + 1];
-      if (this.phase === "CORE") {
-        this._executeCore();
-      }
+      if (this.phase === "CORE") this._executeCore();
     }
-
     const winner = this.checkWinCondition();
-    if (winner) {
-      this.winner = winner;
-    }
+    if (winner) this.winner = winner;
   }
 
   _executeCore() {
     const player = this.players[this.activePlayer];
     player.hasSoldThisTurn = false;
     player.hasRolledThisTurn = false;
+    player.handLocked = false;
 
-    // O - Obtain Card (skip on turn 1 — hand already drawn in initializePlayer)
-    if (this.turn > 1 && player.deck.length === 0) {
-      const rivalId = this.activePlayer === 1 ? 2 : 1;
-      this.winner = { player: rivalId, condition: "Deck Out" };
-      return;
-    }
+    // O - Obtain Card (skip turn 1 — hand already dealt)
     if (this.turn > 1) {
+      if (player.deck.length === 0) {
+        const rivalId = this.activePlayer === 1 ? 2 : 1;
+        this.winner = { player: rivalId, condition: "Deck Out" };
+        return;
+      }
       player.hand.push(player.deck.shift());
       this.log(`Player ${this.activePlayer} draws a card`);
     } else {
       this.log(`Player ${this.activePlayer} — opening hand ready`);
     }
-
-    player.hand.push(player.deck.shift());
-    this.log(`Player ${this.activePlayer} draws a card`);
 
     // R - Roll a Gig (manual)
     this.log(`Roll a Gig: click a die in the FIXER area`);
@@ -156,7 +138,7 @@ export class GameState {
       u.isTapped = false;
       u.summonedThisTurn = false;
     });
-    er.eddies.forEach((e) => {
+    player.eddies.forEach((e) => {
       e.isTapped = false;
     });
     this.clearExpiredEffects();
@@ -171,7 +153,7 @@ export class GameState {
       return { success: false, error: "Die not available in Fixer" };
 
     if (dieType === 20 && player.fixerDice.filter((d) => d !== 20).length > 0) {
-      return { success: false, error: "El d20 debe tomarse último" };
+      return { success: false, error: "El d20 debe tomarse ultimo" };
     }
 
     player.fixerDice.splice(dieIdx, 1);
@@ -179,14 +161,15 @@ export class GameState {
     player.gigs.push({ type: dieType, value });
     player.hasRolledThisTurn = true;
     this._calculateStreetCred(playerId);
-
     this.log(
-      `Player ${playerId} rolled d${dieType} → ${value} ☆${player.streetCred}`,
+      `Player ${playerId} rolled d${dieType} -> ${value} (SC: ${player.streetCred})`,
     );
-    return { success: true, value };
-    // Check overtime win immediately after any gig change
+
+    // Instant overtime check
     const winner = this.checkWinCondition();
     if (winner) this.winner = winner;
+
+    return { success: true, value };
   }
 
   _calculateStreetCred(playerId) {
@@ -199,7 +182,6 @@ export class GameState {
 
   endTurn() {
     const endingPlayer = this.players[this.activePlayer];
-
     endingPlayer.field = endingPlayer.field.filter((u) => {
       if (u._destroyAtEndOfTurn) {
         endingPlayer.trash.push(u);
@@ -212,7 +194,6 @@ export class GameState {
     this.activePlayer = this.activePlayer === 1 ? 2 : 1;
     this.turn++;
     this.phase = "CORE";
-
     this.log(`Turn ${this.turn} — Player ${this.activePlayer}'s turn`);
     this._executeCore();
 
@@ -224,9 +205,6 @@ export class GameState {
     }
   }
 
-  // =====================================================
-  // WIN CONDITIONS
-  // =====================================================
   checkWinCondition() {
     const p1 = this.players[1];
     const p2 = this.players[2];
@@ -243,7 +221,6 @@ export class GameState {
         return { player: 1, condition: "Overtime Win (7 Gigs)" };
       if (p2.gigs.length >= 7)
         return { player: 2, condition: "Overtime Win (7 Gigs)" };
-
       if (this.phase === "END" && p1.streetCred !== p2.streetCred) {
         const winner = p1.streetCred > p2.streetCred ? 1 : 2;
         const loser = winner === 1 ? 2 : 1;
@@ -262,7 +239,6 @@ export class GameState {
     return null;
   }
 
-  // ── ACTIVE EFFECTS SYSTEM ─────────────────────────────────────
   registerEffect(effect) {
     this.activeEffects.push({ ...effect, id: Date.now() + Math.random() });
     this.log(`Effect registered: ${effect.type} from ${effect.sourceCard}`);
