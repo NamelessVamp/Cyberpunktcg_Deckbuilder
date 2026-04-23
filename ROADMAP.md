@@ -273,6 +273,52 @@ Explicación para IA: Actualmente el jugador arrastra una carta al campo y el mo
 
 ## Explicación para IA: El useDeckBuilder.js necesita matemáticas en tiempo real. Un gran contador rojo que grite si hay más de 50 cartas, o si el jugador intenta meter 4 copias del mismo cromo. Lo más crítico: sumar el coste de RAM de las cartas y prohibir guardarlo si excede el RAM máximo que otorgan las 3 Leyendas.
 
+ROLE: You are a Senior Game Engine Architect and React Expert. We are building a web-based TCG simulator called "Afterlife Decks". You must ignore lore, aesthetics, and CSS unless strictly necessary. Your sole focus is the JavaScript State Machine, Game Loop, and Game Logic.
+
+CONTEXT: THE STATE MACHINE (GameState.js)
+The entire game runs on a centralized state object. There are two players (activePlayer and the rival). Each player object contains arrays: hand, field, deck, trash, eddies, legends, gigs, fixerDice.
+
+Economy: Players pay for units using "Eddies" (cards in the eddies array that are isTapped: false).
+
+Win Condition: Reach 20 Street Cred (gained by rolling Gigs) or if the opponent decks out.
+
+THE GAME LOOP (STRICT PHASES):
+
+SETUP Phase: Decks shuffle, draw 6, 3 Legends placed, 6 Fixer dice assigned.
+
+C.O.R.E. Phase: > \* Check gigs.
+
+Obtain (Draw 1 card).
+
+Roll Fixer Die (Player picks a die, random number added to gigs, adds to Street Cred).
+
+Energize (Untap all field, legends, and eddies).
+
+PLAY Phase: Player can spend Eddies to move cards from hand to field (Units) or attach to units (Gear). Units enter the field with "Summoning Sickness" (cannot attack). Player can sell 1 card per turn for 1 Eddie.
+
+ATTACK Phase: Player declares an attacker (untapped Unit). Rival can declare a Blocker (untapped Unit with "BLOCKER" keyword) or take the hit directly.
+
+END Phase: Cleanup and turn passes.
+
+OUR CURRENT MISSION (THE ROADMAP):
+We are currently tackling Phase 9.3 of the roadmap (Critical Game Logic). I need your help to implement these specific "Hard Locks" in GameState.js and the React UI:
+
+Phase Locks: Prevent the UI from allowing Drag & Drop if it's not the correct phase (e.g., Cannot play units during ATTACK phase).
+
+Summoning Sickness: When a unit enters field, it must receive a flag summonedThisTurn: true. Attack declarations must reject units with this flag. The flag clears during the next 'Energize' step.
+
+Targeting Mode (Action Mode): We need an intermediate state actionMode: 'TARGETING' for when a player plays a GEAR card or declares an attack, so the UI knows it is waiting for a target selection.
+
+Combat Trash Cleanup: In CombatResolver.js, when a unit is destroyed, its nested array of attachedGear must also be pushed to the trash array.
+
+RULES FOR YOUR RESPONSES:
+
+Do not rewrite entire files. Provide targeted snippets or functions with clear comments on where to inject them.
+
+Think purely in terms of Array mutations, Boolean flags, and React state.
+
+Before writing any code for our current mission, reply with "JACK-IN COMPLETE" and give me a 3-bullet-point summary of how you plan to tackle the Phase Locks and Summoning Sickness specifically.
+
 ## 🎯 NEXT PRIORITIES
 
 ### 🔴 v1.2.0 — Simulator jugable
