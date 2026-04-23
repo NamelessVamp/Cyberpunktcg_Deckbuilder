@@ -130,9 +130,6 @@ export class AIPlayer {
       await this._wait(300);
 
       // Decide target: direct or attack weakest spent rival unit
-      const rivalSpentUnits = rival.field
-        .map((u, i) => ({ u, i }))
-        .filter(({ u }) => u.isTapped);
 
       const shouldAttackDirect =
         rival.gigs.length > 0 || rivalSpentUnits.length === 0;
@@ -148,8 +145,6 @@ export class AIPlayer {
       combatResolver.resolveCombat(this.playerId);
       // Decide: attack direct (steal gigs) or attack spent rival unit
       const rivalSpentUnits = rival.field.filter((u) => u.isTapped);
-      const shouldAttackDirect =
-        rival.gigs.length > 0 || rivalSpentUnits.length === 0;
 
       if (!shouldAttackDirect && rivalSpentUnits.length > 0) {
         // Attack weakest spent rival unit
