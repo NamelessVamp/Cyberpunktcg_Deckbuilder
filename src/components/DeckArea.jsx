@@ -99,7 +99,7 @@ export default function DeckArea({
       {/* HEADER WITH DELETE ALL */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-term-amber font-bold text-xl font-mono">
-          CURRENT_DECK.DAT
+          {deck._name + ".DAT" || "CURRENT_DECK.DAT"}
         </h2>
         <button
           onClick={onClearDeck}

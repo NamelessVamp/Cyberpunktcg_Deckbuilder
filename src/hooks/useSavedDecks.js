@@ -65,7 +65,10 @@ export function useSavedDecks({
 
   // ── LOAD ──────────────────────────────────────────────────────────────────
   const handleLoadDeck = (savedDeck) => {
-    setDeck(savedDeck.deck);
+    setDeck({
+      ...savedDeck.deck,
+      _name: savedDeck.name || savedDeck.deck_name || null,
+    });
     setActiveTab("build");
     showToast(`Deck "${savedDeck.name}" loaded!`, "success");
   };
