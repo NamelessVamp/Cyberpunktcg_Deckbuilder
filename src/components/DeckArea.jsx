@@ -235,57 +235,41 @@ export default function DeckArea({
           {!freeBuildMode && (
             <div className="space-y-2">
               {[
-                {
-                  color: "Red",
-                  bg: "bg-red-500",
-                  text: "text-red-400",
-                  border: "border-red-500/40",
-                },
+                { color: "Red", dot: "bg-red-500", text: "text-red-400" },
                 {
                   color: "Yellow",
-                  bg: "bg-yellow-400",
+                  dot: "bg-yellow-400",
                   text: "text-yellow-400",
-                  border: "border-yellow-400/40",
                 },
-                {
-                  color: "Green",
-                  bg: "bg-green-500",
-                  text: "text-green-400",
-                  border: "border-green-500/40",
-                },
-                {
-                  color: "Blue",
-                  bg: "bg-blue-500",
-                  text: "text-blue-400",
-                  border: "border-blue-500/40",
-                },
-              ].map(({ color, bg, text, border }) => {
+                { color: "Green", dot: "bg-green-500", text: "text-green-400" },
+                { color: "Blue", dot: "bg-blue-500", text: "text-blue-400" },
+              ].map(({ color, dot, text }) => {
                 const budget = ramBudget[color] || 0;
-                const used = ramUsed[color] || 0;
-                const pct =
-                  budget > 0 ? Math.min((used / budget) * 100, 100) : 0;
-                const over = used > budget;
-                if (budget === 0 && used === 0) return null;
+                if (budget === 0) return null;
+                // Count illegal cards (cost > budget for this color)
+                const illegalCount = deck.mainDeck.filter(
+                  (c) => c.ram_color === color && (c.ram || 0) > budget,
+                ).length;
                 return (
-                  <div key={color}>
-                    <div className="flex justify-between items-center mb-0.5">
+                  <div
+                    key={color}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2.5 h-2.5 rounded-full ${dot}`} />
                       <span className={`font-mono text-xs font-bold ${text}`}>
-                        {color.toUpperCase()}
-                      </span>
-                      <span
-                        className={`font-mono text-xs font-bold ${over ? "text-red-400 animate-pulse" : text}`}
-                      >
-                        {used} / {budget} RAM {over ? "⚠ OVER LIMIT!" : ""}
+                        {color.toUpperCase()} — max {budget} RAM
                       </span>
                     </div>
-                    <div
-                      className={`w-full h-2 bg-black/50 rounded-full border ${border}`}
-                    >
-                      <div
-                        className={`h-full rounded-full transition-all duration-300 ${over ? "bg-red-500" : bg}`}
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
+                    {illegalCount > 0 ? (
+                      <span className="font-mono text-xs font-bold text-red-400 animate-pulse">
+                        {illegalCount} illegal card{illegalCount > 1 ? "s" : ""}
+                      </span>
+                    ) : (
+                      <span className="font-mono text-xs text-green-400/60">
+                        ✓ legal
+                      </span>
+                    )}
                   </div>
                 );
               })}
