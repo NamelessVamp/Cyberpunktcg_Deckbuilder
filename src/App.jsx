@@ -1165,7 +1165,7 @@ function App() {
 
               {activeTab === "simulator" && (
                 <div key="simulator-tab">
-                  <SimulatorBeta currentDeck={deck} />
+                  <SimulatorBeta currentDeck={deck} showToast={showToast} />
                 </div>
               )}
 

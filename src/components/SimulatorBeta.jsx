@@ -125,7 +125,10 @@ const PRECON_DECKS = {
   },
 };
 
-export default function SimulatorBeta({ currentDeck }) {
+export default function SimulatorBeta({
+  currentDeck,
+  showToast = (msg) => alert(msg),
+}) {
   const { isEnabled, isLoading: featureLoading } =
     useFeatureFlag("phase9_simulator");
   const { user } = useAuth();
@@ -715,7 +718,7 @@ export default function SimulatorBeta({ currentDeck }) {
                     cardIndex,
                     targetIndex,
                   );
-                  if (!result.success) alert(result.error);
+                  if (!result.success) showToast(result.error, "error");
                   else refresh();
                 }}
                 onSellCard={(cardIndex) => {
@@ -724,7 +727,7 @@ export default function SimulatorBeta({ currentDeck }) {
                     gameRef.current.activePlayer,
                     cardIndex,
                   );
-                  if (!result.success) alert(result.error);
+                  if (!result.success) showToast(result.error, "error");
                   else refresh();
                 }}
                 onCallLegend={(legendIndex) => {
@@ -735,7 +738,7 @@ export default function SimulatorBeta({ currentDeck }) {
                     gameRef.current.activePlayer,
                     legendIndex,
                   );
-                  if (!result.success) alert(result.error);
+                  if (!result.success) showToast(result.error, "error");
                   else refresh();
                   setTimeout(() => setCallingLegend(false), 500);
                 }}
@@ -745,7 +748,7 @@ export default function SimulatorBeta({ currentDeck }) {
                     gameRef.current.activePlayer,
                     unitIndex,
                   );
-                  if (!result.success) alert(result.error);
+                  if (!result.success) showToast(result.error, "error");
                   else {
                     refresh();
                     // In AI mode, AI auto-responds as defender
@@ -766,7 +769,7 @@ export default function SimulatorBeta({ currentDeck }) {
                 }}
                 onDeclareBlocker={(blockerIndex) => {
                   if (!blockingMode) {
-                    alert("Click 'USE BLOCKER' when an attack is declared.");
+                    showToast("Click USE BLOCKER when an attack is declared", "warning");
                     return;
                   }
                   const cr = new CombatResolver(gameRef.current);
@@ -775,7 +778,7 @@ export default function SimulatorBeta({ currentDeck }) {
                     gameRef.current.activePlayer
                   ].field.findIndex((u) => u.isAttacking);
                   if (attackerIndex === -1) {
-                    alert("No attacking unit found!");
+                    showToast("No attacking unit found", "warning");
                     return;
                   }
                   const result = cr.declareBlocker(
@@ -783,7 +786,7 @@ export default function SimulatorBeta({ currentDeck }) {
                     blockerIndex,
                     attackerIndex,
                   );
-                  if (!result.success) alert(result.error);
+                  if (!result.success) showToast(result.error, "error");
                   else {
                     setBlockingMode(false);
                     refresh();
@@ -800,7 +803,7 @@ export default function SimulatorBeta({ currentDeck }) {
                     gameRef.current.activePlayer,
                     dieType,
                   );
-                  if (!result.success) alert(result.error);
+                  if (!result.success) showToast(result.error, "error");
                   else refresh();
                 }}
                 onGoSolo={(legendIndex) => {
@@ -809,7 +812,7 @@ export default function SimulatorBeta({ currentDeck }) {
                     gameRef.current.activePlayer,
                     legendIndex,
                   );
-                  if (!result.success) alert(result.error);
+                  if (!result.success) showToast(result.error, "error");
                   else refresh();
                 }}
                 isBlockingMode={blockingMode}
@@ -828,7 +831,7 @@ export default function SimulatorBeta({ currentDeck }) {
                     blockerIndex,
                     attackerIndex,
                   );
-                  if (!result.success) alert(result.error);
+                  if (!result.success) showToast(result.error, "error");
                   else {
                     cr.resolveCombat(gameRef.current.activePlayer);
                     gameRef.current.clearExpiredEffects?.();
