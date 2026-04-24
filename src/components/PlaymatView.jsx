@@ -59,7 +59,7 @@ export default function PlaymatView({ game, onCardClick }) {
         {fixerDice.map((dice, idx) => (
           <button
             key={dice.type}
-            onClick={() => console.log("Claimed dice:", dice.type)}
+            onClick={() => {}}
             className="aspect-square border-2 border-term-amber/60 rounded-lg bg-term-gray/80 backdrop-blur-sm flex items-center justify-center text-term-amber font-mono font-bold text-xs hover:bg-term-amber/20 transition-colors"
           >
             {dice.type}

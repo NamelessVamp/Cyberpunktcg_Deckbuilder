@@ -60,10 +60,6 @@ export default function ProxyModal({ deck, onClose }) {
         }
       }
 
-      console.log(
-        `Supabase image not found for ${card.id}, trying original URL...`,
-      );
-
       // OPCIÓN 2: Intentar cargar desde la URL original (si no está bloqueada por CORS)
       const originalUrl = card.image_uris?.front || card.image_url;
       if (originalUrl) {
@@ -78,9 +74,7 @@ export default function ProxyModal({ deck, onClose }) {
               reader.readAsDataURL(blob);
             });
           }
-        } catch (corsError) {
-          console.log(`CORS blocked for ${card.id}, using placeholder...`);
-        }
+        } catch (corsError) {}
       }
 
       // OPCIÓN 3: Usar placeholder SVG (convertido a PNG)
