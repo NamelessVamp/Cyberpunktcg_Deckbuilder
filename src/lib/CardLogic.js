@@ -94,24 +94,18 @@ export class CardLogic {
       return { success: false, error: "Card not found in hand" };
     }
 
-    // Check if player can afford the card
-    const availableEddies = player.eddies.filter((e) => !e.isTapped).length;
-    const untappedLegends = player.legends.filter((l) => !l.isTapped).length;
-    const totalEddies = availableEddies + untappedLegends;
-    if (card.cost > totalEddies) {
+    // ── FLOATING EDDIES SYSTEM ────────────────────────────────
+    // Player must pre-load Eddies BEFORE dropping card
+    // UI blocks drop if floatingEddies < cost
+    const consumeResult = this.game.consumeFloatingEddies(playerId, card.cost);
+    if (!consumeResult.success) {
       return {
         success: false,
-        error: `Not enough Eddies (need ${card.cost}, have ${totalEddies})`,
+        error: `Pre-load ${card.cost} Eddies first (you have ${player.floatingEddies} floating)`,
       };
     }
 
     // RAM is a deckbuilding rule only — not validated during gameplay
-
-    // Spend Eddies (tap Legends equal to cost)
-    const spendResult = this.spendEddies(player, card.cost);
-    if (!spendResult.success) {
-      return spendResult;
-    }
 
     // Remove from hand
     player.hand.splice(cardIndex, 1);

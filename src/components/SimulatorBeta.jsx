@@ -712,6 +712,19 @@ export default function SimulatorBeta({
                   setGame(g);
                 }}
                 onPlayCard={(cardIndex, targetIndex) => {
+                  const player =
+                    gameRef.current.players[gameRef.current.activePlayer];
+                  const card = player.hand[cardIndex];
+
+                  // PRE-CHECK: Floating pool validation
+                  if (card && card.cost > player.floatingEddies) {
+                    showToast(
+                      `⚡ Pre-load ${card.cost} Eddies first (you have ${player.floatingEddies} floating)`,
+                      "warning",
+                    );
+                    return;
+                  }
+
                   const cl = new CardLogic(gameRef.current);
                   const result = cl.playCard(
                     gameRef.current.activePlayer,
@@ -769,7 +782,10 @@ export default function SimulatorBeta({
                 }}
                 onDeclareBlocker={(blockerIndex) => {
                   if (!blockingMode) {
-                    showToast("Click USE BLOCKER when an attack is declared", "warning");
+                    showToast(
+                      "Click USE BLOCKER when an attack is declared",
+                      "warning",
+                    );
                     return;
                   }
                   const cr = new CombatResolver(gameRef.current);

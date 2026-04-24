@@ -41,6 +41,7 @@ export class GameState {
       hasSoldThisTurn: false,
       hasRolledThisTurn: false,
       handLocked: false,
+      floatingEddies: 0,
     };
   }
 
@@ -101,6 +102,11 @@ export class GameState {
     if (currentIndex === phaseOrder.length - 1) {
       this.endTurn();
     } else {
+      // Clear floating pool when leaving PLAY phase
+      if (this.phase === "PLAY") {
+        this.clearFloatingEddies(this.activePlayer);
+      }
+
       this.phase = phaseOrder[currentIndex + 1];
       if (this.phase === "CORE") this._executeCore();
     }
@@ -191,7 +197,8 @@ export class GameState {
       return true;
     });
 
-    this.activePlayer = this.activePlayer === 1 ? 2 : 1;
+    // Clear floating pool del jugador que termino
+    this.clearFloatingEddies(this.activePlayer === 1 ? 2 : 1);
     this.turn++;
     this.phase = "CORE";
     this.log(`Turn ${this.turn} — Player ${this.activePlayer}'s turn`);
@@ -267,6 +274,64 @@ export class GameState {
     this.activeEffects = this.activeEffects.filter(
       (e) => e.sourceCardId !== sourceCardId,
     );
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // FLOATING EDDIES SYSTEM (Pre-load before drop)
+  // ══════════════════════════════════════════════════════════
+
+  preloadEddies(playerId, amount = 1) {
+    const player = this.players[playerId];
+    let loaded = 0;
+
+    // Intentar girar Eddies primero
+    const availableEddies = player.eddies.filter((e) => !e.isTapped);
+    for (let i = 0; i < availableEddies.length && loaded < amount; i++) {
+      availableEddies[i].isTapped = true;
+      loaded++;
+    }
+
+    // Si no alcanza, girar Legends
+    if (loaded < amount) {
+      const availableLegends = player.legends.filter(
+        (l) => !l.isTapped && l.isFaceUp,
+      );
+      for (let i = 0; i < availableLegends.length && loaded < amount; i++) {
+        availableLegends[i].isTapped = true;
+        loaded++;
+      }
+    }
+
+    player.floatingEddies += loaded;
+    this.log(
+      `Player ${playerId} preloaded ${loaded} Eddies (pool: ${player.floatingEddies})`,
+    );
+    return { success: loaded > 0, loaded, total: player.floatingEddies };
+  }
+
+  consumeFloatingEddies(playerId, cost) {
+    const player = this.players[playerId];
+    if (player.floatingEddies < cost) {
+      return {
+        success: false,
+        error: `Not enough floating Eddies (have ${player.floatingEddies}, need ${cost})`,
+      };
+    }
+    player.floatingEddies -= cost;
+    this.log(
+      `Player ${playerId} consumed ${cost} Eddies (remaining: ${player.floatingEddies})`,
+    );
+    return { success: true, remaining: player.floatingEddies };
+  }
+
+  clearFloatingEddies(playerId) {
+    const player = this.players[playerId];
+    const cleared = player.floatingEddies;
+    player.floatingEddies = 0;
+    if (cleared > 0) {
+      this.log(`Player ${playerId} cleared ${cleared} unused floating Eddies`);
+    }
+    return { cleared };
   }
 
   log(message) {

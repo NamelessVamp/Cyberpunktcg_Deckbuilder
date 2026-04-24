@@ -179,6 +179,7 @@ function PlayerBoard({
   onDeclareBlocker,
   onRollGig,
   onGoSolo,
+  onPreloadEddies, // ← NUEVA LINEA
   isBlockingMode,
   onBlockerSelected,
   activeDragId,
@@ -324,7 +325,15 @@ function PlayerBoard({
                       onMouseEnter={() => onHoverCard?.(legends[idx])}
                       onMouseLeave={() => onHoverCard?.(null)}
                       onClick={() => {
-                        if (isPlayPhase && !isRival) onCallLegend?.(idx);
+                        if (!isPlayPhase || isRival) return;
+                        // Si esta face-up y untapped → preload Eddie
+                        if (legends[idx].isFaceUp && !legends[idx].isTapped) {
+                          onPreloadEddies?.(1);
+                        }
+                        // Si esta face-down → call legend
+                        else if (!legends[idx].isFaceUp) {
+                          onCallLegend?.(idx);
+                        }
                       }}
                       whileHover={
                         isPlayPhase && !isRival ? { scale: 1.05, y: -3 } : {}
@@ -373,23 +382,28 @@ function PlayerBoard({
               <div
                 className={`label absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 text-[8px] font-bold rounded-xl whitespace-nowrap z-10 ${labelBg}`}
               >
-                EDDIES {isPlayPhase ? "— drag €$" : ""}
+                EDDIES {isPlayPhase ? "— click to load" : ""}
               </div>
               <AnimatePresence>
                 {eddies.map((card, idx) => (
                   <motion.div
                     key={`eddie-${idx}`}
                     initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: card.isTapped ? 0.4 : 1 }}
+                    animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0, opacity: 0 }}
-                    className={`h-full max-h-[70px] transition-all ${card.isTapped ? "rotate-90 cursor-not-allowed" : "cursor-pointer hover:ring-1 hover:ring-term-amber"}`}
+                    transition={{ delay: idx * 0.02 }}
+                    className={`w-6 h-8 md:w-8 md:h-12 border rounded flex items-center justify-center
+          ${card.isTapped ? "border-term-amber/20 bg-term-amber/5" : "border-term-amber/60 bg-term-amber/20 cursor-pointer hover:bg-term-amber/40 hover:scale-110 transition-all"}
+        `}
                     onClick={() => {
-                      if (!card.isTapped) {
-                        card.isTapped = true;
-                      }
+                      if (isPlayPhase && !card.isTapped) onPreloadEddies?.(1);
                     }}
                   >
-                    <CyberCard card={card} />
+                    <span
+                      className={`text-term-amber ${card.isTapped ? "opacity-20" : "opacity-80"} text-[10px] font-bold`}
+                    >
+                      €
+                    </span>
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -491,6 +505,17 @@ export default function PlaymatV2({
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
   );
+
+  // ══════════════════════════════════════════════════════════
+  // SMART PAYMENT SYSTEM — Click Eddies/Legends to pre-load
+  // ══════════════════════════════════════════════════════════
+  const handlePreloadEddies = (amount = 1) => {
+    if (game?.phase !== "PLAY") return;
+    const result = game.preloadEddies(activeId, amount);
+    if (result.success) {
+      onGameUpdate?.({ ...game }); // Force re-render
+    }
+  };
 
   const activeId = game?.activePlayer || 1;
   const rivalId = activeId === 1 ? 2 : 1;
@@ -692,6 +717,18 @@ export default function PlaymatV2({
 
           {/* PLAYER BOARD (Lower half) */}
           <div className="flex-1 min-h-0">
+            {/* FLOATING EDDIES COUNTER */}
+            {playerData.floatingEddies > 0 && (
+              <motion.div
+                initial={{ scale: 0, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0 }}
+                className="absolute top-2 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-term-amber text-term-black font-mono font-bold text-sm rounded-lg shadow-[0_0_20px_rgba(247,224,24,0.8)] border-2 border-term-amber"
+              >
+                ⚡ {playerData.floatingEddies} EDDIES LOADED
+              </motion.div>
+            )}
+
             <PlayerBoard
               playerData={playerData}
               isRival={false}
@@ -703,6 +740,7 @@ export default function PlaymatV2({
               onDeclareBlocker={onDeclareBlocker}
               onRollGig={onRollGig}
               onGoSolo={onGoSolo}
+              onPreloadEddies={handlePreloadEddies} // ← NUEVA LINEA
               isBlockingMode={isBlockingMode}
               onBlockerSelected={onBlockerSelected}
               onHoverCard={setHoveredCard}
@@ -727,7 +765,8 @@ export default function PlaymatV2({
                 key={`hand-wrapper-${idx}`}
                 onMouseEnter={() => setHoveredCard(card)}
                 onMouseLeave={() => setHoveredCard(null)}
-                className={`h-full ${isAttackPhase ? "opacity-50 pointer-events-none" : ""}`}
+                className={`h-full ${isAttackPhase ? "opacity-50 pointer-events-none" : ""} 
+  ${card.type === "UNIT" && playerData.floatingEddies < card.cost && isPlayPhase ? "opacity-40 saturate-0 cursor-not-allowed" : ""}`}
                 whileHover={
                   !isAttackPhase ? { y: -15, scale: 1.1, zIndex: 60 } : {}
                 }
@@ -737,7 +776,11 @@ export default function PlaymatV2({
                 ) : (
                   <DraggableCard
                     id={`hand-${idx}`}
-                    disabled={!isPlayPhase && game?.phase !== "CORE"}
+                    disabled={
+                      (!isPlayPhase && game?.phase !== "CORE") ||
+                      (card.type === "UNIT" &&
+                        playerData.floatingEddies < card.cost)
+                    }
                   >
                     <CyberCard card={card} />
                   </DraggableCard>
