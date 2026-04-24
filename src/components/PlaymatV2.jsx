@@ -480,6 +480,8 @@ function PlayerBoard({
 // ── Main PlaymatV2 Orchestrator ─────────────────────────────────────────────────
 export default function PlaymatV2({
   game,
+  gameRef,
+  onRefresh,
   onGameUpdate,
   onPlayCard,
   onSellCard,
