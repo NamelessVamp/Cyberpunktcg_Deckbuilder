@@ -1,16 +1,20 @@
 # AFTERLIFE DECKS — Claude Context File
+
 # NON OMNIS MORIAR — Este archivo lo lee Claude Code automaticamente
 
 ---
 
 ## PROYECTO
+
 Deck Builder web para Cyberpunk 2077 TCG (WeirdCo, Alpha Kit 2026).
 Referencia visual: choom.gg y duelfrontier.com. Objetivo: superarlos.
 
 ## STACK
+
 React 19.2.4 + Vite + Supabase + Tailwind + Framer Motion + @dnd-kit
 
 ## INFRA
+
 - Repo: https://github.com/NamelessVamp/Cyberpunktcg_Deckbuilder
 - Deploy: https://afterlife-decks.vercel.app
 - Supabase Project ID: laxyrcvcovmwpywwfntz
@@ -18,13 +22,15 @@ React 19.2.4 + Vite + Supabase + Tailwind + Framer Motion + @dnd-kit
 - Vercel Team: team_4LDlxzUKbdArrvYtsxZhF2I4
 
 ## USUARIO
+
 - Nombre: Vamp (Inti)
 - Rol: Ingeniero JR + master en IA — Emerson FTEC
 - Comunicacion: casual en espanol, directo
 - Caveman mode activo — respuestas cortas, sin filler
-- Text emojis/kaomojis: :) :D ^_^ T_T (¬-¬) NO emojis Unicode
+- Text emojis/kaomojis: :) :D ^\_^ T_T (¬-¬) NO emojis Unicode
 
 ## METODOLOGIA
+
 Valve — fail fast, un modulo funcional antes del siguiente.
 Clean Code / SOLID. No spaghetti. Leer archivos reales antes de modificar.
 
@@ -33,23 +39,27 @@ Clean Code / SOLID. No spaghetti. Leer archivos reales antes de modificar.
 ## REGLAS DEL JUEGO (CRITICO — leer antes de tocar GameState)
 
 ### C.O.R.E. Protocol (orden de turno)
+
 1. [C] Check Victory — 6+ dados en Gigs = win (al inicio de CORE)
 2. [O] Obtain Card — robar 1 carta (turno 1 SKIP — mano ya dealt)
 3. [R] Roll a Gig — jugador elige dado del Fixer (d20 DEBE ser ultimo)
 4. [E] Energize — enderezar todo (legends, field, eddies), limpiar summonedThisTurn
 
 ### Economia
+
 - Eddies = cartas vendidas boca abajo + Legends giradas
 - 1 venta por turno (hasSoldThisTurn)
 - Pagar unidad costo 2: girar 2 Eddies/Legends
 - RAM = SOLO regla de deckbuilding, NO existe en gameplay
 
 ### Win Conditions
+
 - Normal: iniciar CORE con 6+ dados en Gigs
 - Deck Out: mazo vacio al intentar robar (fase END)
 - Overtime: ambos sin fixerDice → necesitan 7 gigs o mayoria streetCred
 
 ### Estado jugador
+
 ```js
 {
   legends, deck, hand, field, eddies, gigs,
@@ -77,6 +87,7 @@ Clean Code / SOLID. No spaghetti. Leer archivos reales antes de modificar.
 ## ARCHIVOS CLAVE
 
 ### Motor (Vanilla JS — separado de UI)
+
 ```
 src/lib/game/GameState.js        Motor principal, C.O.R.E. protocol
 src/lib/game/AIPlayer.js         AI v2 (CORE+PLAY+ATTACK+respondToAttack)
@@ -85,6 +96,7 @@ src/lib/CombatResolver.js        combat, stealGigs, _destroyUnit recursivo
 ```
 
 ### UI React
+
 ```
 src/components/SimulatorBeta.jsx     UI simulador, Online Play menu, Toast
 src/components/PlaymatV2.jsx         Mirror board, dnd-kit, Framer Motion
@@ -98,6 +110,7 @@ src/data/cards.json                  48 cartas Alpha Kit
 ```
 
 ### Config
+
 ```
 src/contexts/AuthContext.jsx
 src/lib/supabase.js
@@ -111,6 +124,7 @@ tailwind.config.js               term-amber, term-green, term-red, term-black
 ## ESTADO ACTUAL (v1.3.0-dev — Abril 2026)
 
 ### COMPLETADO (Fase 9)
+
 - Mirror board PlaymatV2 (PlayerBoard reutilizable, rival rotado 180)
 - Zona central compartida de GIGS con dados animados
 - Online Play menu (VS AI / Hotseat) con AnimatePresence
@@ -121,7 +135,7 @@ tailwind.config.js               term-amber, term-green, term-red, term-black
 - CyberCard V3 (1:1.4, sin HP falso, gradiente protector)
 - AI v2 con respondToAttack() y summonedThisTurn
 - Toast system — 10 alert() reemplazados
-- Dynamic deck name via deck._name
+- Dynamic deck name via deck.\_name
 - RAM display correcto (max por color + illegal count)
 - DeckAnalytics barras animadas + warnings
 - CLAUDE.md para Claude Code
@@ -129,15 +143,18 @@ tailwind.config.js               term-amber, term-green, term-red, term-black
 ### PENDIENTE (proximos sprints)
 
 **SECTOR 2 — Motor (ya implementados, verificar)**
+
 - handLocked en UI (flag existe, verificar que PlaymatV2 lo usa)
 
 **SECTOR 4 — UX critico**
+
 - Sistema de pagos inteligente (pre-cargar Eddies antes del drop)
 - Responsive playmat (eliminar horizontal scroll — TODO-A)
 - Hotseat mode P2 visible
 - actionMode (IDLE/TARGETING/PAYING) para Gear/Program
 
 **Efectos de carta pendientes**
+
 - Viktor Vektor: FLIP, busca top 5 por GEAR
 - Alt Cunningham: GO SOLO effect
 - Kiroshi Optics: ATTACK buff
@@ -145,6 +162,7 @@ tailwind.config.js               term-amber, term-green, term-red, term-black
 - Placide: PLAY/ATTACK effect
 
 **Futuro v2.0.0**
+
 - P2P Multiplayer (Supabase Realtime)
 - Fase 19 Scanner OCR (react-webcam + PHash/blockhash-js)
 - Mobile-First completo
@@ -152,6 +170,7 @@ tailwind.config.js               term-amber, term-green, term-red, term-black
 ---
 
 ## ADMIN
+
 - Discord: bloodnghosts
 - user_id: 18a99179-77e0-4129-9db4-d9ff030085f8
 - Feature flag: phase9_simulator (admin-only)
@@ -160,6 +179,7 @@ tailwind.config.js               term-amber, term-green, term-red, term-black
 ---
 
 ## PRIORIDADES INMEDIATAS (v1.3.0)
+
 1. Sistema de pagos inteligente — PlaymatV2
 2. Responsive playmat (TODO-A)
 3. Hotseat P2 visible
