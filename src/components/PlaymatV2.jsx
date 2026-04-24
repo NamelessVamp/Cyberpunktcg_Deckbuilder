@@ -113,6 +113,17 @@ function FixerPanel({ fixerDice, isCorePhase, onRollGig, isRival = false }) {
 
   return (
     <div className="col-left w-[60px] md:w-[80px] flex flex-col justify-end gap-2 h-full">
+      {/* FIXER AREA RULE TEXT - Solo visible para jugador local */}
+      {!isRival && (
+        <div className="text-[7.5px] leading-tight text-term-amber/40 uppercase pointer-events-none mb-1 px-1">
+          <span className="font-bold underline text-white block mb-1">
+            FIXER AREA
+          </span>
+          Eddies gained after completing a gig. The die used determines the
+          Street Cred gained.
+        </div>
+      )}
+
       <div
         className={`dice-box border ${borderColor} rounded-lg flex flex-col items-center justify-evenly flex-1 bg-transparent relative py-2 min-h-0`}
       >
@@ -236,6 +247,73 @@ function PlayerBoard({
           <div
             className={`dashed-units-area border border-dashed ${borderColor} w-full h-full rounded-lg flex flex-row flex-wrap gap-2 p-2 relative z-[5] items-center justify-start overflow-y-auto`}
           >
+            {/* PHASE GUIDE OVERLAY - Parte superior del field */}
+            {!isRival && (
+              <div className="absolute top-1 left-2 right-2 grid grid-cols-3 gap-2 text-[7px] leading-[1.4] text-term-amber/40 uppercase pointer-events-none z-0">
+                <div>
+                  <span className="font-bold text-term-amber block mb-1 text-[8px]">
+                    READY PHASE
+                  </span>
+                  <span className="bg-term-amber text-black px-1 py-0.5 font-bold text-[7px] inline-block mb-0.5">
+                    DRAW A CARD
+                  </span>
+                  <br />
+                  <span className="bg-term-amber text-black px-1 py-0.5 font-bold text-[7px] inline-block mb-0.5">
+                    GAIN A GIG
+                  </span>
+                  <br />
+                  <span className="bg-term-amber text-black px-1 py-0.5 font-bold text-[7px] inline-block">
+                    READY SPENT CARDS
+                  </span>
+                </div>
+                <div>
+                  <span className="font-bold text-cyan-400 block mb-1 text-[8px]">
+                    PLAY PHASE
+                  </span>
+                  <span className="bg-cyan-400 text-black px-1 py-0.5 font-bold text-[7px] inline-block mb-0.5">
+                    SELL FOR EDDIES
+                  </span>
+                  <br />
+                  <span className="bg-cyan-400 text-black px-1 py-0.5 font-bold text-[7px] inline-block mb-0.5">
+                    CALL A LEGEND
+                  </span>
+                  <br />
+                  <span className="bg-cyan-400 text-black px-1 py-0.5 font-bold text-[7px] inline-block">
+                    PLAY CARDS
+                  </span>
+                </div>
+                <div>
+                  <span className="font-bold text-fuchsia-500 block mb-1 text-[8px]">
+                    ATTACK PHASE
+                  </span>
+                  <div className="grid grid-cols-2 gap-0.5 mb-1">
+                    <span className="bg-fuchsia-500 text-white px-1 py-0.5 font-bold text-[7px] inline-block">
+                      ATTACK A SPENT UNIT
+                    </span>
+                    <span className="bg-fuchsia-500 text-white px-1 py-0.5 font-bold text-[7px] inline-block">
+                      ATTACK YOUR RIVAL
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-0.5 text-[6.5px]">
+                    <div>
+                      <span className="font-bold text-white">FIGHT!</span>
+                      <br />↓<br />
+                      <div className="text-[6px]">OFFENSIVE STEPS</div>
+                      <div className="text-[6px]">DEFENSIVE STEPS</div>
+                      <div className="text-[6px]">RESOLVE</div>
+                    </div>
+                    <div>
+                      <span className="font-bold text-white">STEAL!</span>
+                      <br />↓<br />
+                      <div className="text-[6px]">OFFENSIVE STEPS</div>
+                      <div className="text-[6px]">DEFENSIVE STEPS</div>
+                      <div className="text-[6px]">DEFEAT</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <AnimatePresence>
               {combatFlash && (
                 <motion.div
@@ -300,6 +378,60 @@ function PlayerBoard({
                 </DroppableZone>
               ))}
             </AnimatePresence>
+
+            {/* KEYWORD RIBBON OVERLAY - Parte inferior del field */}
+            {!isRival && (
+              <div className="absolute bottom-1 left-2 right-2 pointer-events-none z-0">
+                <div className="text-center text-[8px] font-bold text-white mb-1 uppercase">
+                  TIMING TRIGGERS & KEYWORDS
+                </div>
+
+                {/* Fila 1: PLAY + BLOCKER */}
+                <div className="flex gap-1 text-[6.5px] leading-tight uppercase mb-0.5">
+                  <span className="bg-green-600 text-white px-1 py-0.5 font-bold inline-block">
+                    PLAY
+                  </span>
+                  <span className="text-term-amber/40">
+                    As soon as you play this card's cost, the effect happens.
+                  </span>
+                  <span className="bg-blue-500 text-white px-1 py-0.5 font-bold inline-block ml-2">
+                    BLOCKER
+                  </span>
+                  <span className="text-term-amber/40">
+                    When a rival Unit attacks, you may spend this Unit to
+                    redirect the attack to it.
+                  </span>
+                </div>
+
+                {/* Fila 2: ATTACK + GO SOLO */}
+                <div className="flex gap-1 text-[6.5px] leading-tight uppercase mb-0.5">
+                  <span className="bg-red-600 text-white px-1 py-0.5 font-bold inline-block">
+                    ATTACK
+                  </span>
+                  <span className="text-term-amber/40">
+                    When this Unit attacks, before the fight resolves, the
+                    effect happens.
+                  </span>
+                  <span className="bg-amber-500 text-black px-1 py-0.5 font-bold inline-block ml-2">
+                    GO SOLO
+                  </span>
+                  <span className="text-term-amber/40">
+                    Pay this card's cost to play it as a ready Unit—it can
+                    attack this turn.
+                  </span>
+                </div>
+
+                {/* Fila 3: FLIP */}
+                <div className="flex gap-1 text-[6.5px] leading-tight uppercase">
+                  <span className="bg-cyan-500 text-white px-1 py-0.5 font-bold inline-block">
+                    FLIP
+                  </span>
+                  <span className="text-term-amber/40">
+                    As soon as this card is flipped face-up, the effect happens.
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </DroppableZone>
 
@@ -313,6 +445,14 @@ function PlayerBoard({
             >
               LEGENDS
             </div>
+
+            {/* WATERMARK LEGENDS - Solo visible si no hay legends y es jugador local */}
+            {!isRival && legends.filter(Boolean).length === 0 && (
+              <div className="absolute bottom-1 w-full text-center text-[6px] text-term-amber/30 pointer-events-none z-0 uppercase px-1">
+                START FACE DOWN. PAY 2 EDDIES TO FLIP.
+              </div>
+            )}
+
             {[0, 1, 2].map((idx) => (
               <div
                 key={`legend-${idx}`}
@@ -384,6 +524,18 @@ function PlayerBoard({
               >
                 EDDIES {isPlayPhase ? "— click to load" : ""}
               </div>
+
+              {/* WATERMARK EDDIES - Solo visible si no hay eddies */}
+              {eddies.length === 0 && (
+                <div className="absolute inset-0 flex items-center justify-center text-center text-[7px] text-term-amber/30 pointer-events-none z-0 uppercase px-2 leading-tight">
+                  TAP TO PAY COSTS.
+                  <br />
+                  UNTAP DURING ENERGIZE.
+                  <br />
+                  SELL 1 CARD/TURN.
+                </div>
+              )}
+
               <AnimatePresence>
                 {eddies.map((card, idx) => (
                   <motion.div
@@ -425,6 +577,38 @@ function PlayerBoard({
             TCG SIMULATOR
           </span>
         </div>
+
+        {/* CARD TYPES GLOSSARY - Solo visible para jugador local */}
+        {!isRival && (
+          <div className="text-[7.5px] leading-tight text-term-amber/40 uppercase pointer-events-none px-2 mb-2">
+            <span className="font-bold underline text-white block mb-2">
+              CARD TYPES
+            </span>
+            <div className="space-y-1">
+              <div>
+                <span className="text-white font-bold">• LEGEND:</span>
+                <br />
+                Deck centerpiece
+              </div>
+              <div>
+                <span className="text-white font-bold">• UNIT:</span>
+                <br />
+                Members of crew
+              </div>
+              <div>
+                <span className="text-white font-bold">• PROGRAM:</span>
+                <br />
+                One time effects
+              </div>
+              <div>
+                <span className="text-white font-bold">• GEAR:</span>
+                <br />
+                Attach to units
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="spacer flex-grow"></div>
 
         <motion.div
@@ -629,7 +813,7 @@ export default function PlaymatV2({
         </div>
 
         {/* CONTENEDOR PRINCIPAL: Flexbox dinámico */}
-        <div className="flex flex-col w-full max-w-[1200px] h-full p-2 pb-[60px] md:pb-[80px] gap-1 md:gap-2 relative">
+        <div className="flex flex-col w-full max-w-[1200px] h-full p-1 pb-[40px] md:pb-[50px] gap-1 relative">
           {/* RIVAL BOARD (Upper half) */}
           <div className="flex-1 min-h-0 rotate-180">
             <PlayerBoard
@@ -646,7 +830,7 @@ export default function PlaymatV2({
           </div>
 
           {/* EL CENTRO COMPARTIDO (GIGS ZONE) */}
-          <div className="shrink-0 h-[60px] md:h-[80px] flex items-center justify-center gap-3 w-full relative z-10 my-1">
+          <div className="shrink-0 h-[50px] md:h-[60px] flex items-center justify-center gap-2 w-full relative z-10 my-0.5">
             {/* Stats Rival */}
             <div
               className={`hidden md:flex stats-box w-[120px] h-full border border-term-red/40 rounded-lg flex-col items-center justify-center p-1 bg-term-black/80 backdrop-blur`}
@@ -775,7 +959,7 @@ export default function PlaymatV2({
                 className={`h-full ${isAttackPhase ? "opacity-50 pointer-events-none" : ""} 
   ${card.type === "UNIT" && playerData.floatingEddies < card.cost && isPlayPhase ? "opacity-40 saturate-0 cursor-not-allowed" : ""}`}
                 whileHover={
-                  !isAttackPhase ? { y: -15, scale: 1.1, zIndex: 60 } : {}
+                  !isAttackPhase ? { y: -8, scale: 1.05, zIndex: 60 } : {}
                 }
               >
                 {isAttackPhase ? (
