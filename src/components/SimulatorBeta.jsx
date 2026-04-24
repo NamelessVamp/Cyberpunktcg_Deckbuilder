@@ -707,6 +707,8 @@ export default function SimulatorBeta({
               )}
               <PlaymatV2
                 game={game}
+                gameRef={gameRef}
+                onRefresh={refresh}
                 onGameUpdate={(g) => {
                   gameRef.current = g;
                   setGame(g);
