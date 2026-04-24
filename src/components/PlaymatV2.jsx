@@ -511,9 +511,14 @@ export default function PlaymatV2({
   // ══════════════════════════════════════════════════════════
   const handlePreloadEddies = (amount = 1) => {
     if (game?.phase !== "PLAY") return;
-    const result = game.preloadEddies(activeId, amount);
+
+    console.log("ANTES:", gameRef.current.players[activeId].floatingEddies);
+    const result = gameRef.current.preloadEddies(activeId, amount);
+    console.log("DESPUÉS:", gameRef.current.players[activeId].floatingEddies);
+    console.log("RESULT:", result);
+
     if (result.success) {
-      onGameUpdate?.({ ...game }); // Force re-render
+      onRefresh?.();
     }
   };
 
