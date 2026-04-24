@@ -71,6 +71,27 @@
 | —   | Undo button (snapshot del GameState)                       | ❌ TODO  |
 | —   | S/M/L card size toggle                                     | ❌ TODO  |
 
+### 🎯 FASE 9.5: ACTUALIZACIÓN "PIXELBORN" (UX AUTOMATIZADO)
+
+**Objetivo:** Eliminar errores humanos en el simulador mediante bloqueos estrictos de UI.
+
+1. **State Machine UI (Bloqueos Visuales):**
+   - Vincular la propiedad estricta `draggable={false}` en las cartas de la mano si `game.phase !== "PLAY"`.
+   - Atenuar (dim) todas las cartas que no pueden ser activadas en la fase actual.
+
+2. **Action Mode "TARGETING" (Cables y Miras):**
+   - Crear un nuevo estado en React: `const [actionMode, setActionMode] = useState("IDLE")`.
+   - Cuando se declara un atacante: `setActionMode("TARGETING")`.
+   - En modo TARGETING, oscurecer la UI general y resaltar solo a las unidades enemigas viables. (A futuro: renderizar un SVG o Canvas de una línea/flecha que siga al cursor desde el atacante).
+
+3. **Smart Economy (El Pool de Eddies):**
+   - Refactorizar la función de pago. El jugador hace "tap" manual a sus recursos para llenar un `floatingEddiesPool`.
+   - Condicionar el `dnd-kit` (DropZone): `isDroppable = floatingEddiesPool >= dragItem.cost`.
+
+4. **Botón Dinámico de Turno (The Big Button):**
+   - Reemplazar los botones sueltos de fase por un solo botón maestro en la esquina inferior derecha.
+   - El botón lee la máquina de estados y cambia su texto y acción: `[DRAW CARD]` -> `[END PLAY PHASE]` -> `[END TURN]`.
+
 ## ✅ FASE 10-12: COMMUNITY & VAULT (100%)
 
 ## ⏳ FASE 11: ENHANCED FILTERS (87%)
@@ -88,6 +109,32 @@ Subtitle + multiple factions ❌
 (ya hay dos decks publicados)
 
 ## 🔮 FASE 19: SCANNER & SMART IMPORT (0%)
+
+## 📂 FASE 19: SCANNER & SMART IMPORT (INVESTIGACIÓN Y ARQUITECTURA)
+
+**Objetivo:** Permitir a los jugadores importar cartas físicas a su colección digital o mazo activo utilizando la cámara de su dispositivo móvil, eliminando la fricción de la búsqueda manual.
+
+**Inspiración de UX/UI:** Modelo Card Nexus (Escanear en flujo, sin fricción).
+
+### 📐 Arquitectura Planeada
+
+1. **Interfaz (El Ojo Cibernético)**
+   - Enfoque 100% "Mobile-First".
+   - Uso de librería (ej. `react-webcam`) para control nativo de cámara frontal/trasera.
+   - UI oscura con retícula de enfoque central ("Encuadra la carta").
+   - Bucle continuo: No hay botón de "Tomar foto", escaneo en tiempo real (1 frame/segundo).
+
+2. **Motor de Reconocimiento (Computer Vision)**
+   - **MVP (Fase Inicial):** _Hashing Perceptual (PHash)_. Generación de hashes desde `cards.json` y comparación local en el navegador para latencia cero.
+   - **Escalabilidad (Post-MVP):** _Template Matching / OpenCV_. Backend en Python para mayor tolerancia a ángulos, reflejos holográficos y mala iluminación.
+
+3. **Flujo de Usuario (El Bucle Nexus)**
+   - **Detección Exitosa:** Destello visual + feedback sonoro sutil.
+   - **Resolución de Variantes:** Si el arte base coincide pero existen versiones Foil/Promo, mostrar un _Toast_ interactivo o Bottom Sheet rápido: _"Detectado: [Carta]. ¿Versión Foil o Normal?"_.
+   - **Destino Rápido:** Selector pre-escaneo para enviar las cartas detectadas directamente a `[MI COLECCIÓN]` o `[MAZO ACTUAL]`.
+
+4. **Integración con Sistemas Actuales**
+   - **Wishlist Auto-Resolve:** Al escanear una carta para añadirla a la colección, el sistema verificará automáticamente si estaba en la Wishlist y la removerá.
 
 ---
 
