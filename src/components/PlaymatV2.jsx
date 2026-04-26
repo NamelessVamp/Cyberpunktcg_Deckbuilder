@@ -11,6 +11,7 @@ import {
 } from "@dnd-kit/core";
 import { motion, AnimatePresence } from "framer-motion";
 import CyberCard from "./simulator/CyberCard";
+import CardHoverPreview from "./simulator/CardHoverPreview";
 
 // ── Draggable card ─────────────────────────────────────────────────
 function DraggableCard({ id, children, disabled }) {
@@ -666,6 +667,7 @@ export default function PlaymatV2({
   game,
   gameRef,
   onRefresh,
+  onAdvancePhase,
   onGameUpdate,
   onPlayCard,
   onSellCard,
@@ -680,6 +682,7 @@ export default function PlaymatV2({
 }) {
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [activeCard, setActiveCard] = useState(null);
   const [combatFlash, setCombatFlash] = useState(false);
   const [activeDragIdx, setActiveDragIdx] = useState(null);
@@ -722,6 +725,15 @@ export default function PlaymatV2({
     }
     prevFieldLen.current = currentLen;
   }, [playerField.length]);
+
+  // Track mouse position for hover preview
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   const getLegalZones = (card) => {
     if (!card) return [];
@@ -861,12 +873,26 @@ export default function PlaymatV2({
               </AnimatePresence>
             </div>
 
-            {/* Indicador de Fase Central */}
-            <div className="text-term-amber/60 bg-term-black/80 px-3 py-2 rounded backdrop-blur font-mono text-[9px] md:text-[11px] font-bold tracking-widest border border-term-amber/20 shadow-[0_0_10px_rgba(247,224,24,0.1)] flex flex-col items-center">
-              <span>— COMBAT ZONE —</span>
-              <span className="text-term-amber">
-                T{game?.turn || 1} [{game?.phase || "SETUP"}]
-              </span>
+            {/* Indicador de Fase Central + Next Phase Button */}
+            <div className="flex flex-col items-center gap-2">
+              <div className="text-term-amber/60 bg-term-black/80 px-3 py-2 rounded backdrop-blur font-mono text-[9px] md:text-[11px] font-bold tracking-widest border border-term-amber/20 shadow-[0_0_10px_rgba(247,224,24,0.1)] flex flex-col items-center">
+                <span>— COMBAT ZONE —</span>
+                <span className="text-term-amber">
+                  T{game?.turn || 1} [{game?.phase || "SETUP"}]
+                </span>
+              </div>
+
+              {/* Next Phase Button */}
+              {game?.phase &&
+                game.phase !== "SETUP" &&
+                game.phase !== "MULLIGAN" && (
+                  <button
+                    onClick={() => onAdvancePhase?.()}
+                    className="px-4 py-2 bg-term-green/20 border-2 border-term-green text-term-green font-mono font-bold text-xs hover:bg-term-green hover:text-term-black transition-all shadow-[0_0_12px_rgba(74,222,128,0.4)] hover:shadow-[0_0_24px_rgba(74,222,128,0.8)]"
+                  >
+                    NEXT PHASE →
+                  </button>
+                )}
             </div>
 
             {/* Gigs Box (Local) */}
@@ -983,47 +1009,6 @@ export default function PlaymatV2({
           </div>
         </div>
 
-        {/* Hover Preview Tooltip */}
-        <AnimatePresence>
-          {hoveredCard && (
-            <motion.div
-              className="fixed top-4 right-4 z-[100] w-[200px] md:w-56 bg-term-black border-2 border-term-amber rounded-lg p-2 md:p-3 shadow-[0_0_24px_rgba(255,191,0,0.4)] pointer-events-none"
-              initial={{ opacity: 0, x: 20, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 20, scale: 0.9 }}
-              transition={{ duration: 0.15 }}
-            >
-              {hoveredCard.image_url ? (
-                <img
-                  src={hoveredCard.image_url}
-                  alt={hoveredCard.name}
-                  className="w-full rounded mb-2 shadow-lg"
-                />
-              ) : (
-                <div className="w-full h-24 bg-term-gray/40 rounded mb-2 flex items-center justify-center text-term-amber/20 text-[10px] font-mono">
-                  NO IMAGE
-                </div>
-              )}
-              <div className="font-mono text-term-amber text-[10px] md:text-xs font-bold">
-                {hoveredCard.name}
-              </div>
-              {hoveredCard.subtitle && (
-                <div className="font-mono text-term-amber/50 text-[8px] md:text-[10px]">
-                  {hoveredCard.subtitle}
-                </div>
-              )}
-              <div className="font-mono text-term-green/70 text-[8px] md:text-[10px] mt-1">
-                {hoveredCard.type} · {hoveredCard.faction} · {hoveredCard.cost}€
-              </div>
-              {hoveredCard.text && (
-                <div className="font-mono text-term-amber/60 text-[7px] md:text-[9px] mt-1 leading-tight border-t border-term-amber/20 pt-1">
-                  {hoveredCard.text}
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
         {/* Drag Overlay */}
         <DragOverlay>
           {activeCard && (
@@ -1036,6 +1021,17 @@ export default function PlaymatV2({
             </motion.div>
           )}
         </DragOverlay>
+
+        {/* Card Hover Preview */}
+        <AnimatePresence>
+          {hoveredCard && (
+            <CardHoverPreview
+              card={hoveredCard}
+              mouseX={mousePos.x}
+              mouseY={mousePos.y}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </DndContext>
   );

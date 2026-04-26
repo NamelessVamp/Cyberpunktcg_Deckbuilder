@@ -48,6 +48,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import PublicDeckView from "./components/PublicDeckView";
 import * as communityService from "./lib/communityService";
 import PublishDeckModal from "./components/PublishDeckModal";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Arena from "./pages/Arena";
 
 const isNewCard = (card, days = 7) => {
   if (!card.date_added) return false;
@@ -596,880 +598,931 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-term-black text-term-green relative">
-      <a href="#main-content" className="skip-link">
-        Skip to main content
-      </a>
+    <BrowserRouter>
+      <Routes>
+        {/* Ruta principal — Deck Builder */}
+        <Route
+          path="/"
+          element={
+            <div className="min-h-screen bg-term-black text-term-green relative">
+              <a href="#main-content" className="skip-link">
+                Skip to main content
+              </a>
 
-      {/* ── CYBERSPACE BACKGROUND GLOBAL ── */}
-      <CyberspaceParticles className="opacity-100" />
+              {/* ── CYBERSPACE BACKGROUND GLOBAL ── */}
+              <CyberspaceParticles className="opacity-100" />
 
-      {/* Background Grid */}
-      <div className="fixed inset-0 pointer-events-none opacity-5">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
+              {/* Background Grid */}
+              <div className="fixed inset-0 pointer-events-none opacity-5">
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    backgroundImage: `
               linear-gradient(rgba(0, 255, 65, 0.1) 1px, transparent 1px),
               linear-gradient(90deg, rgba(0, 255, 65, 0.1) 1px, transparent 1px)
             `,
-            backgroundSize: "50px 50px",
-          }}
-        ></div>
-      </div>
-
-      <div className="relative z-10 p-8">
-        {/* Header */}
-        <header className="mb-4 sm:mb-8 border-b border-term-amber/20 pb-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
-            <div className="flex-1">
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <h1 className="text-xl sm:text-4xl font-bold text-term-amber mb-1 font-mono leading-tight">
-                    AFTERLIFE DECKS // DECK_BUILDER.EXE
-                  </h1>
-                  <p className="text-xs text-term-amber/50 font-mono tracking-wider -mt-1">
-                    [UNOFFICIAL FAN PROJECT - NOT AFFILIATED WITH CDPR OR
-                    WEIRDCO]
-                  </p>
-                </div>
-                {/* Login button — mobile solo, se mueve inline con el título */}
-                <div className="sm:hidden flex-shrink-0 mt-1">
-                  {user ? (
-                    <button
-                      onClick={signOut}
-                      className="px-2 py-1 bg-term-red/20 text-term-red border border-term-red rounded font-mono text-xs hover:bg-term-red/30 transition-colors"
-                    >
-                      [OUT]
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setShowLoginModal(true)}
-                      className="px-2 py-1 bg-term-green/20 text-term-green border border-term-green rounded font-mono text-xs hover:bg-term-green/30 transition-colors"
-                    >
-                      [LOGIN]
-                    </button>
-                  )}
-                </div>
+                    backgroundSize: "50px 50px",
+                  }}
+                ></div>
               </div>
 
-              <div className="space-y-1 mt-2">
-                <p className="text-term-green font-mono">
-                  [{filteredCards.length} / {cards.length} CARDS] // [ALPHA/BETA
-                  KIT 2026]
-                </p>
-                {user && collection.length > 0 && (
-                  <p className="text-term-amber/80 font-mono text-sm">
-                    📦 COLLECTION: {collection.length} unique cards
-                    {(() => {
-                      const stats = collectionService.getCollectionStats(
-                        collection,
-                        cards,
-                      );
-                      return ` (${stats.completionPercent}% complete)`;
-                    })()}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="hidden sm:flex items-center gap-4">
-              {user ? (
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => setShowProfileModal(true)}
-                    className="relative group focus:outline-none"
-                    title="View profile"
-                  >
-                    {profileAvatarUrl || user.discord_avatar ? (
-                      <img
-                        src={profileAvatarUrl || user.discord_avatar}
-                        alt="Avatar"
-                        className="w-10 h-10 rounded-full border-2 border-term-amber group-hover:border-term-green transition-colors object-cover"
-                      />
-                    ) : (
-                      <div className="w-10 h-10 rounded-full border-2 border-term-amber group-hover:border-term-green bg-term-black flex items-center justify-center transition-colors">
-                        <span className="text-term-amber font-mono font-bold text-sm">
-                          {profileDisplayName ||
-                            user.discord_username ||
-                            user.email?.split("@")[0].substring(0, 12)}
-                        </span>
+              <div className="relative z-10 p-8">
+                {/* Header */}
+                <header className="mb-4 sm:mb-8 border-b border-term-amber/20 pb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <h1 className="text-xl sm:text-4xl font-bold text-term-amber mb-1 font-mono leading-tight">
+                            AFTERLIFE DECKS // DECK_BUILDER.EXE
+                          </h1>
+                          <p className="text-xs text-term-amber/50 font-mono tracking-wider -mt-1">
+                            [UNOFFICIAL FAN PROJECT - NOT AFFILIATED WITH CDPR
+                            OR WEIRDCO]
+                          </p>
+                        </div>
+                        {/* Login button — mobile solo, se mueve inline con el título */}
+                        <div className="sm:hidden flex-shrink-0 mt-1">
+                          {user ? (
+                            <button
+                              onClick={signOut}
+                              className="px-2 py-1 bg-term-red/20 text-term-red border border-term-red rounded font-mono text-xs hover:bg-term-red/30 transition-colors"
+                            >
+                              [OUT]
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => setShowLoginModal(true)}
+                              className="px-2 py-1 bg-term-green/20 text-term-green border border-term-green rounded font-mono text-xs hover:bg-term-green/30 transition-colors"
+                            >
+                              [LOGIN]
+                            </button>
+                          )}
+                        </div>
                       </div>
-                    )}
-                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-term-green border-2 border-term-gray"></div>
-                  </button>
 
-                  <div
-                    className="text-right cursor-pointer"
-                    onClick={() => setShowProfileModal(true)}
-                  >
-                    <p className="text-term-amber font-mono text-sm font-bold hover:text-term-green transition-colors">
-                      {profileDisplayName ||
-                        user.discord_username ||
-                        user.email?.split("@")[0].substring(0, 12)}
-                    </p>
-                    <p className="text-term-green/60 font-mono text-xs">
-                      {savedDecks.length} saved decks
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={signOut}
-                    className="px-4 py-2 bg-term-red/20 text-term-red border border-term-red rounded font-mono hover:bg-term-red/30 transition-colors"
-                  >
-                    [LOGOUT]
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => setShowLoginModal(true)}
-                  className="px-4 py-2 bg-term-green/20 text-term-green border border-term-green rounded font-mono hover:bg-term-green/30 transition-colors"
-                >
-                  [LOGIN]
-                </button>
-              )}
-            </div>
-          </div>
-        </header>
-
-        <main id="main-content" role="main">
-          <DeckTabs
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-            publicDeckCount={
-              savedDecks.filter((d) => d.visibility === "public").length
-            }
-          />
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, filter: "blur(4px)", y: 6 }}
-              animate={{
-                opacity: 1,
-                filter: "blur(0px)",
-                y: 0,
-                transitionEnd: { filter: "none", transform: "none" },
-              }}
-              exit={{ opacity: 0, filter: "blur(3px)", y: -4 }}
-              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {/* HOME */}
-              {activeTab === "home" && (
-                <div key="home-tab">
-                  <LandingPage
-                    user={user}
-                    collection={collection}
-                    allCards={cards}
-                    savedDecks={savedDecks}
-                    onNavigate={setActiveTab}
-                    onLoadPrecon={handleLoadPrecon}
-                  />
-                </div>
-              )}
-
-              {/* BUILD */}
-              {activeTab === "build" && (
-                <div key="build-tab">
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* LEFT: Card Browser */}
-                    <div className="lg:col-span-2">
-                      <SearchBar
-                        onSearch={setSearchTerm}
-                        onToggleFilters={() => setFiltersOpen(!filtersOpen)}
-                        filtersOpen={filtersOpen}
-                        onCloseFilters={() => setFiltersOpen(false)}
-                      />
-
-                      <FilterPanel
-                        cards={cards}
-                        filters={filters}
-                        onFilterChange={setFilters}
-                        isOpen={filtersOpen}
-                        showOwnedOnly={showOwnedOnly}
-                        onToggleOwnedOnly={setShowOwnedOnly}
-                        collectionCount={collection.length}
-                        isLoggedIn={!!user}
-                      />
-
-                      {/* Card Grid */}
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-0">
-                        {currentCards.map((card) => (
-                          <div
-                            key={card.id}
-                            className="deck-card-container glitch-card hover:border-term-green transition-all duration-300 cursor-pointer group"
-                            onClick={() => setPreviewCard(card)}
-                          >
-                            <div className="relative overflow-hidden rounded mb-3 bg-term-gray-light">
-                              <SmartCardImage
-                                card={card}
-                                className="w-full h-auto transition-transform duration-300 group-hover:scale-105 glitch-img"
-                                showLoadingState={true}
-                              />
-
-                              {/* Owned Badge */}
-                              {user &&
-                                collectionService.ownsCard(
+                      <div className="space-y-1 mt-2">
+                        <p className="text-term-green font-mono">
+                          [{filteredCards.length} / {cards.length} CARDS] //
+                          [ALPHA/BETA KIT 2026]
+                        </p>
+                        {user && collection.length > 0 && (
+                          <p className="text-term-amber/80 font-mono text-sm">
+                            📦 COLLECTION: {collection.length} unique cards
+                            {(() => {
+                              const stats =
+                                collectionService.getCollectionStats(
                                   collection,
-                                  card.id,
-                                ) && (
-                                  <div className="absolute top-2 left-2 bg-term-green text-term-black font-mono font-bold text-xs px-2 py-1 rounded flex items-center gap-1">
-                                    ✓ x
-                                    {collectionService.getCardQuantity(
-                                      collection,
-                                      card.id,
-                                    )}
-                                  </div>
-                                )}
+                                  cards,
+                                );
+                              return ` (${stats.completionPercent}% complete)`;
+                            })()}
+                          </p>
+                        )}
+                      </div>
+                    </div>
 
-                              {/* Deck Count Badge */}
-                              {(() => {
-                                const deckCount = [
-                                  ...deck.mainDeck,
-                                  ...deck.legends,
-                                ].filter((c) => c.id === card.id).length;
-                                return deckCount > 0 ? (
-                                  <div className="absolute bottom-2 left-2 bg-term-blue text-white font-mono font-bold text-xs px-2 py-0.5 rounded">
-                                    x{deckCount}
-                                  </div>
-                                ) : null;
-                              })()}
-
-                              {/* NEW Badge */}
-                              {isNewCard(card) && (
-                                <div className="absolute top-2 right-2 bg-term-green text-term-black font-mono font-bold text-xs px-2 py-1 rounded animate-pulse flex items-center gap-1">
-                                  NEW
-                                </div>
-                              )}
-
-                              {/* RAM Color Dot */}
-                              {card.ram_color && (
-                                <div
-                                  className={`absolute top-2 right-2 w-3 h-3 rounded-full ${
-                                    card.ram_color === "Red"
-                                      ? "bg-term-red"
-                                      : card.ram_color === "Yellow"
-                                        ? "bg-term-amber"
-                                        : card.ram_color === "Green"
-                                          ? "bg-term-green"
-                                          : card.ram_color === "Blue"
-                                            ? "bg-term-blue"
-                                            : "bg-gray-500"
-                                  }`}
-                                ></div>
-                              )}
-
-                              {/* ─── WISHLIST STAR en Build Grid ─────────────────── */}
-                              {user && (
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleToggleWishlist(card.id);
-                                  }}
-                                  className={`absolute bottom-2 right-2 text-xl leading-none transition-all select-none
-  rounded px-1 py-0.5
-  ${
-    wishlistIds.has(card.id)
-      ? "opacity-100 text-term-amber drop-shadow-[0_0_8px_#ffb300] bg-black/50"
-      : "opacity-0 group-hover:opacity-100 text-term-amber bg-black/40"
-  }`}
-                                  title={
-                                    wishlistIds.has(card.id)
-                                      ? "Quitar de wishlist"
-                                      : "Agregar a wishlist"
-                                  }
-                                >
-                                  {wishlistIds.has(card.id) ? "★" : "☆"}
-                                </button>
-                              )}
-                              {/* ──────────────────────────────────────────────────── */}
-                            </div>
-
-                            <h3 className="text-term-green font-bold font-mono text-lg">
-                              {card.name}
-                            </h3>
-
-                            {card.subtitle && (
-                              <p className="text-term-amber/60 text-sm font-mono mb-2">
-                                {card.subtitle}
-                              </p>
-                            )}
-
-                            <div className="flex gap-3 text-xs font-mono mb-2">
-                              {card.cost !== undefined && (
-                                <span className="text-term-blue">
-                                  COST: {card.cost}
+                    <div className="hidden sm:flex items-center gap-4">
+                      {user ? (
+                        <div className="flex items-center gap-4">
+                          <button
+                            onClick={() => setShowProfileModal(true)}
+                            className="relative group focus:outline-none"
+                            title="View profile"
+                          >
+                            {profileAvatarUrl || user.discord_avatar ? (
+                              <img
+                                src={profileAvatarUrl || user.discord_avatar}
+                                alt="Avatar"
+                                className="w-10 h-10 rounded-full border-2 border-term-amber group-hover:border-term-green transition-colors object-cover"
+                              />
+                            ) : (
+                              <div className="w-10 h-10 rounded-full border-2 border-term-amber group-hover:border-term-green bg-term-black flex items-center justify-center transition-colors">
+                                <span className="text-term-amber font-mono font-bold text-sm">
+                                  {profileDisplayName ||
+                                    user.discord_username ||
+                                    user.email?.split("@")[0].substring(0, 12)}
                                 </span>
-                              )}
-                              {card.power !== undefined && (
-                                <span className="text-term-red">
-                                  PWR: {card.power}
-                                </span>
-                              )}
-                              <span className="text-term-green">
-                                RAM: {card.ram}
-                              </span>
-                            </div>
-
-                            <div className="flex items-center gap-2 text-xs font-mono">
-                              <span className="text-term-amber/80">
-                                {card.type}
-                              </span>
-                              {card.faction && (
-                                <>
-                                  <span className="text-term-amber/40">//</span>
-                                  <span className="text-term-green/80">
-                                    {card.faction}
-                                  </span>
-                                </>
-                              )}
-                            </div>
-
-                            {card.keywords && card.keywords.length > 0 && (
-                              <div className="mt-2 flex flex-wrap gap-1">
-                                {card.keywords.map((keyword, idx) => (
-                                  <span
-                                    key={idx}
-                                    className="text-xs px-2 py-0.5 bg-term-amber/10 text-term-amber rounded font-mono"
-                                  >
-                                    {keyword}
-                                  </span>
-                                ))}
                               </div>
                             )}
-
-                            <div className="mt-3 text-center">
-                              <span className="text-term-green text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity">
-                                [CLICK TO PREVIEW]
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Pagination */}
-                      {totalPages > 1 && (
-                        <div className="mt-6 flex items-center justify-center gap-4">
-                          <button
-                            onClick={() => {
-                              setCurrentPage((prev) => Math.max(prev - 1, 1));
-                              window.scrollTo({ top: 0, behavior: "smooth" });
-                            }}
-                            disabled={currentPage === 1}
-                            className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
-                              currentPage === 1
-                                ? "bg-term-gray border border-term-amber/20 text-term-amber/40 cursor-not-allowed"
-                                : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
-                            }`}
-                          >
-                            [◄ PREV]
+                            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-term-green border-2 border-term-gray"></div>
                           </button>
 
-                          <span className="text-term-green font-mono">
-                            PAGE {currentPage} / {totalPages}
-                          </span>
+                          <div
+                            className="text-right cursor-pointer"
+                            onClick={() => setShowProfileModal(true)}
+                          >
+                            <p className="text-term-amber font-mono text-sm font-bold hover:text-term-green transition-colors">
+                              {profileDisplayName ||
+                                user.discord_username ||
+                                user.email?.split("@")[0].substring(0, 12)}
+                            </p>
+                            <p className="text-term-green/60 font-mono text-xs">
+                              {savedDecks.length} saved decks
+                            </p>
+                          </div>
 
                           <button
-                            onClick={() => {
-                              setCurrentPage((prev) =>
-                                Math.min(prev + 1, totalPages),
-                              );
-                              window.scrollTo({ top: 0, behavior: "smooth" });
-                            }}
-                            disabled={currentPage === totalPages}
-                            className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
-                              currentPage === totalPages
-                                ? "bg-term-gray border border-term-amber/20 text-term-amber/40 cursor-not-allowed"
-                                : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
-                            }`}
+                            onClick={signOut}
+                            className="px-4 py-2 bg-term-red/20 text-term-red border border-term-red rounded font-mono hover:bg-term-red/30 transition-colors"
                           >
-                            [NEXT ►]
+                            [LOGOUT]
                           </button>
                         </div>
+                      ) : (
+                        <button
+                          onClick={() => setShowLoginModal(true)}
+                          className="px-4 py-2 bg-term-green/20 text-term-green border border-term-green rounded font-mono hover:bg-term-green/30 transition-colors"
+                        >
+                          [LOGIN]
+                        </button>
                       )}
                     </div>
+                  </div>
+                </header>
 
-                    {/* RIGHT: Deck Area */}
-                    <div className="lg:col-span-1">
-                      <div className="lg:sticky lg:top-8 space-y-6">
-                        <DeckArea
-                          deck={deck}
-                          onRemoveCard={handleRemoveCard}
-                          onClearDeck={handleClearDeck}
-                          onShareDeck={handleShareDeck}
-                          allCards={cards}
-                          showAnalytics={showAnalytics}
-                          onToggleAnalytics={() =>
-                            setShowAnalytics(!showAnalytics)
-                          }
-                          onGenerateProxies={() => setShowProxyModal(true)}
-                          onAddToDeck={handleAddToDeck}
-                          onAddToSideboard={handleAddToSideboard}
-                          freeBuildMode={freeBuildMode}
-                          onToggleFreeBuild={() =>
-                            setFreeBuildMode(!freeBuildMode)
-                          }
-                        />
-
-                        {showProxyModal && (
-                          <ProxyModal
-                            deck={deck}
-                            onClose={() => setShowProxyModal(false)}
+                <main id="main-content" role="main">
+                  <DeckTabs
+                    activeTab={activeTab}
+                    onTabChange={setActiveTab}
+                    publicDeckCount={
+                      savedDecks.filter((d) => d.visibility === "public").length
+                    }
+                  />
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeTab}
+                      initial={{ opacity: 0, filter: "blur(4px)", y: 6 }}
+                      animate={{
+                        opacity: 1,
+                        filter: "blur(0px)",
+                        y: 0,
+                        transitionEnd: { filter: "none", transform: "none" },
+                      }}
+                      exit={{ opacity: 0, filter: "blur(3px)", y: -4 }}
+                      transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      {/* HOME */}
+                      {activeTab === "home" && (
+                        <div key="home-tab">
+                          <LandingPage
+                            user={user}
+                            collection={collection}
+                            allCards={cards}
+                            savedDecks={savedDecks}
+                            onNavigate={setActiveTab}
+                            onLoadPrecon={handleLoadPrecon}
                           />
-                        )}
+                        </div>
+                      )}
 
-                        {showAnalytics && (
-                          <AnalyticsModal
-                            deck={deck}
-                            onClose={() => setShowAnalytics(false)}
+                      {/* BUILD */}
+                      {activeTab === "build" && (
+                        <div key="build-tab">
+                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            {/* LEFT: Card Browser */}
+                            <div className="lg:col-span-2">
+                              <SearchBar
+                                onSearch={setSearchTerm}
+                                onToggleFilters={() =>
+                                  setFiltersOpen(!filtersOpen)
+                                }
+                                filtersOpen={filtersOpen}
+                                onCloseFilters={() => setFiltersOpen(false)}
+                              />
+
+                              <FilterPanel
+                                cards={cards}
+                                filters={filters}
+                                onFilterChange={setFilters}
+                                isOpen={filtersOpen}
+                                showOwnedOnly={showOwnedOnly}
+                                onToggleOwnedOnly={setShowOwnedOnly}
+                                collectionCount={collection.length}
+                                isLoggedIn={!!user}
+                              />
+
+                              {/* Card Grid */}
+                              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-0">
+                                {currentCards.map((card) => (
+                                  <div
+                                    key={card.id}
+                                    className="deck-card-container glitch-card hover:border-term-green transition-all duration-300 cursor-pointer group"
+                                    onClick={() => setPreviewCard(card)}
+                                  >
+                                    <div className="relative overflow-hidden rounded mb-3 bg-term-gray-light">
+                                      <SmartCardImage
+                                        card={card}
+                                        className="w-full h-auto transition-transform duration-300 group-hover:scale-105 glitch-img"
+                                        showLoadingState={true}
+                                      />
+
+                                      {/* Owned Badge */}
+                                      {user &&
+                                        collectionService.ownsCard(
+                                          collection,
+                                          card.id,
+                                        ) && (
+                                          <div className="absolute top-2 left-2 bg-term-green text-term-black font-mono font-bold text-xs px-2 py-1 rounded flex items-center gap-1">
+                                            ✓ x
+                                            {collectionService.getCardQuantity(
+                                              collection,
+                                              card.id,
+                                            )}
+                                          </div>
+                                        )}
+
+                                      {/* Deck Count Badge */}
+                                      {(() => {
+                                        const deckCount = [
+                                          ...deck.mainDeck,
+                                          ...deck.legends,
+                                        ].filter(
+                                          (c) => c.id === card.id,
+                                        ).length;
+                                        return deckCount > 0 ? (
+                                          <div className="absolute bottom-2 left-2 bg-term-blue text-white font-mono font-bold text-xs px-2 py-0.5 rounded">
+                                            x{deckCount}
+                                          </div>
+                                        ) : null;
+                                      })()}
+
+                                      {/* NEW Badge */}
+                                      {isNewCard(card) && (
+                                        <div className="absolute top-2 right-2 bg-term-green text-term-black font-mono font-bold text-xs px-2 py-1 rounded animate-pulse flex items-center gap-1">
+                                          NEW
+                                        </div>
+                                      )}
+
+                                      {/* RAM Color Dot */}
+                                      {card.ram_color && (
+                                        <div
+                                          className={`absolute top-2 right-2 w-3 h-3 rounded-full ${
+                                            card.ram_color === "Red"
+                                              ? "bg-term-red"
+                                              : card.ram_color === "Yellow"
+                                                ? "bg-term-amber"
+                                                : card.ram_color === "Green"
+                                                  ? "bg-term-green"
+                                                  : card.ram_color === "Blue"
+                                                    ? "bg-term-blue"
+                                                    : "bg-gray-500"
+                                          }`}
+                                        ></div>
+                                      )}
+
+                                      {/* ─── WISHLIST STAR en Build Grid ─────────────────── */}
+                                      {user && (
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleToggleWishlist(card.id);
+                                          }}
+                                          className={`absolute bottom-2 right-2 text-xl leading-none transition-all select-none
+                                    rounded px-1 py-0.5
+                                    ${
+                                      wishlistIds.has(card.id)
+                                        ? "opacity-100 text-term-amber drop-shadow-[0_0_8px_#ffb300] bg-black/50"
+                                        : "opacity-0 group-hover:opacity-100 text-term-amber bg-black/40"
+                                    }`}
+                                          title={
+                                            wishlistIds.has(card.id)
+                                              ? "Quitar de wishlist"
+                                              : "Agregar a wishlist"
+                                          }
+                                        >
+                                          {wishlistIds.has(card.id) ? "★" : "☆"}
+                                        </button>
+                                      )}
+                                      {/* ──────────────────────────────────────────────────── */}
+                                    </div>
+
+                                    <h3 className="text-term-green font-bold font-mono text-lg">
+                                      {card.name}
+                                    </h3>
+
+                                    {card.subtitle && (
+                                      <p className="text-term-amber/60 text-sm font-mono mb-2">
+                                        {card.subtitle}
+                                      </p>
+                                    )}
+
+                                    <div className="flex gap-3 text-xs font-mono mb-2">
+                                      {card.cost !== undefined && (
+                                        <span className="text-term-blue">
+                                          COST: {card.cost}
+                                        </span>
+                                      )}
+                                      {card.power !== undefined && (
+                                        <span className="text-term-red">
+                                          PWR: {card.power}
+                                        </span>
+                                      )}
+                                      <span className="text-term-green">
+                                        RAM: {card.ram}
+                                      </span>
+                                    </div>
+
+                                    <div className="flex items-center gap-2 text-xs font-mono">
+                                      <span className="text-term-amber/80">
+                                        {card.type}
+                                      </span>
+                                      {card.faction && (
+                                        <>
+                                          <span className="text-term-amber/40">
+                                            //
+                                          </span>
+                                          <span className="text-term-green/80">
+                                            {card.faction}
+                                          </span>
+                                        </>
+                                      )}
+                                    </div>
+
+                                    {card.keywords &&
+                                      card.keywords.length > 0 && (
+                                        <div className="mt-2 flex flex-wrap gap-1">
+                                          {card.keywords.map((keyword, idx) => (
+                                            <span
+                                              key={idx}
+                                              className="text-xs px-2 py-0.5 bg-term-amber/10 text-term-amber rounded font-mono"
+                                            >
+                                              {keyword}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      )}
+
+                                    <div className="mt-3 text-center">
+                                      <span className="text-term-green text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+                                        [CLICK TO PREVIEW]
+                                      </span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Pagination */}
+                              {totalPages > 1 && (
+                                <div className="mt-6 flex items-center justify-center gap-4">
+                                  <button
+                                    onClick={() => {
+                                      setCurrentPage((prev) =>
+                                        Math.max(prev - 1, 1),
+                                      );
+                                      window.scrollTo({
+                                        top: 0,
+                                        behavior: "smooth",
+                                      });
+                                    }}
+                                    disabled={currentPage === 1}
+                                    className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
+                                      currentPage === 1
+                                        ? "bg-term-gray border border-term-amber/20 text-term-amber/40 cursor-not-allowed"
+                                        : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
+                                    }`}
+                                  >
+                                    [◄ PREV]
+                                  </button>
+
+                                  <span className="text-term-green font-mono">
+                                    PAGE {currentPage} / {totalPages}
+                                  </span>
+
+                                  <button
+                                    onClick={() => {
+                                      setCurrentPage((prev) =>
+                                        Math.min(prev + 1, totalPages),
+                                      );
+                                      window.scrollTo({
+                                        top: 0,
+                                        behavior: "smooth",
+                                      });
+                                    }}
+                                    disabled={currentPage === totalPages}
+                                    className={`px-4 py-2 rounded font-mono font-bold transition-colors ${
+                                      currentPage === totalPages
+                                        ? "bg-term-gray border border-term-amber/20 text-term-amber/40 cursor-not-allowed"
+                                        : "bg-term-gray border border-term-amber/40 text-term-amber hover:bg-term-amber/10"
+                                    }`}
+                                  >
+                                    [NEXT ►]
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* RIGHT: Deck Area */}
+                            <div className="lg:col-span-1">
+                              <div className="lg:sticky lg:top-8 space-y-6">
+                                <DeckArea
+                                  deck={deck}
+                                  onRemoveCard={handleRemoveCard}
+                                  onClearDeck={handleClearDeck}
+                                  onShareDeck={handleShareDeck}
+                                  allCards={cards}
+                                  showAnalytics={showAnalytics}
+                                  onToggleAnalytics={() =>
+                                    setShowAnalytics(!showAnalytics)
+                                  }
+                                  onGenerateProxies={() =>
+                                    setShowProxyModal(true)
+                                  }
+                                  onAddToDeck={handleAddToDeck}
+                                  onAddToSideboard={handleAddToSideboard}
+                                  freeBuildMode={freeBuildMode}
+                                  onToggleFreeBuild={() =>
+                                    setFreeBuildMode(!freeBuildMode)
+                                  }
+                                />
+
+                                {showProxyModal && (
+                                  <ProxyModal
+                                    deck={deck}
+                                    onClose={() => setShowProxyModal(false)}
+                                  />
+                                )}
+
+                                {showAnalytics && (
+                                  <AnalyticsModal
+                                    deck={deck}
+                                    onClose={() => setShowAnalytics(false)}
+                                  />
+                                )}
+
+                                <div className="grid grid-cols-3 gap-2">
+                                  <button
+                                    onClick={() => setShowSaveModal(true)}
+                                    disabled={
+                                      deck.mainDeck.length === 0 &&
+                                      deck.legends.length === 0
+                                    }
+                                    className="bg-term-green text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-green-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                  >
+                                    [SAVE]
+                                  </button>
+
+                                  <button
+                                    onClick={() => setShowImportModal(true)}
+                                    className="bg-term-blue text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-blue-400 transition-colors"
+                                  >
+                                    [IMPORT]
+                                  </button>
+
+                                  <button
+                                    onClick={() => {
+                                      setExportDeckName("My Deck");
+                                      setShowExportModal(true);
+                                    }}
+                                    disabled={deck.mainDeck.length === 0}
+                                    className="bg-term-amber text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-yellow-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                  >
+                                    [EXPORT]
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {activeTab === "mydecks" && (
+                        <div key="mydecks-tab">
+                          <MyDecksView
+                            savedDecks={savedDecks}
+                            onLoadDeck={handleLoadDeck}
+                            onDeleteDeck={handleDeleteDeck}
+                            onDuplicateDeck={handleDuplicateDeck}
+                            onRenameDeck={handleRenameDeck}
+                            onExportAll={handleExportAllDecks}
+                            onImportAll={handleImportAllDecks}
+                            onPublishDeck={user ? handlePublishDeck : null}
+                            onUnpublishDeck={user ? handleUnpublishDeck : null}
                           />
-                        )}
+                        </div>
+                      )}
 
-                        <div className="grid grid-cols-3 gap-2">
-                          <button
-                            onClick={() => setShowSaveModal(true)}
-                            disabled={
-                              deck.mainDeck.length === 0 &&
-                              deck.legends.length === 0
+                      {activeTab === "precon" && cards && cards.length > 0 && (
+                        <div key="precon-tab">
+                          <PreconDecksView
+                            onLoadPrecon={handleLoadPrecon}
+                            allCards={cards}
+                          />
+                        </div>
+                      )}
+
+                      {activeTab === "practice" && (
+                        <div key="practice-tab">
+                          <MulliganSimulator deck={deck} allCards={cards} />
+                        </div>
+                      )}
+
+                      {activeTab === "packs" && (
+                        <div key="packs-tab">
+                          {/* Mode toggle */}
+                          <div className="flex gap-2 mb-6 border-b border-term-amber/20 pb-4">
+                            <button
+                              onClick={() => setPackMode("open")}
+                              className={`px-5 py-2 font-mono font-bold text-sm rounded transition-colors ${
+                                packMode === "open"
+                                  ? "bg-term-amber text-term-black"
+                                  : "border border-term-amber/40 text-term-amber/60 hover:text-term-amber"
+                              }`}
+                            >
+                              📦 PACK OPENER
+                            </button>
+                            <button
+                              onClick={() => setPackMode("draft")}
+                              className={`px-5 py-2 font-mono font-bold text-sm rounded transition-colors ${
+                                packMode === "draft"
+                                  ? "bg-cyan-500 text-white"
+                                  : "border border-cyan-500/40 text-cyan-400/60 hover:text-cyan-400"
+                              }`}
+                            >
+                              🃏 DRAFT SIMULATOR
+                            </button>
+                          </div>
+                          {packMode === "open" && (
+                            <PackOpener allCards={cards} />
+                          )}
+                          {packMode === "draft" && (
+                            <DraftSimulator
+                              allCards={cards}
+                              onLoadDraft={(draftDeck) => {
+                                setDeck(draftDeck);
+                                setActiveTab("build");
+                                showToast(
+                                  `Draft loaded: ${draftDeck.mainDeck.length} cards`,
+                                  "success",
+                                );
+                              }}
+                            />
+                          )}
+                        </div>
+                      )}
+
+                      {/* ─── COLLECTION TAB — now with wishlist props ─── */}
+                      {activeTab === "collection" && (
+                        <div key="collection-tab">
+                          <CollectionView
+                            collection={collection}
+                            allCards={cards}
+                            onAddToCollection={handleAddToCollection}
+                            onRemoveFromCollection={handleRemoveFromCollection}
+                            onViewCard={(card) => setPreviewCard(card)}
+                            wishlistIds={wishlistIds}
+                            onToggleWishlist={
+                              user ? handleToggleWishlist : null
                             }
-                            className="bg-term-green text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-green-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                          >
-                            [SAVE]
-                          </button>
+                            isLoggedIn={!!user}
+                          />
+                        </div>
+                      )}
 
-                          <button
-                            onClick={() => setShowImportModal(true)}
-                            className="bg-term-blue text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-blue-400 transition-colors"
-                          >
-                            [IMPORT]
-                          </button>
+                      {activeTab === "blackmarket" && (
+                        <div key="blackmarket-tab">
+                          <BlackMarketView
+                            key={blackMarketKey}
+                            allCards={cards}
+                            onLoadDeck={(clonedDeck) => {
+                              setSavedDecks((prev) => [clonedDeck, ...prev]);
+                            }}
+                            onShowToast={showToast}
+                            onViewPublicDeck={(deck) =>
+                              setPublicDeckId(deck.id)
+                            }
+                          />
+                        </div>
+                      )}
 
+                      {activeTab === "simulator" && (
+                        <div key="simulator-tab">
+                          {/* Auto-redirect to Arena */}
+                          {(() => {
+                            window.location.href = "/arena";
+                            return (
+                              <div className="min-h-[60vh] flex items-center justify-center">
+                                <div className="text-term-amber font-mono text-xl">
+                                  Redirecting to The Arena...
+                                </div>
+                              </div>
+                            );
+                          })()}
+                        </div>
+                      )}
+
+                      {activeTab === "legal" && (
+                        <div key="legal-tab">
+                          <LegalDisclaimer />
+                        </div>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+
+                  {/* MODALS — outside AnimatePresence */}
+                  {showSaveModal && (
+                    <SaveDeckModal
+                      deck={deck}
+                      onSave={handleSaveDeck}
+                      onClose={() => setShowSaveModal(false)}
+                    />
+                  )}
+
+                  {showExportModal && (
+                    <ExportModal
+                      deck={deck}
+                      deckName={exportDeckName}
+                      onClose={() => setShowExportModal(false)}
+                    />
+                  )}
+
+                  {showShareImageModal && (
+                    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+                      <div className="bg-term-gray border-2 border-term-amber rounded-lg p-6 max-w-sm w-full">
+                        <h3 className="text-term-amber font-bold font-mono text-lg mb-1">
+                          ▓ SHARE DECK
+                        </h3>
+                        <p className="text-term-green/60 font-mono text-xs mb-4">
+                          &gt; Choose how to share
+                        </p>
+                        <div className="flex flex-col gap-3">
                           <button
                             onClick={() => {
-                              setExportDeckName("My Deck");
-                              setShowExportModal(true);
+                              navigator.clipboard.writeText(shareUrl);
+                              showToast("URL copied!", "success");
                             }}
-                            disabled={deck.mainDeck.length === 0}
-                            className="bg-term-amber text-term-black px-3 py-3 rounded font-mono font-bold text-sm hover:bg-yellow-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                            className="w-full py-2 border border-term-green text-term-green font-mono font-bold text-sm rounded hover:bg-term-green/10 transition-colors"
                           >
-                            [EXPORT]
+                            [🔗 COPY LINK]
+                          </button>
+                          <DeckImageExport
+                            deck={deck}
+                            deckName="My Deck"
+                            authorName={
+                              user?.discord_username ||
+                              user?.email?.split("@")[0] ||
+                              "RUNNER"
+                            }
+                            shareUrl={shareUrl}
+                            className="w-full py-2 bg-term-amber/20 border border-term-amber text-term-amber rounded hover:bg-term-amber/30"
+                          />
+                          <button
+                            onClick={() => setShowShareImageModal(false)}
+                            className="w-full py-2 border border-term-amber/30 text-term-amber/60 font-mono text-xs rounded hover:bg-term-amber/10 transition-colors"
+                          >
+                            [CLOSE]
                           </button>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              )}
+                  )}
 
-              {activeTab === "mydecks" && (
-                <div key="mydecks-tab">
-                  <MyDecksView
-                    savedDecks={savedDecks}
-                    onLoadDeck={handleLoadDeck}
-                    onDeleteDeck={handleDeleteDeck}
-                    onDuplicateDeck={handleDuplicateDeck}
-                    onRenameDeck={handleRenameDeck}
-                    onExportAll={handleExportAllDecks}
-                    onImportAll={handleImportAllDecks}
-                    onPublishDeck={user ? handlePublishDeck : null}
-                    onUnpublishDeck={user ? handleUnpublishDeck : null}
-                  />
-                </div>
-              )}
+                  {toast && (
+                    <Toast
+                      message={toast.message}
+                      type={toast.type}
+                      onClose={() => setToast(null)}
+                      duration={4000}
+                    />
+                  )}
 
-              {activeTab === "precon" && cards && cards.length > 0 && (
-                <div key="precon-tab">
-                  <PreconDecksView
-                    onLoadPrecon={handleLoadPrecon}
-                    allCards={cards}
-                  />
-                </div>
-              )}
+                  {confirmModal && (
+                    <ConfirmModal
+                      title={confirmModal.title}
+                      message={confirmModal.message}
+                      onConfirm={confirmModal.onConfirm}
+                      onCancel={confirmModal.onCancel}
+                    />
+                  )}
 
-              {activeTab === "practice" && (
-                <div key="practice-tab">
-                  <MulliganSimulator deck={deck} allCards={cards} />
-                </div>
-              )}
-
-              {activeTab === "packs" && (
-                <div key="packs-tab">
-                  {/* Mode toggle */}
-                  <div className="flex gap-2 mb-6 border-b border-term-amber/20 pb-4">
-                    <button
-                      onClick={() => setPackMode("open")}
-                      className={`px-5 py-2 font-mono font-bold text-sm rounded transition-colors ${
-                        packMode === "open"
-                          ? "bg-term-amber text-term-black"
-                          : "border border-term-amber/40 text-term-amber/60 hover:text-term-amber"
-                      }`}
-                    >
-                      📦 PACK OPENER
-                    </button>
-                    <button
-                      onClick={() => setPackMode("draft")}
-                      className={`px-5 py-2 font-mono font-bold text-sm rounded transition-colors ${
-                        packMode === "draft"
-                          ? "bg-cyan-500 text-white"
-                          : "border border-cyan-500/40 text-cyan-400/60 hover:text-cyan-400"
-                      }`}
-                    >
-                      🃏 DRAFT SIMULATOR
-                    </button>
-                  </div>
-                  {packMode === "open" && <PackOpener allCards={cards} />}
-                  {packMode === "draft" && (
-                    <DraftSimulator
-                      allCards={cards}
-                      onLoadDraft={(draftDeck) => {
-                        setDeck(draftDeck);
-                        setActiveTab("build");
-                        showToast(
-                          `Draft loaded: ${draftDeck.mainDeck.length} cards`,
-                          "success",
+                  {/* ─── CARD PREVIEW MODAL — con wishlist callback ─── */}
+                  {previewCard && (
+                    <CardPreviewModal
+                      card={previewCard}
+                      onClose={() => setPreviewCard(null)}
+                      onAddToDeck={handleAddToDeck}
+                      onAddToSideboard={handleAddToSideboard}
+                      onAddToCollection={handleAddToCollection}
+                      onRemoveFromCollection={handleRemoveFromCollection}
+                      ownedQuantity={collectionService.getCardQuantity(
+                        collection,
+                        previewCard.id,
+                      )}
+                      isLoggedIn={!!user}
+                      allFilteredCards={filteredCards}
+                      currentIndex={filteredCards.findIndex(
+                        (c) => c.id === previewCard.id,
+                      )}
+                      onNavigate={(direction) => {
+                        const currentIdx = filteredCards.findIndex(
+                          (c) => c.id === previewCard.id,
                         );
+                        if (direction === "prev" && currentIdx > 0) {
+                          setPreviewCard(filteredCards[currentIdx - 1]);
+                        } else if (
+                          direction === "next" &&
+                          currentIdx < filteredCards.length - 1
+                        ) {
+                          setPreviewCard(filteredCards[currentIdx + 1]);
+                        }
+                      }}
+                      onWishlistChange={(cardId, added) => {
+                        setWishlistIds((prev) => {
+                          const next = new Set(prev);
+                          added ? next.add(cardId) : next.delete(cardId);
+                          return next;
+                        });
                       }}
                     />
                   )}
-                </div>
-              )}
 
-              {/* ─── COLLECTION TAB — now with wishlist props ─── */}
-              {activeTab === "collection" && (
-                <div key="collection-tab">
-                  <CollectionView
-                    collection={collection}
-                    allCards={cards}
-                    onAddToCollection={handleAddToCollection}
-                    onRemoveFromCollection={handleRemoveFromCollection}
-                    onViewCard={(card) => setPreviewCard(card)}
-                    wishlistIds={wishlistIds}
-                    onToggleWishlist={user ? handleToggleWishlist : null}
-                    isLoggedIn={!!user}
-                  />
-                </div>
-              )}
+                  {publicDeckId && (
+                    <PublicDeckView
+                      deckId={publicDeckId}
+                      allCards={cards}
+                      onClose={() => setPublicDeckId(null)}
+                      onCloneSuccess={(clonedDeck) => {
+                        setSavedDecks((prev) => [clonedDeck, ...prev]);
+                        showToast(`Deck cloned to your terminal ✓`, "success");
+                      }}
+                      onShowToast={showToast}
+                      currentUserId={user?.id}
+                      isAdmin={isAdmin}
+                      onDeckDeleted={() => {
+                        setPublicDeckId(null);
+                        setBlackMarketKey((k) => k + 1);
+                      }}
+                    />
+                  )}
 
-              {activeTab === "blackmarket" && (
-                <div key="blackmarket-tab">
-                  <BlackMarketView
-                    key={blackMarketKey}
-                    allCards={cards}
-                    onLoadDeck={(clonedDeck) => {
-                      setSavedDecks((prev) => [clonedDeck, ...prev]);
+                  {showImportModal && (
+                    <ImportDeckModal
+                      allCards={cards}
+                      onImport={handleImportDeck}
+                      onClose={() => setShowImportModal(false)}
+                    />
+                  )}
+
+                  {showMigrationModal && (
+                    <MigrationModal
+                      localDeckCount={localDeckCount}
+                      onMigrate={handleMigration}
+                      onSkip={handleSkipMigration}
+                      onClose={handleSkipMigration}
+                    />
+                  )}
+
+                  {showProfileModal && user && (
+                    <UserProfileModal
+                      user={user}
+                      savedDecks={savedDecks}
+                      onClose={() => setShowProfileModal(false)}
+                      onProfileUpdate={async () => {
+                        const { supabase: sb } = await import("./lib/supabase");
+                        const { data } = await sb
+                          .from("profiles")
+                          .select("avatar_url")
+                          .eq("id", user.id)
+                          .single();
+                        if (data?.avatar_url)
+                          setProfileAvatarUrl(data.avatar_url);
+                      }}
+                    />
+                  )}
+
+                  {showLoginModal && (
+                    <LoginModal onClose={() => setShowLoginModal(false)} />
+                  )}
+
+                  {showFeedbackModal && (
+                    <FeedbackModal
+                      onClose={() => setShowFeedbackModal(false)}
+                      onSubmit={handleSubmitFeedback}
+                      isSubmitting={isSubmittingFeedback}
+                    />
+                  )}
+
+                  {showAdminFeedback && isAdmin && user && (
+                    <AdminFeedbackViewer
+                      onClose={() => setShowAdminFeedback(false)}
+                      user={user}
+                      showToast={showToast}
+                    />
+                  )}
+                </main>
+
+                {showPublishModal && deckToPublish && (
+                  <PublishDeckModal
+                    deck={deckToPublish}
+                    onConfirm={handleConfirmPublish}
+                    onClose={() => {
+                      setShowPublishModal(false);
+                      setDeckToPublish(null);
                     }}
-                    onShowToast={showToast}
-                    onViewPublicDeck={(deck) => setPublicDeckId(deck.id)}
                   />
-                </div>
-              )}
-
-              {activeTab === "simulator" && (
-                <div key="simulator-tab">
-                  <SimulatorBeta currentDeck={deck} showToast={showToast} />
-                </div>
-              )}
-
-              {activeTab === "legal" && (
-                <div key="legal-tab">
-                  <LegalDisclaimer />
-                </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
-
-          {/* MODALS — outside AnimatePresence */}
-          {showSaveModal && (
-            <SaveDeckModal
-              deck={deck}
-              onSave={handleSaveDeck}
-              onClose={() => setShowSaveModal(false)}
-            />
-          )}
-
-          {showExportModal && (
-            <ExportModal
-              deck={deck}
-              deckName={exportDeckName}
-              onClose={() => setShowExportModal(false)}
-            />
-          )}
-
-          {showShareImageModal && (
-            <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-              <div className="bg-term-gray border-2 border-term-amber rounded-lg p-6 max-w-sm w-full">
-                <h3 className="text-term-amber font-bold font-mono text-lg mb-1">
-                  ▓ SHARE DECK
-                </h3>
-                <p className="text-term-green/60 font-mono text-xs mb-4">
-                  &gt; Choose how to share
-                </p>
-                <div className="flex flex-col gap-3">
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(shareUrl);
-                      showToast("URL copied!", "success");
-                    }}
-                    className="w-full py-2 border border-term-green text-term-green font-mono font-bold text-sm rounded hover:bg-term-green/10 transition-colors"
-                  >
-                    [🔗 COPY LINK]
-                  </button>
-                  <DeckImageExport
-                    deck={deck}
-                    deckName="My Deck"
-                    authorName={
-                      user?.discord_username ||
-                      user?.email?.split("@")[0] ||
-                      "RUNNER"
-                    }
-                    shareUrl={shareUrl}
-                    className="w-full py-2 bg-term-amber/20 border border-term-amber text-term-amber rounded hover:bg-term-amber/30"
-                  />
-                  <button
-                    onClick={() => setShowShareImageModal(false)}
-                    className="w-full py-2 border border-term-amber/30 text-term-amber/60 font-mono text-xs rounded hover:bg-term-amber/10 transition-colors"
-                  >
-                    [CLOSE]
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {toast && (
-            <Toast
-              message={toast.message}
-              type={toast.type}
-              onClose={() => setToast(null)}
-              duration={4000}
-            />
-          )}
-
-          {confirmModal && (
-            <ConfirmModal
-              title={confirmModal.title}
-              message={confirmModal.message}
-              onConfirm={confirmModal.onConfirm}
-              onCancel={confirmModal.onCancel}
-            />
-          )}
-
-          {/* ─── CARD PREVIEW MODAL — con wishlist callback ─── */}
-          {previewCard && (
-            <CardPreviewModal
-              card={previewCard}
-              onClose={() => setPreviewCard(null)}
-              onAddToDeck={handleAddToDeck}
-              onAddToSideboard={handleAddToSideboard}
-              onAddToCollection={handleAddToCollection}
-              onRemoveFromCollection={handleRemoveFromCollection}
-              ownedQuantity={collectionService.getCardQuantity(
-                collection,
-                previewCard.id,
-              )}
-              isLoggedIn={!!user}
-              allFilteredCards={filteredCards}
-              currentIndex={filteredCards.findIndex(
-                (c) => c.id === previewCard.id,
-              )}
-              onNavigate={(direction) => {
-                const currentIdx = filteredCards.findIndex(
-                  (c) => c.id === previewCard.id,
-                );
-                if (direction === "prev" && currentIdx > 0) {
-                  setPreviewCard(filteredCards[currentIdx - 1]);
-                } else if (
-                  direction === "next" &&
-                  currentIdx < filteredCards.length - 1
-                ) {
-                  setPreviewCard(filteredCards[currentIdx + 1]);
-                }
-              }}
-              onWishlistChange={(cardId, added) => {
-                setWishlistIds((prev) => {
-                  const next = new Set(prev);
-                  added ? next.add(cardId) : next.delete(cardId);
-                  return next;
-                });
-              }}
-            />
-          )}
-
-          {publicDeckId && (
-            <PublicDeckView
-              deckId={publicDeckId}
-              allCards={cards}
-              onClose={() => setPublicDeckId(null)}
-              onCloneSuccess={(clonedDeck) => {
-                setSavedDecks((prev) => [clonedDeck, ...prev]);
-                showToast(`Deck cloned to your terminal ✓`, "success");
-              }}
-              onShowToast={showToast}
-              currentUserId={user?.id}
-              isAdmin={isAdmin}
-              onDeckDeleted={() => {
-                setPublicDeckId(null);
-                setBlackMarketKey((k) => k + 1);
-              }}
-            />
-          )}
-
-          {showImportModal && (
-            <ImportDeckModal
-              allCards={cards}
-              onImport={handleImportDeck}
-              onClose={() => setShowImportModal(false)}
-            />
-          )}
-
-          {showMigrationModal && (
-            <MigrationModal
-              localDeckCount={localDeckCount}
-              onMigrate={handleMigration}
-              onSkip={handleSkipMigration}
-              onClose={handleSkipMigration}
-            />
-          )}
-
-          {showProfileModal && user && (
-            <UserProfileModal
-              user={user}
-              savedDecks={savedDecks}
-              onClose={() => setShowProfileModal(false)}
-              onProfileUpdate={async () => {
-                const { supabase: sb } = await import("./lib/supabase");
-                const { data } = await sb
-                  .from("profiles")
-                  .select("avatar_url")
-                  .eq("id", user.id)
-                  .single();
-                if (data?.avatar_url) setProfileAvatarUrl(data.avatar_url);
-              }}
-            />
-          )}
-
-          {showLoginModal && (
-            <LoginModal onClose={() => setShowLoginModal(false)} />
-          )}
-
-          {showFeedbackModal && (
-            <FeedbackModal
-              onClose={() => setShowFeedbackModal(false)}
-              onSubmit={handleSubmitFeedback}
-              isSubmitting={isSubmittingFeedback}
-            />
-          )}
-
-          {showAdminFeedback && isAdmin && user && (
-            <AdminFeedbackViewer
-              onClose={() => setShowAdminFeedback(false)}
-              user={user}
-              showToast={showToast}
-            />
-          )}
-        </main>
-
-        {showPublishModal && deckToPublish && (
-          <PublishDeckModal
-            deck={deckToPublish}
-            onConfirm={handleConfirmPublish}
-            onClose={() => {
-              setShowPublishModal(false);
-              setDeckToPublish(null);
-            }}
-          />
-        )}
-
-        <footer className="mt-12 border-t border-term-amber/20 pt-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="text-center md:text-left">
-              <h4 className="text-term-green font-mono font-bold text-sm mb-3">
-                KEYBOARD SHORTCUTS
-              </h4>
-              <div className="text-xs space-y-1 text-term-amber/60 font-mono">
-                <div>
-                  <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
-                    Ctrl+S
-                  </kbd>{" "}
-                  Save Deck
-                </div>
-                <div>
-                  <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
-                    Ctrl+F
-                  </kbd>{" "}
-                  Search
-                </div>
-                <div>
-                  <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
-                    Ctrl+E
-                  </kbd>{" "}
-                  Export
-                </div>
-                <div>
-                  <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
-                    Ctrl+B
-                  </kbd>{" "}
-                  Feedback
-                </div>
-                <div>
-                  <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
-                    ESC
-                  </kbd>{" "}
-                  Close Modals
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center">
-              <h4 className="text-term-green font-mono font-bold text-sm mb-3">
-                SUPPORT & FEEDBACK
-              </h4>
-              <button
-                onClick={() => setShowFeedbackModal(true)}
-                className="bg-term-amber/20 border border-term-amber text-term-amber px-6 py-2 rounded font-mono font-bold hover:bg-term-amber/30 transition-colors text-sm"
-              >
-                [SEND FEEDBACK]
-              </button>
-              <p className="text-term-green/60 text-xs font-mono mt-3">
-                Report bugs, request features, or share feedback
-              </p>
-            </div>
-
-            <div className="text-center md:text-right">
-              <h4 className="text-term-green font-mono font-bold text-sm mb-3">
-                CREDITS & LEGAL
-              </h4>
-              <div className="text-term-amber/60 text-xs font-mono space-y-1">
-                <div>Built by // V4MP</div>
-                <div className="text-term-red/60 text-xs">
-                  Unofficial fan project
-                </div>
-                <div className="text-term-red/60 text-xs">
-                  Not affiliated with CDPR or WeirdCo
-                </div>
-
-                <div className="flex flex-col items-center md:items-end gap-1 mt-2">
-                  <button
-                    onClick={() => setActiveTab("legal")}
-                    className="text-term-blue hover:text-blue-400 transition-colors font-mono text-xs text-right"
-                  >
-                    [Legal & Disclaimer]
-                  </button>
-                </div>
-
-                {isAdmin && !adminLoading && (
-                  <button
-                    onClick={() => setShowAdminFeedback(true)}
-                    className="text-term-red hover:text-red-400 transition-colors font-mono text-xs"
-                  >
-                    [ADMIN PANEL]
-                  </button>
                 )}
+
+                <footer className="mt-12 border-t border-term-amber/20 pt-8">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div className="text-center md:text-left">
+                      <h4 className="text-term-green font-mono font-bold text-sm mb-3">
+                        KEYBOARD SHORTCUTS
+                      </h4>
+                      <div className="text-xs space-y-1 text-term-amber/60 font-mono">
+                        <div>
+                          <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
+                            Ctrl+S
+                          </kbd>{" "}
+                          Save Deck
+                        </div>
+                        <div>
+                          <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
+                            Ctrl+F
+                          </kbd>{" "}
+                          Search
+                        </div>
+                        <div>
+                          <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
+                            Ctrl+E
+                          </kbd>{" "}
+                          Export
+                        </div>
+                        <div>
+                          <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
+                            Ctrl+B
+                          </kbd>{" "}
+                          Feedback
+                        </div>
+                        <div>
+                          <kbd className="px-2 py-1 bg-term-gray border border-term-amber/20 rounded">
+                            ESC
+                          </kbd>{" "}
+                          Close Modals
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-center">
+                      <h4 className="text-term-green font-mono font-bold text-sm mb-3">
+                        SUPPORT & FEEDBACK
+                      </h4>
+                      <button
+                        onClick={() => setShowFeedbackModal(true)}
+                        className="bg-term-amber/20 border border-term-amber text-term-amber px-6 py-2 rounded font-mono font-bold hover:bg-term-amber/30 transition-colors text-sm"
+                      >
+                        [SEND FEEDBACK]
+                      </button>
+                      <p className="text-term-green/60 text-xs font-mono mt-3">
+                        Report bugs, request features, or share feedback
+                      </p>
+                    </div>
+
+                    <div className="text-center md:text-right">
+                      <h4 className="text-term-green font-mono font-bold text-sm mb-3">
+                        CREDITS & LEGAL
+                      </h4>
+                      <div className="text-term-amber/60 text-xs font-mono space-y-1">
+                        <div>Built by // V4MP</div>
+                        <div className="text-term-red/60 text-xs">
+                          Unofficial fan project
+                        </div>
+                        <div className="text-term-red/60 text-xs">
+                          Not affiliated with CDPR or WeirdCo
+                        </div>
+
+                        <div className="flex flex-col items-center md:items-end gap-1 mt-2">
+                          <button
+                            onClick={() => setActiveTab("legal")}
+                            className="text-term-blue hover:text-blue-400 transition-colors font-mono text-xs text-right"
+                          >
+                            [Legal & Disclaimer]
+                          </button>
+                        </div>
+
+                        {isAdmin && !adminLoading && (
+                          <button
+                            onClick={() => setShowAdminFeedback(true)}
+                            className="text-term-red hover:text-red-400 transition-colors font-mono text-xs"
+                          >
+                            [ADMIN PANEL]
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </footer>
               </div>
             </div>
-          </div>
-        </footer>
-      </div>
-    </div>
+          }
+        />
+
+        {/* Ruta fullscreen — The Arena */}
+        <Route path="/arena" element={<Arena />} />
+
+        {/* Redirect de rutas no existentes */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
