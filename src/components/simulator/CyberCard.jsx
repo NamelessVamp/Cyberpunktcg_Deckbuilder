@@ -1,15 +1,38 @@
 // NON OMNIS MORIAR — CyberCard with Framer Motion game feel
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 
 export default function CyberCard({
   card,
   isFlipped: initialFlipped = false,
   isNew = false,
+  zone = "unknown", // NEW: zona donde está la carta
+  index = 0, // NEW: índice en esa zona
+  isDraggable = true, // NEW: si se puede arrastrar
 }) {
   const [isTapped, setIsTapped] = useState(false);
   const [isFlipped, setIsFlipped] = useState(initialFlipped);
   const [zIndex, setZIndex] = useState(100);
+
+  // Drag-and-drop hook
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: `${zone}-${card?.id || "unknown"}-${index}`,
+      data: {
+        card: card,
+        zone: zone,
+        index: index,
+      },
+      disabled: !isDraggable || !card,
+    });
+
+  const dragStyle = transform
+    ? {
+        transform: CSS.Translate.toString(transform),
+      }
+    : undefined;
 
   // Guard — must be AFTER all hooks
   if (!card) return null;
@@ -37,11 +60,18 @@ export default function CyberCard({
 
   return (
     <motion.div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
       className={`cyber-card ${getCardTypeClass()} ${isTapped ? "tapped" : ""} ${isFlipped ? "flipped" : ""}`}
       onClick={handleClick}
       onContextMenu={handleContextMenu}
-      draggable={true}
-      style={{ zIndex }}
+      style={{
+        zIndex: isDragging ? 9999 : zIndex,
+        opacity: isDragging ? 0.5 : 1,
+        cursor: isDragging ? "grabbing" : "grab",
+        ...dragStyle,
+      }}
       // Entry animation when card is new (played to field)
       initial={isNew ? { scale: 0.5, opacity: 0, y: -30 } : false}
       animate={isNew ? { scale: 1, opacity: 1, y: 0 } : {}}
@@ -93,15 +123,14 @@ export default function CyberCard({
 
       <style>{`
         .cyber-card {
-          width: 60px;
-          height: 84px;
-          background-color: transparent;
-          cursor: grab;
-          perspective: 1000px;
-          position: relative;
-          z-index: 100;
-        }
-        .cyber-card:active { cursor: grabbing; }
+  width: 60px;
+  height: 84px;
+  background-color: transparent;
+  perspective: 1000px;
+  position: relative;
+  z-index: 100;
+  transition: opacity 0.2s ease;
+}
         .card-inner {
           position: relative;
           width: 100%;

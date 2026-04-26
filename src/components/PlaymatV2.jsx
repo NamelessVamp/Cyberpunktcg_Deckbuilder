@@ -883,16 +883,14 @@ export default function PlaymatV2({
               </div>
 
               {/* Next Phase Button */}
-              {game?.phase &&
-                game.phase !== "SETUP" &&
-                game.phase !== "MULLIGAN" && (
-                  <button
-                    onClick={() => onAdvancePhase?.()}
-                    className="px-4 py-2 bg-term-green/20 border-2 border-term-green text-term-green font-mono font-bold text-xs hover:bg-term-green hover:text-term-black transition-all shadow-[0_0_12px_rgba(74,222,128,0.4)] hover:shadow-[0_0_24px_rgba(74,222,128,0.8)]"
-                  >
-                    NEXT PHASE →
-                  </button>
-                )}
+              {game?.phase && (
+                <button
+                  onClick={() => onAdvancePhase?.()}
+                  className="px-4 py-2 bg-term-green/20 border-2 border-term-green text-term-green font-mono font-bold text-xs hover:bg-term-green hover:text-term-black transition-all shadow-[0_0_12px_rgba(74,222,128,0.4)] hover:shadow-[0_0_24px_rgba(74,222,128,0.8)] rounded"
+                >
+                  NEXT PHASE →
+                </button>
+              )}
             </div>
 
             {/* Gigs Box (Local) */}
@@ -996,7 +994,12 @@ export default function PlaymatV2({
                         playerData.floatingEddies < card.cost)
                     }
                   >
-                    <CyberCard card={card} />
+                    <CyberCard
+                      card={card}
+                      zone="hand"
+                      index={idx}
+                      isDraggable={true}
+                    />
                   </DraggableCard>
                 )}
               </motion.div>
