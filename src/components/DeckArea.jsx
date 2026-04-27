@@ -95,10 +95,10 @@ export default function DeckArea({
   const legalityValidation = validateDeckLegality(deck);
 
   return (
-    <div className="bg-term-gray border border-term-amber/40 rounded p-4">
+    <div className="bg-term-gray border border-term-amber/40 rounded p-3 sm:p-4">
       {/* HEADER WITH DELETE ALL */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-term-amber font-bold text-xl font-mono">
+      <div className="flex items-center justify-between mb-4 gap-2">
+        <h2 className="text-term-amber font-bold text-base sm:text-xl font-mono truncate max-w-[60%] sm:max-w-none">
           {deck._name + ".DAT" || "CURRENT_DECK.DAT"}
         </h2>
         <button
@@ -108,14 +108,16 @@ export default function DeckArea({
             deck.mainDeck.length === 0 &&
             deck.sideboard.length === 0
           }
-          className="text-term-red/80 hover:text-term-red text-sm font-mono font-bold transition-colors disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1"
+          className="text-term-red/80 hover:text-term-red text-xs sm:text-sm font-mono font-bold transition-colors disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 flex-shrink-0"
         >
-          <span className="text-lg">🗑</span> DELETE ALL
+          <span className="text-base sm:text-lg">🗑</span>
+          <span className="hidden sm:inline">DELETE ALL</span>
+          <span className="sm:hidden">DEL</span>
         </button>
       </div>
 
       {/* SCROLLABLE CONTENT WRAPPER */}
-      <div className="max-h-[calc(100vh-300px)] overflow-y-auto pr-2 space-y-6">
+      <div className="max-h-[calc(100vh-240px)] sm:max-h-[calc(100vh-300px)] overflow-y-auto pr-2 space-y-6">
         {/* LEGALITY WARNING */}
         {!legalityValidation.isLegal && (
           <div className="bg-term-red/10 border-2 border-term-red rounded-lg p-4">

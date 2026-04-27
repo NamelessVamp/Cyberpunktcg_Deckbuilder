@@ -93,7 +93,7 @@ export default function FilterPanel({
   const DropdownButton = ({ section, label, activeCount }) => (
     <button
       onClick={() => toggleSection(section)}
-      className={`px-4 py-2 rounded font-mono font-bold text-sm transition-all border ${
+      className={`px-3 sm:px-4 py-2 rounded font-mono font-bold text-xs sm:text-sm transition-all border min-w-[80px] sm:min-w-[100px] ${
         openSection === section
           ? "bg-term-amber text-term-black border-term-amber"
           : activeCount > 0
@@ -110,12 +110,12 @@ export default function FilterPanel({
   return (
     <div className="mb-6 p-4 card-container animate-slideDown">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-term-amber font-bold text-lg font-mono">
+        <h2 className="text-term-amber font-bold text-base sm:text-lg font-mono">
           FILTERS.SYS
         </h2>
         <button
           onClick={resetFilters}
-          className="text-term-amber/80 text-sm hover:text-term-amber transition-colors font-mono"
+          className="text-term-amber/80 text-xs sm:text-sm hover:text-term-amber transition-colors font-mono"
         >
           [RESET]
         </button>
@@ -204,7 +204,7 @@ export default function FilterPanel({
       {/* COLOR SECTION */}
       {openSection === "color" && (
         <div className="mb-4 p-4 bg-term-gray-light rounded border border-term-amber/30 animate-slideDown">
-          <div className="flex flex-wrap gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             <label className="flex items-center gap-2 cursor-pointer px-3 py-1.5 bg-term-gray border border-term-amber/30 rounded hover:border-term-amber transition-colors">
               <input
                 type="checkbox"
@@ -338,7 +338,7 @@ export default function FilterPanel({
               max="9"
               value={filters.costMin}
               onChange={(e) => updateFilter("costMin", Number(e.target.value))}
-              className="input-terminal w-20 text-sm text-center"
+              className="input-terminal w-16 sm:w-20 text-sm text-center min-h-[44px]"
             />
             <span className="text-term-amber">-</span>
             <input
@@ -347,7 +347,7 @@ export default function FilterPanel({
               max="9"
               value={filters.costMax}
               onChange={(e) => updateFilter("costMax", Number(e.target.value))}
-              className="input-terminal w-20 text-sm text-center"
+              className="input-terminal w-16 sm:w-20 text-sm text-center min-h-[44px]"
             />
           </div>
         </div>
@@ -363,7 +363,7 @@ export default function FilterPanel({
               max="15"
               value={filters.powerMin}
               onChange={(e) => updateFilter("powerMin", Number(e.target.value))}
-              className="input-terminal w-20 text-sm text-center"
+              className="input-terminal w-16 sm:w-20 text-sm text-center min-h-[44px]"
             />
             <span className="text-term-amber">-</span>
             <input
@@ -372,7 +372,7 @@ export default function FilterPanel({
               max="15"
               value={filters.powerMax}
               onChange={(e) => updateFilter("powerMax", Number(e.target.value))}
-              className="input-terminal w-20 text-sm text-center"
+              className="input-terminal w-16 sm:w-20 text-sm text-center min-h-[44px]"
             />
           </div>
         </div>
@@ -388,7 +388,7 @@ export default function FilterPanel({
               max="5"
               value={filters.ramMin}
               onChange={(e) => updateFilter("ramMin", Number(e.target.value))}
-              className="input-terminal w-20 text-sm text-center"
+              className="input-terminal w-16 sm:w-20 text-sm text-center min-h-[44px]"
             />
             <span className="text-term-amber">-</span>
             <input
@@ -397,7 +397,7 @@ export default function FilterPanel({
               max="5"
               value={filters.ramMax}
               onChange={(e) => updateFilter("ramMax", Number(e.target.value))}
-              className="input-terminal w-20 text-sm text-center"
+              className="input-terminal w-16 sm:w-20 text-sm text-center min-h-[44px]"
             />
           </div>
         </div>
