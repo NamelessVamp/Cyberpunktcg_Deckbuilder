@@ -13,12 +13,6 @@ import CyberspaceParticles from "../components/CyberspaceParticles";
 import { motion, AnimatePresence } from "framer-motion";
 import { CardLogic } from "../lib/CardLogic";
 import { CombatResolver } from "../lib/CombatResolver";
-import {
-  DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
 
 export default function Arena() {
   const navigate = useNavigate();
@@ -63,10 +57,9 @@ export default function Arena() {
 
   // ← HANDLER MOVIDO AQUÍ (FUERA DE startGame)
   const handleAdvancePhase = () => {
-    if (gameRef.current) {
-      gameRef.current.advancePhase();
-      refresh();
-    }
+    if (!gameRef.current) return;
+    gameRef.current.advancePhase();
+    refresh();
   };
 
   useEffect(() => {
@@ -284,30 +277,6 @@ export default function Arena() {
     );
   }
 
-  // Drag-and-drop sensors configuration
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8, // 8px threshold before drag starts (prevents accidental drags)
-      },
-    }),
-  );
-
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-
-    if (!over) return; // Dropped outside any zone
-
-    console.log("[DRAG END]", {
-      cardId: active.id,
-      sourceZone: active.data.current?.zone,
-      targetZone: over.id,
-    });
-
-    // TODO: Implement card movement logic in next step
-    showToast(`Moved card ${active.id} to ${over.id}`, "info");
-  };
-
   // Game screen (FULLSCREEN)
   return (
     <div className="w-screen h-screen overflow-hidden bg-term-black relative">
@@ -345,104 +314,98 @@ export default function Arena() {
 
       {/* Playmat fullscreen */}
       <div className="w-full h-full pt-[60px]">
-        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-          <PlaymatV2
-            game={game}
-            gameRef={gameRef}
-            onRefresh={refresh}
-            onAdvancePhase={handleAdvancePhase}
-            onGameUpdate={(g) => {
-              gameRef.current = g;
-              setGame(g);
-            }}
-            onPlayCard={(cardIndex, targetIndex) => {
-              const player =
-                gameRef.current.players[gameRef.current.activePlayer];
-              const card = player.hand[cardIndex];
+        <PlaymatV2
+          game={game}
+          gameRef={gameRef}
+          onRefresh={refresh}
+          onAdvancePhase={handleAdvancePhase}
+          onGameUpdate={(g) => {
+            gameRef.current = g;
+            setGame(g);
+          }}
+          onPlayCard={(cardIndex, targetIndex) => {
+            const player =
+              gameRef.current.players[gameRef.current.activePlayer];
+            const card = player.hand[cardIndex];
 
-              if (card && card.cost > player.floatingEddies) {
-                showToast(
-                  `⚡ Pre-load ${card.cost} Eddies first (you have ${player.floatingEddies} floating)`,
-                  "warning",
-                );
-                return;
-              }
+            if (card && card.cost > player.floatingEddies) {
+              showToast(
+                `⚡ Pre-load ${card.cost} Eddies first (you have ${player.floatingEddies} floating)`,
+                "warning",
+              );
+              return;
+            }
 
-              const cl = new CardLogic(gameRef.current);
-              const result = cl.playCard(
-                gameRef.current.activePlayer,
-                cardIndex,
-                targetIndex,
-              );
-              if (!result.success) showToast(result.error, "error");
-              else refresh();
-            }}
-            onSellCard={(cardIndex) => {
-              const cl = new CardLogic(gameRef.current);
-              const result = cl.sellCard(
-                gameRef.current.activePlayer,
-                cardIndex,
-              );
-              if (!result.success) showToast(result.error, "error");
-              else refresh();
-            }}
-            onCallLegend={(legendIndex) => {
-              if (callingLegend) return;
-              setCallingLegend(true);
-              const cl = new CardLogic(gameRef.current);
-              const result = cl.callLegend(
-                gameRef.current.activePlayer,
-                legendIndex,
-              );
-              if (!result.success) showToast(result.error, "error");
-              else refresh();
-              setTimeout(() => setCallingLegend(false), 500);
-            }}
-            onDeclareAttacker={(unitIndex) => {
-              const player =
-                gameRef.current.players[gameRef.current.activePlayer];
-              const unit = player.field[unitIndex];
-              if (!unit) return;
+            const cl = new CardLogic(gameRef.current);
+            const result = cl.playCard(
+              gameRef.current.activePlayer,
+              cardIndex,
+              targetIndex,
+            );
+            if (!result.success) showToast(result.error, "error");
+            else refresh();
+          }}
+          onSellCard={(cardIndex) => {
+            const cl = new CardLogic(gameRef.current);
+            const result = cl.sellCard(gameRef.current.activePlayer, cardIndex);
+            if (!result.success) showToast(result.error, "error");
+            else refresh();
+          }}
+          onCallLegend={(legendIndex) => {
+            if (callingLegend) return;
+            setCallingLegend(true);
+            const cl = new CardLogic(gameRef.current);
+            const result = cl.callLegend(
+              gameRef.current.activePlayer,
+              legendIndex,
+            );
+            if (!result.success) showToast(result.error, "error");
+            else refresh();
+            setTimeout(() => setCallingLegend(false), 500);
+          }}
+          onDeclareAttacker={(unitIndex) => {
+            const player =
+              gameRef.current.players[gameRef.current.activePlayer];
+            const unit = player.field[unitIndex];
+            if (!unit) return;
 
-              unit.isAttacking = true;
-              refresh();
+            unit.isAttacking = true;
+            refresh();
 
-              setTimeout(() => {
-                setWaitingDefense(true);
-                setBlockingMode(true);
-              }, 300);
-            }}
-            onDeclareBlocker={(blockerIndex) => {
-              const resolver = new CombatResolver(gameRef.current);
-              const result = resolver.resolveCombat(
-                gameRef.current.activePlayer,
-                blockerIndex,
-              );
-              if (!result.success) showToast(result.error, "error");
-              else refresh();
+            setTimeout(() => {
+              setWaitingDefense(true);
+              setBlockingMode(true);
+            }, 300);
+          }}
+          onDeclareBlocker={(blockerIndex) => {
+            const resolver = new CombatResolver(gameRef.current);
+            const result = resolver.resolveCombat(
+              gameRef.current.activePlayer,
+              blockerIndex,
+            );
+            if (!result.success) showToast(result.error, "error");
+            else refresh();
 
-              setWaitingDefense(false);
-              setBlockingMode(false);
-            }}
-            onRollGig={(dieSides) => {
-              const result = gameRef.current.rollGig(
-                gameRef.current.activePlayer,
-                dieSides,
-              );
-              if (result.success) refresh();
-              else showToast(result.error, "error");
-            }}
-            onGoSolo={(cardIndex) => {
-              const cl = new CardLogic(gameRef.current);
-              const result = cl.goSolo(gameRef.current.activePlayer, cardIndex);
-              if (!result.success) showToast(result.error, "error");
-              else refresh();
-            }}
-            isBlockingMode={blockingMode}
-            onBlockerSelected={(idx) => {}}
-            onAdvancePhase={handleAdvancePhase}
-          />
-        </DndContext>
+            setWaitingDefense(false);
+            setBlockingMode(false);
+          }}
+          onRollGig={(dieSides) => {
+            const result = gameRef.current.rollGig(
+              gameRef.current.activePlayer,
+              dieSides,
+            );
+            if (result.success) refresh();
+            else showToast(result.error, "error");
+          }}
+          onGoSolo={(cardIndex) => {
+            const cl = new CardLogic(gameRef.current);
+            const result = cl.goSolo(gameRef.current.activePlayer, cardIndex);
+            if (!result.success) showToast(result.error, "error");
+            else refresh();
+          }}
+          isBlockingMode={blockingMode}
+          onBlockerSelected={(idx) => {}}
+        />
       </div>
 
       {/* Win screen overlay */}
