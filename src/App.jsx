@@ -50,6 +50,7 @@ import * as communityService from "./lib/communityService";
 import PublishDeckModal from "./components/PublishDeckModal";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Arena from "./pages/Arena";
+import ScannerTest from "./pages/ScannerTest";
 
 const isNewCard = (card, days = 7) => {
   if (!card.date_added) return false;
@@ -600,6 +601,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Ruta de testing del scanner */}
+        <Route path="/scanner-test" element={<ScannerTest />} />
+
+        {/* Ruta fullscreen — The Arena */}
+        <Route path="/arena" element={<Arena />} />
+
         {/* Ruta principal — Deck Builder */}
         <Route
           path="/"
@@ -1515,15 +1522,8 @@ function App() {
             </div>
           }
         />
-
-        {/* Ruta fullscreen — The Arena */}
-        <Route path="/arena" element={<Arena />} />
-
-        {/* Redirect de rutas no existentes */}
-        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
 }
-
 export default App;
