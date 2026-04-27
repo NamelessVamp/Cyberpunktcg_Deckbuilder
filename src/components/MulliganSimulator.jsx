@@ -14,8 +14,8 @@ export default function MulliganSimulator({ deck, allCards }) {
         <div className="absolute inset-0 bg-term-amber/5 animate-pulse"></div>
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-3">
-            <span className="text-4xl">⚀⚁⚂⚃⚄⚅</span>
-            <h2 className="text-term-amber font-bold text-3xl font-mono tracking-wider">
+            <span className="text-2xl sm:text-4xl">⚀⚁⚂⚃⚄⚅</span>
+            <h2 className="text-term-amber font-bold text-lg sm:text-2xl md:text-3xl font-mono tracking-wider">
               OPENING HAND SIMULATOR
             </h2>
 
@@ -51,13 +51,13 @@ export default function MulliganSimulator({ deck, allCards }) {
 
       {/* Deck Status Card */}
       <div className="mb-8 p-6 bg-term-gray border-2 border-term-green/40 rounded-lg">
-        <div className="flex items-start justify-between">
-          <div>
+        <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+          <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-2xl">
+              <span className="text-xl sm:text-2xl">
                 {deck.mainDeck.length > 0 ? "✓" : "｡°⚠︎°｡"}
               </span>
-              <h3 className="text-term-amber font-bold font-mono text-xl">
+              <h3 className="text-term-amber font-bold font-mono text-base sm:text-lg md:text-xl">
                 {deck.mainDeck.length > 0 ? "DECK LOADED" : "NO DECK LOADED"}
               </h3>
             </div>
@@ -91,8 +91,8 @@ export default function MulliganSimulator({ deck, allCards }) {
             )}
           </div>
 
-          {/* Info Panel */}
-          <div className="bg-term-black/50 border border-term-amber/30 rounded p-3 text-xs font-mono">
+          {/* Info Panel - Hidden on mobile, visible on tablet+ */}
+          <div className="hidden sm:block bg-term-black/50 border border-term-amber/30 rounded p-3 text-xs font-mono flex-shrink-0">
             <div className="text-term-amber mb-2">MULLIGAN RULES</div>
             <div className="text-term-green/70 space-y-1">
               <div>• Initial hand: 6 cards</div>
@@ -105,18 +105,18 @@ export default function MulliganSimulator({ deck, allCards }) {
       </div>
 
       {/* Draw Buttons */}
-      <div className="grid grid-cols-2 gap-6 max-w-3xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-3xl mx-auto">
         {/* Going First */}
         <button
           onClick={() => {
             setGoingFirst(true);
             setShowModal(true);
           }}
-          className="group relative overflow-hidden bg-gradient-to-br from-cyan-600 to-cyan-800 border-2 border-cyan-400 text-white py-6 px-8 rounded-lg font-mono font-bold text-lg hover:border-cyan-300 hover:scale-105 transition-all shadow-lg hover:shadow-cyan-500/50"
+          className="group relative overflow-hidden bg-gradient-to-br from-cyan-600 to-cyan-800 border-2 border-cyan-400 text-white py-4 sm:py-6 px-6 sm:px-8 rounded-lg font-mono font-bold text-base sm:text-lg hover:border-cyan-300 hover:scale-105 transition-all shadow-lg hover:shadow-cyan-500/50"
         >
           <div className="absolute inset-0 bg-cyan-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <div className="relative z-10">
-            <div className="text-2xl mb-2">GOING FIRST</div>
+            <div className="text-xl sm:text-2xl mb-2">GOING FIRST</div>
             <div className="text-xs opacity-80 font-normal">
               Ready 1 Legend • Draw 6 Cards
             </div>
@@ -129,11 +129,11 @@ export default function MulliganSimulator({ deck, allCards }) {
             setGoingFirst(false);
             setShowModal(true);
           }}
-          className="group relative overflow-hidden bg-gradient-to-br from-pink-600 to-pink-800 border-2 border-pink-400 text-white py-6 px-8 rounded-lg font-mono font-bold text-lg hover:border-pink-300 hover:scale-105 transition-all shadow-lg hover:shadow-pink-500/50"
+          className="group relative overflow-hidden bg-gradient-to-br from-pink-600 to-pink-800 border-2 border-pink-400 text-white py-4 sm:py-6 px-6 sm:px-8 rounded-lg font-mono font-bold text-base sm:text-lg hover:border-pink-300 hover:scale-105 transition-all shadow-lg hover:shadow-pink-500/50"
         >
           <div className="absolute inset-0 bg-pink-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <div className="relative z-10">
-            <div className="text-2xl mb-2">GOING SECOND</div>
+            <div className="text-xl sm:text-2xl mb-2">GOING SECOND</div>
             <div className="text-xs opacity-80 font-normal">
               Ready All Legends • Draw 6 Cards
             </div>
