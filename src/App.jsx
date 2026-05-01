@@ -51,6 +51,7 @@ import PublishDeckModal from "./components/PublishDeckModal";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Arena from "./pages/Arena";
 import ScannerTest from "./pages/ScannerTest";
+import LiveScannerModal from "./components/LiveScannerModal";
 
 const isNewCard = (card, days = 7) => {
   if (!card.date_added) return false;
@@ -128,6 +129,7 @@ function App() {
   const [profileDisplayName, setProfileDisplayName] = useState("");
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
   const [showMigrationModal, setShowMigrationModal] = useState(false);
   const [localDeckCount, setLocalDeckCount] = useState(0);
   const { user, signOut } = useAuth();
@@ -1182,6 +1184,7 @@ function App() {
                               user ? handleToggleWishlist : null
                             }
                             isLoggedIn={!!user}
+                            onOpenScanner={() => setShowScanner(true)}
                           />
                         </div>
                       )}
@@ -1406,6 +1409,21 @@ function App() {
                       onClose={() => setShowFeedbackModal(false)}
                       onSubmit={handleSubmitFeedback}
                       isSubmitting={isSubmittingFeedback}
+                    />
+                  )}
+
+                  {showScanner && user && (
+                    <LiveScannerModal
+                      user={user}
+                      allCards={cards}
+                      onClose={() => setShowScanner(false)}
+                      onCardAdded={(card) => {
+                        showToast(`Added: ${card.name}`, "success");
+                        // Reload collection
+                        collectionService
+                          .loadCollection(user.id)
+                          .then(setCollection);
+                      }}
                     />
                   )}
 

@@ -15,6 +15,8 @@ export default function LiveScannerModal({
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [matchFound, setMatchFound] = useState(null);
+  const [matchHistory, setMatchHistory] = useState([]);
+  const MIN_CONFIRMATIONS = 2; // Requiere 2 matches consecutivos
   const [autoAdd, setAutoAdd] = useState(false);
   const [scanStatus, setStatus] = useState("Ready to scan");
   const [recentlyScanned, setRecentlyScanned] = useState([]);
@@ -57,6 +59,15 @@ export default function LiveScannerModal({
       .replace(/[^a-z0-9\s]/g, "")
       .trim();
 
+    // Dynamic threshold basado en longitud
+    const getDynamicThreshold = (text) => {
+      if (text.length < 5) return 0.85; // Nombres cortos más estrictos
+      if (text.length < 10) return 0.75; // Nombres medianos
+      return 0.65; // Nombres largos más permisivos
+    };
+
+    const threshold = getDynamicThreshold(cleanText);
+
     let bestMatch = null;
     let bestScore = 0;
 
@@ -64,8 +75,8 @@ export default function LiveScannerModal({
       const cardName = card.name.toLowerCase();
       const score = calculateSimilarity(cleanText, cardName);
 
-      if (score > bestScore && score > 0.7) {
-        // 70% threshold
+      if (score > bestScore && score > threshold) {
+        // Dynamic threshold aplicado: solo considerar matches que superen el umbral dinámico
         bestMatch = { ...card, confidence: Math.round(score * 100) };
         bestScore = score;
       }
@@ -79,6 +90,37 @@ export default function LiveScannerModal({
     // Simple heuristic: first line usually contains card name
     const lines = text.split("\n").filter((line) => line.trim().length > 3);
     return lines[0] || text;
+  };
+
+  // ROI Cropping — solo escanear zona del nombre (top 25%)
+  const cropToNameRegion = (imageSrc) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Crop top 25% de la carta
+        const cropHeight = Math.floor(img.height * 0.25);
+        canvas.width = img.width;
+        canvas.height = cropHeight;
+
+        ctx.drawImage(
+          img,
+          0,
+          0,
+          img.width,
+          cropHeight, // source
+          0,
+          0,
+          img.width,
+          cropHeight, // destination
+        );
+
+        resolve(canvas.toDataURL("image/jpeg", 0.95));
+      };
+      img.src = imageSrc;
+    });
   };
 
   // Captura frame + OCR processing
@@ -95,8 +137,11 @@ export default function LiveScannerModal({
         return;
       }
 
+      // ROI: Crop solo la región del nombre
+      const croppedImage = await cropToNameRegion(imageSrc);
+
       // OCR con Tesseract.js
-      const result = await Tesseract.recognize(imageSrc, "eng", {
+      const result = await Tesseract.recognize(croppedImage, "eng", {
         logger: (m) => console.log(m), // Progress logging
       });
 
@@ -104,21 +149,42 @@ export default function LiveScannerModal({
       const match = fuzzyMatch(cardName);
 
       if (match) {
-        setMatchFound(match);
-        setStatus(`[OK] Match found:: ${match.confidence}%`);
+        // Agregar a historial
+        setMatchHistory((prev) => {
+          const newHistory = [...prev, match.id].slice(-5); // Keep last 5
 
-        // Si Auto-Add está ON, inyectar directamente
-        if (autoAdd) {
-          await handleAutoAdd(match);
-        } else {
-          // Pausar scan para confirmación manual
-          if (scanIntervalRef.current) {
-            clearInterval(scanIntervalRef.current);
-            scanIntervalRef.current = null;
+          // Contar confirmaciones del último match
+          const confirmations = newHistory.filter(
+            (id) => id === match.id,
+          ).length;
+
+          if (confirmations >= MIN_CONFIRMATIONS) {
+            // CONFIRMADO!
+            setMatchFound(match);
+            setStatus(`[CONFIRMED] ${match.name} (${match.confidence}%)`);
+
+            // Si Auto-Add está ON, inyectar directamente
+            if (autoAdd) {
+              handleAutoAdd(match);
+            } else {
+              // Pausar scan para confirmación manual
+              if (scanIntervalRef.current) {
+                clearInterval(scanIntervalRef.current);
+                scanIntervalRef.current = null;
+              }
+            }
+          } else {
+            // Pendiente de confirmación
+            setStatus(
+              `[PENDING] ${match.name} (${confirmations}/${MIN_CONFIRMATIONS})`,
+            );
           }
-        }
+
+          return newHistory;
+        });
       } else {
         setStatus("[!] No match found");
+        setMatchHistory([]); // Reset history si no hay match
       }
     } catch (error) {
       console.error("OCR Error:", error);
@@ -165,10 +231,10 @@ export default function LiveScannerModal({
   // Rescanear (descartar match)
   const handleRescan = () => {
     setMatchFound(null);
+    setMatchHistory([]); // Reset confirmations
     setStatus("[READY]");
     startLiveScanning();
   };
-
   // Iniciar loop de scanning
   const startLiveScanning = useCallback(() => {
     if (scanIntervalRef.current) return; // Ya está corriendo

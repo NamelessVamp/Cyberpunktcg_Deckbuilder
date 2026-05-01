@@ -9,9 +9,10 @@ export default function CollectionView({
   onAddToCollection,
   onRemoveFromCollection,
   onViewCard,
-  wishlistIds = new Set(),
-  onToggleWishlist = null,
-  isLoggedIn = false,
+  wishlistIds,
+  onToggleWishlist,
+  isLoggedIn,
+  onOpenScanner,
 }) {
   const [viewFilter, setViewFilter] = useState("all");
   const [sortBy, setSortBy] = useState("name");
@@ -39,9 +40,12 @@ export default function CollectionView({
   });
 
   const filterBtns = [
-    { id: "all",      label: `ALL (${allCards.length})` },
-    { id: "owned",    label: `OWNED (${stats.uniqueOwned})` },
-    { id: "missing",  label: `MISSING (${stats.totalPossible - stats.uniqueOwned})` },
+    { id: "all", label: `ALL (${allCards.length})` },
+    { id: "owned", label: `OWNED (${stats.uniqueOwned})` },
+    {
+      id: "missing",
+      label: `MISSING (${stats.totalPossible - stats.uniqueOwned})`,
+    },
     { id: "wishlist", label: `WISHLIST (${stats.wishlistCount})` },
   ];
 
@@ -52,18 +56,42 @@ export default function CollectionView({
         <h2 className="text-term-amber font-bold text-xl font-mono mb-3">
           MY_COLLECTION.DAT
         </h2>
+
+        {/* Scanner button */}
+        {isLoggedIn && onOpenScanner && (
+          <button
+            onClick={onOpenScanner}
+            className="mb-4 bg-term-amber text-term-black font-mono font-bold px-4 py-2 rounded hover:bg-amber-400 transition-colors min-h-[44px] flex items-center justify-center gap-2"
+          >
+            <span>[SCAN_CARD.EXE]</span>
+          </button>
+        )}
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center"></div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           <div>
-            <p className="text-term-green/60 text-xs font-mono mb-1">TOTAL COPIES</p>
-            <p className="text-term-green font-bold text-2xl font-mono">{stats.totalCards}</p>
+            <p className="text-term-green/60 text-xs font-mono mb-1">
+              TOTAL COPIES
+            </p>
+            <p className="text-term-green font-bold text-2xl font-mono">
+              {stats.totalCards}
+            </p>
           </div>
           <div>
-            <p className="text-term-amber/60 text-xs font-mono mb-1">UNIQUE OWNED</p>
-            <p className="text-term-amber font-bold text-2xl font-mono">{stats.uniqueOwned}</p>
+            <p className="text-term-amber/60 text-xs font-mono mb-1">
+              UNIQUE OWNED
+            </p>
+            <p className="text-term-amber font-bold text-2xl font-mono">
+              {stats.uniqueOwned}
+            </p>
           </div>
           <div>
-            <p className="text-term-blue/60 text-xs font-mono mb-1">COMPLETION</p>
-            <p className="text-term-blue font-bold text-2xl font-mono">{stats.completionPercent}%</p>
+            <p className="text-term-blue/60 text-xs font-mono mb-1">
+              COMPLETION
+            </p>
+            <p className="text-term-blue font-bold text-2xl font-mono">
+              {stats.completionPercent}%
+            </p>
           </div>
           <div>
             <p className="text-term-red/60 text-xs font-mono mb-1">MISSING</p>
@@ -111,11 +139,15 @@ export default function CollectionView({
       {/* Empty state */}
       {displayCards.length === 0 && (
         <div className="text-center py-16">
-          <p className="text-term-amber/60 text-lg font-mono mb-2">NO CARDS FOUND</p>
+          <p className="text-term-amber/60 text-lg font-mono mb-2">
+            NO CARDS FOUND
+          </p>
           <p className="text-term-green/40 text-sm font-mono">
-            {viewFilter === "owned" && "Add cards from [BUILD] to your collection"}
+            {viewFilter === "owned" &&
+              "Add cards from [BUILD] to your collection"}
             {viewFilter === "missing" && "You own all cards! Congrats, choom."}
-            {viewFilter === "wishlist" && "Star cards in [BUILD] to add them here"}
+            {viewFilter === "wishlist" &&
+              "Star cards in [BUILD] to add them here"}
             {viewFilter === "all" && "No cards in database"}
           </p>
         </div>
@@ -177,7 +209,9 @@ export default function CollectionView({
                         ? "opacity-100 text-term-amber drop-shadow-[0_0_6px_#ffb300]"
                         : "opacity-0 group-hover:opacity-60 text-term-amber"
                     }`}
-                    title={inWishlist ? "Quitar de wishlist" : "Agregar a wishlist"}
+                    title={
+                      inWishlist ? "Quitar de wishlist" : "Agregar a wishlist"
+                    }
                   >
                     {inWishlist ? "★" : "☆"}
                   </button>
@@ -186,13 +220,19 @@ export default function CollectionView({
 
               {/* Card footer */}
               <div className="bg-term-gray px-2 py-1.5">
-                <p className={`font-bold font-mono text-xs truncate ${owned ? "text-term-green" : "text-term-amber/50"}`}>
+                <p
+                  className={`font-bold font-mono text-xs truncate ${owned ? "text-term-green" : "text-term-amber/50"}`}
+                >
                   {card.name}
                 </p>
                 <div className="flex justify-between items-center mt-0.5">
-                  <span className="text-term-amber/60 font-mono text-[10px]">{card.type}</span>
+                  <span className="text-term-amber/60 font-mono text-[10px]">
+                    {card.type}
+                  </span>
                   {card.cost !== undefined && (
-                    <span className="text-term-blue font-mono text-[10px]">€{card.cost}</span>
+                    <span className="text-term-blue font-mono text-[10px]">
+                      €{card.cost}
+                    </span>
                   )}
                 </div>
                 {isLoggedIn && (
