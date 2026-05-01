@@ -287,12 +287,12 @@ export default function PackOpener({ allCards }) {
   return (
     <div className="max-w-5xl mx-auto">
       {/* Terminal Header */}
-      <div className="mb-8 p-6 bg-gradient-to-r from-term-black via-term-gray to-term-black border-2 border-term-amber rounded-lg relative overflow-hidden">
+      <div className="mb-8 p-4 sm:p-6 bg-gradient-to-r from-term-black via-term-gray to-term-black border-2 border-term-amber rounded-lg relative overflow-hidden">
         <div className="absolute inset-0 bg-term-amber/5 animate-pulse"></div>
         <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-3">
-            <span className="text-4xl"></span>
-            <h2 className="text-term-amber font-bold text-3xl font-mono tracking-wider">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3">
+            <span className="text-2xl sm:text-4xl">📦</span>
+            <h2 className="text-term-amber font-bold text-lg sm:text-2xl md:text-3xl font-mono tracking-wider">
               PACK OPENER SIMULATOR
             </h2>
 
@@ -340,11 +340,11 @@ export default function PackOpener({ allCards }) {
           </div>
         </div>
 
-        <div className="bg-term-gray border-2 border-term-green/40 rounded-lg p-4">
-          <div className="text-term-amber font-mono text-sm mb-1">
+        <div className="bg-term-gray border-2 border-term-green/40 rounded-lg p-3 sm:p-4">
+          <div className="text-term-amber font-mono text-xs sm:text-sm mb-1">
             COLLECTION
           </div>
-          <div className="text-term-green font-bold text-3xl font-mono">
+          <div className="text-term-green font-bold text-2xl sm:text-3xl font-mono">
             {collection.length}/
             {allCards.filter((c) => c.type !== "LEGEND").length}
           </div>
@@ -358,11 +358,11 @@ export default function PackOpener({ allCards }) {
           </div>
         </div>
 
-        <div className="bg-term-gray border-2 border-term-green/40 rounded-lg p-4">
-          <div className="text-term-amber font-mono text-sm mb-1">
+        <div className="bg-term-gray border-2 border-term-green/40 rounded-lg p-3 sm:p-4">
+          <div className="text-term-amber font-mono text-xs sm:text-sm mb-1">
             CURRENT SET
           </div>
-          <div className="text-term-green font-bold text-lg font-mono">
+          <div className="text-term-green font-bold text-sm sm:text-base md:text-lg font-mono break-words">
             Welcome to Night City
           </div>
           <div className="text-term-green/60 text-xs font-mono mt-1">

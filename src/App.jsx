@@ -50,6 +50,8 @@ import * as communityService from "./lib/communityService";
 import PublishDeckModal from "./components/PublishDeckModal";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Arena from "./pages/Arena";
+import ScannerTest from "./pages/ScannerTest";
+import LiveScannerModal from "./components/LiveScannerModal";
 
 const isNewCard = (card, days = 7) => {
   if (!card.date_added) return false;
@@ -127,6 +129,7 @@ function App() {
   const [profileDisplayName, setProfileDisplayName] = useState("");
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
   const [showMigrationModal, setShowMigrationModal] = useState(false);
   const [localDeckCount, setLocalDeckCount] = useState(0);
   const { user, signOut } = useAuth();
@@ -600,6 +603,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Ruta de testing del scanner */}
+        <Route path="/scanner-test" element={<ScannerTest />} />
+
+        {/* Ruta fullscreen — The Arena */}
+        <Route path="/arena" element={<Arena />} />
+
         {/* Ruta principal — Deck Builder */}
         <Route
           path="/"
@@ -1175,6 +1184,7 @@ function App() {
                               user ? handleToggleWishlist : null
                             }
                             isLoggedIn={!!user}
+                            onOpenScanner={() => setShowScanner(true)}
                           />
                         </div>
                       )}
@@ -1402,6 +1412,21 @@ function App() {
                     />
                   )}
 
+                  {showScanner && user && (
+                    <LiveScannerModal
+                      user={user}
+                      allCards={cards}
+                      onClose={() => setShowScanner(false)}
+                      onCardAdded={(card) => {
+                        showToast(`Added: ${card.name}`, "success");
+                        // Reload collection
+                        collectionService
+                          .loadCollection(user.id)
+                          .then(setCollection);
+                      }}
+                    />
+                  )}
+
                   {showAdminFeedback && isAdmin && user && (
                     <AdminFeedbackViewer
                       onClose={() => setShowAdminFeedback(false)}
@@ -1515,15 +1540,8 @@ function App() {
             </div>
           }
         />
-
-        {/* Ruta fullscreen — The Arena */}
-        <Route path="/arena" element={<Arena />} />
-
-        {/* Redirect de rutas no existentes */}
-        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
 }
-
 export default App;

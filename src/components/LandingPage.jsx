@@ -56,14 +56,14 @@ function LandingPage({
             </p>
 
             {/* Stats */}
-            <div className="mt-8 flex justify-center lg:justify-start gap-4 text-xs font-mono text-term-green/60">
+            <div className="mt-8 flex flex-wrap justify-center lg:justify-start gap-2 sm:gap-4 text-xs font-mono text-term-green/60">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-term-green rounded-full animate-pulse"></span>
                 ONLINE
               </div>
-              <span>//</span>
+              <span className="hidden sm:inline">//</span>
               <div>{allCards.length} CARDS LOADED</div>
-              <span>//</span>
+              <span className="hidden sm:inline">//</span>
               <div>{savedDecks.length} DECKS SAVED</div>
             </div>
           </div>
@@ -187,9 +187,7 @@ function LandingPage({
           <p className="text-term-green/60 text-sm font-mono mb-4">
             Rules, deck building guide, and gameplay basics
           </p>
-          <div className="text-term-blue font-mono text-xs">
-            [READ GUIDE →]
-          </div>
+          <div className="text-term-blue font-mono text-xs">[READ GUIDE →]</div>
         </button>
       </div>
 
