@@ -1,1 +1,21 @@
-[]
+[
+  {
+    "id": "adam-smasher-ender-of-legends?printing=a9c1137e-2e33-4293-9dcc-9351c9a0bbee",
+    "name": "Adam Smasher — Ender of Legends",
+    "subtitle": "",
+    "url": "https://cyberpunktcg.com/cards/adam-smasher-ender-of-legends?printing=a9c1137e-2e33-4293-9dcc-9351c9a0bbee",
+    "cost": 9,
+    "power": 9,
+    "ram": 2,
+    "type": "LEGEND",
+    "faction": "ARASAKA",
+    "keywords": [],
+    "text": "Go Solo (Pay this Legend's cost to play it as a ready Unit. It can attack this turn. If it leaves the field, remove it from the game.)\nPlay Defeat a rival Unit.",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/a9c1137e-2e33-4293-9dcc-9351c9a0bbee/render-mpvmot9g.webp?Expires=1781507982&Key-Pair-Id=K3SGRHESIHQPEW&Signature=P-1g-nGYI1nBbl-tHb7piwMdNueqAZtV4vNZM7g5nHn5vMhbYdhU75b-CXZDSFmWpkQEH4r8rQw-m~-AKwtwDCCUiJ3krIX78g8IEHSYQgu8NYEoqQg4PJu9k2M2PHlNkkTHM1c7v39yq4IvPeoa8wF5ki2JNyKUpopmtjee2fUn8dYZaCLv4mosz~xnH5a0LAy2iKkmtRR0xYFtQ8NqqNHCh8Ixsnqg77Df8s6Y2rmLyNQVOEAG7uBdn461ynQEKL7eiXP1vfGHdKy0gelbWKVM9B8tXDqsoBr3bzGar2HUaUJx0VUx1FGL2Flm5AuXkfFaYw65BSHFeVzAYqexJw__",
+    "set": "Welcome to Night City — Retail",
+    "number": "001",
+    "artist": "Michał Dziekan",
+    "ram_color": "Red",
+    "date_added": "2026-06-14"
+  }
+]
