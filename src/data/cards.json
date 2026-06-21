@@ -1,1 +1,21 @@
-[]
+[
+  {
+    "id": "6th-street-recruits?printing=756f3e53-9ff3-4c01-9f33-bb27a1cd5957",
+    "name": "6th Street Recruits",
+    "subtitle": "",
+    "url": "https://cyberpunktcg.com/cards/6th-street-recruits?printing=756f3e53-9ff3-4c01-9f33-bb27a1cd5957",
+    "cost": 4,
+    "power": 6,
+    "ram": 1,
+    "type": "UNIT",
+    "faction": "GANGER",
+    "keywords": [],
+    "text": "When a friendly Unit steals a d6, increase a Gig by up to 6.",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/756f3e53-9ff3-4c01-9f33-bb27a1cd5957/render-mpvlsra8.webp?Expires=1782113390&Key-Pair-Id=K3SGRHESIHQPEW&Signature=mkdOmZt3CXWWPRkEwW5V-QKH0WO5FcvGnb2hYfPNHX-XeAc49JxUQmwT5hZshzuCUFjMEy0RN1IGRwlmeOP281T6D~NP5O4bhcPsn14TKuXqhPo6M39ofF6M6vxf2PIc93J~SG~H0zuIYqdVOaff1t6x0GESXX~JvwvaeOn60j9vpKm979gtr2acNX75JzQDAyqXiXpSceajAXvmYtY7KQ~oU6VzJ4l4tVBkBXwiUKayMkFxKxraIpdR9dOqXVHlOQxrYJ5nWBwgoZ~-V81fwWkrZHCKHh5ZJ04hbNWPvykJlADThjZ26CpsxYqiI95DH~zplEFiXkiTGg4wMEj~qQ__",
+    "set": "Welcome to Night City — Retail",
+    "number": "006",
+    "artist": "Daniel Valaisis",
+    "ram_color": "Red",
+    "date_added": "2026-06-21"
+  }
+]
