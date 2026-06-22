@@ -11,11 +11,30 @@
     "faction": "GANGER",
     "keywords": [],
     "text": "When a friendly Unit steals a d6, increase a Gig by up to 6.",
-    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/756f3e53-9ff3-4c01-9f33-bb27a1cd5957/render-mpvlsra8.webp?Expires=1782113390&Key-Pair-Id=K3SGRHESIHQPEW&Signature=mkdOmZt3CXWWPRkEwW5V-QKH0WO5FcvGnb2hYfPNHX-XeAc49JxUQmwT5hZshzuCUFjMEy0RN1IGRwlmeOP281T6D~NP5O4bhcPsn14TKuXqhPo6M39ofF6M6vxf2PIc93J~SG~H0zuIYqdVOaff1t6x0GESXX~JvwvaeOn60j9vpKm979gtr2acNX75JzQDAyqXiXpSceajAXvmYtY7KQ~oU6VzJ4l4tVBkBXwiUKayMkFxKxraIpdR9dOqXVHlOQxrYJ5nWBwgoZ~-V81fwWkrZHCKHh5ZJ04hbNWPvykJlADThjZ26CpsxYqiI95DH~zplEFiXkiTGg4wMEj~qQ__",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/756f3e53-9ff3-4c01-9f33-bb27a1cd5957/render-mpvlsra8.webp?Expires=1782204863&Key-Pair-Id=K3SGRHESIHQPEW&Signature=gJhhoRv7tWHdRZ518IWYhPtO6P0rpatAinUr1pQqaZd4lBq65uxa-8HewobMRV7z9T-hlf1bp6Sl9zIzdj0~0d8WAc8y1RZ-xipsXzgzINPzaeYTeKgPTJ9GOfll0RljoZ9c~EaNzGxAplu3wfGQihmoYSSkUUaeIuk~MHfczhu21uWu7UYZdg19E9MAZ6XhDNB~4PEcFFcYsAlwFPXhD3dLkcUz9TtuHhSCqfi4nhLG0Tl6XO6sFKZjzljZaogTGDbeoiBSKWctOXuRhdBdCgQIGOZZPv71078jqW0Pu0wNsBMeLHDIWggyDMxQfT6Tt40HsdMSY0LqN7EaWujsTQ__",
     "set": "Welcome to Night City — Retail",
     "number": "006",
     "artist": "Daniel Valaisis",
     "ram_color": "Red",
     "date_added": "2026-06-21"
+  },
+  {
+    "id": "overwatch-panam-s-gift?printing=336131d1-3bc8-4b39-b893-5fce9be8ce7f",
+    "name": "Overwatch — Panam's Gift",
+    "subtitle": "",
+    "url": "https://cyberpunktcg.com/cards/overwatch-panam-s-gift?printing=336131d1-3bc8-4b39-b893-5fce9be8ce7f",
+    "cost": 4,
+    "power": 4,
+    "ram": 4,
+    "type": "GEAR",
+    "faction": "WEAPON",
+    "keywords": [],
+    "text": "Quick 1 €$, Spend Discard 1. Defeat a spent rival Unit with cost equal to or less than the discarded card's cost.",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/336131d1-3bc8-4b39-b893-5fce9be8ce7f/render-mpvn1gb1.webp?Expires=1782205261&Key-Pair-Id=K3SGRHESIHQPEW&Signature=oIIjEQWgjf2oYwL32mJTOxzWvttb7gBXcGjc88DFWlqRHvgwypAo0ZOzxE09xZb5VZJWuTOYNhI8J1dHI0luDd-kQagCJ8~i3wS7MtIVoFNN5IF8-MYPlYmyGdUMquDebmmSRLPOSZxL-iGaPJHF1LkBzZi4~XLJb9CYjvcyUlsL0p~5L7Kk~Y82wy71DuZKbOnM0F-GKbdfLF7rw7Sv0wyUoL44q6EM~0FJQ9EXHkM40DBSWVHujuuN15jcMPxzH~agOAE-lkliz7cr5oA4LXCW44w9DoEwy9uf1JuHku-BPB4x~ARDWQ0~B8NMvSEse2I17ufYnGbZ2N4IBFCqEw__",
+    "set": "Welcome to Night City — Retail",
+    "number": "093",
+    "artist": "Mooncolony",
+    "ram_color": "Green",
+    "date_added": "2026-06-22"
   }
 ]
