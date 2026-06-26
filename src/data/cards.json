@@ -1,1 +1,21 @@
-[]
+[
+  {
+    "id": "mox-inciters?printing=354fd7d3-070d-4767-989c-5b3efbd9f30d",
+    "name": "Mox Inciters",
+    "subtitle": "",
+    "url": "https://cyberpunktcg.com/cards/mox-inciters?printing=354fd7d3-070d-4767-989c-5b3efbd9f30d",
+    "cost": 3,
+    "power": 2,
+    "ram": 2,
+    "type": "UNIT",
+    "faction": "GANGER",
+    "keywords": [],
+    "text": "Play A rival Unit must attack next turn if it can.\nBlocker (You may spend this Unit to redirect a rival Unit's attack to it instead.)",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/354fd7d3-070d-4767-989c-5b3efbd9f30d/render-mpvlrgqe.webp?Expires=1782543542&Key-Pair-Id=K3SGRHESIHQPEW&Signature=GedKRT0Z1swOIiKQy7srGHLbXu4utFgPbmg5WmjLskUKTAYyVg8bDp456I3-FJRRclHG6kvjewU1I9bxYLfvDVbOl1TMznOBw6CuyCVG0DkDt-dZRGo5c-B9CQOBygsZQowvRfPbNTnR4Db~60xZ5rUSfHLCJLYEx6fBZ172SRLQw6X1lfbpYikPgeyKfF-1cM8ri2dobk6myRCAXNqt-da5bi9EPnhbNaCYDnTb8RszkLLL9X4eKD6YtC3s-cyUVbUenS~n0lKRAJPkopk7AvSE~AXIdVIA46UJO229nqkP6gYnfSk1TQKmC1J5od~8FimRYckk~lS3vDG2ort5lA__",
+    "set": "Welcome to Night City — Retail",
+    "number": "122",
+    "artist": "Michał Dziekan",
+    "ram_color": "Blue",
+    "date_added": "2026-06-26"
+  }
+]
