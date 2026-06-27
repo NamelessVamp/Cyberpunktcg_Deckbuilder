@@ -1,5 +1,20 @@
 [
   {
+    "id": "rebecca-having-a-moment?printing=71a35836-e604-4d98-ab56-58bfb4581033",
+    "name": "Rebecca — Having a Moment",
+    "subtitle": "",
+    "url": "https://cyberpunktcg.com/cards/rebecca-having-a-moment?printing=71a35836-e604-4d98-ab56-58bfb4581033",
+    "type": "LEGEND",
+    "faction": null,
+    "keywords": [],
+    "text": "",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/71a35836-e604-4d98-ab56-58bfb4581033/render-mqgjx21h.webp?Expires=1782628000&Key-Pair-Id=K3SGRHESIHQPEW&Signature=fnwlKsXYX7WUD3y0LgfPKq~ebA09lz670BaSp~WUUoh12X2VBbZXBLtcpBVt1FLoaxd~5WzacHKDX9jOlNNg2mS9qXuucuQxVd~ZNAGIQ~uZIAszx2RpE0f902daWVOnJkJFnCsIfDy8OwSQ2sysRMXx8vPbO0SG8XHrzVNOvoGBj0PsRVQazvNBdqcHxPFMaPSNggw2Ty21q~phYjBPZ7SRZlLgM9O9uRKMW3jXZJGHE9S7jjrHzMWrmFOxzVlKoC7sCVSv8h5ikdERYBxvvfRPCFJsx0AhwfHUeWezk3YuCYjgqh~Upl3Nj5QzT-OE3rILf2uAUMuLWN4Cs9l0qA__",
+    "set": "Set 1 Promos",
+    "number": "005",
+    "artist": "Narupiti Harunsong",
+    "date_added": "2026-06-27"
+  },
+  {
     "id": "mox-inciters?printing=354fd7d3-070d-4767-989c-5b3efbd9f30d",
     "name": "Mox Inciters",
     "subtitle": "",
@@ -11,7 +26,7 @@
     "faction": "GANGER",
     "keywords": [],
     "text": "Play A rival Unit must attack next turn if it can.\nBlocker (You may spend this Unit to redirect a rival Unit's attack to it instead.)",
-    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/354fd7d3-070d-4767-989c-5b3efbd9f30d/render-mpvlrgqe.webp?Expires=1782543542&Key-Pair-Id=K3SGRHESIHQPEW&Signature=GedKRT0Z1swOIiKQy7srGHLbXu4utFgPbmg5WmjLskUKTAYyVg8bDp456I3-FJRRclHG6kvjewU1I9bxYLfvDVbOl1TMznOBw6CuyCVG0DkDt-dZRGo5c-B9CQOBygsZQowvRfPbNTnR4Db~60xZ5rUSfHLCJLYEx6fBZ172SRLQw6X1lfbpYikPgeyKfF-1cM8ri2dobk6myRCAXNqt-da5bi9EPnhbNaCYDnTb8RszkLLL9X4eKD6YtC3s-cyUVbUenS~n0lKRAJPkopk7AvSE~AXIdVIA46UJO229nqkP6gYnfSk1TQKmC1J5od~8FimRYckk~lS3vDG2ort5lA__",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/354fd7d3-070d-4767-989c-5b3efbd9f30d/render-mpvlrgqe.webp?Expires=1782628532&Key-Pair-Id=K3SGRHESIHQPEW&Signature=QJ7qwka9pBlYF26EyhIrR4B3Z541vm07fIcZRRSrHtWk2PVG3g33HQMzPTIGYaa1nTOOWb9ymInq-dfq-FOs6TNEKbZ5Bq0nfTnmeHNH7mDL0aJS50lSGTKHZaYe3T9GDUk~c5FD49cNlbpAcTaaNJAG6nbQPG2vub7DPGnNx7SPmjH40JBDYzK3IfM4JEZ-UKrG8dFtJLmXs3szS5BkyOs~RXfYNHyS17u~6eGqX8m--XTtH1kRqxBipFDuO0lZBXQoMJh5Ix-kImR2ylFFhJB~zehUYNDjS5Mzp962Ao5djbl6cKBaLeMHgaEu0KaFeOlQNhXdPPh-GZMQX72I5A__",
     "set": "Welcome to Night City — Retail",
     "number": "122",
     "artist": "Michał Dziekan",
