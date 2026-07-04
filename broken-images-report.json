@@ -1,20 +1,302 @@
 [
   {
+    "id": "v-streetkid?printing=3fc63c58-5954-4744-a5af-047bfc5cb159",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "royce-psycho-on-the-edge?printing=3e2e228b-dbfb-484b-b82d-6972ff184aab",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "adam-smasher-ender-of-legends?printing=a9c1137e-2e33-4293-9dcc-9351c9a0bbee",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
     "id": "rebecca-having-a-moment?printing=71a35836-e604-4d98-ab56-58bfb4581033",
-    "name": "Rebecca — Having a Moment",
-    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/71a35836-e604-4d98-ab56-58bfb4581033/render-mqgjx21h.webp?Expires=1782716373&Key-Pair-Id=K3SGRHESIHQPEW&Signature=phDtQXTnRGzf7zoXqynQWyNzYOa13Iu8VCYpgMyrGt8HFEJ6SF3IZS4gAGsCGFIkPeSOSo1~~LzHfVbxpxUjin3rZVrrW8YN4c7LNiFaOGJ~NfGAO~nRSknKmreoN2EzwoFfcoBzibGcPZRMP1P4pBtaCG1UNuYO5UIy7bI0ze6fAz8w9O3bI-3JDGBW4rFqNjEWC5ViFeMeMoATrbL8UDUKUd8kziBvcerfcFJh0oyg4ope1raE2VQoZmxGjjo4WfGI4zrZTRyizX-cbjYbFQHovUx5lDqQkYvo94Nq95Z0G-VUZGjfIa4DrJJqpAOapkj3qhv59PWNgof4FPocwA__",
-    "status": 403
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "yorinobu-arasaka-embracing-destruction?printing=f70b75b5-aa2f-4c2d-b8c3-01fcb2a670ec",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "la-llorona-ghost-of-the-past?printing=e3d1d8a0-1d53-4c85-84ca-66439fd3639a",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "swordwise-huscle?printing=1c053198-187e-49ab-a9e0-0661b4c3b337",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "6th-street-recruits?printing=756f3e53-9ff3-4c01-9f33-bb27a1cd5957",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "kerry-eurodyne-the-last-rockerboy?printing=c26c7db6-f540-4073-ab33-b09335631764",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "meredith-stout-stone-cold-corpo?printing=5939771d-bdcc-4b42-aea4-376311189e93",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "el-sombrero-n-la-venganza-lenta?printing=94180516-28a6-4f5c-b79e-de38a95ed47b",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "royce-don-t-call-me-simon?printing=b749ce16-1b44-47d8-bce4-4fd373007a5c",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "minotaur?printing=19587d4f-6d47-44fe-b4da-99743e2742f7",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "yorinobu-arasaka-steel-dragon?printing=c057ccc4-bb15-4efd-8115-8d223568134b",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "mantis-blades?printing=7ffa8ba4-f187-4ba0-a719-fa8ebf45a03b",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "satori-sword-of-saburo?printing=11a8fed4-5401-4cfc-901b-ab9b5b94d0ab",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "all-is-lost?printing=d1a3c0e0-e0e7-418d-afb4-e6e43400c42e",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "carnage-at-the-colosseum?printing=36128749-4cb1-440d-b4de-4fd463cc2f5c",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "dum-dum-maelstrom-triggerman?printing=aaac486c-dbfd-4137-b373-24a2df29522c",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
   },
   {
     "id": "kerry-eurodyne-axe-attitude-audience?printing=e54e06c0-3f9c-412a-8dea-942eebecd687",
-    "name": "Kerry Eurodyne — Axe, Attitude, Audience",
-    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/e54e06c0-3f9c-412a-8dea-942eebecd687/render-mpvmls9g.webp?Expires=1782716512&Key-Pair-Id=K3SGRHESIHQPEW&Signature=NfHnJv-pBxJ5bs6v4PZQqxe8swjdCi7qZmD5PfTmwVlaAdCojtOXstG08lLC0LO3pewPQytZMYXhGM2dld-ehwANAIjE3znsk206O-FDKFZH8ImlsdG~ck3-qLe7jI9v1d0O~y702~i9slG6jhOq4IuKA0so-5ToQFq1VGQ4RoxkFvL6RT6ofTqQRAEcYF8mC5T9iFJXSJncUxKhZnwADkAWwjaIDJ~v6rUXD3FTSfZNc5L4tY4Oxr16jNJrfbtFuxFxemAULxjgzqI8g9MpgvnJFSt21sVSztybj6sV~Pw30D2RsA25x8Kza7EWuD4fxv9kM33Xg0jc6Dp6FQqBdQ__",
-    "status": 403
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "river-ward-detective-on-the-hunt?printing=b3895f75-e147-49b0-a6d8-6fb35b356b2e",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "viktor-vektor-sit-down-and-relax?printing=7d539173-4022-402e-a9f4-100338935fd2",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "secondhand-bombus?printing=fcbb6d58-6666-4bd3-8ff0-64930fb0f422",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "sketchy-ripper?printing=12f0398c-bcc3-4944-af72-ac2ae9f36761",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "gilded-mato-n?printing=846b55b4-5e12-44b6-a204-53bd8c862888",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "hanako-arasaka-in-a-gilded-cage?printing=7386d22f-1065-4043-a6c4-9cee6256fe8a",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "offduty-malfini?printing=fbefb447-34a3-4d53-9b23-d1bf141f8eec",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "t-bug-amateur-philosopher?printing=e2e3d98d-0159-4a79-b543-e37264f23118",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "caliber-totentanz-s-top-dog?printing=4b5dc479-0db1-46dd-859f-e7dc34d50f03",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "jackie-welles-ride-or-die-choom?printing=12d44604-ad7b-4e82-b517-9edb0be44427",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "adam-smasher-metal-over-meat?printing=d23e322f-ad60-431d-b33e-1e8a813248ff",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "kiroshi-optics?printing=ec3368a9-79f1-4dfc-9cf7-1cb464ec1c88",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "mandibular-upgrade?printing=219b7a29-0f8b-4750-bc46-0f39eec6721b",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "zetatech-faceplate?printing=79cdc9a5-d94d-4df4-9f88-aa02fb0357b3",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "gorilla-arms?printing=e1959b9e-d32d-43be-94c3-a595809e0c28",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "afterparty-at-lizzie-s?printing=d53925ee-df55-4b71-8ca0-13ec3ede2076",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "cyberpsychosis?printing=5aafe80b-7c7d-4060-8677-a2881a21dd72",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "bootleg-black-sapphire-show?printing=decc76ed-f5ed-4f02-90d7-e01e2a3975e0",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "goro-takemura-hands-unclean?printing=2ba68619-7050-44c5-b0ce-b32d48b8f40f",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "goro-takemura-vengeful-bodyguard?printing=0f6e52f0-511f-4ae9-a380-5e718b26e58a",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "panam-palmer-nomad-cavalry?printing=6e4ee31b-82d1-421c-b658-ba3f79520365",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "saburo-arasaka-stubborn-patriarch?printing=6ac7adce-01af-4b5b-956b-698eda0bed14",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "corpo-security?printing=80dcc139-d31d-4b89-86ff-cdbdd2664953",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "emergency-atlus?printing=9c18b6ae-765d-4244-8de4-e382c4767de1",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "riding-nomad?printing=1ee3ba07-86b0-4309-be55-4b4698f700b8",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "wraith-marauders?printing=0944037e-5b14-4332-b345-7935924c2125",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "sandayu-oda-hanako-s-guardian?printing=f452a0ca-3204-48d5-8565-ec746f27959b",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "saul-bright-stormrider?printing=60e476b4-51ab-4b10-8861-a8362b4232d7",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "sandevistan?printing=97de62e2-3fea-4324-8367-87d1f1d674ed",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "overwatch-panam-s-gift?printing=336131d1-3bc8-4b39-b893-5fce9be8ce7f",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "peace-offering?printing=8570122a-52aa-4a6b-8d72-4c8848df0f9b",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "corporate-surveillance?printing=d3dc7194-a545-4588-9702-b094c27ce359",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "take-control?printing=bc1401d4-5b9b-495a-853e-0a22a11f6f4c",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "v-corporate-exile?printing=4a5591f9-743e-4186-8deb-560971bb3f82",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "alt-cunningham-soulkiller-architect?printing=cb23a651-dd1d-48f8-aca3-8d33fef79fdd",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "evelyn-parker-beautiful-enigma?printing=ba766c1d-d929-4a22-bc91-7400784536c8",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "jackie-welles-pour-one-out-for-me?printing=a33d3324-fe48-4a9f-80a8-8545a0a4727f",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "evelyn-parker-scheming-siren?printing=7d174619-2183-4058-a89a-082c6b7b5a5c",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "misty-olszewski-mender-of-broken-spirits?printing=17252514-02ba-4d0d-a9cc-3590cee528af",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
   },
   {
     "id": "mox-inciters?printing=354fd7d3-070d-4767-989c-5b3efbd9f30d",
-    "name": "Mox Inciters",
-    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/354fd7d3-070d-4767-989c-5b3efbd9f30d/render-mpvlrgqe.webp?Expires=1782716911&Key-Pair-Id=K3SGRHESIHQPEW&Signature=IBfLcHN2LAEQZas2I81h5-ZzmkSFBrs9P9MJeiyIJy8UqWqmCvN-0AVIY0qsRgo2qiW2~LUH5Dn1moRgwnmxiWenh4gLn4b0AxxxjVxjRMX9SMBT5NQxG-10tG-4j-m4oEYmvo6d9StjUlyyio2fXK1fjdngwBIZSxf2nbtbWVFVqGsB44S0odjjas5WACsFzZt62AEz4~Bk1vQ5Z5r~UeigKjm-Y9zBbbzv0KeBiu6iKpYhrT1KwfjuDzfiHCouigPoRDWHPwjgAt2-EwWvQS5vx12zt4Dh01CX8jZ9NwWmwD01uTB9OIsZ8-gFseFZybBj~ogpiXyLWosfzYHkpw__",
-    "status": 403
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
   }
 ]
