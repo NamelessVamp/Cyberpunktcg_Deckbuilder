@@ -95,6 +95,12 @@
     "error": "Invalid URL"
   },
   {
+    "id": "appetite-for-destruction?printing=f274789d-69f2-4acf-a511-f728c67d1a13",
+    "name": "Appetite for Destruction",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/f274789d-69f2-4acf-a511-f728c67d1a13/render-mpvmf46g.webp?Expires=1783834544&Key-Pair-Id=K3SGRHESIHQPEW&Signature=GQ3YqL2qfJxuTBv4w-sZMGhhZ3osLWs6a8aQXfIFndn0PG-v52Ek0R3QuKSFL-owso6Dg65B0ZEbstSi36OuCI0eZdwU8Nrrr3d85gipMCVHyUoOVjDaVMx7wyU0jgfje2XhkSVHOQNrkqoGXmkAG6EE3s3SOy95l8w359-xYgvmQj~DjzP93i4tukLYU8Q50JGnVcGOfhouW~JQcSqe7JTwDBy7CNTYdXhLKgqPSIcwTbM7w4bQGTvveg9qhW7XUv23LxArUjxB~Gf9IIKu6ULFKhRcpknTKlZNfL1ldLVV6x25IYmE4yirQW10OPJlfOwDt4MSXVkb7A-W7mhzzA__",
+    "status": 403
+  },
+  {
     "id": "over-the-edge?printing=f1cf4133-45ef-4de5-abfc-757de1613731",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
