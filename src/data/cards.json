@@ -257,7 +257,7 @@
     "faction": "GANGER",
     "keywords": [],
     "text": "The next time a friendly Unit wins a fight by 3+ power this turn, it also steals a Gig.",
-    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/f274789d-69f2-4acf-a511-f728c67d1a13/render-mpvmf46g.webp?Expires=1783921918&Key-Pair-Id=K3SGRHESIHQPEW&Signature=XDeH0zlsj8jshsh~b5MzCrqD0iWBRQCvFzPc9srqvQc~4cG3NiCV26Jjlebi25UbkzOgIWwYXVgDDVGUJ79wxHDcwVnPYrX6d35eAxLd89QafDafKw1dxpHMNdwDNq0MdwGju8bC4gNUnNWBho~yzifFSaQH2N-SrTkIJ4voBUbMn-A5b4YrZrA~dWhgemQTh9s446w4~oR37cQatYYlM0~aeKbSlptMl-ES3-bjF1cJmOpKEgvd6Ir01bpuUq66XYrsy~4KjXlMf9a8OneeJbj5m3auDJV1jq~9aqZLVRxqArfYHn9xysK6echgKMxLe2FW~v9qkSSbDDt6JEVH3A__",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/f274789d-69f2-4acf-a511-f728c67d1a13/render-mpvmf46g.webp?Expires=1784009405&Key-Pair-Id=K3SGRHESIHQPEW&Signature=W2XwAcf7KBrqK43Xk6PBxXyoQRndlMkuYebq~4XvDlvBPSCzXQ3MuQmuxQFGqhMx~9RfMxR8kIZ-0A3gfoiCLrWWj8vnSv5MNQ4B3oHA6ys0wwhn~N3KOpwPZiF~zxAB4qyKu4L9ccHfFNvbQt-NeUppQd2marvoCf1nHHHBOa-QllrqU1iKdkA2QNXGsZfx70MCrR3f3dckKrlYlsS9FiaAKoaJIYA6UWtIIQCkvpcjy3BdTOYeZmSx-9nxtDUCZnmBCf9--1ZlcdaNzb0vZkN7T9d4YgNiGAOJ4wEUP7UFDjoWRMBJuKzvI-RjDGIiKzlyEBkBiuCVGQEkSvo18A__",
     "set": "Welcome to Night City — Retail",
     "number": "028",
     "artist": "Miguel Valderrama & Jason Wordie",
@@ -625,7 +625,7 @@
     "faction": "ARASAKA",
     "keywords": [],
     "text": "Spend Swap a friendly Gig with a rival Gig.\nAt the start of your turn, draw 1 for each friendly value-pair of Gigs.",
-    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/2c4a77e8-0fda-4ec1-9519-1d15e0f172b3/render-mpvmk5xh.webp?Expires=1783922012&Key-Pair-Id=K3SGRHESIHQPEW&Signature=AiMRuaVAdnukWCPWnbR4xzlGAN5nSRHX~KTlEIuMt3rWHEwOMmpUeb508ZTx6kk48~-kKKfFVkkYTqmA5UkdmlrR1rkIzi4RJoYse8y2bDoQWXOV6vpE~352s0hy7w-q2JaUWKyar4GAaltvQNfyGn8xA2TeOcu5y~OyMYQKLfnxnrdW4HMPcn4bCinLfkqXZUSRoRsUJ-7EWR8QHevgV9RBEfE2l99Fdy7AB5tpoAo6nbHCRnerXDzkXtBVhcuJ-HrKGunG4-Cxn50GJfyrg3DfLzz4JWi7CTltJVnC-qcmmvaITPKP5O1lkVwFGTH1DuABXyW5T73uuTqmzxauYA__",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/2c4a77e8-0fda-4ec1-9519-1d15e0f172b3/render-mpvmk5xh.webp?Expires=1784009496&Key-Pair-Id=K3SGRHESIHQPEW&Signature=tBF3V8Z43NyDqvSHf0urSVaOHV8hmx9M3nVWJhkvcw6Fg2e9fiP2j3pTIbttPGGrF2BetskhraHFmCco0GuE7vgOlriIub-mDfltesnwkVVnf5vghKym1nen154WE68-C8c76T4E8Hb-m1-hVF9XC-bU0~V7vGx24SYg0XmONHxw2gYsOIIH3wdUypQoTJ6icsBEMhAaGkWzTS5F9kz7HwETpL0PBPDix0~Q2MKsVeGKO1C1jfJuf4y9eTUATVnf~CemQYZXyIPz2bnt~gU-DuyaO3oLrhnL8UrEePNvYTM6wbOeKOhqhYRm1M7LicD6uN9CSwRiEHkq2X4XXzCwag__",
     "set": "Welcome to Night City — Retail",
     "number": "072",
     "artist": "Daniel Valaisis",
@@ -711,6 +711,25 @@
     "date_added": "2026-07-04"
   },
   {
+    "id": "pepe-najarro-working-doubles?printing=0de81196-f1d3-4fd0-ae6a-062dae3f3f2c",
+    "name": "Pepe Najarro — Working Doubles",
+    "subtitle": "",
+    "url": "https://cyberpunktcg.com/cards/pepe-najarro-working-doubles?printing=0de81196-f1d3-4fd0-ae6a-062dae3f3f2c",
+    "cost": 4,
+    "power": 6,
+    "ram": 2,
+    "type": "UNIT",
+    "faction": null,
+    "keywords": [],
+    "text": "Attack If you control a value-pair of Gigs, ready up to 2 MERC Legends in your Legends area.",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/0de81196-f1d3-4fd0-ae6a-062dae3f3f2c/render-mpvm610y.webp?Expires=1784009519&Key-Pair-Id=K3SGRHESIHQPEW&Signature=QNox9TxmktrkPPN-A51MunKpZCoH9KuhbsemVQZdY1fxXnXao0heiMge4gyL0i6yLwZuFD30rL-a-02vVuvOKb7HHB77NHIG5daa4ieMuNwH67YsYrbcjZghV6cghsoqWoZ-a53YtKugAiYphtg7c~Zn9j42I-sLP~jX78~y-ZKEzo47G2WmVWFlnIni~BosSYf9~gTeQEYxYy4qn0lPQxQRIMy-x9jwdFZLffqM6P6a-XVjO0LYil9-9WsecycJediPTQ4ZiwjPEe1plzT8X6HT8DzNZhr~-9O5LV2taLLOBSKPc0mZcV52Mf1gENFL00ILeuzGpIvX~R2Y~wefUw__",
+    "set": "Welcome to Night City — Retail",
+    "number": "086",
+    "artist": "TOPDOG Entertainment",
+    "ram_color": "Green",
+    "date_added": "2026-07-13"
+  },
+  {
     "id": "riding-nomad?printing=1ee3ba07-86b0-4309-be55-4b4698f700b8",
     "name": "SOMETHING WENT WRONG",
     "subtitle": "An unexpected error occurred while displaying this page.",
@@ -774,18 +793,5 @@
     "number": "",
     "artist": "",
     "date_added": "2026-07-01"
-  },
-  {
-    "id": "sandevistan?printing=97de62e2-3fea-4324-8367-87d1f1d674ed",
-    "name": "SOMETHING WENT WRONG",
-    "subtitle": "An unexpected error occurred while displaying this page.",
-    "url": "https://cyberpunktcg.com/cards/sandevistan?printing=97de62e2-3fea-4324-8367-87d1f1d674ed",
-    "faction": null,
-    "keywords": [],
-    "text": "",
-    "set": "",
-    "number": "",
-    "artist": "",
-    "date_added": "2026-07-03"
   }
 ]
