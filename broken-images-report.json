@@ -95,6 +95,12 @@
     "error": "Invalid URL"
   },
   {
+    "id": "appetite-for-destruction?printing=f274789d-69f2-4acf-a511-f728c67d1a13",
+    "name": "Appetite for Destruction",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/f274789d-69f2-4acf-a511-f728c67d1a13/render-mpvmf46g.webp?Expires=1784179551&Key-Pair-Id=K3SGRHESIHQPEW&Signature=CkXfTkWxNik2cxvxtqu7L-2zCUlhFDrhfscjKb5zFxE~rsfz98q3LYuSaqIa-pdMtS50eFBfVhw-oM14km9hdZHT46MGeebiWV4UBOJjHTNg9QQM3xTazs~YsUATVECm2uBoJcywK2mcvqINwAj6aX8Psh0y4pAlgfCm0fXhLbcUiEQ9guNS1ChZSqZu~lh~mjJN4gMgTizvVHC70xcufR7OCimbkGoTUK3Isq9RGWdNqRkHa4zuGAHSkm-9EtRHxhLqy6EsE8hIg02GAodL3tHk50mhMM1ZVmfdnOf25~o4q8vz~TP4JVTADprNO9PmsVWsQnIS6tqtO7BShdTWgQ__",
+    "status": 403
+  },
+  {
     "id": "over-the-edge?printing=f1cf4133-45ef-4de5-abfc-757de1613731",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -230,6 +236,12 @@
     "error": "Invalid URL"
   },
   {
+    "id": "hanako-arasaka-daughter-of-the-emperor?printing=2c4a77e8-0fda-4ec1-9519-1d15e0f172b3",
+    "name": "Hanako Arasaka — Daughter of the Emperor",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/2c4a77e8-0fda-4ec1-9519-1d15e0f172b3/render-mpvmk5xh.webp?Expires=1784179641&Key-Pair-Id=K3SGRHESIHQPEW&Signature=PFA-a5FHx0sXCke4lpFdzUQYZUXWfx6aqDj0-SXqjeyCmPB4OxvAVuaPf-lB8tJhzBuRje3ErhV~3gdoErlqxBbbf7PM4IiSkX4~SDIXS7FJq9okrzVsNSVYW-s8-LxMoXEGLKO~TeKD97ZWAY2Z9sXV6Q9eWoHOu5n2bFnyiu2hEkVos-jXiSpIY7kAqahbfTaQjiW7XJpFT3Fp0C7aScHIFT~hinaSzgq0Qv0qTEZGGfiLv-XImXB1lF2G6ityq2~0qTJj2Qvp11pvxT1fSrhHBNvI7wqnTJY5q4SL2X9h17bBmlVNduPImec~ncl8iP-5aXLS4UoYQG9jMKl07Q__",
+    "status": 403
+  },
+  {
     "id": "panam-palmer-nomad-cavalry?printing=6e4ee31b-82d1-421c-b658-ba3f79520365",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -258,6 +270,12 @@
     "id": "goro-takemura-losing-his-way?printing=42e03e7a-923d-4f2b-8d79-191e69873947",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
+  },
+  {
+    "id": "pepe-najarro-working-doubles?printing=0de81196-f1d3-4fd0-ae6a-062dae3f3f2c",
+    "name": "Pepe Najarro — Working Doubles",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/0de81196-f1d3-4fd0-ae6a-062dae3f3f2c/render-mpvm610y.webp?Expires=1784179664&Key-Pair-Id=K3SGRHESIHQPEW&Signature=PovgHvZryEok7uHXlSXM5jgv1VBDKHPmZnVa6y-8OEyx8S8S~wT7f1scQj5~6KkqBDtCsF3-VSyNg-R2n9tLYVCvSSDUgqGlX9gjjV8hquxKtEzr5UV5ue0tZpCVhCaudRf3VyxKmuFbMnKnoKzeV6-IH1ijWDH-G20B-3Xqz~4JpdWWbjVsLoT2KjzMiTkLl8i5Q~F255qsoOOz4pUsITjZuRijptKYCwE8aR7dpaeCzPFj5H2dxywmaFQzqPWiY5EFToAh7UW1cGV8eGBoWQS9VK-OWG66pxqDdYEczZQqezf1sEMXP~iGKnmhxX-SuizMnEdoWL2vgQu07xSoew__",
+    "status": 403
   },
   {
     "id": "riding-nomad?printing=1ee3ba07-86b0-4309-be55-4b4698f700b8",

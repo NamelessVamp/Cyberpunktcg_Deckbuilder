@@ -182,6 +182,25 @@
     "date_added": "2026-07-03"
   },
   {
+    "id": "octant?printing=089df0e6-0000-4e6c-b6d3-d9119466b624",
+    "name": "Octant",
+    "subtitle": "",
+    "url": "https://cyberpunktcg.com/cards/octant?printing=089df0e6-0000-4e6c-b6d3-d9119466b624",
+    "cost": 7,
+    "power": 8,
+    "ram": 4,
+    "type": "UNIT",
+    "faction": "MILITECH",
+    "keywords": [],
+    "text": "Play this Unit for -1 €$ for each friendly Gig with 8+ value, to a minimum of 1 €$.",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/089df0e6-0000-4e6c-b6d3-d9119466b624/render-mpvlto0j.webp?Expires=1784266465&Key-Pair-Id=K3SGRHESIHQPEW&Signature=n~VyxUTEq8G0qyY0JjidIJlQKR3qpAbXMxzblkO766fO4onhZQomeBDE0cl-5huOSWI5KTS55qLaUneGQTBFyA4vIm7klZtkFMSjgUFczSbfz65DCKU5iyddBJYcHj7v6ZwRD5uHcW2wNZ1VEfMun5O~j2c1Vy8Fbz8NVQt7Rlpj77-M1b4nSep-FO0ZZ3On-UsGBtQZfVvR3HTWazQG4Pvc7E~7IcNb8YL7M20ouddXZ-lO6njlqj9ynD9b23tlqDpMRZRZJHnJJJ0qRRyojbcKLs~47vFJSy6K00zpJJJ6~hu1IDY0b35iG6xQGSjku0bYWp59rWJ5qdHf75tuSg__",
+    "set": "Welcome to Night City — Retail",
+    "number": "015",
+    "artist": "CD Projekt Red",
+    "ram_color": "Red",
+    "date_added": "2026-07-16"
+  },
+  {
     "id": "yorinobu-arasaka-steel-dragon?printing=c057ccc4-bb15-4efd-8115-8d223568134b",
     "name": "SOMETHING WENT WRONG",
     "subtitle": "An unexpected error occurred while displaying this page.",
@@ -257,7 +276,7 @@
     "faction": "GANGER",
     "keywords": [],
     "text": "The next time a friendly Unit wins a fight by 3+ power this turn, it also steals a Gig.",
-    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/f274789d-69f2-4acf-a511-f728c67d1a13/render-mpvmf46g.webp?Expires=1784179551&Key-Pair-Id=K3SGRHESIHQPEW&Signature=CkXfTkWxNik2cxvxtqu7L-2zCUlhFDrhfscjKb5zFxE~rsfz98q3LYuSaqIa-pdMtS50eFBfVhw-oM14km9hdZHT46MGeebiWV4UBOJjHTNg9QQM3xTazs~YsUATVECm2uBoJcywK2mcvqINwAj6aX8Psh0y4pAlgfCm0fXhLbcUiEQ9guNS1ChZSqZu~lh~mjJN4gMgTizvVHC70xcufR7OCimbkGoTUK3Isq9RGWdNqRkHa4zuGAHSkm-9EtRHxhLqy6EsE8hIg02GAodL3tHk50mhMM1ZVmfdnOf25~o4q8vz~TP4JVTADprNO9PmsVWsQnIS6tqtO7BShdTWgQ__",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/f274789d-69f2-4acf-a511-f728c67d1a13/render-mpvmf46g.webp?Expires=1784266485&Key-Pair-Id=K3SGRHESIHQPEW&Signature=KMRw9B3tOdp8c79qDgr1rznb1hum-OF2O~wEYyWRC7p7QGhEyA7NukewQYRqwH2CgQgjIXphI7DOJ6wOabkKmmzimgv7qZluC2n-CvWgcbDxTuL91byJDSlo3Y~rwjZqJrG5hbndpH~hgo6rnLjmedN6jfBnjkT-dAuh8tt8crQWHzMe~hOgN6qX97F2x3CBk-ljW5CdTUOW-HVSbKQAGkNJCkCY4qTps4LcZcJQ-fgR4TPV6mNOgNISgnAX4m9jdl41oWqY~tj9GBkIi8Ly1HC6bpmoDLckGjcc4wsO0mcj98LA7cCxiwHaSW2ZfKYRK6khJLc9mxk3jQBNbdbzhQ__",
     "set": "Welcome to Night City — Retail",
     "number": "028",
     "artist": "Miguel Valderrama & Jason Wordie",
@@ -625,7 +644,7 @@
     "faction": "ARASAKA",
     "keywords": [],
     "text": "Spend Swap a friendly Gig with a rival Gig.\nAt the start of your turn, draw 1 for each friendly value-pair of Gigs.",
-    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/2c4a77e8-0fda-4ec1-9519-1d15e0f172b3/render-mpvmk5xh.webp?Expires=1784179641&Key-Pair-Id=K3SGRHESIHQPEW&Signature=PFA-a5FHx0sXCke4lpFdzUQYZUXWfx6aqDj0-SXqjeyCmPB4OxvAVuaPf-lB8tJhzBuRje3ErhV~3gdoErlqxBbbf7PM4IiSkX4~SDIXS7FJq9okrzVsNSVYW-s8-LxMoXEGLKO~TeKD97ZWAY2Z9sXV6Q9eWoHOu5n2bFnyiu2hEkVos-jXiSpIY7kAqahbfTaQjiW7XJpFT3Fp0C7aScHIFT~hinaSzgq0Qv0qTEZGGfiLv-XImXB1lF2G6ityq2~0qTJj2Qvp11pvxT1fSrhHBNvI7wqnTJY5q4SL2X9h17bBmlVNduPImec~ncl8iP-5aXLS4UoYQG9jMKl07Q__",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/2c4a77e8-0fda-4ec1-9519-1d15e0f172b3/render-mpvmk5xh.webp?Expires=1784266575&Key-Pair-Id=K3SGRHESIHQPEW&Signature=W7WHOn5-d75qeczzH09YPc1pyBfB47nFn5Sw9x9BKRl1LzfFf2i~5mMq1mYLeK1kEk9uZiZ6vVFQSEunWqumrcOb6GVHEyDoh49UtRWXkeab1KbbaRRbcwg8WkFAcnHPCs1Hp2D9kuINiCA7ATc~XEVWrR2-Z0sNMH7l555C1yty7wn8SA6NOv~bw25MeitsBmTeiO11ZNhgE5ytnhRAvzR2KRgZ9t8hA9ZIKsmY1ecEC3hvAvIj7BenziYii3NdPSl88PXk4RD04o0BfZs6TXyqTNCxX-T~oWCkx1oYHEsQRHW5SryIlGj-Do0jrcFpg-FC~F5d-TQyHwusBbgUqw__",
     "set": "Welcome to Night City — Retail",
     "number": "072",
     "artist": "Daniel Valaisis",
@@ -722,7 +741,7 @@
     "faction": null,
     "keywords": [],
     "text": "Attack If you control a value-pair of Gigs, ready up to 2 MERC Legends in your Legends area.",
-    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/0de81196-f1d3-4fd0-ae6a-062dae3f3f2c/render-mpvm610y.webp?Expires=1784179664&Key-Pair-Id=K3SGRHESIHQPEW&Signature=PovgHvZryEok7uHXlSXM5jgv1VBDKHPmZnVa6y-8OEyx8S8S~wT7f1scQj5~6KkqBDtCsF3-VSyNg-R2n9tLYVCvSSDUgqGlX9gjjV8hquxKtEzr5UV5ue0tZpCVhCaudRf3VyxKmuFbMnKnoKzeV6-IH1ijWDH-G20B-3Xqz~4JpdWWbjVsLoT2KjzMiTkLl8i5Q~F255qsoOOz4pUsITjZuRijptKYCwE8aR7dpaeCzPFj5H2dxywmaFQzqPWiY5EFToAh7UW1cGV8eGBoWQS9VK-OWG66pxqDdYEczZQqezf1sEMXP~iGKnmhxX-SuizMnEdoWL2vgQu07xSoew__",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/0de81196-f1d3-4fd0-ae6a-062dae3f3f2c/render-mpvm610y.webp?Expires=1784266598&Key-Pair-Id=K3SGRHESIHQPEW&Signature=AyiE3Iqu5MI6mPclDNIYe7ArsDHI33JjN69bqmNT8H8K9tP0whN8OXFDqYHs3Ob6EzRI9DmUtMRILzD-H9A1s1N~CV00nQKx5BWA8Pl3zu6DOozom8ty-CvaTOEBwsgSR9ASuw0hyvut~fQCZQzBdf7p6OTO8JVfTrFdTk6rriodpOxTkVLpigxI5idy4Tb0ouCCaNd~V8iMSehw-wDZkkfurztVv5Rxe7jd1tzPsmSpSZXWdvEczEElKkGriL5-y0vlPurR21MKyYV9IyA5-VJT9UvSNxRueyhEv5nzQpmFnvlAxvJSQMwHRmWlig9wzn9Gb7cHeyPVU9840Xd5wA__",
     "set": "Welcome to Night City — Retail",
     "number": "086",
     "artist": "TOPDOG Entertainment",
@@ -780,18 +799,5 @@
     "number": "",
     "artist": "",
     "date_added": "2026-07-03"
-  },
-  {
-    "id": "saul-bright-stormrider?printing=60e476b4-51ab-4b10-8861-a8362b4232d7",
-    "name": "SOMETHING WENT WRONG",
-    "subtitle": "An unexpected error occurred while displaying this page.",
-    "url": "https://cyberpunktcg.com/cards/saul-bright-stormrider?printing=60e476b4-51ab-4b10-8861-a8362b4232d7",
-    "faction": null,
-    "keywords": [],
-    "text": "",
-    "set": "",
-    "number": "",
-    "artist": "",
-    "date_added": "2026-07-01"
   }
 ]
