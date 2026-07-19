@@ -70,6 +70,11 @@
     "error": "Invalid URL"
   },
   {
+    "id": "octant?printing=089df0e6-0000-4e6c-b6d3-d9119466b624",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
     "id": "yorinobu-arasaka-steel-dragon?printing=c057ccc4-bb15-4efd-8115-8d223568134b",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -91,6 +96,11 @@
   },
   {
     "id": "industrial-assembly?printing=9103b5db-bf95-4385-8941-308cb0353c9a",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "appetite-for-destruction?printing=f274789d-69f2-4acf-a511-f728c67d1a13",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
   },
@@ -215,6 +225,11 @@
     "error": "Invalid URL"
   },
   {
+    "id": "live-with-the-aftermath?printing=f931c82e-a382-4f60-808c-5910ac9850be",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
     "id": "bootleg-black-sapphire-show?printing=decc76ed-f5ed-4f02-90d7-e01e2a3975e0",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -226,6 +241,11 @@
   },
   {
     "id": "goro-takemura-vengeful-bodyguard?printing=0f6e52f0-511f-4ae9-a380-5e718b26e58a",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "hanako-arasaka-daughter-of-the-emperor?printing=2c4a77e8-0fda-4ec1-9519-1d15e0f172b3",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
   },
@@ -256,6 +276,11 @@
   },
   {
     "id": "goro-takemura-losing-his-way?printing=42e03e7a-923d-4f2b-8d79-191e69873947",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
+    "id": "pepe-najarro-working-doubles?printing=0de81196-f1d3-4fd0-ae6a-062dae3f3f2c",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
   },
