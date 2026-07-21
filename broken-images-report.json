@@ -25,12 +25,6 @@
     "error": "Invalid URL"
   },
   {
-    "id": "japantown-jonin?printing=30619097-d9d7-42fe-bf4c-cd4ae822792d",
-    "name": "Japantown Jonin",
-    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/30619097-d9d7-42fe-bf4c-cd4ae822792d/render-mpvlsow6.webp?Expires=1784526337&Key-Pair-Id=K3SGRHESIHQPEW&Signature=oc5BSTLBEXf5PybLW-ylK3nA5Pu5M4N~-kpBrHxBuLeS8Y5~sASKV48Nf7nRKmuylcDMbnHM9ypNl75Wi1DtmDJFFhsoC7Md-gsPBCRgX1nsPpEdxINPshZfYUymYsDRiL-lPHllM-Emm0PQi7Fmu5NdDJ69vhHvAcod7M7znCWXkM30joCpDj8eaz88NBP3fzjhreI3mXilzHmXbffymmP8xwdq7TC~uymaBosCIhLuCMiDBVFww8Fy5Bm9u2YuCFCcOzQgD4m5552CIWhV~AmIvaP0WUnhsY5JJVTnZMe1DO1xyvk0hwQ4F4TBKyzUwVQyabc1J~5pQUim1QNbzw__",
-    "status": 403
-  },
-  {
     "id": "la-llorona-ghost-of-the-past?printing=e3d1d8a0-1d53-4c85-84ca-66439fd3639a",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -292,11 +286,6 @@
   },
   {
     "id": "riding-nomad?printing=1ee3ba07-86b0-4309-be55-4b4698f700b8",
-    "name": "SOMETHING WENT WRONG",
-    "error": "Invalid URL"
-  },
-  {
-    "id": "wraith-marauders?printing=0944037e-5b14-4332-b345-7935924c2125",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
   }
