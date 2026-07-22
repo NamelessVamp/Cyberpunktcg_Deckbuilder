@@ -76,7 +76,7 @@
     "faction": null,
     "keywords": [],
     "text": "Play Give a friendly Unit +2 power this turn.\n(Units with power 0 don't steal Gigs.)",
-    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/30619097-d9d7-42fe-bf4c-cd4ae822792d/render-mpvlsow6.webp?Expires=1784699048&Key-Pair-Id=K3SGRHESIHQPEW&Signature=QAg26N31OaG3cEoV0sGZVqeLAgbAkBxP2iDFGdSrfaNwAp8p0Ok96fPcbFPVj39W7wAV90fRc~BJExp~e1j5xOUAXTe6Tl8cDDsr5pDN2lJQ34~p~1ODtOrcY-xmXpAz45~PM6ZTuLcuLpWDsS3A8wgpAlA6RruXNVUAReDmbnqQFwpAkSao9jsSlUuwEVEeQdRw6BxhpLDJFIDpHiAwTtSS4ZJIW9iyktbsgNlywaESQ2pOIvYoLHbMY3xxQaZV0LhSzUm~Y3~cf6eRPCAFjgNXzXvYMF3cmGRjIKF0eI4ES0Kg0gKBL31ecuYZciret2cgMHWIbFjW5IDMkDhocw__",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/30619097-d9d7-42fe-bf4c-cd4ae822792d/render-mpvlsow6.webp?Expires=1784785378&Key-Pair-Id=K3SGRHESIHQPEW&Signature=XUAbcK8sakM1uyzGJybhqZgjg-aRfKaRs67QapTaf~hgfX8bJf81tmbbqKv0PwXzOAkuvgH-W44obv30XJC~yMKWspNZS2EPT27kl9LrF4FWK9YVkXuH3GuCY3DvQOH5Qr6AnB7eBNDwa1jech8AnDqX3lCibmoUCb3uwENjq2P1DU0I0qbSoqX6HkyhiOtFA7lPcKmm6mo9AMFnUpRAXJq2SoU27RkhGOoKGABw0HQxSq4lGQLJlA6hGlnlkAmsV4gLquCs5Tl6l5GakD1s09bi7cXElWhDNnPVTOGLdJH~CzZdupIiG2A294J9rGON~wQOKXlPHzFCvswKNE04zw__",
     "set": "Welcome to Night City — Retail",
     "number": "010",
     "artist": "Michał Dziekan",
@@ -591,6 +591,24 @@
     "date_added": "2026-07-03"
   },
   {
+    "id": "the-heist?printing=a1e2c25e-fb27-458f-984d-df422f879664",
+    "name": "The Heist",
+    "subtitle": "",
+    "url": "https://cyberpunktcg.com/cards/the-heist?printing=a1e2c25e-fb27-458f-984d-df422f879664",
+    "cost": 2,
+    "ram": 2,
+    "type": "PROGRAM",
+    "faction": "MERC",
+    "keywords": [],
+    "text": "Trash 4. Add a Gear from among them to your hand. If that Gear's cost equals the value of a friendly Gig, you may play it for free instead.",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/a1e2c25e-fb27-458f-984d-df422f879664/render-mpvmgkup.webp?Expires=1784785508&Key-Pair-Id=K3SGRHESIHQPEW&Signature=bRNyUys6SH0l9UASKs8-dQ9o1io8975jcQDA9woB96T0Lrc8A2bj9h4RTW-87WqFFc8Zd5gyfOg5G3mcpzdMUy~jL5nekhizknl~Gp74AFFoadqt6O-FGDJx4rugHXjiqF6m8N7xmW~-70C-juBNravgeNLap9OBOzbAFW0k30zbwOBSuWQZpzehNaokIwKWYTkqFLDll3fzczlCjuyLu-zwjiBxkoZZ~q-FotYJ04YrJmOhhXY3v2gInhQ0HAA1Vji5CzPaGd8JckXpWfFCpAWvS7a~0MV3XckU8uwM~5fG5is-mdjWc1T7RhmOYgC5S0MsBmmD8xOKKqqr9MgVBg__",
+    "set": "Welcome to Night City — Retail",
+    "number": "070",
+    "artist": "Dilara Özden",
+    "ram_color": "Yellow",
+    "date_added": "2026-07-22"
+  },
+  {
     "id": "cyberpsychosis?printing=5aafe80b-7c7d-4060-8677-a2881a21dd72",
     "name": "SOMETHING WENT WRONG",
     "subtitle": "An unexpected error occurred while displaying this page.",
@@ -745,7 +763,7 @@
     "faction": "VEHICLE",
     "keywords": [],
     "text": "Play Give another friendly Unit with cost 5 or less Adrenaline this turn. (A Unit with Adrenaline can attack the turn it's played.)",
-    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/dc15db71-3443-4de0-b988-c62601bae5e1/render-mpvlvw95.webp?Expires=1784699219&Key-Pair-Id=K3SGRHESIHQPEW&Signature=kTQYe5vuiOcSwGYnk2ho-ScvuXhhyGh9CJbxlM7ZYBfdH1RHSA2KN71wbSOaIGIvmwxMpdzOib1Ke5hbQbj4ZZEqgYYFrwrRCK~W82~ddZfMDqx4obKu66orMfhLvoq11-17CFpPh~M37WlPwJuNjUqdNAuKZaMSPiIcPNY4uVf7kWrsg8nxr~jdywzrzijsaG-BP8IiPDMFPEWalNPSseEiUcCEFbTAxxAJc5IcIHFEmwWiGXCplcqLIprnyAPLZX3Ublvr-ezEQ-xh5EAaKgeX~OPYu7HzJ52wyGg~IdRUxchxnneNOIeNVzQQXIKRFH5If2Aa5tPhbj5YsdnvKA__",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/dc15db71-3443-4de0-b988-c62601bae5e1/render-mpvlvw95.webp?Expires=1784785548&Key-Pair-Id=K3SGRHESIHQPEW&Signature=eKAJurzSFW7-VBYWsM7VNLsT7J51CxoSrEdRb2KiHY-sxPaNXMaMZFXiSE7U40ryLjhEWt89qNHad3ev5R8ihLByNIGbsl0PbOWkofBb3EeVEe73p~hnruSySrjNfs87kbD7ULSv-EZiS5OiUGoiocLQe5ow-Q6xZva3kwydGoNmqctlkGyo6O8uByYEG9-yPyqeGlhVdFTzlix5zsx4b7RgGCdPf0U6if9AH1rMZMLTZqoZOgpUBCK9K5D4g6bCW8n8NkrwLFHP4dT-Z8ww9DZ9MXJZM7CJRR3g6Od9yL6L3R~OhxrRdAHCUKi9UKrNGpX67rTy0KcDD0MDMCiECQ__",
     "set": "Welcome to Night City — Retail",
     "number": "091",
     "artist": "Michał Dziekan",
@@ -777,18 +795,5 @@
     "number": "",
     "artist": "",
     "date_added": "2026-07-13"
-  },
-  {
-    "id": "riding-nomad?printing=1ee3ba07-86b0-4309-be55-4b4698f700b8",
-    "name": "SOMETHING WENT WRONG",
-    "subtitle": "An unexpected error occurred while displaying this page.",
-    "url": "https://cyberpunktcg.com/cards/riding-nomad?printing=1ee3ba07-86b0-4309-be55-4b4698f700b8",
-    "faction": null,
-    "keywords": [],
-    "text": "",
-    "set": "",
-    "number": "",
-    "artist": "",
-    "date_added": "2026-07-03"
   }
 ]
