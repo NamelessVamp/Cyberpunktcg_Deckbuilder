@@ -286,6 +286,24 @@
     "date_added": "2026-07-10"
   },
   {
+    "id": "bonnie-and-clyde?printing=26d60270-1b43-4af3-a8b7-1c3db9675cfa",
+    "name": "Bonnie and Clyde",
+    "subtitle": "",
+    "url": "https://cyberpunktcg.com/cards/bonnie-and-clyde?printing=26d60270-1b43-4af3-a8b7-1c3db9675cfa",
+    "cost": 3,
+    "ram": 3,
+    "type": "PROGRAM",
+    "faction": "BRAINDANCE",
+    "keywords": [],
+    "text": "Defeat a rival Unit with power 4 or less. You may defeat 2 instead if a Rival controls at least 2 Gigs more than you.",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/26d60270-1b43-4af3-a8b7-1c3db9675cfa/render-mpvmfxjg.webp?Expires=1784958322&Key-Pair-Id=K3SGRHESIHQPEW&Signature=q-~mUtxcRemmn4bl1w0MgjaVIUZ7nrQamWPepl-tqta-dlU~PT79n~oUONosu2y5t2wtmFMDAFl3136IcX101h9RzcW40niLE70OJrgWEQ5rTY2c1xmA-gn45cLf9d5de09jWVIcJ~SP8X4wxjyTESev1YsjECkp4F-mXNxky5zyxiDty0lmRb7F8s-BSJNN8LMBtKxZ2EJxhoJ5HE8-atZJsOY6zS0gLZ9Wceu5IJMZqm0CQE8rIgMlqVpAa2pRNakhEhTb9EwEPtd1fzxc58xVKecJotfITvvsVIS~zyUQ~aEA4NfJlYfA-bB6OU6V5lxmfClN6512CFqoc3t90Q__",
+    "set": "Welcome to Night City — Retail",
+    "number": "029",
+    "artist": "Rion Chow",
+    "ram_color": "Red",
+    "date_added": "2026-07-24"
+  },
+  {
     "id": "over-the-edge?printing=f1cf4133-45ef-4de5-abfc-757de1613731",
     "name": "SOMETHING WENT WRONG",
     "subtitle": "An unexpected error occurred while displaying this page.",
@@ -765,18 +783,5 @@
     "number": "",
     "artist": "",
     "date_added": "2026-07-04"
-  },
-  {
-    "id": "pepe-najarro-working-doubles?printing=0de81196-f1d3-4fd0-ae6a-062dae3f3f2c",
-    "name": "SOMETHING WENT WRONG",
-    "subtitle": "An unexpected error occurred while displaying this page.",
-    "url": "https://cyberpunktcg.com/cards/pepe-najarro-working-doubles?printing=0de81196-f1d3-4fd0-ae6a-062dae3f3f2c",
-    "faction": null,
-    "keywords": [],
-    "text": "",
-    "set": "",
-    "number": "",
-    "artist": "",
-    "date_added": "2026-07-13"
   }
 ]
