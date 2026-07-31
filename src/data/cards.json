@@ -507,6 +507,25 @@
     "date_added": "2026-07-03"
   },
   {
+    "id": "maxtac-suppression-team?printing=47f55164-e5da-494e-9d55-02bd0b7f97c1",
+    "name": "MaxTac Suppression Team",
+    "subtitle": "",
+    "url": "https://cyberpunktcg.com/cards/maxtac-suppression-team?printing=47f55164-e5da-494e-9d55-02bd0b7f97c1",
+    "cost": 5,
+    "power": 7,
+    "ram": 1,
+    "type": "UNIT",
+    "faction": "NCPD",
+    "keywords": [],
+    "text": "Rival Units can't attack the turn they're played.",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/47f55164-e5da-494e-9d55-02bd0b7f97c1/render-mpvlzqaa.webp?Expires=1785564141&Key-Pair-Id=K3SGRHESIHQPEW&Signature=MKTyCQ1buFThjG0Tvm~~XjhzoHLiKAAv~2~9M2T1efmnoUBGH8tvM-OLVuvW7nF7IGCvUxLs8wXKQRH9Qx8TQWlYfqgayJjhJqBSQPllVWKm7-0fL68Yi2aPrs9y9QdgZPUGlkpNVqXXtilIM9B1Zyr0vl9lbDjoWn2zHZm1kXNeduVXRqO~WHfJ8jucJ~eAxCEhGnA6yARhTzks5z2xqlfDPpy5hhdUnNDyS0-3NdzQ-tBSgmchrybCDDENyvABaul1NM-jZDYZ3nsPmIDHGOeZ4V8JiINd52rSFran71LVaUvG3-ow6YAkf7Ui7Dkq7y4AE8JZBobvPN2taQcImQ__",
+    "set": "Welcome to Night City — Retail",
+    "number": "050",
+    "artist": "ADIA",
+    "ram_color": "Yellow",
+    "date_added": "2026-07-31"
+  },
+  {
     "id": "jackie-welles-ride-or-die-choom?printing=12d44604-ad7b-4e82-b517-9edb0be44427",
     "name": "SOMETHING WENT WRONG",
     "subtitle": "An unexpected error occurred while displaying this page.",
@@ -765,18 +784,5 @@
     "number": "",
     "artist": "",
     "date_added": "2026-07-04"
-  },
-  {
-    "id": "valentino-street-racer?printing=dc15db71-3443-4de0-b988-c62601bae5e1",
-    "name": "SOMETHING WENT WRONG",
-    "subtitle": "An unexpected error occurred while displaying this page.",
-    "url": "https://cyberpunktcg.com/cards/valentino-street-racer?printing=dc15db71-3443-4de0-b988-c62601bae5e1",
-    "faction": null,
-    "keywords": [],
-    "text": "",
-    "set": "",
-    "number": "",
-    "artist": "",
-    "date_added": "2026-07-20"
   }
 ]
