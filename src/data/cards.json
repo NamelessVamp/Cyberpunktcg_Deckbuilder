@@ -219,7 +219,7 @@
     "faction": "MERC",
     "keywords": [],
     "text": "The first time this Unit wins a fight each turn, ready it.\nThis Unit wins all fights against CORPO Units.",
-    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/14ab188f-2ce3-4790-8823-5a352371ff1f/render-mpvlmm24.webp?Expires=1785908592&Key-Pair-Id=K3SGRHESIHQPEW&Signature=N8K1phea3S0koD0u-nETAltxXe256HNEz78HRh1moZkK5E3aR-UJzZNXvrz0JPIe3HDIexvBA0dtbbSx1a1kBvNx6eYzNOEdoWnC6av8-pEOt2w1NWM3eWfF5-hoRpAq2oWeEKazDNrI1tU682noYF1nCRmpU~g-XLefFqty6UtADAqbbMjU-c5Nnw7yO8PqfDG7Hvn2HxilL5yNnVlk-wuM8N~nFkwCoeRVQ8FmwsvIOHnzfY73WWsUHRapIzX06NVOfp1k0jNit4X42exzBlS28vRn2iB87s~SJr5kLltBSXvErvVPf2pWe4A6iqYRc~F-n1eVnJK64nZngZ5I-g__",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/14ab188f-2ce3-4790-8823-5a352371ff1f/render-mpvlmm24.webp?Expires=1785994887&Key-Pair-Id=K3SGRHESIHQPEW&Signature=DC91K6FIG~mcK510pN4Kx-HFDHk9lr7buLoXURM8tKKcqKyiemAXd~7mDN5~SZsfH1QaO34lO-zgAZlozW4CMdltOnKJb23JLh-3rgNCvSkXs-c48BI8SVyS5UArh5n8EsRCwBJcfZHYTJqp5w-rTtNEZ9C241t09VFiplu7Dj~~fBYwyD8uPWb6~QG9LmEmTZfmo74zSRdausvxHTKIWTnY2hpDew8gXzA37kVmWQHWV-L6nQOiSm1M2MEwAgI6jWA2lsDlMfxgcgv6sTycdcGlXmWAbzdQblKgWyBMf3tUl55gWRf8SXXLXUk9yLJLxLSGGetLZO6IJSYaNI~mNw__",
     "set": "Welcome to Night City — Retail",
     "number": "011",
     "artist": "Łukasz Poller",
@@ -682,6 +682,24 @@
     "date_added": "2026-07-03"
   },
   {
+    "id": "safety-override?printing=5d987aa8-baed-45b2-986c-a21e04a53331",
+    "name": "Safety Override",
+    "subtitle": "",
+    "url": "https://cyberpunktcg.com/cards/safety-override?printing=5d987aa8-baed-45b2-986c-a21e04a53331",
+    "cost": 2,
+    "ram": 3,
+    "type": "PROGRAM",
+    "faction": "QUICKHACK",
+    "keywords": [],
+    "text": "Quick The next time a friendly Unit loses a fight this turn, defeat the opposing rival Unit.",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/5d987aa8-baed-45b2-986c-a21e04a53331/render-mpvm9rqp.webp?Expires=1785995002&Key-Pair-Id=K3SGRHESIHQPEW&Signature=nPGb5zhx7JYGqUY1pM7htNA3QjWrzmXe2vbcl4iDkxt2S~kMJRnvHgOl4mIB1z8J2MSTsQLoCWvlj-PWoAdN1vHXiwPgA4N~tCRxwwmNO3S8ZmE2eVeqwlIacygY1~8cXPnH9ceidAAuG-ljNiDXDDHFfS-MFa79hrCYAA3ypJEAg3hYPQS~O43FslXHLFm7poHljoZEGZCGq92tF1M37NPYjgRDbVFU9X70f7c58z3~Rg5OUHKvnjrP2CIPbYnVTnPu4cqi6blvLK5hS98lepeXCS3T2tc1ZKdggO2GbkuChptzjfyicjYdp2iD1yFVnXsyL-2mwlsb0xK1SddJ7Q__",
+    "set": "Welcome to Night City — Retail",
+    "number": "069",
+    "artist": "Miguel Valderrama",
+    "ram_color": "Yellow",
+    "date_added": "2026-08-05"
+  },
+  {
     "id": "the-heist?printing=a1e2c25e-fb27-458f-984d-df422f879664",
     "name": "SOMETHING WENT WRONG",
     "subtitle": "An unexpected error occurred while displaying this page.",
@@ -771,18 +789,5 @@
     "number": "",
     "artist": "",
     "date_added": "2026-07-03"
-  },
-  {
-    "id": "hanako-arasaka-daughter-of-the-emperor?printing=2c4a77e8-0fda-4ec1-9519-1d15e0f172b3",
-    "name": "SOMETHING WENT WRONG",
-    "subtitle": "An unexpected error occurred while displaying this page.",
-    "url": "https://cyberpunktcg.com/cards/hanako-arasaka-daughter-of-the-emperor?printing=2c4a77e8-0fda-4ec1-9519-1d15e0f172b3",
-    "faction": null,
-    "keywords": [],
-    "text": "",
-    "set": "",
-    "number": "",
-    "artist": "",
-    "date_added": "2026-07-12"
   }
 ]
