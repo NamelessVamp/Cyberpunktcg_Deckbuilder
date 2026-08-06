@@ -80,6 +80,12 @@
     "error": "Invalid URL"
   },
   {
+    "id": "johnny-silverhand-never-stop-fighting?printing=14ab188f-2ce3-4790-8823-5a352371ff1f",
+    "name": "Johnny Silverhand — Never Stop Fighting",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/14ab188f-2ce3-4790-8823-5a352371ff1f/render-mpvlmm24.webp?Expires=1785994887&Key-Pair-Id=K3SGRHESIHQPEW&Signature=DC91K6FIG~mcK510pN4Kx-HFDHk9lr7buLoXURM8tKKcqKyiemAXd~7mDN5~SZsfH1QaO34lO-zgAZlozW4CMdltOnKJb23JLh-3rgNCvSkXs-c48BI8SVyS5UArh5n8EsRCwBJcfZHYTJqp5w-rTtNEZ9C241t09VFiplu7Dj~~fBYwyD8uPWb6~QG9LmEmTZfmo74zSRdausvxHTKIWTnY2hpDew8gXzA37kVmWQHWV-L6nQOiSm1M2MEwAgI6jWA2lsDlMfxgcgv6sTycdcGlXmWAbzdQblKgWyBMf3tUl55gWRf8SXXLXUk9yLJLxLSGGetLZO6IJSYaNI~mNw__",
+    "status": 403
+  },
+  {
     "id": "minotaur?printing=19587d4f-6d47-44fe-b4da-99743e2742f7",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -286,11 +292,6 @@
   },
   {
     "id": "goro-takemura-vengeful-bodyguard?printing=0f6e52f0-511f-4ae9-a380-5e718b26e58a",
-    "name": "SOMETHING WENT WRONG",
-    "error": "Invalid URL"
-  },
-  {
-    "id": "hanako-arasaka-daughter-of-the-emperor?printing=2c4a77e8-0fda-4ec1-9519-1d15e0f172b3",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
   }
