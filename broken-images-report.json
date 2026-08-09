@@ -80,6 +80,24 @@
     "error": "Invalid URL"
   },
   {
+    "id": "v-roamer-of-the-badlands?printing=c1747b7d-de5c-43eb-a4ed-b632f1861712",
+    "name": "V — Roamer of the Badlands",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/c1747b7d-de5c-43eb-a4ed-b632f1861712/render-mpvlnxfx.webp?Expires=1786248499&Key-Pair-Id=K3SGRHESIHQPEW&Signature=g8dJsCLr1uyTzNCBDKSNvnTASVyRx15UXMJoj8vMtVD83rq5M1vs5JuHiZLznpd8mTY8PydwZ7Xmpu9BROLnwwxTWWVE1NlQd0~gTegXbHMczE1t5gmgnhbg99conCuqO4FDZ5JjPw2iUgrc4f4EvA7pdqArnDFfFSwRozBWerPBAJJtV2jluSYK1Npc79hGLUl47mYjX7ds8HHTIXvIF4xLFzBAkdtjTrDDTHovERMqWaw4W2SCbJOXjTtEqXoTOyYcdpBuwrlepShV75T3ClfHyF2dyfI9HNu7uXfDko9L9JwHpdT1x1WMfY2dGWDoZdGs5F6y5Hq-3rtWbkCoMg__",
+    "status": 403
+  },
+  {
+    "id": "animals-wrecker?printing=7514dd38-6e2d-43dd-9715-6b3a32615382",
+    "name": "Animals Wrecker",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/7514dd38-6e2d-43dd-9715-6b3a32615382/render-mpvluas2.webp?Expires=1786248503&Key-Pair-Id=K3SGRHESIHQPEW&Signature=Kx2mfWjkxyudnac9ixJt4FP4t75S8O6I96hpmOmtwbs6CCRD7elBIL-2aw8d7SCfqs6ZWE0RDyQnrRXIuBk4sW1fU~uxYLEDRTL536jplTwGGekKi95ERfm5fW~Pooi9taamkL8s-REVmqHz6KfJB3KIkAdeaGgVmHslbKeIIy0B-M0isHMIl4DdItd6f589Z-n6EK-fYhY3GYQWxaa4YyminEZyTotkVf2MksgtHRPO0BiYfd1qrInYmMRtxjBOSGviBQrllJDaVb-~HploRqV6ALoIb8jUPH33tb-xa~cAl1x3kfudboh0QyRWT-jSWPQSO7JTe0mOvjjhzpiwFA__",
+    "status": 403
+  },
+  {
+    "id": "johnny-silverhand-never-stop-fighting?printing=14ab188f-2ce3-4790-8823-5a352371ff1f",
+    "name": "Johnny Silverhand — Never Stop Fighting",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/14ab188f-2ce3-4790-8823-5a352371ff1f/render-mpvlmm24.webp?Expires=1786248506&Key-Pair-Id=K3SGRHESIHQPEW&Signature=AqzX33xB0ynAuxHs9XtFLu35QQNXCZsSrCoehHenoh-zJIB-lSEJ~W96tdWWUUJKJhnAhsnlLd2H-K2e0ETiovrjNneKKhutQ-GxLAe65ILB~dlLIkFAsdwya7N63jvX2JhNiNqSVL5yYYuks~lDa8CrIWgHMA-syRfrCLan0sdzDNcbV3vPP6IogimyYX8bIRjXu78VJ6YhPBC2FzpstjjaE-LIg-pzml26QQafjjMPb0ZWfXlcngp20uWG6ETQ6hT0KVjdKSOJS52EklpVQItQVhR~V3fvhg6fZCwAbDue1rOcul6JX3Z5DK-ZdX-LZKQFp28btwjmVWBIcgvDMw__",
+    "status": 403
+  },
+  {
     "id": "minotaur?printing=19587d4f-6d47-44fe-b4da-99743e2742f7",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -210,6 +228,12 @@
     "error": "Invalid URL"
   },
   {
+    "id": "rockn-rockerboy?printing=07aaea5c-5aef-466e-956a-2e68930669c0",
+    "name": "Rockn' Rockerboy",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/07aaea5c-5aef-466e-956a-2e68930669c0/render-mpvlx5hw.webp?Expires=1786248593&Key-Pair-Id=K3SGRHESIHQPEW&Signature=S4Gyj9N20VffPbQ2xI~BNQZTLGhAgyDHwTTlKaXStB6H-huiJonXv~TKxLYfL8Ltn62c1ugmMEjOY1XLLJymPDVGOVj~YPaPPJS9J3A5TYWKARuXCCR9jjX50rkBIioDBPBElDgELihhTPF9j0VX5t8mjzplqBlKlILuGYtGg4OuN8A96lNSs1EQnn8V0aax-28o7VRL0t4MrCWAwpb9szCrvKET3Q-CqssTEgQKxPfZ7yA4EnTL~mx-miII0OvqqpHVbpQ37ouX-7rxeafSGG~y0~TpLkJTBWqlaw~y1UvsPekCo6ZZlnT~pctzJYiXMx~QMvD3xpHje4tzYfw47w__",
+    "status": 403
+  },
+  {
     "id": "jackie-welles-ride-or-die-choom?printing=12d44604-ad7b-4e82-b517-9edb0be44427",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -253,6 +277,12 @@
     "id": "afterparty-at-lizzie-s?printing=d53925ee-df55-4b71-8ca0-13ec3ede2076",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
+  },
+  {
+    "id": "safety-override?printing=5d987aa8-baed-45b2-986c-a21e04a53331",
+    "name": "Safety Override",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/5d987aa8-baed-45b2-986c-a21e04a53331/render-mpvm9rqp.webp?Expires=1786248625&Key-Pair-Id=K3SGRHESIHQPEW&Signature=c~Oj9XBWguaDzmAErmclTPqIb1pM6H7Hem4wIvwc89yvz6sGAZK1YcyDDoXLcXUbp~06OwqxzmRatUSRsMn1wZNHcbN9N3fFGNjm6aAxIMLK39Vs9xwxjVjMUYKfgsvOMFufWq-D6R7mHjQdGsnAN3bY8UHtVcRa8CEXyZVB-OZzU0wMsazqj1OOqREULFUyNuwOU7DhJVoYQnpzTOzmFMdS9XUwMJAHpMYSgyh1PGDI45t86VwGkzculPktfvfWhIUwbzO1RV3OKDaTCnJJ9GA17eTZo1do1SWao-sx6wJ~GVG9wbNiktoBxcucTWaLyvopg1uX5~aSl1xKgfxY5w__",
+    "status": 403
   },
   {
     "id": "the-heist?printing=a1e2c25e-fb27-458f-984d-df422f879664",
