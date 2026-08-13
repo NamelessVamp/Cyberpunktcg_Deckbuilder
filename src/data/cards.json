@@ -377,6 +377,19 @@
     "date_added": "2026-07-04"
   },
   {
+    "id": "gunpoint-diplomacy?printing=efc5dfdd-f393-4bbe-a7bc-ac959ba1e6bc",
+    "name": "SOMETHING WENT WRONG",
+    "subtitle": "An unexpected error occurred while displaying this page.",
+    "url": "https://cyberpunktcg.com/cards/gunpoint-diplomacy?printing=efc5dfdd-f393-4bbe-a7bc-ac959ba1e6bc",
+    "faction": null,
+    "keywords": [],
+    "text": "",
+    "set": "",
+    "number": "",
+    "artist": "",
+    "date_added": "2026-08-13"
+  },
+  {
     "id": "carnage-at-the-colosseum?printing=36128749-4cb1-440d-b4de-4fd463cc2f5c",
     "name": "SOMETHING WENT WRONG",
     "subtitle": "An unexpected error occurred while displaying this page.",
@@ -508,21 +521,15 @@
   },
   {
     "id": "maelstrom-goons?printing=e14bdd12-1214-4104-bfdd-ae023c21527c",
-    "name": "Maelstrom Goons",
-    "subtitle": "",
+    "name": "SOMETHING WENT WRONG",
+    "subtitle": "An unexpected error occurred while displaying this page.",
     "url": "https://cyberpunktcg.com/cards/maelstrom-goons?printing=e14bdd12-1214-4104-bfdd-ae023c21527c",
-    "cost": 3,
-    "power": 3,
-    "ram": 2,
-    "type": "UNIT",
-    "faction": "GANGER",
+    "faction": null,
     "keywords": [],
-    "text": "When this Unit steals a Gig, if it's equipped, a Rival discards 1.",
-    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/e14bdd12-1214-4104-bfdd-ae023c21527c/render-mpvls0aa.webp?Expires=1786596314&Key-Pair-Id=K3SGRHESIHQPEW&Signature=GWgdxtJljvdZB3xlYqPQtJ6Vf5PZy3sx2YSh3qTXlCsWkrC88iXGj7qR6AhxXh0gyXMPUwrwd6LXIJzTmSySAwdEMC2HDJd4YxLpSek9wj3UXwitm0xhjbGvOsBplNPHPyPTfBS3rrflr9p1-bjkMJnhswp-lKV7UQLJt5if1eSofZXe5yE1-HvBTQi2iTZGitingz-dHWWuN~thjN10JPBJejT7U~O22BSgk6QAssuFnXxdVBAQSCGO9tlcMotQxsc3IV9FdU7z0USzVEf-DwyiZdf9xzPjJn0eacGFuNGQgVNv-RHtRSVb0pixE4S8rggYRfZxPFHY7TdSCq6z7A__",
-    "set": "Welcome to Night City — Retail",
-    "number": "049",
-    "artist": "Alexander Dudar",
-    "ram_color": "Yellow",
+    "text": "",
+    "set": "",
+    "number": "",
+    "artist": "",
     "date_added": "2026-08-12"
   },
   {
@@ -643,6 +650,19 @@
     "date_added": "2026-07-03"
   },
   {
+    "id": "trauma-team-operatives?printing=0d6c1f36-628b-4631-a96d-2000f6fb054e",
+    "name": "SOMETHING WENT WRONG",
+    "subtitle": "An unexpected error occurred while displaying this page.",
+    "url": "https://cyberpunktcg.com/cards/trauma-team-operatives?printing=0d6c1f36-628b-4631-a96d-2000f6fb054e",
+    "faction": null,
+    "keywords": [],
+    "text": "",
+    "set": "",
+    "number": "",
+    "artist": "",
+    "date_added": "2026-08-13"
+  },
+  {
     "id": "alt-cunningham-mother-of-daemons?printing=e782dd02-a136-4bf8-b04b-328c65b84f19",
     "name": "SOMETHING WENT WRONG",
     "subtitle": "An unexpected error occurred while displaying this page.",
@@ -758,31 +778,5 @@
     "number": "",
     "artist": "",
     "date_added": "2026-08-05"
-  },
-  {
-    "id": "the-heist?printing=a1e2c25e-fb27-458f-984d-df422f879664",
-    "name": "SOMETHING WENT WRONG",
-    "subtitle": "An unexpected error occurred while displaying this page.",
-    "url": "https://cyberpunktcg.com/cards/the-heist?printing=a1e2c25e-fb27-458f-984d-df422f879664",
-    "faction": null,
-    "keywords": [],
-    "text": "",
-    "set": "",
-    "number": "",
-    "artist": "",
-    "date_added": "2026-07-22"
-  },
-  {
-    "id": "cyberpsychosis?printing=5aafe80b-7c7d-4060-8677-a2881a21dd72",
-    "name": "SOMETHING WENT WRONG",
-    "subtitle": "An unexpected error occurred while displaying this page.",
-    "url": "https://cyberpunktcg.com/cards/cyberpsychosis?printing=5aafe80b-7c7d-4060-8677-a2881a21dd72",
-    "faction": null,
-    "keywords": [],
-    "text": "",
-    "set": "",
-    "number": "",
-    "artist": "",
-    "date_added": "2026-07-03"
   }
 ]
