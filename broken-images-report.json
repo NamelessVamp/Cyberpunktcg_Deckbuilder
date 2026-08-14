@@ -145,6 +145,11 @@
     "error": "Invalid URL"
   },
   {
+    "id": "gunpoint-diplomacy?printing=efc5dfdd-f393-4bbe-a7bc-ac959ba1e6bc",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
     "id": "carnage-at-the-colosseum?printing=36128749-4cb1-440d-b4de-4fd463cc2f5c",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -196,9 +201,8 @@
   },
   {
     "id": "maelstrom-goons?printing=e14bdd12-1214-4104-bfdd-ae023c21527c",
-    "name": "Maelstrom Goons",
-    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/e14bdd12-1214-4104-bfdd-ae023c21527c/render-mpvls0aa.webp?Expires=1786596314&Key-Pair-Id=K3SGRHESIHQPEW&Signature=GWgdxtJljvdZB3xlYqPQtJ6Vf5PZy3sx2YSh3qTXlCsWkrC88iXGj7qR6AhxXh0gyXMPUwrwd6LXIJzTmSySAwdEMC2HDJd4YxLpSek9wj3UXwitm0xhjbGvOsBplNPHPyPTfBS3rrflr9p1-bjkMJnhswp-lKV7UQLJt5if1eSofZXe5yE1-HvBTQi2iTZGitingz-dHWWuN~thjN10JPBJejT7U~O22BSgk6QAssuFnXxdVBAQSCGO9tlcMotQxsc3IV9FdU7z0USzVEf-DwyiZdf9xzPjJn0eacGFuNGQgVNv-RHtRSVb0pixE4S8rggYRfZxPFHY7TdSCq6z7A__",
-    "status": 403
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
   },
   {
     "id": "viktor-vektor-you-might-feel-a-little-pinch?printing=4eca7fcd-85c1-43d0-8a07-4227312ab0db",
@@ -246,6 +250,11 @@
     "error": "Invalid URL"
   },
   {
+    "id": "trauma-team-operatives?printing=0d6c1f36-628b-4631-a96d-2000f6fb054e",
+    "name": "SOMETHING WENT WRONG",
+    "error": "Invalid URL"
+  },
+  {
     "id": "alt-cunningham-mother-of-daemons?printing=e782dd02-a136-4bf8-b04b-328c65b84f19",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -287,16 +296,6 @@
   },
   {
     "id": "safety-override?printing=5d987aa8-baed-45b2-986c-a21e04a53331",
-    "name": "SOMETHING WENT WRONG",
-    "error": "Invalid URL"
-  },
-  {
-    "id": "the-heist?printing=a1e2c25e-fb27-458f-984d-df422f879664",
-    "name": "SOMETHING WENT WRONG",
-    "error": "Invalid URL"
-  },
-  {
-    "id": "cyberpsychosis?printing=5aafe80b-7c7d-4060-8677-a2881a21dd72",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
   }

@@ -312,6 +312,19 @@
     "date_added": "2026-07-03"
   },
   {
+    "id": "deadman-transmitter?printing=32957075-42ff-47e3-8252-e78877ef61f7",
+    "name": "SOMETHING WENT WRONG",
+    "subtitle": "An unexpected error occurred while displaying this page.",
+    "url": "https://cyberpunktcg.com/cards/deadman-transmitter?printing=32957075-42ff-47e3-8252-e78877ef61f7",
+    "faction": null,
+    "keywords": [],
+    "text": "",
+    "set": "",
+    "number": "",
+    "artist": "",
+    "date_added": "2026-08-14"
+  },
+  {
     "id": "all-is-lost?printing=d1a3c0e0-e0e7-418d-afb4-e6e43400c42e",
     "name": "SOMETHING WENT WRONG",
     "subtitle": "An unexpected error occurred while displaying this page.",
@@ -765,18 +778,5 @@
     "number": "",
     "artist": "",
     "date_added": "2026-07-03"
-  },
-  {
-    "id": "safety-override?printing=5d987aa8-baed-45b2-986c-a21e04a53331",
-    "name": "SOMETHING WENT WRONG",
-    "subtitle": "An unexpected error occurred while displaying this page.",
-    "url": "https://cyberpunktcg.com/cards/safety-override?printing=5d987aa8-baed-45b2-986c-a21e04a53331",
-    "faction": null,
-    "keywords": [],
-    "text": "",
-    "set": "",
-    "number": "",
-    "artist": "",
-    "date_added": "2026-08-05"
   }
 ]
