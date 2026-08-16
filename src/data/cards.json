@@ -728,6 +728,25 @@
     "date_added": "2026-07-03"
   },
   {
+    "id": "adrenaline-converter?printing=535df2a9-d2af-463c-85dd-dafe67cab8fb",
+    "name": "Adrenaline Converter",
+    "subtitle": "",
+    "url": "https://cyberpunktcg.com/cards/adrenaline-converter?printing=535df2a9-d2af-463c-85dd-dafe67cab8fb",
+    "cost": 2,
+    "power": 3,
+    "ram": 4,
+    "type": "GEAR",
+    "faction": "CYBERWARE",
+    "keywords": [],
+    "text": "(Equip to a friendly Unit or face-up Legend.)\nIf a Rival controls at least 2 more Gigs than you, this Unit has Adrenaline. (This Unit can attack the turn it's played.)",
+    "image_url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/535df2a9-d2af-463c-85dd-dafe67cab8fb/render-mpvmy2t7.webp?Expires=1786938321&Key-Pair-Id=K3SGRHESIHQPEW&Signature=JA49SOg2KuPKgpu5RAgMWNJiHKJzGdfGIOa-hhh9yaCLuPlGlM2a9CO6rsoTTCF-J019UQk3VpDVgFDFiAqwTbcn1jSet~g80kCXEydJYepfXZ3QprSvs-YhS03qfbofxeo6M8zVZQCQRT7d-3hAeMD9Pwx~aTYzesQla9VTVKz6Wn0dbufdOG9mcNZndC7z9aQcmzHqf8-mk2qI0nWgCRoSKWSZEAsjbPOMoJbibXm63kjr~RisS1yXbtia6uiWWiphF5tgV9S8bHkd1rBbExtB-grstZxv5zv8fxduh-mDOaJ3mpkdzLk08RaPBBXkDulDwvyrdvIZDF8sKL0-KQ__",
+    "set": "Welcome to Night City — Retail",
+    "number": "059",
+    "artist": "ADIA",
+    "ram_color": "Yellow",
+    "date_added": "2026-08-16"
+  },
+  {
     "id": "zetatech-faceplate?printing=79cdc9a5-d94d-4df4-9f88-aa02fb0357b3",
     "name": "SOMETHING WENT WRONG",
     "subtitle": "An unexpected error occurred while displaying this page.",
@@ -765,18 +784,5 @@
     "number": "",
     "artist": "",
     "date_added": "2026-08-01"
-  },
-  {
-    "id": "afterparty-at-lizzie-s?printing=d53925ee-df55-4b71-8ca0-13ec3ede2076",
-    "name": "SOMETHING WENT WRONG",
-    "subtitle": "An unexpected error occurred while displaying this page.",
-    "url": "https://cyberpunktcg.com/cards/afterparty-at-lizzie-s?printing=d53925ee-df55-4b71-8ca0-13ec3ede2076",
-    "faction": null,
-    "keywords": [],
-    "text": "",
-    "set": "",
-    "number": "",
-    "artist": "",
-    "date_added": "2026-07-03"
   }
 ]
