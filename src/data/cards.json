@@ -650,6 +650,19 @@
     "date_added": "2026-08-07"
   },
   {
+    "id": "viktor-vektor-drop-your-illusions?printing=2285cd3a-7010-4ba4-b23a-ba40aba296f9",
+    "name": "SOMETHING WENT WRONG",
+    "subtitle": "An unexpected error occurred while displaying this page.",
+    "url": "https://cyberpunktcg.com/cards/viktor-vektor-drop-your-illusions?printing=2285cd3a-7010-4ba4-b23a-ba40aba296f9",
+    "faction": null,
+    "keywords": [],
+    "text": "",
+    "set": "",
+    "number": "",
+    "artist": "",
+    "date_added": "2026-08-20"
+  },
+  {
     "id": "jackie-welles-ride-or-die-choom?printing=12d44604-ad7b-4e82-b517-9edb0be44427",
     "name": "SOMETHING WENT WRONG",
     "subtitle": "An unexpected error occurred while displaying this page.",
@@ -765,18 +778,5 @@
     "number": "",
     "artist": "",
     "date_added": "2026-07-03"
-  },
-  {
-    "id": "the-relic-experimental-biochip?printing=38d14168-c182-4a34-a3b2-1b8380ab6635",
-    "name": "SOMETHING WENT WRONG",
-    "subtitle": "An unexpected error occurred while displaying this page.",
-    "url": "https://cyberpunktcg.com/cards/the-relic-experimental-biochip?printing=38d14168-c182-4a34-a3b2-1b8380ab6635",
-    "faction": null,
-    "keywords": [],
-    "text": "",
-    "set": "",
-    "number": "",
-    "artist": "",
-    "date_added": "2026-08-01"
   }
 ]
