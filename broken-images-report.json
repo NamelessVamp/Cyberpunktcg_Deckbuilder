@@ -35,6 +35,12 @@
     "error": "Invalid URL"
   },
   {
+    "id": "ruthless-lowlife?printing=e1b674d0-4ac7-4523-be19-809308871d49",
+    "name": "Ruthless Lowlife",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/a008.webp?Expires=1780245794&Key-Pair-Id=K3SGRHESIHQPEW&Signature=J2VnbBMsT9UvlXSMGcAgvx412xiYtZzQkePxuwTHXVSQyc~DKiilQcUJKNnc3zNzfUZeHDEkyDUozebSviBsqLQkETlXGGJcG-s6OvWc89g8eYFaSLfGYrYa47M6wiHFsPs3jEiUG9vboAmNuK-aEMpsMmj9FyI3JJjnCzVAdCpq9MqNUokKe9cND-cvU~EBFw6BET~xHfwH6nBjo~wNypLjnYom-D5jls8hgjkVbkwUqbD6ciKlyMRi4zd3HCi7uckqukv0zIIx-ycOwNXeNVj4qbAb1jdbYyGd9mLR6vhwxuAix155vKzsPB~NCPU~dZDzTWppHtmgnFbec44dNA__",
+    "status": 403
+  },
+  {
     "id": "la-llorona-ghost-of-the-past?printing=e3d1d8a0-1d53-4c85-84ca-66439fd3639a",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -63,6 +69,12 @@
     "id": "meredith-stout-stone-cold-corpo?printing=5939771d-bdcc-4b42-aea4-376311189e93",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
+  },
+  {
+    "id": "chrome-fang?printing=40db55a6-0220-4cb9-8854-0e23f7cb91f8",
+    "name": "Chrome Fang",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/40db55a6-0220-4cb9-8854-0e23f7cb91f8/render-mpvlsztq.webp?Expires=1787456230&Key-Pair-Id=K3SGRHESIHQPEW&Signature=s3osBwb769uMLdpUXoJG9RgN~CTzzIPQhc-xFzAdruLY-d6MLhZdO0OoJh7U9k9HyaLRK5sIikvIJL58k6pj-TQ~CJrjPhnm78hauUe1iHq-vYZLSmhTy~oFw~hq0lP86mXTlBwy5XvspUcFpYPaFA4wSjkV7PSn8wHjiv07KbTUvPn~HnXJ7LMBWXS0ncBT7swRSpO02F56swqzEhT-4WOtpWfFc~SarchOyBW4lxrq~rRMPk4zstD1vGJ7f0wElijdmkOb9LvXkPdRw2ZYSXMBGE78Dw~3120gLUGIk1wssMwdBJtfaJMq2pDe-O1e6qVYgmfs4ka16OCEA~O5Ww__",
+    "status": 403
   },
   {
     "id": "el-sombrero-n-la-venganza-lenta?printing=94180516-28a6-4f5c-b79e-de38a95ed47b",
@@ -115,6 +127,12 @@
     "error": "Invalid URL"
   },
   {
+    "id": "arasaka-emergency-radioport?printing=d2da65d5-fdaf-44f4-a692-a5672d2c1cca",
+    "name": "Arasaka Emergency Radioport",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/d2da65d5-fdaf-44f4-a692-a5672d2c1cca/render-mpvmwsoe.webp?Expires=1787456268&Key-Pair-Id=K3SGRHESIHQPEW&Signature=Q0pWnC4Tmg6uopuoWkm~FBsA97STnORYC1dhbrNlFAWeZ2K~e4sk2IfPZ2clwo~NjFNL496Np70C2aMWXVWtTQ1HuqTtr-BfbNDBWggie4BDUwgv~pkttL-EkuaTEe9q2gUPTnPC9xXHsJKM3pa6952~0yj~qJNSXjzn~ZqVYkFXutoJjTgHOJqigW0u8aGgDpbuM5J~TMoDwPMpFNQT6j0uWYynT515XmOl1fPWoN6m3XCFUzPe~A3Cd5p1No0~NRT4VKYVcfq8aysAkHRuT805EzzMIuSpTuMccv1OGFZrLpFV2Rogk0Dvq9Bat3HLGixPIkD5PlL0QfmGYi1WQw__",
+    "status": 403
+  },
+  {
     "id": "satori-sword-of-saburo?printing=11a8fed4-5401-4cfc-901b-ab9b5b94d0ab",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -155,6 +173,12 @@
     "error": "Invalid URL"
   },
   {
+    "id": "shattered-memories?printing=3401c7cf-45c5-4fe4-a883-284a9334262d",
+    "name": "Shattered Memories",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/3401c7cf-45c5-4fe4-a883-284a9334262d/render-mpvmj7ok.webp?Expires=1787456298&Key-Pair-Id=K3SGRHESIHQPEW&Signature=DAVuWgSEkVlMZ0uMiuH9XG-WN2u3~KbFijnA-XnVrJjUr~jL19cabftEkXhi79JyM8ymOTkrBZ2gRtTuLI6gbNIG95fIM1ep4AzrHSq-nHeoD-3ZTnmpbwcnyvDWQcxL11uSW7LxwhBsxoyGQfRevNv0WKRlwBLtpsLHMO2ZLeQepHOuI0-XOxiMT7Vs5QrLv2NhlU7BO7ELUJsI0lfShWv-JcJNromibAedW-8TILnTU91relYuRJmaSceDTh2ZBGzgKtKP4VmFCqur8n-OnQE~BZnP6Ck4FVCNTuxXsNljTm~gVIlyAGjR2GHy~evddYuyEwrfYY8J-G6424cLVw__",
+    "status": 403
+  },
+  {
     "id": "carnage-at-the-colosseum?printing=36128749-4cb1-440d-b4de-4fd463cc2f5c",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -173,6 +197,12 @@
     "id": "kerry-eurodyne-axe-attitude-audience?printing=e54e06c0-3f9c-412a-8dea-942eebecd687",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
+  },
+  {
+    "id": "muamar-reyes-el-capita-n?printing=dbbf4a6c-340d-4356-81ad-776940a7ee32",
+    "name": "Muamar Reyes — El Capitán",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/dbbf4a6c-340d-4356-81ad-776940a7ee32/render-mpvmoclb.webp?Expires=1787456316&Key-Pair-Id=K3SGRHESIHQPEW&Signature=QHvhWJ021JCI19GtBQEP57EM9ElptT9iWEBPv~t2heOuW8tKLQmtp1tXlKup5pmzUrj2fTFrVLwnZK06K-UbukUap9U8Q4YMNZN~ebU5VusSxtoATokAt-SCHOv7WKkiExFEANvI8a3Rrz6XHg-UMT0wcUu8O9-ep0jpG4y-JcmpQUY68qDvIzpKC0S3rppAxhhL2sVQTcdbRfKSAXemLfQGwIF6nwtvBFHZ-j7GhlPRTEOa32shLwCYSgvkortqmq77iMdT5rYS3V-zWopO0go6oy2HNfiww0tDi5TgIQMR7nMLBjpgizIS9-QXnJMLU4s8zU-zlt2Knr1cpP7mxg__",
+    "status": 403
   },
   {
     "id": "river-ward-detective-on-the-hunt?printing=b3895f75-e147-49b0-a6d8-6fb35b356b2e",
@@ -255,6 +285,12 @@
     "error": "Invalid URL"
   },
   {
+    "id": "heywood-ripperdoc?printing=2fc5ac93-dae5-4af5-a813-77abc0cc8dfd",
+    "name": "Heywood Ripperdoc",
+    "url": "https://dstcynss47vun.cloudfront.net/prod/cyberpunk/portal/2fc5ac93-dae5-4af5-a813-77abc0cc8dfd/render-mpvm5kl0.webp?Expires=1787456373&Key-Pair-Id=K3SGRHESIHQPEW&Signature=KEA8t9Cz2GPAp4zcCBtKGNhcFuPxb-icGo4ByQM3yWsNt2BkeR0a~oVIZUeDtrLx1EyHp~F-qsPLliaGuPBAo8wGIvkMcnS3CbwmrMClGU8gvvL0h5ZHJdWw3ojusrsRcgFv6-8Z00WO9Iz9r6jcfFxCt7oH4TdqK6YtNZri3-bRGico00NVHtoaUJsdqlhJ4j7xJljPEqqj~kdlbPbvhEB4qIImlEBcs71WgYF1ql3Y7Yhxrl1TYivSxlAsluAvqT4tlGYhT176tjzld~SFxvFkX69oKSi5EmVLWmAdDis~KxTHZ8X~2ve9eLWpinJ4vwTu8bKK2Xt55n9cvExKkA__",
+    "status": 403
+  },
+  {
     "id": "jackie-welles-ride-or-die-choom?printing=12d44604-ad7b-4e82-b517-9edb0be44427",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
@@ -266,31 +302,6 @@
   },
   {
     "id": "alt-cunningham-mother-of-daemons?printing=e782dd02-a136-4bf8-b04b-328c65b84f19",
-    "name": "SOMETHING WENT WRONG",
-    "error": "Invalid URL"
-  },
-  {
-    "id": "adam-smasher-metal-over-meat?printing=d23e322f-ad60-431d-b33e-1e8a813248ff",
-    "name": "SOMETHING WENT WRONG",
-    "error": "Invalid URL"
-  },
-  {
-    "id": "kiroshi-optics?printing=ec3368a9-79f1-4dfc-9cf7-1cb464ec1c88",
-    "name": "SOMETHING WENT WRONG",
-    "error": "Invalid URL"
-  },
-  {
-    "id": "mandibular-upgrade?printing=219b7a29-0f8b-4750-bc46-0f39eec6721b",
-    "name": "SOMETHING WENT WRONG",
-    "error": "Invalid URL"
-  },
-  {
-    "id": "adrenaline-converter?printing=535df2a9-d2af-463c-85dd-dafe67cab8fb",
-    "name": "SOMETHING WENT WRONG",
-    "error": "Invalid URL"
-  },
-  {
-    "id": "zetatech-faceplate?printing=79cdc9a5-d94d-4df4-9f88-aa02fb0357b3",
     "name": "SOMETHING WENT WRONG",
     "error": "Invalid URL"
   }
