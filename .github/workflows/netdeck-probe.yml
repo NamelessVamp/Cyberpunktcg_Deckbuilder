@@ -3,6 +3,10 @@ name: Probe NetDeck API
 on:
   workflow_dispatch:
 
+  push:
+    branches:
+      - feature/netdeck-migration
+
 jobs:
   probe-netdeck:
     runs-on: ubuntu-latest
