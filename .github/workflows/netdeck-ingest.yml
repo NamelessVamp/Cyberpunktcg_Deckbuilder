@@ -62,3 +62,5 @@ jobs:
             src/data/cards.candidate.json
           if-no-files-found: error
           retention-days: 7
+
+# Candidate workflow trigger
