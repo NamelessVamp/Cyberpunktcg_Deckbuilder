@@ -1,8 +1,6 @@
 name: Update Card Images
 
 on:
-  schedule:
-    - cron: "0 3 * * *"
   workflow_dispatch:
 
 jobs:
@@ -10,9 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write # Permite hacer push
+      contents: write
 
-    # 🔌 INYECCIÓN GLOBAL DE ENTORNO: El sistema entero nace con estas llaves
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
@@ -22,9 +19,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch full history for proper pull
+          fetch-depth: 0
 
-      - name: Setup Node.js 24
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "24"
@@ -46,65 +43,32 @@ jobs:
 
       - name: Run image health check
         run: |
-          echo "🔍 Checking image health..."
+          echo "Checking image health..."
           node scripts/checkImageHealth.js
-        continue-on-error: true
 
-      - name: Run card image scraper
+      - name: Run card database scraper
         run: |
-          echo "🕷️ Running image scraper..."
+          echo "Running card scraper..."
           python scripts/scraper.py
-        continue-on-error: true
-
-      - name: Debug Environment Variables
-        run: |
-          echo "🔍 Escaneando la matriz por llaves..."
-          if [ -z "${VITE_SUPABASE_URL}" ]; then 
-            echo "❌ ERROR FATAL: VITE_SUPABASE_URL está VACÍO en GitHub Actions"
-          else 
-            echo "✅ VITE_SUPABASE_URL fue inyectado correctamente"
-          fi
-          
-          if [ -z "${VITE_SUPABASE_SERVICE_ROLE_KEY}" ]; then 
-            echo "❌ ERROR FATAL: SERVICE_ROLE_KEY está VACÍO en GitHub Actions"
-          else 
-            echo "✅ SERVICE_ROLE_KEY fue inyectado correctamente"
-          fi
 
       - name: Backup card images
-        # Ya no necesitas el bloque 'env' aquí, lo hereda del entorno global
         run: |
-          echo "💾 Backing up images..."
+          echo "Backing up images..."
           node scripts/backupImages.js
-        continue-on-error: true
 
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "Afterlife Decks Bot"
+
           git add -A
 
-          # Check if there are changes to commit
           if git diff --staged --quiet; then
-            echo "✅ No changes to commit"
+            echo "No changes detected"
             exit 0
           fi
 
-          # Commit changes
-          git commit -m "chore: auto-update card images [skip ci]
+          git commit -m "chore: auto-update card database [skip ci]"
 
-          - Health check: $(date)
-          - Scraper: Updated image sources
-          - Backup: All images backed up
-
-          Automated by GitHub Actions"
-
-          # Pull with rebase to avoid conflicts
-          echo "📥 Pulling latest changes..."
           git pull --rebase origin main
-
-          # Push changes
-          echo "📤 Pushing changes..."
           git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
