@@ -398,9 +398,12 @@ def parse_integer(value):
 
 def get_card_id(url):
     """
-    Extract the card slug from a canonical card URL.
+    Extract a canonical card slug without query parameters.
     """
-    return url.rstrip("/").split("/")[-1]
+    parsed = urlparse(url)
+    clean_path = parsed.path.rstrip("/")
+
+    return clean_path.split("/")[-1]
 
 
 # ============================================================================
@@ -453,32 +456,90 @@ def scroll_gallery(driver):
 
 def find_next_page_control(driver):
     """
-    Find a visible and enabled control that advances the gallery.
+    Find the next gallery page control.
 
-    Supports:
+    The official gallery may expose pagination as:
         - rel="next"
-        - links containing page=N
-        - text labels such as Next
-        - buttons with matching aria-labels
-        - numeric pagination
+        - aria-label containing "next"
+        - visible Next text
+        - arrow icon
+        - numeric page button
     """
-    current_url = driver.current_url
+    current_page_match = re.search(
+        r"Page\s+(\d+)\s+of\s+(\d+)",
+        driver.page_source,
+        flags=re.IGNORECASE,
+    )
 
-    candidate_selectors = [
+    current_page = 1
+    total_pages = None
+
+    if current_page_match:
+        current_page = int(current_page_match.group(1))
+        total_pages = int(current_page_match.group(2))
+
+        print(
+            f"[PAGINATION] Current page: "
+            f"{current_page}/{total_pages}"
+        )
+
+    selectors = [
         (By.CSS_SELECTOR, 'a[rel="next"]'),
         (By.CSS_SELECTOR, 'a[aria-label*="next" i]'),
         (By.CSS_SELECTOR, 'button[aria-label*="next" i]'),
-        (By.XPATH, '//a[contains(translate(normalize-space(.), '
-                   '"NEXT", "next"), "next")]'),
-        (By.XPATH, '//button[contains(translate(normalize-space(.), '
-                   '"NEXT", "next"), "next")]'),
-        (By.XPATH, '//a[contains(normalize-space(.), "›")]'),
-        (By.XPATH, '//button[contains(normalize-space(.), "›")]'),
-        (By.XPATH, '//a[contains(normalize-space(.), "→")]'),
-        (By.XPATH, '//button[contains(normalize-space(.), "→")]'),
+        (
+            By.XPATH,
+            '//a[contains('
+            'translate(normalize-space(.), '
+            '"NEXT", "next"), "next")]',
+        ),
+        (
+            By.XPATH,
+            '//button[contains('
+            'translate(normalize-space(.), '
+            '"NEXT", "next"), "next")]',
+        ),
+        (
+            By.XPATH,
+            '//a[normalize-space(.)="›" '
+            'or normalize-space(.)="→" '
+            'or normalize-space(.)=">"]',
+        ),
+        (
+            By.XPATH,
+            '//button[normalize-space(.)="›" '
+            'or normalize-space(.)="→" '
+            'or normalize-space(.)=">"]',
+        ),
     ]
 
-    for by, selector in candidate_selectors:
+    if total_pages and current_page < total_pages:
+        next_page_number = current_page + 1
+
+        selectors.extend(
+            [
+                (
+                    By.XPATH,
+                    f'//button[normalize-space(.)='
+                    f'"{next_page_number}"]',
+                ),
+                (
+                    By.XPATH,
+                    f'//a[normalize-space(.)='
+                    f'"{next_page_number}"]',
+                ),
+                (
+                    By.CSS_SELECTOR,
+                    f'[data-page="{next_page_number}"]',
+                ),
+                (
+                    By.CSS_SELECTOR,
+                    f'[aria-label*="page {next_page_number}" i]',
+                ),
+            ]
+        )
+
+    for by, selector in selectors:
         try:
             elements = driver.find_elements(by, selector)
         except WebDriverException:
@@ -489,28 +550,39 @@ def find_next_page_control(driver):
                 if not element.is_displayed():
                     continue
 
-                disabled = (
-                    element.get_attribute("disabled") is not None
-                    or element.get_attribute("aria-disabled") == "true"
+                disabled_attribute = element.get_attribute(
+                    "disabled"
                 )
+                aria_disabled = element.get_attribute(
+                    "aria-disabled"
+                )
+                classes = (
+                    element.get_attribute("class") or ""
+                ).lower()
 
-                classes = element.get_attribute("class") or ""
-
-                if disabled or "disabled" in classes.lower():
+                if (
+                    disabled_attribute is not None
+                    or aria_disabled == "true"
+                    or "disabled" in classes
+                ):
                     continue
 
-                href = element.get_attribute("href")
-
-                if href and href == current_url:
-                    continue
+                print(
+                    "[PAGINATION] Control found: "
+                    f"tag={element.tag_name}, "
+                    f"text={element.text!r}, "
+                    f"aria-label="
+                    f"{element.get_attribute('aria-label')!r}"
+                )
 
                 return element
 
             except StaleElementReferenceException:
                 continue
 
-    return None
+    print("[PAGINATION] No usable control detected.")
 
+    return None
 
 def click_next_page(driver, control):
     """
