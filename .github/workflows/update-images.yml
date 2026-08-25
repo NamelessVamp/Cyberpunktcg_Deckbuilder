@@ -64,6 +64,15 @@ jobs:
           echo "Running official card database scraper..."
           python scripts/scraper.py
 
+      - name: Upload pagination diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pagination-diagnostics
+          path: artifacts/pagination/
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Validate generated dataset
         run: |
           node -e "const cards=require('./src/data/cards.json'); if(cards.length < 100) throw new Error('Dataset below safety threshold: ' + cards.length); const ids=cards.map(c=>c.id); const duplicates=[...new Set(ids.filter((id,i)=>ids.indexOf(id)!==i))]; if(duplicates.length) throw new Error('Duplicate IDs: ' + duplicates.join(', ')); console.log('Validated cards:', cards.length); console.log('Types:', cards.reduce((a,c)=>(a[c.type]=(a[c.type]||0)+1,a),{}));"

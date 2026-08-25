@@ -622,6 +622,92 @@ def click_next_page(driver, control):
     except TimeoutException:
         return False
 
+def save_pagination_diagnostics(driver, page_number):
+    """
+    Save the rendered gallery HTML, screenshot, and an inventory of
+    interactive controls when pagination cannot be detected.
+
+    These files are uploaded as GitHub Actions artifacts by the workflow.
+    """
+    diagnostics_dir = PROJECT_ROOT / "artifacts" / "pagination"
+    diagnostics_dir.mkdir(parents=True, exist_ok=True)
+
+    html_path = diagnostics_dir / f"gallery-page-{page_number}.html"
+    screenshot_path = diagnostics_dir / f"gallery-page-{page_number}.png"
+    controls_path = diagnostics_dir / f"gallery-controls-{page_number}.json"
+
+    html_path.write_text(
+        driver.page_source,
+        encoding="utf-8",
+    )
+
+    driver.save_screenshot(str(screenshot_path))
+
+    controls = []
+
+    interactive_elements = driver.find_elements(
+        By.CSS_SELECTOR,
+        (
+            "a, button, [role='button'], "
+            "[role='link'], [tabindex], "
+            "[aria-label], [data-page]"
+        ),
+    )
+
+    for index, element in enumerate(interactive_elements):
+        try:
+            controls.append(
+                {
+                    "index": index,
+                    "tag": element.tag_name,
+                    "text": element.text,
+                    "href": element.get_attribute("href"),
+                    "role": element.get_attribute("role"),
+                    "aria_label": element.get_attribute(
+                        "aria-label"
+                    ),
+                    "aria_disabled": element.get_attribute(
+                        "aria-disabled"
+                    ),
+                    "disabled": element.get_attribute(
+                        "disabled"
+                    ),
+                    "data_page": element.get_attribute(
+                        "data-page"
+                    ),
+                    "class": element.get_attribute("class"),
+                    "outer_html": element.get_attribute(
+                        "outerHTML"
+                    ),
+                    "displayed": element.is_displayed(),
+                    "enabled": element.is_enabled(),
+                }
+            )
+
+        except StaleElementReferenceException:
+            continue
+
+        except WebDriverException as error:
+            controls.append(
+                {
+                    "index": index,
+                    "error": str(error),
+                }
+            )
+
+    controls_path.write_text(
+        json.dumps(
+            controls,
+            indent=2,
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    print("[DIAGNOSTICS] Pagination evidence saved:")
+    print(f"              HTML: {html_path}")
+    print(f"              Screenshot: {screenshot_path}")
+    print(f"              Controls: {controls_path}")
 
 def extract_card_links(driver):
     """
@@ -683,7 +769,15 @@ def extract_card_links(driver):
         next_control = find_next_page_control(driver)
 
         if next_control is None:
-            print("[STOP] No enabled next-page control found.")
+            save_pagination_diagnostics(
+                driver=driver,
+                page_number=page_number,
+            )
+
+            print(
+                "[STOP] No enabled next-page control found. "
+                "Pagination diagnostics were saved."
+            )
             break
 
         if not click_next_page(driver, next_control):
