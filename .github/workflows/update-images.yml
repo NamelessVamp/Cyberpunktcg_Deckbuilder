@@ -1,10 +1,14 @@
-name: Update Card Images
+name: Update Card Database
 
 on:
   workflow_dispatch:
 
+concurrency:
+  group: update-card-database
+  cancel-in-progress: false
+
 jobs:
-  update-images:
+  update-cards:
     runs-on: ubuntu-latest
 
     permissions:
@@ -16,10 +20,11 @@ jobs:
       VITE_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.VITE_SUPABASE_SERVICE_ROLE_KEY }}
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: main
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -34,41 +39,70 @@ jobs:
       - name: Install Node dependencies
         run: npm install
 
-      - name: Install Python dependencies
+      - name: Install scraper dependencies
         run: |
-          pip install selenium beautifulsoup4 requests
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          pip install selenium==4.41.0 beautifulsoup4==4.14.3 requests==2.33.0
+
+      - name: Validate required secrets
+        shell: bash
+        run: |
+          if [ -z "${VITE_SUPABASE_URL}" ]; then
+            echo "VITE_SUPABASE_URL is missing"
+            exit 1
           fi
 
-      - name: Run image health check
-        run: |
-          echo "Checking image health..."
-          node scripts/checkImageHealth.js
+          if [ -z "${VITE_SUPABASE_SERVICE_ROLE_KEY}" ]; then
+            echo "VITE_SUPABASE_SERVICE_ROLE_KEY is missing"
+            exit 1
+          fi
+
+          echo "Required secrets are available"
 
       - name: Run card database scraper
         run: |
-          echo "Running card scraper..."
+          echo "Running official card database scraper..."
           python scripts/scraper.py
 
-      - name: Backup card images
+      - name: Validate generated dataset
         run: |
-          echo "Backing up images..."
+          node -e "const cards=require('./src/data/cards.json'); if(cards.length < 100) throw new Error('Dataset below safety threshold: ' + cards.length); const ids=cards.map(c=>c.id); const duplicates=[...new Set(ids.filter((id,i)=>ids.indexOf(id)!==i))]; if(duplicates.length) throw new Error('Duplicate IDs: ' + duplicates.join(', ')); console.log('Validated cards:', cards.length); console.log('Types:', cards.reduce((a,c)=>(a[c.type]=(a[c.type]||0)+1,a),{}));"
+
+      - name: Run image health check
+        run: |
+          echo "Checking synchronized image health..."
+          node scripts/checkImageHealth.js
+        continue-on-error: true
+
+      - name: Backup card images to Supabase
+        run: |
+          echo "Backing up card images..."
           node scripts/backupImages.js
 
-      - name: Commit and push changes
+      - name: Remove temporary scraper files
+        shell: bash
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "Afterlife Decks Bot"
+          rm -f src/data/cards.pre-scrape.json
+          rm -f src/data/cards.backup.json
+          rm -f src/data/cards.tmp.json
 
-          git add -A
+      - name: Build application
+        run: npm run build
+
+      - name: Commit and push synchronized data
+        shell: bash
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "Afterlife Decks Bot"
+
+          git add src/data/cards.json
+          git add broken-images-report.json || true
 
           if git diff --staged --quiet; then
-            echo "No changes detected"
+            echo "No card database changes detected"
             exit 0
           fi
 
-          git commit -m "chore: auto-update card database [skip ci]"
-
+          git commit -m "chore: synchronize official card database [skip ci]"
           git pull --rebase origin main
-          git push origin main
+          git push origin HEAD:main
