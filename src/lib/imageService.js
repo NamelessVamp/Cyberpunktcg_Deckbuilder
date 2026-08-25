@@ -16,7 +16,7 @@ export function getImageUrl(card) {
   return {
     primary: card.image_url || "",
     fallback: getSupabaseImageUrl(card.id),
-    placeholder: getPlaceholder(card.type),
+    import noImage from "../assets/placeholders/no-image.webp";
   };
 }
 
