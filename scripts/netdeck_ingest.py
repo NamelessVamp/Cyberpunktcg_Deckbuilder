@@ -1,4 +1,4 @@
-"""
+﻿"""
 Afterlife NetDeck ingestion pipeline.
 
 This script:
@@ -767,4 +767,374 @@ def validate_candidate(
             reasons.append("missing printings")
 
         if not card.get("image_url"):
-            reasons
+            reasons.append("missing selected image_url")
+
+        if reasons:
+            invalid_cards.append(
+                {
+                    "id": card_id,
+                    "reasons": reasons,
+                }
+            )
+
+    if invalid_cards:
+        formatted_errors = "\n".join(
+            f"  - {record['id']}: "
+            + ", ".join(record["reasons"])
+            for record in invalid_cards
+        )
+
+        raise RuntimeError(
+            "Candidate validation failed:\n"
+            f"{formatted_errors}"
+        )
+
+
+def write_json(
+    path: Path,
+    payload: Any,
+) -> None:
+    """
+    Write a UTF-8 JSON document atomically.
+    """
+    path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    temporary_path = path.with_suffix(
+        path.suffix + ".tmp"
+    )
+
+    temporary_path.write_text(
+        json.dumps(
+            payload,
+            indent=2,
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    json.loads(
+        temporary_path.read_text(
+            encoding="utf-8",
+        )
+    )
+
+    temporary_path.replace(path)
+
+
+def print_summary(
+    cards: list[dict[str, Any]],
+) -> None:
+    """
+    Print candidate totals by type and color.
+    """
+    type_counts: dict[str, int] = {}
+    color_counts: dict[str, int] = {}
+    printing_count = 0
+
+    for card in cards:
+        card_type = str(
+            card.get("type") or "UNKNOWN"
+        )
+
+        color = str(
+            card.get("color") or "UNKNOWN"
+        )
+
+        type_counts[card_type] = (
+            type_counts.get(card_type, 0) + 1
+        )
+
+        color_counts[color] = (
+            color_counts.get(color, 0) + 1
+        )
+
+        printing_count += len(
+            card.get("printings", [])
+        )
+
+    print("")
+    print("=" * 72)
+    print("NETDECK CANDIDATE SUMMARY")
+    print("=" * 72)
+    print(f"Cards: {len(cards)}")
+    print(f"Printings: {printing_count}")
+    print(f"Types: {type_counts}")
+    print(f"Colors: {color_counts}")
+    print(f"Raw snapshot: {RAW_OUTPUT_FILE}")
+    print(f"Candidate snapshot: {CANDIDATE_OUTPUT_FILE}")
+
+
+def main() -> None:
+    """
+    Run the complete safe ingestion pipeline.
+
+    The current production cards.json file is never modified.
+    """
+    print("=" * 72)
+    print("AFTERLIFE NETDECK INGESTION")
+    print("MODE: NON-DESTRUCTIVE CANDIDATE GENERATION")
+    print("=" * 72)
+    print(f"API: {API_URL}")
+    print("")
+
+    session = create_session()
+    started_at = time.perf_counter()
+
+    slugs = enumerate_slugs(session)
+
+    print(
+        f"[DISCOVERY] {len(slugs)} "
+        "canonical slugs found."
+    )
+
+    raw_cards = fetch_all_details(
+        session,
+        slugs,
+    )
+
+    write_json(
+        RAW_OUTPUT_FILE,
+        raw_cards,
+    )
+
+    print(
+        f"[RAW] Snapshot written to "
+        f"{RAW_OUTPUT_FILE}"
+    )
+
+    date_map = load_existing_date_map()
+
+    candidate_cards = [
+        normalize_card(
+            raw_card,
+            date_map,
+        )
+        for raw_card in raw_cards
+    ]
+
+    candidate_cards.sort(
+        key=lambda card: (
+            str(card.get("type", "")),
+            str(card.get("color", "")),
+            str(card.get("name", "")),
+            str(card.get("id", "")),
+        )
+    )
+
+    validate_candidate(
+        candidate_cards
+    )
+
+    write_json(
+        CANDIDATE_OUTPUT_FILE,
+        candidate_cards,
+    )
+
+    print_summary(
+        candidate_cards
+    )
+
+    elapsed_seconds = (
+        time.perf_counter() - started_at
+    )
+
+    print(
+        f"[COMPLETE] Candidate generated in "
+        f"{elapsed_seconds:.2f} seconds."
+    )
+
+    print(
+        "[SAFE] cards.json was not modified."
+    )
+
+
+if __name__ == "__main__":
+    main()
+
+        if reasons:
+            invalid_cards.append(
+                {
+                    "id": card_id,
+                    "reasons": reasons,
+                }
+            )
+
+    if invalid_cards:
+        formatted_errors = "\n".join(
+            f"  - {record['id']}: "
+            + ", ".join(record["reasons"])
+            for record in invalid_cards
+        )
+
+        raise RuntimeError(
+            "Candidate validation failed:\n"
+            f"{formatted_errors}"
+        )
+
+
+def write_json(
+    path: Path,
+    payload: Any,
+) -> None:
+    """
+    Write a UTF-8 JSON document atomically.
+    """
+    path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    temporary_path = path.with_suffix(
+        path.suffix + ".tmp"
+    )
+
+    temporary_path.write_text(
+        json.dumps(
+            payload,
+            indent=2,
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    json.loads(
+        temporary_path.read_text(
+            encoding="utf-8",
+        )
+    )
+
+    temporary_path.replace(path)
+
+
+def print_summary(
+    cards: list[dict[str, Any]],
+) -> None:
+    """
+    Print candidate totals by type and color.
+    """
+    type_counts: dict[str, int] = {}
+    color_counts: dict[str, int] = {}
+    printing_count = 0
+
+    for card in cards:
+        card_type = str(
+            card.get("type") or "UNKNOWN"
+        )
+
+        color = str(
+            card.get("color") or "UNKNOWN"
+        )
+
+        type_counts[card_type] = (
+            type_counts.get(card_type, 0) + 1
+        )
+
+        color_counts[color] = (
+            color_counts.get(color, 0) + 1
+        )
+
+        printing_count += len(
+            card.get("printings", [])
+        )
+
+    print("")
+    print("=" * 72)
+    print("NETDECK CANDIDATE SUMMARY")
+    print("=" * 72)
+    print(f"Cards: {len(cards)}")
+    print(f"Printings: {printing_count}")
+    print(f"Types: {type_counts}")
+    print(f"Colors: {color_counts}")
+    print(f"Raw snapshot: {RAW_OUTPUT_FILE}")
+    print(f"Candidate snapshot: {CANDIDATE_OUTPUT_FILE}")
+
+
+def main() -> None:
+    """
+    Run the complete safe ingestion pipeline.
+
+    The current production cards.json file is never modified.
+    """
+    print("=" * 72)
+    print("AFTERLIFE NETDECK INGESTION")
+    print("MODE: NON-DESTRUCTIVE CANDIDATE GENERATION")
+    print("=" * 72)
+    print(f"API: {API_URL}")
+    print("")
+
+    session = create_session()
+    started_at = time.perf_counter()
+
+    slugs = enumerate_slugs(session)
+
+    print(
+        f"[DISCOVERY] {len(slugs)} "
+        "canonical slugs found."
+    )
+
+    raw_cards = fetch_all_details(
+        session,
+        slugs,
+    )
+
+    write_json(
+        RAW_OUTPUT_FILE,
+        raw_cards,
+    )
+
+    print(
+        f"[RAW] Snapshot written to "
+        f"{RAW_OUTPUT_FILE}"
+    )
+
+    date_map = load_existing_date_map()
+
+    candidate_cards = [
+        normalize_card(
+            raw_card,
+            date_map,
+        )
+        for raw_card in raw_cards
+    ]
+
+    candidate_cards.sort(
+        key=lambda card: (
+            str(card.get("type", "")),
+            str(card.get("color", "")),
+            str(card.get("name", "")),
+            str(card.get("id", "")),
+        )
+    )
+
+    validate_candidate(
+        candidate_cards
+    )
+
+    write_json(
+        CANDIDATE_OUTPUT_FILE,
+        candidate_cards,
+    )
+
+    print_summary(
+        candidate_cards
+    )
+
+    elapsed_seconds = (
+        time.perf_counter() - started_at
+    )
+
+    print(
+        f"[COMPLETE] Candidate generated in "
+        f"{elapsed_seconds:.2f} seconds."
+    )
+
+    print(
+        "[SAFE] cards.json was not modified."
+    )
+
+
+if __name__ == "__main__":
+    main()
